@@ -315,7 +315,7 @@ export async function PUT(
     return NextResponse.json({ error: 'Invalid status' }, { status: 400 });
   }
 
-  const validFormats = ['single_elimination', 'group_stage', 'swiss'];
+  const validFormats = ['single_elimination', 'group_stage', 'swiss', 'upper_semi'];
   if (body.format && !validFormats.includes(body.format)) {
     return NextResponse.json({ error: 'Invalid format' }, { status: 400 });
   }
