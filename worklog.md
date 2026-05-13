@@ -1,0 +1,217 @@
+---
+Task ID: 1
+Agent: Main Agent
+Task: Clone and implement the evony/tarkam GitHub repository with Neon PostgreSQL
+
+Work Log:
+- Cloned the repository from https://github.com/evony/tarkam to /tmp/tarkam
+- Compared all files between the repo and existing project
+- Found key differences: prisma schema (SQLite vs PostgreSQL), root middleware.ts, package.json dev script, missing middleware.ts.bak
+- Updated .env with user-provided environment variables (Neon PostgreSQL, Cloudinary, Pusher, Session Secret)
+- Switched Prisma schema from SQLite to PostgreSQL (copied from repo's schema.postgres.prisma)
+- Updated root middleware.ts to match repo's lightweight pass-through version
+- Updated package.json dev script to match repo
+- Added src/middleware.ts.bak from repo
+- Ran prisma generate and db push to sync schema with Neon database
+- Fixed Prisma Client initialization issue: Bun was caching old .env values, resolved by adding dotenv with override:true to db.ts
+- Converted db.ts to use lazy Proxy pattern for Prisma Client creation to ensure env vars are loaded before client initialization
+- Verified all API endpoints returning 200 (version, tournament-status, clubs, feed, auth, account, init-admin)
+- ESLint passes with no errors
+
+Stage Summary:
+- Project fully implemented matching the GitHub repo evony/tarkam
+- Database connected to Neon PostgreSQL with live data preserved
+- All environment variables configured (SESSION_SECRET, DATABASE_URL, Cloudinary, Pusher)
+- Key fix: dotenv override required because Bun caches .env values
+- Dev server running on port 3000 with all APIs functional
+
+---
+Task ID: 2
+Agent: Main Agent
+Task: Overhaul point system - remove all achievement points except win match, streak, and prize juara. Fix player profile modal UI.
+
+Work Log:
+- Analyzed the complete point system: points-system.ts, points.ts, achievements.ts, score/route.ts, finalize/route.ts, player-profile.tsx
+- Identified the root cause of the 56pts discrepancy: old system had Swiss 3pts/win, participation points, MVP bonus, and streak bonus with different thresholds
+- Updated points-system.ts: New formula = win (+1pts) + streak (+2pts per 3 consecutive wins) + prize juara; applies to ALL formats including single_elimination and swiss
+- Updated score/route.ts: Win always +1pts (removed Swiss 3pts special case), streak bonus applies to all formats with new calculation (incremental: Math.floor(new/3)*2 - Math.floor(old/3)*2), Swiss BYE now 1pt, removed draw points
+- Updated achievements.ts: Removed achievement bonus point awarding (kept badge system), removed awardPoints import
+- Created new API: /api/players/[id]/point-breakdown - returns detailed point breakdown from PlayerPoint audit trail grouped by reason (match_win, streak_bonus, prize_juara1/2/3, prize_mvp, other)
+- Updated player-profile.tsx: Replaced hardcoded "Rincian Poin" section with data-driven breakdown from API showing Match Win, Streak Bonus, Prize Juara (1/2/3/MVP), and legacy points
+- All lint checks pass, dev server running without errors
+
+Stage Summary:
+- Point system simplified to only 3 sources: match win (+1), streak bonus (+2 per 3 consecutive), prize juara
+- Streak bonus now applies to ALL bracket formats (including single_elimination and swiss)
+- Achievement badges still awarded but no longer give bonus points
+- Draw matches no longer give points
+- Player profile modal now shows accurate point breakdown from API data
+- New API endpoint: GET /api/players/[id]/point-breakdown
+
+---
+Task ID: 3
+Agent: Main Agent
+Task: Recalculate all existing player points using the new point system
+
+Work Log:
+- Created /api/recalculate-points endpoint with secret key auth for CLI execution
+- First attempt used Participation.isWinner which was wrong (that's tournament winner, not match winner)
+- Fixed to use Match records (winnerId/loserId on team level) to count actual match wins
+- Recalculation process:
+  1. Keep prize PlayerPoint records (prize_juara1/2/3, prize_mvp, prize_other) unchanged
+  2. Delete old match_win, streak_bonus, match_draw, achievement_bonus PlayerPoint records
+  3. Replay match history chronologically to calculate new match_win (+1 per win) and streak_bonus (+2 per 3 consecutive)
+  4. Create new PlayerPoint records with recalculated amounts
+  5. Update Player.points, totalWins, matches, streak, maxStreak
+  6. Update Participation.pointsEarned per tournament
+- Results:
+  - zico: 56 → 47 pts (5 match_win + 2 streak + 40 prize_juara1)
+  - Ren: 56 → 47 pts
+  - predator: 56 → 47 pts
+  - kelra: 42 → 36 pts (3 match_win + 0 streak + 33 prize_juara2)
+  - justice: 42 → 36 pts
+  - afroki: 42 → 36 pts
+  - zmz: 37 → 32 pts (2 match_win + 0 streak + 30 prize_mvp)
+  - Faide: 7 → 2 pts (2 match_win)
+  - Rizal_: 7 → 2 pts (2 match_win)
+- Verified point-breakdown API shows correct data with diff=0
+- Lint passes
+
+Stage Summary:
+- All existing player points successfully recalculated with new system
+- New system: match_win +1pt, streak_bonus +2pt per 3 consecutive, prize unchanged
+- No more "other" points from old draw/achievement system
+- Player profile modal now shows accurate breakdown matching new calculations
+
+---
+Task ID: 4
+Agent: Main Agent
+Task: Skin champion dan achievement champion hanya diberikan ke Juara 1
+
+Work Log:
+- Updated skin-auto-award.ts: getChampionSkinType() now returns null for rank 2/3 (only rank 1 gets champion_1 skin)
+- Updated achievement criteria: top3_count now only counts isWinner=true (Juara 1 only, not all podium)
+- Updated skin seed: champion_2 and champion_3 marked as isActive: false
+- Updated achievement seed: "Podium Regular" description changed to "Menang Juara 1 sebanyak 5 kali"
+- Fixed score route: removed isWinner=true from participation updates (isWinner should only be set during finalization for Juara 1)
+- Added finalize route fix: after prize awarding, reset isWinner=false for all non-Juara-1 participants
+- Created /api/update-champion-rules endpoint to apply one-time DB updates
+- Executed update: deactivated champion_2/3 skins, revoked 6 PlayerSkin records, fixed 3 incorrect isWinner flags
+
+Stage Summary:
+- Skin champion (champion_1) ONLY awarded to Juara 1 team members at tournament finalization
+- champion_2 and champion_3 skins deactivated and revoked from existing players
+- isWinner flag on Participation now correctly means "tournament champion (Juara 1)" only
+- Achievement "Weekly Champion" and "Podium Regular" now only count Juara 1 wins
+- Score route no longer sets isWinner=true on participation (only finalize route does for Juara 1)
+---
+Task ID: 1
+Agent: Main Agent
+Task: Equalize Juara Tarkam card heights and remove 1st/2nd/3rd rank badges from champion player avatars
+
+Work Log:
+- Analyzed all components rendering "Juara Tarkam" section: weekly-champion-card.tsx, top-players-section.tsx, weekly-champions.tsx
+- Identified the podium layout in weekly-champion-card.tsx with different widths (38% center vs 31% sides) and different aspect ratios (3/4.5 center vs 3/4 sides)
+- Identified 1ST/2ND/3RD rank badge overlays on avatars
+- Identified rank-based border colors and text colors
+- Modified weekly-champion-card.tsx: Changed from flex podium layout to grid-cols-3 equal layout, same aspect ratio (3/4) for all cards, removed rank badge overlays, removed podium reordering, all borders now yellow-500/50, all player names now yellow-300
+- Modified top-players-section.tsx: Changed Juara tab to pass rank={1} for all champion players instead of idx+1
+- Modified weekly-champions.tsx: Changed to pass rank={1} for all champion players instead of idx+1
+- PlayerCard component already treats rank===1 as champion with gold accent line, so all champion team members now get equal treatment
+- Cleaned up unused Medal import from weekly-champion-card.tsx
+- Verified no lint errors and dev server running fine
+
+Stage Summary:
+- All 3 player cards in Juara Tarkam section are now equal height (3/4 aspect ratio)
+- No more 1ST/2ND/3RD badges on avatars
+- No more podium-style differentiation (center taller/wider)
+- All champion team members treated equally with same gold champion styling
+- MVP badge still shown for the MVP player (maintained as it's a distinct award)
+
+---
+Task ID: 2
+Agent: Main Agent
+Task: Fix player profile modal inconsistency - city info missing in dashboard context
+
+Work Log:
+- Investigated the difference between landing page and dashboard player profile modals
+- Found the root cause: several components manually construct player objects without including the `city` field
+- When `city` is missing, the profile shows `player.name` (gamertag repeated) instead of city info, and watermark shows gamertag instead of city name
+- Fixed 4 frontend components to include `city`:
+  1. weekly-champion-card.tsx - Added `city: player.city` to onPlayerClick
+  2. weekly-champions.tsx - Added `city: p.city` to onPlayerClick
+  3. community-champions.tsx - Added `city: latestSultan.player!.city` to Sultan card onPlayerClick
+  4. quick-search.tsx - Added `city: player.city` and added `city?: string` to PlayerResult interface
+- Fixed 3 API/type issues:
+  1. stats.ts (types) - Added `city?: string` to SultanOfWeekly.player and WeeklyPerformer interfaces
+  2. stats route.ts - Added `city: matchedPlayer.city` to sultan player info
+  3. stats route.ts - Added `city: player.city` to both weekly performer candidate objects
+  4. stats route.ts - Added `city?: string` to inline type definition for sultan playerInfo
+- Verified no lint errors and dev server running fine
+
+Stage Summary:
+- Player profile modal now consistently shows city info (with MapPin icon) across all contexts
+- SVG watermark now shows city name instead of gamertag when city is available
+- The `city` field now flows from the database through the API to all UI components
+
+---
+Task ID: 3
+Agent: backend-agent
+Task: Implement Upper Semi bracket backend (schema, generation, advancement)
+
+Work Log:
+- Updated prisma/schema.prisma: Added `upper_semi` to Tournament `format` field comment
+- Updated src/app/api/tournaments/route.ts: Added `'upper_semi'` to `validFormats` array and error message
+- Added upper_semi bracket generation in generate-bracket/route.ts:
+  - Supports 4-8 teams with correct double elimination bracket structure
+  - 4 teams = 6 matches, 5 = 8, 6 = 10, 7 = 12, 8 = 14
+  - Teams seeded by power (highest power = seed 1) for fair bracket placement
+  - Uses bracket='upper' for UB, 'lower' for LB, 'grand_final' for GF
+  - groupLabels follow U{round}-{pos}, L{round}-{pos}, GF pattern
+  - R1 matches with known teams set to 'ready', TBD matches set to 'pending'
+- Fixed duplicate Swiss code in generate-bracket/route.ts (lines 345-465 removed)
+- Added advanceUpperSemi() function in score/route.ts:
+  - Complete winner/loser advancement mapping for all team counts (4-8)
+  - UB winner → next UB match, UB loser → specific LB match (cross-bracket dropping)
+  - LB winner → next LB match, LB Final winner → GF.team2
+  - UB Final winner → GF.team1, UB Final loser → LB Final
+  - Uses declarative advancement map per team count for clarity and correctness
+- Modified existing UB advancement code to exclude upper_semi format (has its own dedicated handler)
+- Ran db:push and lint: both pass with no errors
+
+Stage Summary:
+- Upper Semi (Double Elimination) bracket format fully implemented for 4-8 teams
+- Bracket generation creates correct UB/LB/GF structure with proper seeding
+- Score advancement correctly handles winner/loser routing through both brackets
+- Existing single_elimination, swiss, and group_stage formats unaffected
+- Duplicate Swiss code removed from generate-bracket route
+
+---
+Task ID: 4
+Agent: frontend-agent
+Task: Implement Upper Semi bracket frontend visualization
+
+Work Log:
+- Updated BracketViewProps type union to include 'upper_semi'
+- Added ArrowDown and Swords icons to lucide-react imports
+- Created getUpperSemiRoundLabel() helper function for dynamic round labeling (Upper Final, Upper Semi, Lower Final, Lower Semi, etc.)
+- Created UpperSemiView component with vertical section-based layout:
+  - Upper Bracket section with round-grouped match cards and division theme styling
+  - Connector visual between UB and LB sections (ArrowDown + "Yang kalah turun ke Lower Bracket")
+  - Lower Bracket section with orange-themed styling for differentiation
+  - Connector visual between LB and GF sections (Crown + ArrowDown + gold styling)
+  - Grand Final section with gold accent styling and shadow glow
+  - Empty state fallback when no matches exist
+- Added routing for 'upper_semi' bracketType in main BracketView export component
+- Updated bracket-page.tsx format selector to include Upper Semi option with Swords icon
+- Updated tournament-manager.tsx to add format selection dropdown with all 4 formats (Elim. Langsung, Fase Grup, Swiss, Upper Semi (Double Elim))
+- Added format state variable and passed it through to API tournament creation
+- Lint passes with no errors, dev server running fine
+
+Stage Summary:
+- Upper Semi (Double Elimination) bracket visualization fully implemented in frontend
+- Vertical section layout: Upper Bracket → Lower Bracket → Grand Final with visual connectors
+- Round labels dynamically determined (Upper Semi, Upper Final, Lower Semi, Lower Final, etc.)
+- Bracket page format selector now includes "Upper Semi" option
+- Admin tournament manager now has format dropdown with "Upper Semi (Double Elim)" option
+- All existing bracket formats (single_elimination, group_stage, swiss, round_robin) unaffected
