@@ -187,12 +187,15 @@ export async function PUT(
   });
 
 
-
   // ★ Invalidate CDN + ISR cache so landing page shows updated data immediately
-  revalidatePath('/');
-  revalidatePath('/api/stats');
-  revalidatePath('/api/league');
-  revalidateTag('league-data', 'max');
+  try {
+    revalidatePath('/');
+    revalidatePath('/api/stats');
+    revalidatePath('/api/league');
+    revalidateTag('league-data', 'max');
+  } catch (e) {
+    console.warn('[PUT /api/players/[id]] revalidateTag error (non-critical):', e);
+  }
 
   // ★ Pusher: notify all clients of player data change (avatar, stats, etc.)
   try {
