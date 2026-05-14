@@ -375,9 +375,9 @@ export function TopDonorsWidget({ onDonate, statsData, statsData2 }: TopDonorsWi
                 <div className="flex-1 min-w-0 flex items-center gap-1.5">
                   <span className={`text-xs font-semibold truncate ${
                     i === 0
-                      ? 'text-transparent bg-clip-text bg-gradient-to-r from-rose-400 via-pink-400 to-rose-500 animate-pulse'
-                      : ''
-                  }`} style={i === 0 ? { textShadow: '0 0 12px rgba(244,63,94,0.5), 0 0 24px rgba(244,63,94,0.3)' } : undefined}>
+                      ? 'text-idm-gold-warm donor-name-pulse-gold'
+                      : 'donor-name-pulse'
+                  }`}>
                     {donor.donorName || 'Anonymous'}
                   </span>
                   {/* Division badges */}

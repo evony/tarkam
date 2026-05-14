@@ -483,3 +483,25 @@ Stage Summary:
 - Female Week 1 teams created successfully (4 teams, 12 players)
 - Top Penyawer widget now shows donors from BOTH divisions (male + female merged)
 - Same donor appearing in both divisions gets amounts combined
+
+---
+Task ID: 21
+Agent: main
+Task: Add visible pulse/blink animation to donor names on desktop
+
+Work Log:
+- Analyzed current donor name styling — only rank #1 had `animate-pulse` with `text-transparent bg-clip-text bg-gradient-to-r` which was barely visible
+- Added two new CSS keyframe animations in globals.css:
+  - `donor-name-neon-pulse`: Subtle gold glow pulse for all donors (2.5s cycle)
+  - `donor-name-gold-pulse`: More intense gold pulse for rank #1 (2s cycle)
+- Both animations are desktop-only (min-width: 640px media query)
+- Applied `donor-name-pulse-gold` class to rank #1 donor names and `donor-name-pulse` to all others
+- Updated both `top-donors-widget.tsx` and `community-donors.tsx`
+- Removed the old `text-transparent bg-clip-text bg-gradient-to-r from-rose-400 via-pink-400 to-rose-500 animate-pulse` which was not visible
+- Rank #1 now uses `text-idm-gold-warm` color with intense gold glow pulse
+- Lint passes cleanly
+
+Stage Summary:
+- Donor names now pulse/blink with a neon gold glow effect on desktop
+- Rank #1 has a more intense pulse than other donors
+- Mobile view is unaffected (animation only triggers on sm: breakpoint and up)

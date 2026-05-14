@@ -233,9 +233,9 @@ export function CommunityDonors({ maleData, femaleData, onSawer }: CommunityDono
                     <div className="flex items-center gap-1.5 mb-1">
                       <span className={`text-xs font-semibold truncate ${
                         i === 0
-                          ? 'text-transparent bg-clip-text bg-gradient-to-r from-rose-400 via-pink-400 to-rose-500 animate-pulse'
-                          : ''
-                      }`} style={i === 0 ? { textShadow: '0 0 12px rgba(244,63,94,0.5), 0 0 24px rgba(244,63,94,0.3)' } : undefined}>{donor.donorName}</span>
+                          ? 'text-idm-gold-warm donor-name-pulse-gold'
+                          : 'donor-name-pulse'
+                      }`}>{donor.donorName}</span>
                       {/* Division badges */}
                       {donor.divisions.map(div => (
                         <DivisionBadge key={div} division={div} />

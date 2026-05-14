@@ -791,6 +791,42 @@
   contain: layout style;
 }
 
+/* Donor name neon glow pulse — visible blinking/breathing effect on desktop */
+@keyframes donor-name-neon-pulse {
+  0%, 100% {
+    text-shadow: 0 0 4px rgba(229, 190, 74, 0.3), 0 0 8px rgba(229, 190, 74, 0.1);
+    opacity: 1;
+  }
+  50% {
+    text-shadow: 0 0 8px rgba(229, 190, 74, 0.6), 0 0 16px rgba(229, 190, 74, 0.3), 0 0 24px rgba(229, 190, 74, 0.1);
+    opacity: 0.85;
+  }
+}
+
+/* Top donor (#1) — more intense gold pulse */
+@keyframes donor-name-gold-pulse {
+  0%, 100% {
+    text-shadow: 0 0 6px rgba(250, 204, 21, 0.4), 0 0 12px rgba(250, 204, 21, 0.2);
+    opacity: 1;
+  }
+  50% {
+    text-shadow: 0 0 12px rgba(250, 204, 21, 0.7), 0 0 20px rgba(250, 204, 21, 0.4), 0 0 32px rgba(250, 204, 21, 0.15);
+    opacity: 0.8;
+  }
+}
+
+/* Desktop-only donor name pulse */
+@media (min-width: 640px) {
+  .donor-name-pulse {
+    animation: donor-name-neon-pulse 2.5s ease-in-out infinite;
+    contain: layout style;
+  }
+  .donor-name-pulse-gold {
+    animation: donor-name-gold-pulse 2s ease-in-out infinite;
+    contain: layout style;
+  }
+}
+
 /* Rank badge subtle pulse for gold rank */
 @keyframes donor-rank-glow {
   0%, 100% { box-shadow: 0 0 4px rgba(250, 204, 21, 0.2); }
