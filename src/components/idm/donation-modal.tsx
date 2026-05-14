@@ -180,9 +180,9 @@ export function DonationModal({ open, onOpenChange, defaultType = 'season', defa
 
       if (res.ok) {
         setSelectedDivision(div);
-        setSubmitResult({ success: true, message: data.message });
-        addNotification('donation', `${donorName.trim()} ${effectiveType === 'weekly' ? 'menyawer' : 'mendonasi'} ${formatCurrency(finalAmount)}! 🎉`);
-        toast.success('Donasi berhasil!', { description: `Terima kasih, ${donorName.trim()}!` });
+        setSubmitResult({ success: true, message: data.donation?.status === 'pending' ? `Terima kasih, ${donorName.trim()}! Donasi Anda sedang menunggu konfirmasi admin setelah pembayaran dikonfirmasi.` : data.message });
+        addNotification('donation', `${donorName.trim()} ${effectiveType === 'weekly' ? 'menyawer' : 'mendonasi'} ${formatCurrency(finalAmount)}! Menunggu konfirmasi.`);
+        toast.success('Donasi dicatat!', { description: `Terima kasih, ${donorName.trim()}! Silakan lakukan pembayaran.` });
         // Set default active payment to first available
         if (availablePayments.length > 0) {
           setActivePayment(availablePayments[0].key);

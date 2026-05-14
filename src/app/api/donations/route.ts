@@ -48,14 +48,12 @@ export async function POST(request: Request) {
       resolvedTournamentId = activeTournament?.id || null;
     }
 
-    // Check if admin is adding the donation — auto-approve if so
-    const isAdmin = await (async () => {
-      try {
-        const { requireAdmin } = await import('@/lib/api-auth');
-        const result = await requireAdmin(request);
-        return !(result instanceof NextResponse);
-      } catch { return false; }
-    })();
+    // ═══ Auto-approve logic ═══
+    // Only auto-approve when explicitly submitted from admin panel (source: 'admin').
+    // Public modal submissions (hero banner "Sawer Pool" button) are ALWAYS pending,
+    // even if the submitter happens to be an admin.
+    // Flow: User sawer → status=pending → user transfers → admin verifies → admin approves.
+    const isAdminManualAdd = body.source === 'admin';
 
     const donation = await db.donation.create({
       data: {
@@ -64,7 +62,7 @@ export async function POST(request: Request) {
         message: message?.trim() || null,
         type: donationType,
         division: donationDivision,
-        status: isAdmin ? 'approved' : 'pending',
+        status: isAdminManualAdd ? 'approved' : 'pending',
         tournamentId: donationType === 'weekly' ? resolvedTournamentId : null,
         seasonId: resolvedSeasonId,
       },
@@ -92,8 +90,8 @@ export async function POST(request: Request) {
       console.warn('[DONATIONS_PLAYER_MATCH] Failed:', matchError);
     }
 
-    // ★ If auto-approved (admin added), trigger the same award logic as manual approval
-    if (isAdmin && donation.status === 'approved' && donationType === 'weekly') {
+    // ★ If auto-approved (admin manual add), trigger the same award logic as manual approval
+    if (isAdminManualAdd && donation.status === 'approved' && donationType === 'weekly') {
       try {
         const { autoAwardSawerSkin } = await import('@/lib/sawer-auto-award');
         await autoAwardSawerSkin(donation.donorName);
@@ -151,7 +149,7 @@ export async function POST(request: Request) {
 
     // Pusher: Notify real-time clients about new donation
     void pusherTrigger(PUSHER_CHANNELS.FEED, PUSHER_EVENTS.FEED_UPDATED, {
-      type: isAdmin ? 'donation-approved' : 'donation-created',
+      type: isAdminManualAdd ? 'donation-approved' : 'donation-created',
       donationId: donation.id,
       amount: donation.amount,
       donorName: donation.donorName,

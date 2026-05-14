@@ -299,7 +299,7 @@ export function AdminPanel() {
     mutationFn: async (data: { donorName: string; amount: number; message: string; type: string; tournamentId?: string }) => {
       const res = await authFetch('/api/donations', {
         method: 'POST',
-        body: JSON.stringify({ ...data, division: storeDivision, seasonId: stats?.season?.id }),
+        body: JSON.stringify({ ...data, division: storeDivision, seasonId: stats?.season?.id, tournamentId: stats?.activeTournament?.id, source: 'admin' }),
       });
       if (!res.ok) { const d = await res.json(); throw new Error(d.error); }
       return res.json();
