@@ -7,6 +7,7 @@ import { autoAwardTournamentSkins } from '@/lib/skin-auto-award';
 import { getSafeErrorMessage } from '@/lib/api-error';
 import { pusherTrigger, PUSHER_CHANNELS, PUSHER_EVENTS } from '@/lib/pusher';
 import { createAuditLog } from '@/lib/audit';
+import { revalidateTag, revalidatePath } from 'next/cache';
 import { NextResponse } from 'next/server';
 
 export async function POST(
@@ -136,6 +137,56 @@ export async function POST(
     }
     if (thirdMatch) {
       rank3TeamIds = thirdMatch.winnerId ? [thirdMatch.winnerId] : [];
+    }
+  } else if (format === 'upper_semi') {
+    // Double-elimination format (Upper Semi):
+    // Brackets: upper (semi + upper final), lower (lower rounds + lower final), grand_final
+    // Rank 1: Grand Final winner
+    // Rank 2: Grand Final loser
+    // Rank 3: Lower Bracket Final loser
+    const completedMatches = tournament.matches.filter(m => m.status === 'completed');
+
+    // Find Grand Final match
+    let finalMatch = completedMatches.find(m => m.bracket === 'grand_final');
+    if (!finalMatch) {
+      // Fallback: match with groupLabel 'GF' or 'Final'
+      finalMatch = completedMatches.find(m => m.groupLabel === 'GF' || m.groupLabel === 'Final');
+    }
+
+    if (finalMatch) {
+      rank1TeamId = finalMatch.winnerId;
+      rank2TeamId = finalMatch.loserId;
+    }
+
+    // Find Lower Bracket Final (highest round in lower bracket)
+    const lowerMatches = completedMatches.filter(m => m.bracket === 'lower');
+    if (lowerMatches.length > 0) {
+      const maxLowerRound = Math.max(...lowerMatches.map(m => m.round));
+      const lowerFinal = lowerMatches.find(m => m.round === maxLowerRound);
+      if (lowerFinal?.loserId) {
+        rank3TeamIds = [lowerFinal.loserId];
+      }
+    }
+
+    // Fallback: if no Grand Final found, determine from match wins
+    if (!rank1TeamId && tournament.teams.length > 0) {
+      const teamWins: Record<string, number> = {};
+      for (const team of tournament.teams) {
+        teamWins[team.id] = 0;
+      }
+      for (const match of completedMatches) {
+        if (match.winnerId && teamWins[match.winnerId] !== undefined) {
+          teamWins[match.winnerId]++;
+        }
+      }
+
+      const sortedTeamIds = Object.entries(teamWins)
+        .sort((a, b) => b[1] - a[1])
+        .map(([id]) => id);
+
+      if (sortedTeamIds[0]) rank1TeamId = sortedTeamIds[0];
+      if (sortedTeamIds[1]) rank2TeamId = sortedTeamIds[1];
+      if (sortedTeamIds[2]) rank3TeamIds = [sortedTeamIds[2]];
     }
   } else if (format === 'swiss') {
     // Swiss format: Swiss rounds followed by playoff bracket (SF/Final/3rd place)
@@ -367,6 +418,20 @@ export async function POST(
     where: { id },
     data: { status: 'completed', finalizedAt: new Date(), completedAt: new Date() },
   });
+
+  // ===== INVALIDATE CACHES =====
+  // Finalization changes champion data, standings, and points —
+  // must purge all relevant caches so the landing page and dashboard update immediately.
+  try {
+    revalidateTag('league-data');
+    revalidateTag('landing-stats');
+    revalidateTag('landing-league');
+    revalidatePath('/');
+    revalidatePath('/api/stats');
+    revalidatePath('/api/league');
+  } catch (cacheErr) {
+    console.warn('[FINALIZE] Cache revalidation failed (non-critical):', cacheErr);
+  }
 
   // ===== AUTO-CLOSE SEASON if week 10 finalized =====
   try {

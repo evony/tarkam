@@ -325,3 +325,24 @@ Stage Summary:
 - Shimmer is fully animated (moving diagonal sweep) using framer-motion
 - Theme-aware: automatically uses the correct skin color (gold/platinum/diamond/emerald/maroon)
 - CSS shimmer classes in globals.css kept for potential future use
+---
+Task ID: 1
+Agent: Main Agent
+Task: Fix Juara Tarkam Week 1 not appearing on landing page and dashboard after finalization
+
+Work Log:
+- Investigated the issue by checking the stats API response - found weeklyChampions[0].winnerTeam was null
+- Queried the database directly - discovered all teams had isWinner=false and rank=null
+- Identified root cause: tournament format was `upper_semi` (double-elimination) but the finalization route only handled `single_elimination`, `group_stage`, and `swiss` formats
+- The `upper_semi` format uses brackets: `upper` (semi-finals + upper final), `lower` (lower rounds + lower final), `grand_final`
+- Added `upper_semi` format handling to finalization route: finds Grand Final match (bracket='grand_final') for Rank 1/2, and Lower Bracket Final loser for Rank 3
+- Added cache invalidation (revalidateTag + revalidatePath) to the finalize route - this was completely missing before
+- Ran retroactive fix script to set correct team ranks, isWinner flags, and award prize points for existing Week 1 tournament
+- Verified the fix by checking the API - weeklyChampions now correctly shows Tim Predator as Week 1 champion with 3 players
+
+Stage Summary:
+- Root cause: `upper_semi` format not handled in finalization route
+- Fix: Added format handler + fallback logic for unrecognized formats
+- Data fix: Manually corrected team ranks, isWinner flags, and awarded prize points for Week 1
+- Cache fix: Added revalidateTag/revalidatePath to finalize route
+- API now returns correct champion data for Week 1
