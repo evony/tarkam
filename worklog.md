@@ -215,3 +215,26 @@ Stage Summary:
 - Bracket page format selector now includes "Upper Semi" option
 - Admin tournament manager now has format dropdown with "Upper Semi (Double Elim)" option
 - All existing bracket formats (single_elimination, group_stage, swiss, round_robin) unaffected
+
+---
+Task ID: 6
+Agent: Main Agent
+Task: Fix bug pendaftaran AiTan dan Moy - tidak bisa daftar ulang setelah dihapus admin
+
+Work Log:
+- Queried database: found AiTan has 2 duplicate records (gamertag "AiTan" and "Aitan"), both isActive=false, registrationStatus=approved
+- Found Moy has 1 record, isActive=false, registrationStatus=approved, has Account
+- Root cause 1: GET /api/register only queries isActive=true players, so soft-deleted players are invisible to the duplicate check
+- Root cause 2: POST /api/account/register doesn't reactivate inactive players before trying to create accounts
+- Root cause 3: Duplicate AiTan records with same phone but different gamertag casing
+- Fix 1: Removed isActive:true filter from GET /api/register so soft-deleted players are found
+- Fix 2: Added reactivation logic in POST /api/account/register for both phone-match and gamertag-match flows
+- Fix 3: Deleted duplicate AiTan record (cmp50j1sy0003jo04u06jqm8h), kept original with avatar
+- Fix 4: Reactivated AiTan (cmp2b2mc40000oqxhcosu5i6m) and Moy (cmp3uhol20000ky04wego6flm) with registrationStatus=pending
+- Lint passes, pushed to repo (commit fa075c2)
+
+Stage Summary:
+- Soft-deleted players can now be detected by the registration duplicate check
+- account/register now reactivates inactive players before creating accounts
+- Duplicate AiTan record deleted, original AiTan and Moy reactivated as pending
+- Admin just needs to approve their pending registrations from dashboard
