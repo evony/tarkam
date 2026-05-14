@@ -364,8 +364,8 @@ function DivisionCard({
       </div>
 
       {/* ── CTA Buttons ── */}
-      <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-2">
-        {/* Row 1: Primary actions */}
+      <div className="flex flex-col gap-2">
+        {/* Row 1: Primary action buttons — Daftar, Hasil, Sawer, Arena Live, Payment */}
         <div className="flex flex-wrap items-center gap-2">
           {/* Daftar / Register — always visible, disabled when registration not open */}
           <button
@@ -384,18 +384,6 @@ function DivisionCard({
             {isRegistrationOpen && <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />}
           </button>
 
-          {/* Arena Live */}
-          {showLiveBtn && (
-            <button
-              onClick={(e) => { e.stopPropagation(); goToArenaLive(); }}
-              className="group flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-[10px] sm:text-xs font-bold bg-red-500/15 border border-red-500/30 text-red-400 hover:bg-red-500/25 hover:shadow-[0_0_12px_rgba(239,68,68,0.2)] hover:scale-[1.02] active:scale-95 transition-all duration-200 cursor-pointer"
-            >
-              <Radio className="w-3.5 h-3.5" />
-              <span>Arena Live</span>
-              <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
-            </button>
-          )}
-
           {/* Lihat Hasil */}
           {showResultBtn && (
             <button
@@ -404,6 +392,29 @@ function DivisionCard({
             >
               <Trophy className="w-3.5 h-3.5" />
               <span>Hasil</span>
+              <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+            </button>
+          )}
+
+          {/* Sawer — next to Hasil */}
+          {showSawerBtn && (
+            <button
+              onClick={(e) => { e.stopPropagation(); onSawer?.(); }}
+              className="group flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-[10px] sm:text-xs font-bold bg-idm-gold-warm/10 border border-idm-gold-warm/20 text-idm-gold-warm hover:bg-idm-gold-warm/20 hover:shadow-[0_0_12px_rgba(212,168,83,0.2)] hover:scale-[1.02] active:scale-95 transition-all duration-200 cursor-pointer"
+            >
+              <Gift className="w-3.5 h-3.5" />
+              <span>Sawer</span>
+            </button>
+          )}
+
+          {/* Arena Live */}
+          {showLiveBtn && (
+            <button
+              onClick={(e) => { e.stopPropagation(); goToArenaLive(); }}
+              className="group flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-[10px] sm:text-xs font-bold bg-red-500/15 border border-red-500/30 text-red-400 hover:bg-red-500/25 hover:shadow-[0_0_12px_rgba(239,68,68,0.2)] hover:scale-[1.02] active:scale-95 transition-all duration-200 cursor-pointer"
+            >
+              <Radio className="w-3.5 h-3.5" />
+              <span>Arena Live</span>
               <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
             </button>
           )}
@@ -421,27 +432,14 @@ function DivisionCard({
           )}
         </div>
 
-        {/* Row 2: Secondary — Sawer, Prize Pool */}
-        <div className="flex flex-wrap items-center gap-2">
-          {/* Sawer */}
-          {showSawerBtn && (
-            <button
-              onClick={(e) => { e.stopPropagation(); onSawer?.(); }}
-              className="group flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-[10px] sm:text-xs font-bold bg-idm-gold-warm/10 border border-idm-gold-warm/20 text-idm-gold-warm hover:bg-idm-gold-warm/20 hover:shadow-[0_0_12px_rgba(212,168,83,0.2)] hover:scale-[1.02] active:scale-95 transition-all duration-200 cursor-pointer"
-            >
-              <Gift className="w-3.5 h-3.5" />
-              <span>Sawer</span>
-            </button>
-          )}
-
-          {/* Prize Pool info — always visible */}
-          {tournament && (
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] sm:text-xs font-bold bg-idm-gold-warm/10 border border-idm-gold-warm/20 text-idm-gold-warm">
-              <Coins className="w-3.5 h-3.5" />
-              <span>{prizePool > 0 ? formatCurrencyShort(prizePool) : 'Rp 0'}</span>
-            </div>
-          )}
-        </div>
+        {/* Row 2: PrizePool — standalone below */}
+        {tournament && (
+          <div className="flex items-center gap-2 px-3 py-2 rounded-lg text-[10px] sm:text-xs font-bold bg-idm-gold-warm/10 border border-idm-gold-warm/20 text-idm-gold-warm">
+            <Coins className="w-4 h-4" />
+            <span className="uppercase tracking-wider text-[9px] sm:text-[10px] opacity-70">PrizePool</span>
+            <span className="text-xs sm:text-sm font-black">{prizePool > 0 ? formatCurrencyShort(prizePool) : 'Rp 0'}</span>
+          </div>
+        )}
       </div>
     </div>
   );
