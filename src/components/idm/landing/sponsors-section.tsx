@@ -59,7 +59,7 @@ export function SponsorsSection() {
           </div>
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3 sm:gap-4">
             {[0, 1, 2, 3, 4, 5].map(i => (
-              <div key={i} className="aspect-[5/3] rounded-xl bg-idm-gold-warm/5 animate-pulse" style={{ animationDelay: `${i * 100}ms` }} />
+              <div key={i} className="aspect-[7/3] rounded-xl bg-idm-gold-warm/5 animate-pulse" style={{ animationDelay: `${i * 100}ms` }} />
             ))}
           </div>
         </div>
@@ -94,7 +94,7 @@ export function SponsorsSection() {
             const logo = sponsor.logo;
             const inner = (
               <div
-                className={`group relative rounded-xl border aspect-[5/3] overflow-hidden transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_0_24px_rgba(212,168,83,0.12)] ${CARD_STYLE}`}
+                className={`group relative rounded-xl border aspect-[7/3] overflow-hidden transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_0_24px_rgba(212,168,83,0.12)] ${CARD_STYLE}`}
               >
                 {logo ? (
                   <Image
