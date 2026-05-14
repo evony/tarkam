@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import Image from 'next/image';
+import { AvatarMedia } from '@/components/ui/avatar-media';
 import {
   Trophy, Music, Users, Shield, Crown, Wallet, Flame, Play, Zap, Star, Medal,
 } from 'lucide-react';
@@ -288,7 +288,7 @@ export function ChampionsSection({
                                 ...(member.role === 'captain' ? { ringColor: 'rgba(212,168,83,0.5)' } : {}),
                               }}
                             >
-                              <Image
+                              <AvatarMedia
                                 src={getAvatarUrl(member.gamertag, member.division as 'male' | 'female', member.avatar)}
                                 alt={member.gamertag}
                                 width={64}
@@ -513,12 +513,13 @@ export function ChampionsSection({
                                       aspectRatio: isCenter ? '3/4.5' : '3/4',
                                     }}
                                   >
-                                    <Image
+                                    <AvatarMedia
                                       src={avatarUrl}
                                       alt={player.gamertag}
                                       fill
                                       sizes="(max-width: 768px) 33vw, 200px"
                                       className="object-cover object-top"
+                                      objectPosition="top"
                                       loading="lazy"
                                     />
                                     {/* Dark overlay gradient */}

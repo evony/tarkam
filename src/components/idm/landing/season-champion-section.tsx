@@ -1,6 +1,6 @@
 'use client';
 
-import Image from 'next/image';
+import { AvatarMedia } from '@/components/ui/avatar-media';
 import { Crown, Trophy, Flame, Calendar, Music, Shield, Swords, TrendingUp, Users, Medal, Heart, Gem } from 'lucide-react';
 import { SectionHeader, AnimatedSection } from './shared';
 import { ClubLogoImage } from '@/components/idm/club-logo-image';
@@ -268,7 +268,7 @@ function BintangMingguIniDuo({
         <div className="relative flex-1">
           {hasMale ? (
             <>
-              <Image
+              <AvatarMedia
                 src={getAvatarUrl(malePerformer.gamertag, 'male', malePerformer.avatar)}
                 alt={malePerformer.gamertag}
                 fill
@@ -342,7 +342,7 @@ function BintangMingguIniDuo({
         <div className="relative flex-1">
           {hasFemale ? (
             <>
-              <Image
+              <AvatarMedia
                 src={getAvatarUrl(femalePerformer.gamertag, 'female', femalePerformer.avatar)}
                 alt={femalePerformer.gamertag}
                 fill
@@ -466,7 +466,7 @@ function SultanOfSeasonCard({ sultans, setSelectedPlayer }: {
         {/* Avatar */}
         <div className="relative w-14 h-14 sm:w-16 sm:h-16 shrink-0 rounded-xl overflow-hidden border-2"
           style={{ borderColor: SULTAN_EMERALD, boxShadow: `0 0 12px ${hexToRgba(SULTAN_EMERALD, 0.3)}` }}>
-          <Image
+          <AvatarMedia
             src={getAvatarUrl(sultan.gamertag, sultan.division === 'female' ? 'female' : 'male', sultan.avatar)}
             alt={sultan.gamertag}
             width={64}
@@ -646,7 +646,7 @@ function DuoChampionCard({
                 className="relative w-24 sm:w-32 lg:w-36 shrink-0 rounded-2xl overflow-hidden bg-gradient-to-br from-idm-male/25 to-idm-male/5 border-idm-male/30"
                 style={{ aspectRatio: '3/4' }}
               >
-                <Image
+                <AvatarMedia
                   src={getAvatarUrl(latestMale.player.gamertag, 'male', latestMale.player.avatar)}
                   alt={latestMale.player.gamertag}
                   width={144}
@@ -786,7 +786,7 @@ function DuoChampionCard({
                 className="relative w-24 sm:w-32 lg:w-36 shrink-0 rounded-2xl overflow-hidden bg-gradient-to-br from-idm-female/25 to-idm-female/5 border-idm-female/30"
                 style={{ aspectRatio: '3/4' }}
               >
-                <Image
+                <AvatarMedia
                   src={getAvatarUrl(latestFemale.player.gamertag, 'female', latestFemale.player.avatar)}
                   alt={latestFemale.player.gamertag}
                   width={144}
@@ -942,7 +942,7 @@ function DuoChampionCard({
                         }}
                       >
                         <div className="relative w-8 h-8 rounded-full overflow-hidden shrink-0" style={{ border: `1.5px solid ${hexToRgba(maleAccent, 0.3)}` }}>
-                          <Image
+                          <AvatarMedia
                             src={getAvatarUrl(male.player.gamertag, 'male', male.player.avatar)}
                             alt={male.player.gamertag}
                             fill
@@ -991,7 +991,7 @@ function DuoChampionCard({
                         }}
                       >
                         <div className="relative w-8 h-8 rounded-full overflow-hidden shrink-0" style={{ border: `1.5px solid ${hexToRgba(femaleAccent, 0.3)}` }}>
-                          <Image
+                          <AvatarMedia
                             src={getAvatarUrl(female.player.gamertag, 'female', female.player.avatar)}
                             alt={female.player.gamertag}
                             fill
@@ -1233,7 +1233,7 @@ function ClubChampionCard({
                           : 'border-idm-female/15 hover:border-idm-female/30'
                       } ${captainMember?.id === member.id ? 'ring-1 ring-idm-gold-warm/30 border-idm-gold-warm/20' : ''}`}
                     >
-                      <Image
+                      <AvatarMedia
                         src={getAvatarUrl(member.gamertag, member.division, member.avatar)}
                         alt={member.gamertag}
                         width={64}

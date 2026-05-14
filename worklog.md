@@ -696,3 +696,32 @@ Stage Summary:
 - Sidebar now shows correct per-division season progress (e.g., "Week 1/10 • 10%")
 - League API also fixed to use tournament-based week counting (with league match fallback)
 - No more "Week 0/? • 0%" when in Tarkam mode
+
+---
+Task ID: 8
+Agent: Main Agent
+Task: Add video avatar support to champion/MVP/Sultan cards
+
+Work Log:
+- Investigated all components displaying player avatars — found `AvatarMedia` component already exists and supports video
+- Only 2 components (PlayerCard, PlayerProfile) were using AvatarMedia; 11 other avatar locations used raw `<Image>` which breaks with video URLs
+- Updated all champion/MVP/Sultan card components to use `AvatarMedia` instead of raw Next.js `<Image>`:
+  1. weekly-champion-card.tsx (Juara Tarkam - Dashboard)
+  2. champions-section.tsx (Juara Tarkam - Landing)
+  3. mvp-spotlight.tsx (MVP Spotlight - Dashboard)
+  4. mvp-section.tsx (MVP Section - Landing)
+  5. mvp-hall-of-fame.tsx (MVP Hall of Fame - Dashboard)
+  6. ui/mvp-spotlight.tsx (MVP Spotlight UI)
+  7. season-champion-section.tsx (Sultan/Bintang/Duo Champion - Landing)
+- `AvatarMedia` auto-detects video URLs (mp4, Cloudinary /video/upload/, webm) and renders `<video>` tag with autoplay/loop/muted
+- For image URLs, renders Next.js `<Image>` as before — zero visual change for existing image avatars
+- CloudinaryPicker already supports video upload (`accept="image/*,video/mp4,video/webm,video/quicktime"`)
+- Video helper functions already exist in utils: `isVideoUrl()`, `getOptimizedVideoUrl()`, `getVideoPosterUrl()`
+- Lint passes clean, dev server running without errors
+
+Stage Summary:
+- ALL champion/MVP/Sultan cards now support video avatars
+- Admin can upload video (mp4, webm, mov) via CloudinaryPicker for player avatars
+- Video avatars auto-play with loop/muted/playsInline for smooth animated display
+- Fallback poster frame auto-generated from Cloudinary for video avatars
+- Zero visual change for existing image avatars — backward compatible

@@ -1,7 +1,7 @@
 'use client';
 
 import { Star, Crown } from 'lucide-react';
-import Image from 'next/image';
+import { AvatarMedia } from '@/components/ui/avatar-media';
 
 interface MVPSpotlightProps {
   gamertag: string;
@@ -72,7 +72,7 @@ export function MVPSpotlight({
             style={{ borderColor: accentColor }}
           >
             {avatar ? (
-              <Image
+              <AvatarMedia
                 src={avatar}
                 alt={gamertag}
                 fill

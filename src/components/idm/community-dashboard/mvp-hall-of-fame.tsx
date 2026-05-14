@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { getDivisionTheme } from '@/hooks/use-division-theme';
 import { getCommunityTheme } from '@/hooks/use-community-theme';
 import { getAvatarUrl } from '@/lib/utils';
-import Image from 'next/image';
+import { AvatarMedia } from '@/components/ui/avatar-media';
 import type { StatsData, MvpHallOfFameEntry } from '@/types/stats';
 
 /* ═══════════════════════════════════════════
@@ -56,7 +56,7 @@ function WeekSlot({
           style={{ borderColor: accentColor + '30', aspectRatio: '3/4' }}
         >
           {/* Full-cover avatar */}
-          <Image
+          <AvatarMedia
             src={getAvatarUrl(entry.gamertag, division, entry.avatar)}
             alt={entry.gamertag}
             width={80}

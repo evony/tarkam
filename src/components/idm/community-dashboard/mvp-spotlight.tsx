@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { getDivisionTheme } from '@/hooks/use-division-theme';
 import { getCommunityTheme } from '@/hooks/use-community-theme';
 import { getAvatarUrl, clubToString } from '@/lib/utils';
-import Image from 'next/image';
+import { AvatarMedia } from '@/components/ui/avatar-media';
 import type { StatsData, TopPlayer, MvpHallOfFameEntry } from '@/types/stats';
 
 /* ═══════════════════════════════════════════
@@ -213,7 +213,7 @@ function MvpDivisionCard({
           division === 'male' ? 'from-idm-male/25 to-idm-male/5' : 'from-idm-female/25 to-idm-female/5'
         }`} style={{ aspectRatio: '3/4' }}>
           {/* Full-cover avatar */}
-          <Image
+          <AvatarMedia
             src={getAvatarUrl(featuredPlayer.gamertag, division, featuredPlayer.avatar)}
             alt={featuredPlayer.gamertag}
             width={128}

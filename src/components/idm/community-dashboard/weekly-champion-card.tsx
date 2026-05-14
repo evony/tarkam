@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import Image from 'next/image';
+import { AvatarMedia } from '@/components/ui/avatar-media';
 import { Crown, Trophy, Zap, Flame, Music, Shield, Star, Wallet, Users } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { WeekNavigator } from '../week-navigator';
@@ -178,12 +178,12 @@ function DivisionChampionCard({
                       className="w-full rounded-2xl overflow-hidden border-2 border-yellow-500/50"
                       style={{ aspectRatio: '3/4' }}
                     >
-                      <Image
+                      <AvatarMedia
                         src={avatarUrl}
                         alt={player.gamertag}
                         fill
                         sizes="(max-width: 768px) 33vw, 200px"
-                        className="object-cover object-top"
+                        objectPosition="top"
                         loading="lazy"
                       />
                       {/* Dark overlay gradient */}

@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import Image from 'next/image';
+import { AvatarMedia } from '@/components/ui/avatar-media';
 import {
   Music, Shield, Crown, Clock, Flame,
 } from 'lucide-react';
@@ -112,12 +112,13 @@ export function MvpSection({
                       <div className="absolute top-0 left-0 right-0 h-1 z-20" style={{ backgroundColor: '#06b6d4' }} />
 
                       {/* Full-Bleed Avatar Background */}
-                      <Image
+                      <AvatarMedia
                         src={getAvatarUrl(mvp.gamertag, 'male', mvp.avatar)}
                         alt={mvp.gamertag}
                         fill
                         sizes="50vw"
-                        className="object-cover object-[center_25%] group-hover:scale-105 transition-transform duration-700"
+                        objectPosition="center 25%"
+                        className="group-hover:scale-105 transition-transform duration-700"
                         loading="lazy"
                       />
 
@@ -274,12 +275,13 @@ export function MvpSection({
                       <div className="absolute top-0 left-0 right-0 h-1 z-20" style={{ backgroundColor: '#a855f7' }} />
 
                       {/* Full-Bleed Avatar Background */}
-                      <Image
+                      <AvatarMedia
                         src={getAvatarUrl(mvp.gamertag, 'female', mvp.avatar)}
                         alt={mvp.gamertag}
                         fill
                         sizes="50vw"
-                        className="object-cover object-[center_25%] group-hover:scale-105 transition-transform duration-700"
+                        objectPosition="center 25%"
+                        className="group-hover:scale-105 transition-transform duration-700"
                         loading="lazy"
                       />
 
