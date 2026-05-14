@@ -55,7 +55,7 @@ function WeekSlot({
           className={`relative w-full max-w-[80px] rounded-2xl overflow-hidden bg-gradient-to-br ${divisionGradient} border shrink-0`}
           style={{ borderColor: accentColor + '30', aspectRatio: '3/4' }}
         >
-          {/* Full-cover avatar */}
+          {/* Full-cover avatar — static poster for small cards, no autoplay */}
           <AvatarMedia
             src={getAvatarUrl(entry.gamertag, division, entry.avatar)}
             alt={entry.gamertag}
@@ -63,6 +63,8 @@ function WeekSlot({
             height={107}
             className="w-full h-full object-cover"
             loading="lazy"
+            autoPlay={false}
+            loop={false}
           />
 
           {/* Gradient overlay — same as MVP Spotlight */}
