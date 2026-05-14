@@ -137,9 +137,13 @@ export async function POST(request: Request) {
                 });
               }
 
+              // Set donorBadgeCount to actual approved donation count (avoids double-increment)
+              const approvedCount1 = await db.donation.count({
+                where: { donorName: donation.donorName, status: 'approved', type: 'weekly' },
+              });
               await db.account.update({
                 where: { id: account.id },
-                data: { donorBadgeCount: { increment: 1 } },
+                data: { donorBadgeCount: approvedCount1 },
               });
             }
           }
@@ -327,10 +331,13 @@ export async function PATCH(request: Request) {
                 });
               }
 
-              // Increment donorBadgeCount (permanent heart badge)
+              // Set donorBadgeCount to actual approved donation count (avoids double-increment)
+              const approvedCount2 = await db.donation.count({
+                where: { donorName: donation.donorName, status: 'approved', type: 'weekly' },
+              });
               await db.account.update({
                 where: { id: account.id },
-                data: { donorBadgeCount: { increment: 1 } },
+                data: { donorBadgeCount: approvedCount2 },
               });
             }
           }
