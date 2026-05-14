@@ -71,6 +71,7 @@ export async function POST(
       return NextResponse.json({ error: 'Sponsor already added to tournament' }, { status: 400 });
     }
 
+    // Neon HTTP adapter doesn't support transactions — split create + include into separate calls
     const tournamentSponsor = await db.tournamentSponsor.create({
       data: {
         tournamentId: id,
@@ -78,12 +79,17 @@ export async function POST(
         role: role || 'supporter',
         displayOrder: displayOrder || 0,
       },
+    });
+
+    // Fetch with sponsor relation separately (Neon HTTP compat)
+    const tournamentSponsorWithRelation = await db.tournamentSponsor.findUnique({
+      where: { id: tournamentSponsor.id },
       include: {
         sponsor: true,
       },
     });
 
-    return NextResponse.json({ tournamentSponsor });
+    return NextResponse.json({ tournamentSponsor: tournamentSponsorWithRelation });
   } catch (error) {
     console.error('Error adding sponsor to tournament:', error);
     return NextResponse.json({ error: 'Failed to add sponsor to tournament' }, { status: 500 });

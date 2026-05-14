@@ -48,6 +48,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'sponsorId, tournamentId, and name are required' }, { status: 400 });
     }
 
+    // Neon HTTP adapter doesn't support transactions — split create + include into separate calls
     const prize = await db.sponsoredPrize.create({
       data: {
         sponsorId,
@@ -61,13 +62,18 @@ export async function POST(request: NextRequest) {
         imageUrl,
         isActive: isActive !== false,
       },
+    });
+
+    // Fetch with relations separately (Neon HTTP compat)
+    const prizeWithRelations = await db.sponsoredPrize.findUnique({
+      where: { id: prize.id },
       include: {
-        sponsor: { select: { id: true, name: true, logo: true } },
-        tournament: { select: { id: true, name: true } },
+        sponsor: { select: { id: true, name: true, logo: true, tier: true } },
+        tournament: { select: { id: true, name: true, weekNumber: true, division: true } },
       },
     });
 
-    return NextResponse.json({ prize });
+    return NextResponse.json({ prize: prizeWithRelations });
   } catch (error) {
     console.error('Error creating sponsored prize:', error);
     return NextResponse.json({ error: 'Failed to create sponsored prize' }, { status: 500 });
