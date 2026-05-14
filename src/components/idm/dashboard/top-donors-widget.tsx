@@ -32,6 +32,8 @@ interface TopDonorsWidgetProps {
   onDonate: () => void;
   /** If provided, uses weeklyTopDonors from stats (per active tournament) instead of all-time API */
   statsData?: import('@/types/stats').StatsData;
+  /** Second division stats data — donors from both divisions will be merged */
+  statsData2?: import('@/types/stats').StatsData;
 }
 
 /* ─── Helpers ─── */
@@ -176,7 +178,7 @@ function EmptyDonorsState({ onDonate }: { onDonate: () => void }) {
 
 /* ─── Main Component ─── */
 
-export function TopDonorsWidget({ onDonate, statsData }: TopDonorsWidgetProps) {
+export function TopDonorsWidget({ onDonate, statsData, statsData2 }: TopDonorsWidgetProps) {
   const dt = useDivisionTheme();
 
   // Use weeklyTopDonors from stats if provided, otherwise fall back to all-time API
@@ -188,32 +190,60 @@ export function TopDonorsWidget({ onDonate, statsData }: TopDonorsWidgetProps) {
       return res.json();
     },
     staleTime: 30000,
-    enabled: !statsData?.weeklyTopDonors?.length, // Skip API call if stats data available
+    enabled: !statsData?.weeklyTopDonors?.length && !statsData2?.weeklyTopDonors?.length, // Skip API call if stats data available
   });
 
-  if (isLoading && !statsData?.weeklyTopDonors?.length) return <LoadingSkeleton />;
+  const hasAnyWeekly = (statsData?.weeklyTopDonors?.length ?? 0) > 0 || (statsData2?.weeklyTopDonors?.length ?? 0) > 0;
+  if (isLoading && !hasAnyWeekly) return <LoadingSkeleton />;
+
+  // Merge weeklyTopDonors from both divisions
+  const donorMap = new Map<string, { donorName: string; totalAmount: number; donationCount: number }>();
+  const mergeWeeklyDonors = (donors: import('@/types/stats').TopDonor[]) => {
+    for (const d of donors) {
+      const key = d.donorName.toLowerCase().trim();
+      const existing = donorMap.get(key);
+      if (existing) {
+        donorMap.set(key, {
+          donorName: d.donorName,
+          totalAmount: existing.totalAmount + d.totalAmount,
+          donationCount: existing.donationCount + d.donationCount,
+        });
+      } else {
+        donorMap.set(key, { donorName: d.donorName, totalAmount: d.totalAmount, donationCount: d.donationCount });
+      }
+    }
+  };
 
   // Prefer weekly-scoped donors from stats, fall back to all-time API data
-  const weeklyDonors = statsData?.weeklyTopDonors;
-  const hasWeekly = weeklyDonors && weeklyDonors.length > 0;
+  const weekly1 = statsData?.weeklyTopDonors;
+  const weekly2 = statsData2?.weeklyTopDonors;
+  const hasWeekly = (weekly1 && weekly1.length > 0) || (weekly2 && weekly2.length > 0);
   const apiSummary = data?.summary;
 
-  const donors = hasWeekly
-    ? weeklyDonors!.map(d => ({
+  let donors: { donorName: string; totalAmount: number; donationCount: number; latestType: string; latestDate: string | null }[];
+
+  if (hasWeekly) {
+    if (weekly1?.length) mergeWeeklyDonors(weekly1);
+    if (weekly2?.length) mergeWeeklyDonors(weekly2);
+    donors = Array.from(donorMap.values())
+      .sort((a, b) => b.totalAmount - a.totalAmount)
+      .map(d => ({
         donorName: d.donorName,
         totalAmount: d.totalAmount,
         donationCount: d.donationCount,
         latestType: 'weekly',
         latestDate: null as string | null,
-      }))
-    : (data?.donors ?? []);
+      }));
+  } else {
+    donors = data?.donors ?? [];
+  }
 
-  const weekNum = statsData?.activeTournament?.weekNumber;
+  const weekNum = statsData?.activeTournament?.weekNumber || statsData2?.activeTournament?.weekNumber;
   const weekLabel = hasWeekly && weekNum ? `Week ${weekNum}` : '';
   const totalAmount = hasWeekly
-    ? weeklyDonors!.reduce((s, d) => s + d.totalAmount, 0)
+    ? donors.reduce((s, d) => s + d.totalAmount, 0)
     : (apiSummary?.totalAmount ?? 0);
-  const totalDonors = hasWeekly ? weeklyDonors!.length : (apiSummary?.totalDonors ?? 0);
+  const totalDonors = hasWeekly ? donors.length : (apiSummary?.totalDonors ?? 0);
 
   if (donors.length === 0) return <EmptyDonorsState onDonate={onDonate} />;
 

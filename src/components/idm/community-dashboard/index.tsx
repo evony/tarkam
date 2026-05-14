@@ -1654,7 +1654,7 @@ export function CommunityDashboard() {
 
       {/* ═══ 3. Top Saweran ═══ */}
       <Section sectionId="saweran">
-        <TopDonorsWidget onDonate={() => setDonationOpen(true)} statsData={selectedDivision === 'female' ? femaleData : maleData} />
+        <TopDonorsWidget onDonate={() => setDonationOpen(true)} statsData={selectedDivision === 'female' ? femaleData : maleData} statsData2={selectedDivision === 'female' ? maleData : femaleData} />
       </Section>
 
       {/* ═══ 4. Season Selector ═══ */}

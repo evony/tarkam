@@ -459,3 +459,27 @@ Stage Summary:
 - Sultan of the Week fully visible on both landing page and community dashboard
 - Cross-division support: donors can be Sultan even if division differs from tournament
 - Stats API provides complete Sultan data including city, avatar, and donation details
+
+---
+Task ID: 13
+Agent: Main Agent
+Task: Create teams for Female Week 1 tournament and fix Top Penyawer not showing female donors
+
+Work Log:
+- Created 4 teams for Female Week 1 tournament (upper_semi format):
+  - Tim Arcalya: Arcalya (S), ciki_w (A), Araanii_ (B)
+  - Tim Indy: Indy (S), ysl (A), AiTan (B)
+  - Tim Veronic: Veronicc (S), Moy (A), meatry (B)
+  - Tim Reptil: reptil (S), cheeyaqq (A), Afrona (B)
+- Note: User's "CEYAK" = cheeyaqq in DB, "MEATRY" used for Tim Veronic slot 3 (IYACH/AFFAIR not registered)
+- Tournament status updated to "team_generation", participations to "assigned"
+- Fixed Top Penyawer not showing female donors in community dashboard:
+  - Root cause: TopDonorsWidget only accepted one statsData prop, and community-dashboard passed only maleData when selectedDivision='all'
+  - Added statsData2 prop to TopDonorsWidget for second division
+  - TopDonorsWidget now merges weeklyTopDonors from both divisions (same pattern as CommunityDonors)
+  - Updated community-dashboard/index.tsx to pass both maleData and femaleData to TopDonorsWidget
+
+Stage Summary:
+- Female Week 1 teams created successfully (4 teams, 12 players)
+- Top Penyawer widget now shows donors from BOTH divisions (male + female merged)
+- Same donor appearing in both divisions gets amounts combined
