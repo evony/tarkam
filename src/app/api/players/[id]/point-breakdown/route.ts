@@ -71,7 +71,7 @@ export async function GET(
   return NextResponse.json({
     playerId: player.id,
     gamertag: player.gamertag,
-    totalPoints: player.points,
+    totalPoints: totalCalculated,
     totalWins: player.totalWins,
     streak: player.streak,
     maxStreak: player.maxStreak,

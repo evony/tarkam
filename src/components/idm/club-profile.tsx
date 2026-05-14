@@ -664,23 +664,13 @@ export function ClubProfile({ club, onClose, rank, onPlayerClick }: ClubProfileP
               </div>
               <div className="space-y-1.5 text-xs">
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Bonus Win ({displayWins} win × 2pts)</span>
-                  <span className="font-bold text-idm-gold-warm">+{displayWins * 2} pts</span>
+                  <span className="text-muted-foreground">Win ({displayWins} × 1pt)</span>
+                  <span className="font-bold text-idm-gold-warm">+{displayWins} pts</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Selisih Game ({displayGameDiff > 0 ? '+' : ''}{displayGameDiff})</span>
                   <span className={`font-bold ${displayGameDiff > 0 ? 'text-green-500' : 'text-red-500'}`}>{displayGameDiff > 0 ? '+' : ''}{displayGameDiff} pts</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Partisipasi ({displayTotalMatches} match)</span>
-                  <span className="font-bold text-green-500">+{displayTotalMatches * 5} pts</span>
-                </div>
-                {displayIsUndefeated && displayWins > 0 && (
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Bonus Tak Terkalahkan</span>
-                    <span className="font-bold text-orange-500">+20 pts</span>
-                  </div>
-                )}
                 <div className="h-px bg-border my-1" />
                 <div className="flex justify-between font-bold">
                   <span>Total</span>

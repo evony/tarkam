@@ -527,3 +527,29 @@ Stage Summary:
 - ArrowRight removed from Hasil for mobile space saving
 - Female points discrepancy is NOT a code bug — admin didn't configure prizes for the female tournament
 - Male tournament has 3 prizes (Juara 1=40pts, Juara 2=33pts, MVP=30pts), female has 0 prizes
+
+---
+Task ID: 1
+Agent: Main Agent
+Task: Change "Belum Buka" button to "Selesai" and fix PrizePool centering + female division points
+
+Work Log:
+- Changed "Belum Buka" → "Selesai" on registration button when tournament is completed/registration not open (community-hero.tsx)
+- Fixed PrizePool text centering: changed from flex with justify-center to w-full text-center with inline-flex centered span
+- Investigated female division points with subagent: female points are NOW correct (admin configured prizes & finalized)
+- Found MALE Player.points stale for 6 players (prize points not synced after retroactive fix)
+- Fixed awardPoints() in points.ts: replaced read-then-write pattern with { increment: amount } to prevent race conditions
+- Fixed point-breakdown API: totalPoints now uses totalCalculated from PlayerPoint audit instead of stale Player.points
+- Fixed unified-profile API: added per-season PlayerPoint aggregation for member points (seasonPointsMap)
+- Fixed club-profile "Rincian Poin": removed hardcoded wrong formulas (2pts/win, 5pts participation, +20 undefeated bonus), replaced with correct breakdown (1pt/win + gameDiff)
+- Ran recalculate-points to sync stale male Player.points: zico/Ren/predator 5→45, afroki/kelra/justice 2→35
+- Lint passes, dev server running fine
+
+Stage Summary:
+- "Belum Buka" → "Selesai" on registration button
+- PrizePool text properly centered
+- 6 male players' stale Player.points fixed via recalculate
+- awardPoints() now uses increment instead of read-then-write (prevents future race conditions)
+- Club profile Rincian Poin now shows correct formula: Win (×1pt) + Selisih Game = Total
+- unified-profile API now returns per-season player points (not stale lifetime points)
+- point-breakdown API returns totalCalculated instead of Player.points

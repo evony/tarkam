@@ -98,6 +98,27 @@ export async function GET(request: Request) {
   const maleMembers = fullProfile.members.filter(m => m.player.division === 'male').length;
   const femaleMembers = fullProfile.members.filter(m => m.player.division === 'female').length;
 
+  // Get per-season player points for all club members (to avoid stale Player.points)
+  const memberPlayerIds = fullProfile.members.map(m => m.player.id);
+  const activeSeasonIds = sameNameClubs.map(c => c.seasonId).filter(Boolean) as string[];
+
+  let seasonPointsMap = new Map<string, number>();
+  if (memberPlayerIds.length > 0 && activeSeasonIds.length > 0) {
+    const playerSeasonPoints = await db.playerPoint.groupBy({
+      by: ['playerId'],
+      where: {
+        playerId: { in: memberPlayerIds },
+        seasonId: { in: activeSeasonIds },
+      },
+      _sum: { amount: true },
+    });
+    for (const row of playerSeasonPoints) {
+      if (row.playerId && row._sum.amount) {
+        seasonPointsMap.set(row.playerId, row._sum.amount);
+      }
+    }
+  }
+
   // Check if this club is a Liga IDM Season champion
   const championSeasons = await db.season.findMany({
     where: {
@@ -131,7 +152,7 @@ export async function GET(request: Request) {
     femaleMembers,
     // Club IDs per division for reference
     clubIds: sameNameClubs.map(c => ({ id: c.id, division: c.division })),
-    // Members with division info
+    // Members with division info — use per-season points when available
     members: fullProfile.members.map(m => ({
       id: m.player.id,
       gamertag: m.player.gamertag,
@@ -139,7 +160,7 @@ export async function GET(request: Request) {
       division: m.player.division,
       avatar: m.player.avatar,
       tier: m.player.tier,
-      points: m.player.points,
+      points: seasonPointsMap.get(m.player.id) ?? m.player.points,
       totalWins: m.player.totalWins,
       totalMvp: m.player.totalMvp,
       streak: m.player.streak,

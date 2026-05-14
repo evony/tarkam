@@ -41,14 +41,11 @@ export async function awardPoints(params: {
     },
   });
 
-  // Update player total points (lifetime)
-  const player = await db.player.findUnique({ where: { id: playerId } });
-  if (player) {
-    await db.player.update({
-      where: { id: playerId },
-      data: { points: player.points + amount },
-    });
-  }
+  // Update player total points (lifetime) — use increment to avoid race conditions
+  await db.player.update({
+    where: { id: playerId },
+    data: { points: { increment: amount } },
+  });
 }
 
 /**
