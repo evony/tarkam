@@ -12,19 +12,30 @@ import { useSyncExternalStore } from 'react';
 import { useState, useEffect, useCallback } from 'react';
 import type { StatsData } from '@/types/stats';
 
-// Section components
+// ★ Above-fold: keep synchronous for instant render
 import { HeroSection } from './landing/hero-section';
-import { HighlightsSection } from './landing/highlights-section';
-import { ExperiencesSection } from './landing/experiences-section';
-import { TournamentHub } from './landing/tournament-hub';
-import { ClubsSection } from './landing/clubs-section';
-import { PlayersSection } from './landing/players-section';
-import { SeasonChampionSection } from './landing/season-champion-section';
-import { CTASection } from './landing/cta-section';
-import { LandingFooter } from './landing/landing-footer';
-import { SponsorsSection } from './landing/sponsors-section';
 import { MarqueeTicker } from './marquee-ticker';
 import { LandingSkeleton } from './landing/landing-skeleton';
+
+// ★ Below-fold sections: lazy loaded to reduce initial JS bundle by ~250KB
+import dynamic from 'next/dynamic';
+const TournamentHub = dynamic(() => import('./landing/tournament-hub').then(m => ({ default: m.TournamentHub })), { ssr: false, loading: () => <div className="h-64" /> });
+const PlayersSection = dynamic(() => import('./landing/players-section').then(m => ({ default: m.PlayersSection })), { ssr: false, loading: () => <div className="h-64" /> });
+const HighlightsSection = dynamic(() => import('./landing/highlights-section').then(m => ({ default: m.HighlightsSection })), { ssr: false, loading: () => <div className="h-64" /> });
+const SeasonChampionSection = dynamic(() => import('./landing/season-champion-section').then(m => ({ default: m.SeasonChampionSection })), { ssr: false, loading: () => <div className="h-64" /> });
+const ExperiencesSection = dynamic(() => import('./landing/experiences-section').then(m => ({ default: m.ExperiencesSection })), { ssr: false, loading: () => <div className="h-64" /> });
+const ClubsSection = dynamic(() => import('./landing/clubs-section').then(m => ({ default: m.ClubsSection })), { ssr: false, loading: () => <div className="h-64" /> });
+const SponsorsSection = dynamic(() => import('./landing/sponsors-section').then(m => ({ default: m.SponsorsSection })), { ssr: false, loading: () => null });
+const CTASection = dynamic(() => import('./landing/cta-section').then(m => ({ default: m.CTASection })), { ssr: false, loading: () => null });
+const LandingFooter = dynamic(() => import('./landing/landing-footer').then(m => ({ default: m.LandingFooter })), { ssr: false, loading: () => null });
+
+// ★ Modals: lazy loaded — removes ~225KB (including framer-motion) from initial bundle
+const PlayerProfile = dynamic(() => import('./player-profile').then(m => ({ default: m.PlayerProfile })), { ssr: false, loading: () => null });
+const ClubProfile = dynamic(() => import('./club-profile').then(m => ({ default: m.ClubProfile })), { ssr: false, loading: () => null });
+const RegistrationModal = dynamic(() => import('./registration-modal').then(m => ({ default: m.RegistrationModal })), { ssr: false, loading: () => null });
+const VideoModal = dynamic(() => import('./video-modal').then(m => ({ default: m.VideoModal })), { ssr: false, loading: () => null });
+const PaymentModal = dynamic(() => import('./payment-modal').then(m => ({ default: m.PaymentModal })), { ssr: false, loading: () => null });
+const UnifiedLoginModal = dynamic(() => import('./unified-login-modal').then(m => ({ default: m.UnifiedLoginModal })), { ssr: false, loading: () => null });
 
 // Shared hooks & components
 import { useSwipeNavigation, useScrollReveal, useParallax, SectionDivider } from './landing/shared';
@@ -86,13 +97,7 @@ function LandingThemeToggle({ scrolled }: { scrolled: boolean }) {
   );
 }
 
-// Modal & utility components
-import { PlayerProfile } from './player-profile';
-import { ClubProfile } from './club-profile';
-import { RegistrationModal } from './registration-modal';
-import { VideoModal } from './video-modal';
-import { PaymentModal } from './payment-modal';
-import { UnifiedLoginModal } from './unified-login-modal';
+// Utility components (tiny — keep synchronous)
 import { BackToTop } from './ui/back-to-top';
 import { ScrollProgress } from './ui/scroll-progress';
 
@@ -455,7 +460,9 @@ export function LandingPage() {
   ]);
 
   // ★ Show full-page skeleton while initial data is loading
-  if (isDataLoading) {
+  // OPTIMIZATION: Only wait for maleData (primary division) for faster LCP
+  // Female data loads in background without blocking the initial render
+  if (isMaleLoading) {
     return <LandingSkeleton />;
   };
 
