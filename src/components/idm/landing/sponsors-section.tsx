@@ -134,18 +134,18 @@ export function SponsorsSection() {
                   const logo = sponsor.logo;
                   const inner = (
                     <div
-                      className={`group relative flex items-center justify-center rounded-xl border aspect-[2/1] overflow-hidden transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_0_24px_rgba(212,168,83,0.12)] ${TIER_STYLES[tier] || TIER_STYLES['other']}`}
+                      className={`group relative rounded-xl border aspect-[2/1] overflow-hidden transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_0_24px_rgba(212,168,83,0.12)] ${TIER_STYLES[tier] || TIER_STYLES['other']}`}
                     >
                       {logo ? (
                         <Image
                           src={logo}
                           alt={sponsor.name}
                           fill
-                          className="object-contain p-3 sm:p-4 opacity-80 group-hover:opacity-100 transition-opacity duration-300"
+                          className="object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-300"
                           unoptimized
                         />
                       ) : (
-                        <span className="text-xs sm:text-sm font-semibold text-idm-gold-warm/70 group-hover:text-idm-gold-warm transition-colors text-center px-2">
+                        <span className="absolute inset-0 flex items-center justify-center text-xs sm:text-sm font-semibold text-idm-gold-warm/70 group-hover:text-idm-gold-warm transition-colors text-center px-2">
                           {sponsor.name}
                         </span>
                       )}
