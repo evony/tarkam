@@ -618,7 +618,7 @@ export function Dashboard() {
                                     name: p.gamertag,
                                     maxStreak: 0,
                                     club: undefined,
-                                    division: p.division || division,
+                                    division: division,
                                   })}
                                 />
                               ))}
