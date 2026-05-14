@@ -238,3 +238,25 @@ Stage Summary:
 - account/register now reactivates inactive players before creating accounts
 - Duplicate AiTan record deleted, original AiTan and Moy reactivated as pending
 - Admin just needs to approve their pending registrations from dashboard
+
+---
+Task ID: 7
+Agent: Main Agent
+Task: Prevent future re-registration issues when admin deletes a player
+
+Work Log:
+- Analyzed the full registration lifecycle: admin delete → player re-register
+- Found root cause: admin DELETE only set isActive=false but kept registrationStatus=approved
+- This caused confusion in checkDuplicates() because the player looked "approved but inactive"
+- Fix 1: Admin DELETE now sets both isActive=false AND registrationStatus='rejected'
+- Fix 2: Admin DELETE also invalidates the player's Account session (sessionInvalidatedAt=now) so they can't login while deleted
+- Fix 3: Updated admin dialog message to say "bisa mendaftar ulang kembali" instead of "tidak muncul di daftar"
+- Previous fixes from Task 6 still apply: GET /api/register includes inactive players, account/register reactivates inactive players
+
+Stage Summary:
+- Complete fix cycle for deleted player re-registration:
+  1. Admin deletes → isActive=false, registrationStatus=rejected, session invalidated
+  2. Player tries to register → duplicate check finds them (now includes inactive), sees "rejected" → canReRegister=true
+  3. Player clicks "Daftar Ulang" → system reactivates player, resets data, sets pending
+  4. Admin approves → player fully active again
+- This will NOT happen again in the future for any deleted player

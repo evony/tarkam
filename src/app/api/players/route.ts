@@ -252,17 +252,6 @@ export async function DELETE(request: Request) {
       data: { isActive: false, registrationStatus: 'rejected' },
     });
 
-    // ★ Also invalidate the player's Account session so they can't login while deleted
-    // (We don't delete the Account — just invalidate the session so they must re-register)
-    try {
-      await db.account.updateMany({
-        where: { playerId: id },
-        data: { sessionInvalidatedAt: new Date() },
-      });
-    } catch {
-      // Account might not exist — ignore
-    }
-
     await createAuditLog({
       adminId: authResult.id,
       adminName: authResult.username,
