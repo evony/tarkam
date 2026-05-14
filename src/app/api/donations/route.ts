@@ -52,7 +52,7 @@ export async function POST(request: Request) {
 
     // ═══ Auto-approve logic ═══
     // Only auto-approve when explicitly submitted from admin panel (source: 'admin').
-    // Public modal submissions (hero banner "Sawer Pool" button) are ALWAYS pending,
+    // Public modal submissions (hero banner "Sawer" button) are ALWAYS pending,
     // even if the submitter happens to be an admin.
     // Flow: User sawer → status=pending → user transfers → admin verifies → admin approves.
     const isAdminManualAdd = body.source === 'admin';

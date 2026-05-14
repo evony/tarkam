@@ -414,7 +414,7 @@ function DivisionCard({
             className="group flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-[10px] sm:text-xs font-bold bg-idm-gold-warm/10 border border-idm-gold-warm/20 text-idm-gold-warm hover:bg-idm-gold-warm/20 hover:shadow-[0_0_12px_rgba(212,168,83,0.2)] hover:scale-[1.02] active:scale-95 transition-all duration-200 cursor-pointer"
           >
             <Gift className="w-3.5 h-3.5" />
-            <span>Sawer Pool</span>
+            <span>Sawer</span>
           </button>
         )}
 

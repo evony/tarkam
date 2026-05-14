@@ -226,7 +226,7 @@ export function DonationModal({ open, onOpenChange, defaultType = 'season', defa
   const typeConfig = {
     weekly: {
       icon: Gift,
-      title: 'Sawer Prize Pool',
+      title: 'Sawer',
       subtitle: 'Sawer untuk menambah hadiah mingguan tournament',
       accent: '#d4a853',
       accentLight: '#e8d5a3',
@@ -490,7 +490,7 @@ export function DonationModal({ open, onOpenChange, defaultType = 'season', defa
               <div className={`text-center p-4 sm:p-5 rounded-2xl ${config.bgSubtle} ${config.borderSubtle} border`}>
                 <p className="text-xs text-muted-foreground mb-0.5">{donorName.trim()}</p>
                 <p className={`text-2xl font-black ${config.textAccent}`}>{formatCurrency(finalAmount)}</p>
-                <p className="text-[10px] text-muted-foreground/70 mt-0.5">Sawer Prize Pool</p>
+                <p className="text-[10px] text-muted-foreground/70 mt-0.5">Sawer</p>
               </div>
 
               {/* Division selection heading */}
