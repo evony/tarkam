@@ -6,11 +6,11 @@ import {
   Trophy, Calendar, Swords,
   Star, Users, Flame, TrendingUp,
   Medal, Gem, Award, Crown,
-  Music, Shield,
+  Music, Shield, Heart,
 } from 'lucide-react';
 import { SectionHeader, AnimatedSection } from './shared';
 import { getAvatarUrl, hexToRgba } from '@/lib/utils';
-import type { StatsData, TopPlayer, MvpHallOfFameEntry, WeeklyChampion } from '@/types/stats';
+import type { StatsData, TopPlayer, MvpHallOfFameEntry, WeeklyChampion, SultanOfWeekly } from '@/types/stats';
 
 /* ═══════════════════════════════════════════════════════════════
    TARKAM IDM — HIGHLIGHTS SECTION (PUNCAK PRESTASI)
@@ -77,7 +77,7 @@ interface TarkamWeeklyTeam {
 /* ─── Highlight Item Type ─── */
 interface HighlightItem {
   id: string;
-  type: 'rank1' | 'performance' | 'rank1-club' | 'tarkam-weekly' | 'mvp';
+  type: 'rank1' | 'performance' | 'rank1-club' | 'tarkam-weekly' | 'mvp' | 'sultan';
   title: string;
   subtitle: string;
   description: string;
@@ -105,6 +105,7 @@ interface HighlightItem {
     male?: TarkamWeeklyTeam;
     female?: TarkamWeeklyTeam;
   };
+  sultanData?: SultanOfWeekly;
 }
 
 /* ─── Color System — Consistent with Landing Page ─── */
@@ -132,6 +133,19 @@ const PLATINUM = {
   glow: 'rgba(229,228,226,0.5)',
   icon: '⭐',
   rgb: '229,228,226',
+} as const;
+
+/* ─── Maroon Sultan Constants — Sultan of the Week ─── */
+const MAROON = {
+  frame: '#800020',
+  nameLight: '#F5C6CB',
+  nameMid: '#D4576A',
+  nameDark: '#800020',
+  badgeBg: 'rgba(128,0,32,0.2)',
+  badgeText: '#F5C6CB',
+  glow: 'rgba(128,0,32,0.5)',
+  icon: '❤️',
+  rgb: '128,0,32',
 } as const;
 
 /* ─── Build Highlight Items from Data ─── */
@@ -310,6 +324,51 @@ function buildHighlights(
       ...(femaleMvpSource ? [{ icon: Trophy, label: 'Points ♀', value: `${femaleMvpSource.points}` }] : []),
     ],
   });
+
+  // ─── 3. Sultan of the Week — Top penyawer (single card, highest from both divisions) ───
+  const maleSultanList = maleData?.sultanOfWeekly || [];
+  const femaleSultanList = femaleData?.sultanOfWeekly || [];
+  const latestMaleSultan = maleSultanList.length > 0 ? maleSultanList[maleSultanList.length - 1] : null;
+  const latestFemaleSultan = femaleSultanList.length > 0 ? femaleSultanList[femaleSultanList.length - 1] : null;
+
+  // Pick the Sultan with the highest totalAmount across both divisions
+  let topSultan: SultanOfWeekly | null = null;
+  if (latestMaleSultan && latestFemaleSultan) {
+    topSultan = latestMaleSultan.totalAmount >= latestFemaleSultan.totalAmount ? latestMaleSultan : latestFemaleSultan;
+  } else {
+    topSultan = latestMaleSultan || latestFemaleSultan;
+  }
+
+  if (topSultan) {
+    const sultanDivision = topSultan.tournamentDivision as 'male' | 'female';
+    const sultanAccentColor = sultanDivision === 'male' ? COLORS.maleAccent : COLORS.femaleAccent;
+    items.push({
+      id: 'sultan',
+      type: 'sultan',
+      title: topSultan.player?.gamertag || topSultan.donorName,
+      subtitle: 'Sultan of the Week',
+      description: `Penyawer terbesar Week ${topSultan.weekNumber}! ${topSultan.donorName} menyawer ${topSultan.donationCount}x dengan total ${topSultan.totalAmount >= 1000 ? `${topSultan.totalAmount / 1000}K` : topSultan.totalAmount}.`,
+      badge: 'SULTAN',
+      thumbLabel: 'Sultan',
+      accentColor: MAROON.frame,
+      accentLight: MAROON.nameMid,
+      isDuo: false,
+      male: undefined,
+      female: undefined,
+      maleAccent: sultanAccentColor,
+      femaleAccent: COLORS.femaleAccent,
+      maleAccentLight: sultanDivision === 'male' ? COLORS.maleAccentLight : COLORS.femaleAccentLight,
+      femaleAccentLight: COLORS.femaleAccentLight,
+      isEmpty: false,
+      weekNumber: topSultan.weekNumber,
+      sultanData: topSultan,
+      metadata: [
+        { icon: Crown, label: 'Total Saweran', value: `Rp ${(topSultan.totalAmount / 1000).toFixed(0)}K` },
+        { icon: Award, label: 'Jumlah Sawer', value: `${topSultan.donationCount}x` },
+        { icon: Calendar, label: 'Minggu', value: `Week ${topSultan.weekNumber}` },
+      ],
+    });
+  }
 
   return items;
 }
@@ -719,6 +778,253 @@ function MvpCard({
 
 
 /* ═══════════════════════════════════════════════════════════════
+   SULTAN CARD — Sultan of the Week highlight
+   Single card showing top penyawer with maroon/donor skin theme
+   ═══════════════════════════════════════════════════════════════ */
+function SultanCard({
+  sultan,
+  setSelectedPlayer,
+}: {
+  sultan: SultanOfWeekly;
+  setSelectedPlayer: (player: any) => void;
+}) {
+  const sultanDivision = sultan.tournamentDivision as 'male' | 'female';
+  const divisionAccent = sultanDivision === 'male' ? COLORS.maleAccent : COLORS.femaleAccent;
+  const divisionAccentLight = sultanDivision === 'male' ? COLORS.maleAccentLight : COLORS.femaleAccentLight;
+  const divisionLabel = sultanDivision === 'male' ? 'MALE' : 'FEMALE';
+  const divisionIcon = sultanDivision === 'male' ? Music : Shield;
+  const divisionRgb = sultanDivision === 'male' ? '46,159,255' : '255,45,120';
+  const hasPlayer = !!sultan.player;
+
+  return (
+    <div
+      className="rounded-[20px] overflow-hidden group/sultan-card transition-all duration-500"
+      style={{
+        background: `linear-gradient(165deg, rgba(${MAROON.rgb},0.12) 0%, rgba(${divisionRgb},0.06) 20%, var(--bg-mid) 50%, rgba(${MAROON.rgb},0.04) 100%)`,
+        border: `1px solid rgba(${MAROON.rgb},0.25)`,
+        boxShadow: `0 2px 8px rgba(0,0,0,0.3), 0 8px 32px rgba(${MAROON.rgb},0.08), inset 0 1px 0 rgba(255,255,255,0.03)`,
+        willChange: 'transform',
+      }}
+    >
+      {/* Maroon luxury top accent bar with glow */}
+      <div className="relative h-1.5" style={{ background: 'linear-gradient(90deg, #800020, #d4576a, #800020, #f5c6cb, #800020)' }}>
+        <div className="absolute inset-x-0 -bottom-2 h-4" style={{ background: 'linear-gradient(to bottom, rgba(128,0,32,0.25), transparent)' }} />
+      </div>
+
+      {/* Content */}
+      <div className="p-4 sm:p-6">
+        {/* Sultan header */}
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2.5">
+            <div
+              className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
+              style={{
+                background: `linear-gradient(135deg, rgba(${MAROON.rgb},0.2), rgba(${divisionRgb},0.1))`,
+                border: `1px solid rgba(${MAROON.rgb},0.3)`,
+                boxShadow: `0 0 10px rgba(${MAROON.rgb},0.1)`,
+              }}
+            >
+              <Heart className="w-4 h-4" style={{ color: MAROON.nameMid }} />
+            </div>
+            <div>
+              <h4
+                className="text-xs font-black uppercase tracking-wider"
+                style={{ color: MAROON.nameMid }}
+              >
+                SULTAN OF THE WEEK
+              </h4>
+              <p className="text-[9px] font-medium uppercase tracking-wider" style={{ color: COLORS.secondaryText }}>
+                TOP PENYAWER
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <span
+              className="text-[8px] font-semibold px-1.5 py-0.5 rounded-md"
+              style={{
+                backgroundColor: `rgba(${divisionRgb},0.1)`,
+                color: divisionAccentLight,
+                border: `1px solid rgba(${divisionRgb},0.2)`,
+              }}
+            >
+              {divisionLabel}
+            </span>
+            <span
+              className="text-[8px] font-semibold px-1.5 py-0.5 rounded-md"
+              style={{
+                backgroundColor: `rgba(${MAROON.rgb},0.1)`,
+                color: MAROON.nameMid,
+                border: `1px solid rgba(${MAROON.rgb},0.2)`,
+              }}
+            >
+              W{sultan.weekNumber}
+            </span>
+          </div>
+        </div>
+
+        {hasPlayer ? (
+          /* Full avatar card */
+          <div
+            className="relative rounded-2xl overflow-hidden cursor-pointer group/sultan transition-all duration-300 hover:shadow-lg"
+            style={{
+              minHeight: '280px',
+              border: `1px solid rgba(${MAROON.rgb},0.15)`,
+              boxShadow: `0 4px 16px rgba(${MAROON.rgb},0.08), 0 4px 12px rgba(${divisionRgb},0.06), inset 0 1px 0 rgba(255,255,255,0.03)`,
+              background: `linear-gradient(165deg, rgba(${MAROON.rgb},0.08) 0%, var(--bg-mid) 40%, rgba(${divisionRgb},0.02) 100%)`,
+            }}
+            onClick={() => {
+              if (sultan.player) {
+                setSelectedPlayer({
+                  id: sultan.player.id,
+                  gamertag: sultan.player.gamertag,
+                  avatar: sultan.player.avatar,
+                  tier: sultan.player.tier,
+                  points: sultan.player.points,
+                  totalWins: sultan.player.totalWins,
+                  totalMvp: sultan.player.totalMvp,
+                  streak: sultan.player.streak,
+                  division: sultan.player.division,
+                  city: sultan.player.city,
+                  club: sultan.player.club,
+                });
+              }
+            }}
+          >
+            {/* Full-body avatar */}
+            <div className="relative w-full" style={{ minHeight: '280px' }}>
+              <Image
+                src={getAvatarUrl(sultan.player!.gamertag, sultanDivision, sultan.player!.avatar)}
+                alt={sultan.player!.gamertag}
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-cover object-top transition-transform duration-500 group-hover/sultan:scale-105"
+                loading="lazy"
+              />
+              {/* Bottom gradient overlay */}
+              <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, var(--bg-mid) 0%, color-mix(in srgb, var(--bg-mid) 60%, transparent) 25%, transparent 55%)' }} />
+              {/* Maroon + division accent glow at bottom */}
+              <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(ellipse at 50% 90%, rgba(${MAROON.rgb},0.1), rgba(${divisionRgb},0.08), transparent 60%)` }} />
+            </div>
+
+            {/* Heart badge top-right */}
+            <div className="absolute top-2.5 right-2.5 z-20">
+              <div
+                className="w-8 h-8 rounded-full flex items-center justify-center shadow-lg"
+                style={{
+                  background: `linear-gradient(135deg, ${MAROON.nameLight}, ${MAROON.nameDark})`,
+                  boxShadow: `0 2px 10px ${MAROON.glow}, 0 0 20px ${MAROON.glow}`,
+                }}
+              >
+                <span className="text-sm" style={{ filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.5))' }}>❤️</span>
+              </div>
+            </div>
+
+            {/* Sultan label badge top-left */}
+            <div className="absolute top-2.5 left-2.5 z-20">
+              <span
+                className="text-[8px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider"
+                style={{
+                  backgroundColor: `rgba(${MAROON.rgb},0.2)`,
+                  color: MAROON.nameLight,
+                  border: `1px solid rgba(${MAROON.rgb},0.35)`,
+                  backdropFilter: 'blur(8px)',
+                }}
+              >
+                ❤️ SULTAN
+              </span>
+            </div>
+
+            {/* Player info at bottom */}
+            <div className="absolute bottom-0 inset-x-0 px-3 pb-3 pt-10 z-10">
+              {/* Gamertag */}
+              <p
+                className="text-base sm:text-lg font-black truncate drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]"
+                style={{
+                  color: MAROON.nameLight,
+                  textShadow: `0 0 6px ${MAROON.glow}, 0 0 16px ${MAROON.glow}`,
+                }}
+              >
+                {sultan.player!.gamertag}
+              </p>
+
+              {/* Stats row */}
+              <div className="flex items-center gap-1.5 mt-1 flex-wrap">
+                <span
+                  className="text-[8px] font-bold px-1.5 py-0.5 rounded"
+                  style={{
+                    backgroundColor: `rgba(${MAROON.rgb},0.12)`,
+                    color: MAROON.nameLight,
+                    border: `1px solid rgba(${MAROON.rgb},0.18)`,
+                  }}
+                >
+                  Rp {sultan.totalAmount >= 1000 ? `${(sultan.totalAmount / 1000).toFixed(0)}K` : sultan.totalAmount}
+                </span>
+                <span
+                  className="text-[8px] font-bold px-1.5 py-0.5 rounded"
+                  style={{
+                    backgroundColor: `rgba(${MAROON.rgb},0.08)`,
+                    color: MAROON.nameMid,
+                    border: `1px solid rgba(${MAROON.rgb},0.12)`,
+                  }}
+                >
+                  {sultan.donationCount}x sawer
+                </span>
+                {sultan.player!.tier && (
+                  <span
+                    className="text-[8px] font-bold px-1.5 py-0.5 rounded"
+                    style={{ backgroundColor: 'rgba(212,168,83,0.12)', color: COLORS.gold }}
+                  >
+                    {sultan.player!.tier}
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+        ) : (
+          /* No player matched — show donor name only */
+          <div
+            className="flex flex-col items-center justify-center gap-3 rounded-2xl"
+            style={{
+              minHeight: '280px',
+              backgroundColor: `rgba(${MAROON.rgb},0.05)`,
+              border: `1px solid rgba(${MAROON.rgb},0.15)`,
+            }}
+          >
+            <div
+              className="w-16 h-16 rounded-full flex items-center justify-center"
+              style={{
+                background: `linear-gradient(135deg, ${MAROON.nameLight}, ${MAROON.nameDark})`,
+                boxShadow: `0 2px 10px ${MAROON.glow}`,
+              }}
+            >
+              <Heart className="w-8 h-8" style={{ color: 'white' }} />
+            </div>
+            <p className="text-sm font-bold" style={{ color: MAROON.nameLight }}>
+              {sultan.donorName}
+            </p>
+            <div className="flex items-center gap-2">
+              <span
+                className="text-[9px] font-bold px-2 py-0.5 rounded"
+                style={{
+                  backgroundColor: `rgba(${MAROON.rgb},0.12)`,
+                  color: MAROON.nameLight,
+                }}
+              >
+                Rp {sultan.totalAmount >= 1000 ? `${(sultan.totalAmount / 1000).toFixed(0)}K` : sultan.totalAmount}
+              </span>
+              <span className="text-[9px]" style={{ color: COLORS.secondaryText }}>
+                {sultan.donationCount}x sawer
+              </span>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
    MAIN HIGHLIGHTS SECTION COMPONENT
    ═══════════════════════════════════════════════════════════════ */
 export function HighlightsSection({
@@ -745,6 +1051,7 @@ export function HighlightsSection({
   /* ─── Extract individual items ─── */
   const tarkamItem = highlights.find(h => h.type === 'tarkam-weekly');
   const mvpItem = highlights.find(h => h.type === 'mvp');
+  const sultanItem = highlights.find(h => h.type === 'sultan');
 
   return (
     <section
@@ -804,28 +1111,38 @@ export function HighlightsSection({
           )}
 
           {/* ═══════════════════════════════════════════════════════════
-              2. MVP TERBARU — MVP Arena
-              Grid of 2 MVP cards (Male/Female)
+              2. SULTAN OF THE WEEK + MVP TERBARU — side by side
+              Sultan (single card) + MVP (duo cards) in 2-col layout
               ═══════════════════════════════════════════════════════════ */}
-          {mvpItem && (
-            <div className="reveal reveal-fade-up">
-              {/* MVP Cards — grid 2-col, compact width */}
-              <div className="grid grid-cols-2 gap-3 sm:gap-4 max-w-2xl mx-auto">
-                <MvpCard
-                  division="male"
-                  player={mvpItem.male}
+          <div className="reveal reveal-fade-up">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              {/* Sultan of the Week — single card */}
+              {sultanItem?.sultanData && (
+                <SultanCard
+                  sultan={sultanItem.sultanData}
                   setSelectedPlayer={setSelectedPlayer}
-                  setPreferredSkinType={setPreferredSkinType}
                 />
-                <MvpCard
-                  division="female"
-                  player={mvpItem.female}
-                  setSelectedPlayer={setSelectedPlayer}
-                  setPreferredSkinType={setPreferredSkinType}
-                />
-              </div>
+              )}
+
+              {/* MVP Terbaru — stacked male/female cards */}
+              {mvpItem && (
+                <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                  <MvpCard
+                    division="male"
+                    player={mvpItem.male}
+                    setSelectedPlayer={setSelectedPlayer}
+                    setPreferredSkinType={setPreferredSkinType}
+                  />
+                  <MvpCard
+                    division="female"
+                    player={mvpItem.female}
+                    setSelectedPlayer={setSelectedPlayer}
+                    setPreferredSkinType={setPreferredSkinType}
+                  />
+                </div>
+              )}
             </div>
-          )}
+          </div>
         </div>
       </div>
 
