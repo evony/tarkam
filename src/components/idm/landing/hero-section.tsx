@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import Image from 'next/image';
 import { Zap, Star, Eye, ArrowRight, Flame, Users, Trophy, Swords } from 'lucide-react';
 import { getAvatarUrl } from '@/lib/utils';
+import { AvatarMedia } from '@/components/ui/avatar-media';
 import type { StatsData } from '@/types/stats';
 
 /* ═══════════════════════════════════════════════════════════════
@@ -389,7 +390,7 @@ export function HeroSection({
                       borderColor: 'rgba(46,159,255,0.5)',
                       boxShadow: '0 0 20px rgba(46,159,255,0.2), inset 0 0 10px rgba(46,159,255,0.1)',
                     }}>
-                      <Image src={maleChampionAvatar} alt={maleChampion.gamertag} fill sizes="96px" className="object-cover" priority />
+                      <AvatarMedia src={maleChampionAvatar} alt={maleChampion.gamertag} fill sizes="96px" className="object-cover" priority />
                       {/* Diamond shimmer overlay — division color */}
                       <div className="absolute inset-0 rounded-full" style={{ background: 'linear-gradient(135deg, rgba(79,195,247,0.15) 0%, transparent 50%, rgba(0,188,212,0.1) 100%)' }} />
                     </div>
@@ -442,7 +443,7 @@ export function HeroSection({
                       borderColor: 'rgba(255,45,120,0.5)',
                       boxShadow: '0 0 20px rgba(255,45,120,0.2), inset 0 0 10px rgba(255,45,120,0.1)',
                     }}>
-                      <Image src={femaleChampionAvatar} alt={femaleChampion.gamertag} fill sizes="96px" className="object-cover" priority />
+                      <AvatarMedia src={femaleChampionAvatar} alt={femaleChampion.gamertag} fill sizes="96px" className="object-cover" priority />
                       {/* Diamond shimmer overlay — division color */}
                       <div className="absolute inset-0 rounded-full" style={{ background: 'linear-gradient(135deg, rgba(255,45,120,0.15) 0%, transparent 50%, rgba(255,92,154,0.1) 100%)' }} />
                     </div>

@@ -9,7 +9,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useDivisionTheme, getDivisionTheme } from '@/hooks/use-division-theme';
 import { useAppStore } from '@/lib/store';
 import { getAvatarUrl, clubToString } from '@/lib/utils';
-import Image from 'next/image';
+import { AvatarMedia } from '@/components/ui/avatar-media';
 
 /* ─── Types ─── */
 interface StreakPlayer {
@@ -193,14 +193,7 @@ function SingleDivisionStreakCard({
             <div className={`w-12 h-12 rounded-2xl overflow-hidden border-2 ${
               topStreak.streak >= 5 ? 'border-orange-400/60' : 'border-idm-gold-warm/40'
             }`}>
-              <Image
-                src={getAvatarUrl(topStreak.gamertag, division, topStreak.avatar)}
-                alt={topStreak.gamertag}
-                width={48}
-                height={48}
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
+              <AvatarMedia src={getAvatarUrl(topStreak.gamertag, division, topStreak.avatar)} alt={topStreak.gamertag} width={48} height={48} className="w-full h-full object-cover" loading="lazy" />
             </div>
             {/* Crown badge */}
             {topStreak.streak >= 3 && (
@@ -256,14 +249,7 @@ function SingleDivisionStreakCard({
 
                 {/* Avatar */}
                 <div className="w-6 h-6 rounded-full overflow-hidden border border-border/30 shrink-0">
-                  <Image
-                    src={getAvatarUrl(player.gamertag, division, player.avatar)}
-                    alt={player.gamertag}
-                    width={24}
-                    height={24}
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                  />
+                  <AvatarMedia src={getAvatarUrl(player.gamertag, division, player.avatar)} alt={player.gamertag} width={24} height={24} className="w-full h-full object-cover" loading="lazy" />
                 </div>
 
                 {/* Name + club */}

@@ -28,6 +28,7 @@ import { useCommunityTheme, getCommunityTheme } from '@/hooks/use-community-them
 import { useDivisionTheme, getDivisionTheme } from '@/hooks/use-division-theme';
 import { useAppStore } from '@/lib/store';
 import { formatCurrencyShort, clubToString, getAvatarUrl } from '@/lib/utils';
+import { AvatarMedia } from '@/components/ui/avatar-media';
 import { PlayerProfile } from '../player-profile';
 import { ClubProfile } from '../club-profile';
 
@@ -423,11 +424,7 @@ function ChampionBadge({
       {/* Avatar */}
       <div className="relative shrink-0">
         <div className="w-11 h-11 lg:w-12 lg:h-12 rounded-2xl overflow-hidden border-2 shadow-lg" style={{ borderColor: accentColor + '40' }}>
-          <img
-            src={avatarUrl}
-            alt={champion.gamertag}
-            className="w-full h-full object-cover"
-          />
+          <AvatarMedia src={avatarUrl} alt={champion.gamertag} width={48} height={48} className="w-full h-full object-cover" />
         </div>
         {/* Crown overlay */}
         <div className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-gradient-to-br from-yellow-500 to-amber-600 flex items-center justify-center shadow-lg border border-yellow-400/30">

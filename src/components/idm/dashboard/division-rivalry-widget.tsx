@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { useDivisionTheme, getDivisionTheme } from '@/hooks/use-division-theme';
 import { useAppStore } from '@/lib/store';
 import { getAvatarUrl } from '@/lib/utils';
-import Image from 'next/image';
+import { AvatarMedia } from '@/components/ui/avatar-media';
 
 /* ========== Types ========== */
 interface RivalPlayer {
@@ -98,14 +98,7 @@ function RivalPlayerCard({
           <div className={`w-10 h-10 sm:w-14 sm:h-14 rounded-lg overflow-hidden border-2 transition-all duration-300 group-hover:scale-105 ${
             isLeading ? 'border-idm-gold-warm/50 shadow-[0_0_12px_rgba(229,190,74,0.2)] rivalry-leading-glow' : 'border-white/10'
           }`}>
-            <Image
-              src={getAvatarUrl(player.gamertag, division, player.avatar)}
-              alt={player.gamertag}
-              width={56}
-              height={56}
-              loading="lazy"
-              className="w-full h-full object-cover"
-            />
+            <AvatarMedia src={getAvatarUrl(player.gamertag, division, player.avatar)} alt={player.gamertag} width={56} height={56} loading="lazy" className="w-full h-full object-cover" />
           </div>
           {/* Leading crown */}
           {isLeading && (

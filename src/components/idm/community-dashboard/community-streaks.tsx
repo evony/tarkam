@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { getDivisionTheme } from '@/hooks/use-division-theme';
 import { useCommunityTheme } from '@/hooks/use-community-theme';
 import { getAvatarUrl, clubToString } from '@/lib/utils';
-import Image from 'next/image';
+import { AvatarMedia } from '@/components/ui/avatar-media';
 
 /* ═══════════════════════════════════════════
    Types
@@ -202,14 +202,7 @@ export function CommunityStreaks({ selectedDivision = 'all' }: CommunityStreaksP
             <div className={`w-14 h-14 rounded-2xl overflow-hidden border-2 ${
               topStreak.streak >= 5 ? 'border-orange-400/60 shadow-[0_0_12px_rgba(249,115,22,0.2)]' : 'border-idm-gold-warm/40'
             }`}>
-              <Image
-                src={getAvatarUrl(topStreak.gamertag, topStreak.division, topStreak.avatar)}
-                alt={topStreak.gamertag}
-                width={56}
-                height={56}
-                loading="lazy"
-                className="w-full h-full object-cover"
-              />
+              <AvatarMedia src={getAvatarUrl(topStreak.gamertag, topStreak.division, topStreak.avatar)} alt={topStreak.gamertag} width={56} height={56} loading="lazy" className="w-full h-full object-cover" />
             </div>
             {/* Crown badge */}
             {topStreak.streak >= 3 && (
@@ -274,14 +267,7 @@ export function CommunityStreaks({ selectedDivision = 'all' }: CommunityStreaksP
 
                   {/* Avatar */}
                   <div className="w-7 h-7 rounded-full overflow-hidden border border-border/30 shrink-0">
-                    <Image
-                      src={getAvatarUrl(player.gamertag, player.division, player.avatar)}
-                      alt={player.gamertag}
-                      width={28}
-                      height={28}
-                      loading="lazy"
-                      className="w-full h-full object-cover"
-                    />
+                    <AvatarMedia src={getAvatarUrl(player.gamertag, player.division, player.avatar)} alt={player.gamertag} width={28} height={28} loading="lazy" className="w-full h-full object-cover" />
                   </div>
 
                   {/* Name + club */}

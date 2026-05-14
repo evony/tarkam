@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { useDivisionTheme } from '@/hooks/use-division-theme';
 import { useAppStore } from '@/lib/store';
 import { getAvatarUrl, toStrictDivision } from '@/lib/utils';
-import Image from 'next/image';
+import { AvatarMedia } from '@/components/ui/avatar-media';
 
 interface RivalPlayer {
   id: string;
@@ -156,7 +156,7 @@ export function DivisionRivalry({ setSelectedPlayer }: DivisionRivalryProps) {
               <div className={`w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden border-2 transition-all duration-300 group-hover/p1:scale-105 ${
                 pointDiff > 0 ? 'border-idm-gold-warm/40' : 'border-white/10'
               }`}>
-                <Image
+                <AvatarMedia
                   src={getAvatarUrl(player1.gamertag, toStrictDivision(division), player1.avatar)}
                   alt={player1.gamertag}
                   width={80}
@@ -196,7 +196,7 @@ export function DivisionRivalry({ setSelectedPlayer }: DivisionRivalryProps) {
               <div className={`w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden border-2 transition-all duration-300 group-hover/p2:scale-105 ${
                 pointDiff <= 0 ? 'border-idm-gold-warm/40' : 'border-white/10'
               }`}>
-                <Image
+                <AvatarMedia
                   src={getAvatarUrl(player2.gamertag, toStrictDivision(division), player2.avatar)}
                   alt={player2.gamertag}
                   width={80}

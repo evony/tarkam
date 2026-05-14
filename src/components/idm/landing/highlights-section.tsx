@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { SectionHeader, AnimatedSection } from './shared';
 import { getAvatarUrl, hexToRgba } from '@/lib/utils';
+import { AvatarMedia } from '@/components/ui/avatar-media';
 import type { StatsData, TopPlayer, MvpHallOfFameEntry, WeeklyChampion, SultanOfWeekly } from '@/types/stats';
 
 /* ═══════════════════════════════════════════════════════════════
@@ -482,7 +483,7 @@ function DivisionCard({
                 >
                   {/* Full-body avatar */}
                   <div className="relative w-full h-full" style={{ minHeight: '360px' }}>
-                    <Image
+                    <AvatarMedia
                       src={getAvatarUrl(player.gamertag, division, player.avatar)}
                       alt={player.gamertag}
                       fill
@@ -678,7 +679,7 @@ function MvpCard({
           >
             {/* Full-body avatar */}
             <div className="relative w-full" style={{ minHeight: '280px' }}>
-              <Image
+              <AvatarMedia
                 src={player.imageUrl || getAvatarUrl(player.gamertag, division)}
                 alt={player.gamertag}
                 fill
@@ -892,7 +893,7 @@ function SultanCard({
           >
             {/* ─── Left: Portrait Avatar ─── */}
             <div className="relative w-[58%] shrink-0 overflow-hidden" style={{ minHeight: '320px' }}>
-              <Image
+              <AvatarMedia
                 src={getAvatarUrl(sultan.player!.gamertag, sultanDivision, sultan.player!.avatar)}
                 alt={sultan.player!.gamertag}
                 fill

@@ -557,6 +557,7 @@ export function Dashboard() {
                         <PlayerCard
                           key={p.id}
                           gamertag={p.gamertag}
+                          avatar={p.avatar}
                           points={p.points}
                           totalWins={p.totalWins}
                           totalMvp={p.totalMvp}
@@ -607,6 +608,7 @@ export function Dashboard() {
                                 <PlayerCard
                                   key={p.id}
                                   gamertag={p.gamertag}
+                                  avatar={p.avatar}
                                   points={p.points}
                                   totalWins={p.totalWins}
                                   totalMvp={p.totalMvp}
@@ -673,6 +675,7 @@ export function Dashboard() {
                             <div className="col-span-1">
                               <PlayerCard
                                 gamertag={selectedMvp.gamertag}
+                                avatar={selectedMvp.avatar}
                                 points={selectedMvp.points}
                                 totalWins={selectedMvp.totalWins}
                                 totalMvp={selectedMvp.totalMvp}
