@@ -88,7 +88,9 @@ function TournamentCard({
   const totalClubs = data?.clubs?.length || 0;
   const totalMatches = data?.recentMatches?.length || 0;
   // PrizePool: use per-tournament prize pool (resets each week), fallback to season aggregate
-  const prizePool = data?.activeTournamentPrizePool ?? (division.key === 'female'
+  // Uses || (not ??) so that activeTournamentPrizePool=0 (no base prize set for this week)
+  // falls through to the season aggregate malePrizePool/femalePrizePool.
+  const prizePool = data?.activeTournamentPrizePool || (division.key === 'female'
     ? (data?.femalePrizePool || data?.totalPrizePool || 0)
     : (data?.malePrizePool || data?.totalPrizePool || 0));
 

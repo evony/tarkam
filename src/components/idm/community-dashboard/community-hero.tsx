@@ -234,7 +234,9 @@ function DivisionCard({
   const bpm = tournament?.bpm;
   const location = tournament?.location;
   // PrizePool: use per-tournament prize pool (resets each week), fallback to season aggregate
-  const prizePool = data?.activeTournamentPrizePool ?? (division === 'female'
+  // Uses || (not ??) so that activeTournamentPrizePool=0 (no base prize set for this week)
+  // falls through to the season aggregate malePrizePool/femalePrizePool.
+  const prizePool = data?.activeTournamentPrizePool || (division === 'female'
     ? (data?.femalePrizePool || data?.totalPrizePool || 0)
     : (data?.malePrizePool || data?.totalPrizePool || 0));
 

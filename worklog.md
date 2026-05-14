@@ -744,3 +744,24 @@ Stage Summary:
 - Fix: Compute `sultanOfWeekly` during SSR by adding cross-division player query and donation grouping logic
 - Verified: Both male and female SSR now include `sultanOfWeekly` data (e.g., male: Rizal_ with 10K, female: ysl with 100K)
 - Files modified: `src/lib/landing-data.ts`
+
+---
+Task ID: 1
+Agent: main
+Task: Fix prize pool inconsistency on landing page (10K) vs dashboard (260K)
+
+Work Log:
+- Investigated data flow: SSR → React Query → TournamentHub → PrizePool display
+- Found TWO root causes:
+  1. SSR `malePrizePool` computed from weekly donations ONLY (10K), while API computes base prize pool + donations (260K). The SSR was missing `tournaments.prizePool` in the calculation.
+  2. SSR `activeTournamentPrizePool` was hardcoded to `0`, and the `??` (nullish coalescing) operator treats `0` as valid, preventing fallback to `malePrizePool`. The dashboard uses `||` which falls through correctly.
+- Fix 1: Updated SSR prize pool computation in `landing-data.ts` to include base prize pool from tournaments (matching API logic exactly)
+- Fix 2: Computed `activeTournamentPrizePool` properly in SSR instead of hardcoding 0 (finds active tournament + its donations)
+- Fix 3: Changed `??` to `||` in TournamentHub and CommunityHero so `activeTournamentPrizePool=0` falls through to season aggregate
+- Also added `activeTournamentInfo` computation in SSR for the activeTournament field
+
+Stage Summary:
+- SSR and API now compute identical prize pool values
+- Male: activeTournamentPrizePool=0 (no base set for week 2) → falls through to malePrizePool=260000 ✅
+- Female: activeTournamentPrizePool=390000 (completed week 1) ✅
+- Files modified: `src/lib/landing-data.ts`, `src/components/idm/landing/tournament-hub.tsx`, `src/components/idm/community-dashboard/community-hero.tsx`

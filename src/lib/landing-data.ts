@@ -335,10 +335,25 @@ async function fetchLandingStatsInner(division: 'male' | 'female') {
   });
 
   // ── Compute prize pools ──
+  // IMPORTANT: Must match the /api/stats computation exactly:
+  //   malePrizePool = basePrizePool from male tournaments + male weekly donations
+  //   femalePrizePool = basePrizePool from female tournaments + female weekly donations
+  // Previously SSR only counted donations (missing base prize pool), causing
+  // SSR→API data mismatch (e.g. 10K vs 260K for male).
   const weeklyDonations = seasonDonations.filter(d => d.type === 'weekly');
-  const totalPrizePool = weeklyDonations.reduce((sum, d) => sum + d.amount, 0);
-  const malePrizePool = weeklyDonations.filter(d => d.division === 'male').reduce((sum, d) => sum + d.amount, 0);
-  const femalePrizePool = weeklyDonations.filter(d => d.division === 'female').reduce((sum, d) => sum + d.amount, 0);
+  const donationTotal = weeklyDonations.reduce((sum, d) => sum + d.amount, 0);
+  const maleDonationTotal = weeklyDonations.filter(d => d.division === 'male').reduce((sum, d) => sum + d.amount, 0);
+  const femaleDonationTotal = weeklyDonations.filter(d => d.division === 'female').reduce((sum, d) => sum + d.amount, 0);
+
+  // Sum base prize pool from all tournaments in the season (admin-inputted)
+  const basePrizePoolTotal = tournaments.reduce((sum, t) => sum + (t.prizePool || 0), 0);
+  const baseMalePrizePool = tournaments.filter(t => t.division === 'male').reduce((sum, t) => sum + (t.prizePool || 0), 0);
+  const baseFemalePrizePool = tournaments.filter(t => t.division === 'female').reduce((sum, t) => sum + (t.prizePool || 0), 0);
+
+  // Combined: base prize pool (admin) + saweran (donations) — SEASON AGGREGATE
+  const totalPrizePool = basePrizePoolTotal + donationTotal;
+  const malePrizePool = baseMalePrizePool + maleDonationTotal;
+  const femalePrizePool = baseFemalePrizePool + femaleDonationTotal;
   const seasonDonationTotal = seasonDonations.reduce((sum, d) => sum + d.amount, 0);
 
   // ── Top donors ──
@@ -454,6 +469,37 @@ async function fetchLandingStatsInner(division: 'male' | 'female') {
 
   // Sort by weekNumber ascending
   sultanOfWeekly.sort((a, b) => a.weekNumber - b.weekNumber);
+
+  // ── Active Tournament + Prize Pool (SSR) ──
+  // Find the active tournament: non-completed first, then latest in season
+  // This must match the /api/stats logic for consistency
+  const activeTournamentData = tournaments.find(t => t.status !== 'completed')
+    || tournaments[tournaments.length - 1]
+    || null;
+
+  // Compute activeTournamentPrizePool: base prize pool + that tournament's weekly donations
+  const activeTournamentBasePrizePool = activeTournamentData?.prizePool || 0;
+  const activeTournamentWeeklyDonations = weeklyDonations.filter(d => d.tournamentId === activeTournamentData?.id);
+  const activeTournamentDonationTotal = activeTournamentWeeklyDonations.reduce((sum, d) => sum + d.amount, 0);
+  const activeTournamentPrizePool = activeTournamentBasePrizePool + activeTournamentDonationTotal;
+
+  // Build active tournament info object for the UI
+  const activeTournamentInfo = activeTournamentData ? {
+    id: activeTournamentData.id,
+    name: activeTournamentData.name,
+    weekNumber: activeTournamentData.weekNumber,
+    status: activeTournamentData.status,
+    format: activeTournamentData.format,
+    prizePool: activeTournamentData.prizePool || 0,
+    basePrizePool: activeTournamentData.prizePool || 0,
+    bpm: activeTournamentData.bpm || null,
+    location: activeTournamentData.location || null,
+    scheduledAt: activeTournamentData.scheduledAt || null,
+    _count: {
+      teams: activeTournamentData._count?.teams || 0,
+      participations: activeTournamentData._count?.participations || 0,
+    },
+  } : null;
 
   // ── Batch: player season stats (depends on club member player IDs) ──
   const memberPlayerIds = Array.from(new Set((batchClubMembers as any[]).map((cm: any) => cm.player.id)));
@@ -664,7 +710,7 @@ async function fetchLandingStatsInner(division: 'male' | 'female') {
     totalPrizePool,
     malePrizePool,
     femalePrizePool,
-    activeTournamentPrizePool: 0, // SSR doesn't have activeTournament; client-side React Query will provide the real value
+    activeTournamentPrizePool, // Computed from active tournament base + its donations
     seasonDonationTotal,
     topDonors,
     seasonProgress: {
@@ -678,7 +724,7 @@ async function fetchLandingStatsInner(division: 'male' | 'female') {
     sultanOfWeekly,
     recentMatches: [] as any[],
     upcomingMatches: [] as any[],
-    activeTournament: null as any,
+    activeTournament: activeTournamentInfo,
   };
 }
 
