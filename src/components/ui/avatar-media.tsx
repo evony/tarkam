@@ -36,6 +36,8 @@ interface AvatarMediaProps {
   playsInline?: boolean;
   /** Priority loading for above-the-fold content */
   priority?: boolean;
+  /** Additional inline styles (merged with internal objectPosition) */
+  style?: React.CSSProperties;
 }
 
 /**
@@ -71,6 +73,7 @@ export function AvatarMedia({
   muted = true,
   playsInline = true,
   priority = false,
+  style,
 }: AvatarMediaProps) {
   if (!src) return null;
 
@@ -80,6 +83,8 @@ export function AvatarMedia({
   if (isVideo) {
     const videoSrc = getOptimizedVideoUrl(src);
     const posterSrc = getVideoPosterUrl(src);
+
+    const mergedStyle = { objectPosition, ...style };
 
     if (fill) {
       return (
@@ -91,7 +96,7 @@ export function AvatarMedia({
           muted={muted}
           playsInline={playsInline}
           className={cn('absolute inset-0 w-full h-full', objectFitClass, className)}
-          style={{ objectPosition }}
+          style={mergedStyle}
           aria-label={alt}
           preload="metadata"
         />
@@ -109,12 +114,14 @@ export function AvatarMedia({
         width={width}
         height={height}
         className={cn(objectFitClass, className)}
-        style={{ objectPosition }}
+        style={mergedStyle}
         aria-label={alt}
         preload="metadata"
       />
     );
   }
+
+  const mergedStyle = { objectPosition, ...style };
 
   // Image avatar — use Next.js Image
   if (fill) {
@@ -125,7 +132,7 @@ export function AvatarMedia({
         fill
         sizes={sizes || '(max-width: 640px) 100vw, 512px'}
         className={cn('absolute inset-0', objectFitClass, className)}
-        style={{ objectPosition }}
+        style={mergedStyle}
         loading={priority ? 'eager' : loading}
         priority={priority}
         unoptimized={unoptimized}
@@ -141,7 +148,7 @@ export function AvatarMedia({
       height={height || 80}
       sizes={sizes}
       className={cn(objectFitClass, className)}
-      style={{ objectPosition }}
+      style={mergedStyle}
       loading={priority ? 'eager' : loading}
       priority={priority}
       unoptimized={unoptimized}
