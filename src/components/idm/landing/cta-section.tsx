@@ -23,11 +23,11 @@ const PARTICLES = [
 function TrustBadge({ icon: Icon, value, label }: { icon: React.ComponentType<{ className?: string }>; value: string; label: string }) {
   return (
     <div className="flex flex-col items-center gap-2 badge-premium">
-      <div className="cta-badge-ring w-12 h-12 rounded-2xl bg-[rgba(212,168,83,0.06)] flex items-center justify-center relative">
-        <Icon className="w-5 h-5 text-[#d4a853]/80 relative z-10" />
+      <div className="cta-badge-ring w-14 h-14 rounded-2xl bg-[rgba(212,168,83,0.08)] flex items-center justify-center relative border border-[rgba(212,168,83,0.12)]">
+        <Icon className="w-6 h-6 text-[#d4a853] relative z-10" />
       </div>
-      <span className="cta-count-up text-foreground text-lg font-extrabold tabular-nums tracking-tight">{value}</span>
-      <span className="text-muted-foreground text-[10px] uppercase tracking-widest">{label}</span>
+      <span className="cta-count-up text-foreground text-xl font-extrabold tabular-nums tracking-tight">{value}</span>
+      <span className="text-idm-gold-warm/60 text-[10px] uppercase tracking-widest font-semibold">{label}</span>
     </div>
   );
 }
@@ -94,7 +94,7 @@ export function CTASection({
           </div>
 
           {/* Card content with background to mask the rotating border */}
-          <div className="relative rounded-3xl glass-premium-strong bg-mid/95 px-6 sm:px-10 py-10 sm:py-14 m-[1.5px]">
+          <div className="relative rounded-3xl glass-premium-strong px-6 sm:px-10 py-10 sm:py-14 m-[1.5px]">
             {/* Diamond pattern overlay */}
             <div className="absolute inset-0 rounded-3xl opacity-[0.025] pointer-events-none" style={{ backgroundImage: 'repeating-linear-gradient(45deg, rgba(212,168,83,1) 0, rgba(212,168,83,1) 1px, transparent 1px, transparent 12px), repeating-linear-gradient(-45deg, rgba(212,168,83,1) 0, rgba(212,168,83,1) 1px, transparent 1px, transparent 12px)', backgroundSize: '17px 17px' }} aria-hidden="true" />
             {/* Gold particle trail — CSS pseudo-element */}
@@ -161,7 +161,7 @@ export function CTASection({
         </div>
 
         {/* Trust Badges — Enhanced with gold ring + count-up */}
-        <div className="reveal reveal-fade-up reveal-delay-3 mt-14 flex items-center justify-center gap-4 sm:gap-6 md:gap-14">
+        <div className="reveal reveal-fade-up reveal-delay-3 mt-12 flex items-center justify-center gap-6 sm:gap-10 md:gap-16">
           {badges.map((badge, i) => (
             <span key={i} className="contents">
               {i > 0 && <div className="h-10 w-px bg-[rgba(212,168,83,0.08)]" aria-hidden="true" />}
