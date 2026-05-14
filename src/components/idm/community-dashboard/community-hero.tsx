@@ -425,14 +425,14 @@ function DivisionCard({
           </div>
         )}
 
-        {/* Payment — OVO styled button */}
+        {/* Payment — DANA styled button */}
         {onPayment && (
           <button
             onClick={(e) => { e.stopPropagation(); onPayment(); }}
-            className="group flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-[10px] sm:text-xs font-bold bg-[#4C3494]/15 border border-[#4C3494]/25 text-[#9B7FE6] hover:bg-[#4C3494]/25 hover:shadow-[0_0_12px_rgba(76,52,148,0.2)] hover:scale-[1.02] active:scale-95 transition-all duration-200 cursor-pointer"
+            className="group flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-[10px] sm:text-xs font-bold bg-[#108ee9]/15 border border-[#108ee9]/25 text-[#5cb8f5] hover:bg-[#108ee9]/25 hover:shadow-[0_0_12px_rgba(16,142,233,0.2)] hover:scale-[1.02] active:scale-95 transition-all duration-200 cursor-pointer"
           >
-            <svg className="w-5 h-3 shrink-0" viewBox="0 0 40 16" fill="currentColor">
-              <text x="0" y="13" fontFamily="system-ui, sans-serif" fontWeight="900" fontSize="14" fontStyle="italic" letterSpacing="-0.5">ovo</text>
+            <svg className="w-5 h-3 shrink-0" viewBox="0 0 48 16" fill="currentColor">
+              <text x="0" y="13" fontFamily="system-ui, sans-serif" fontWeight="900" fontSize="13" letterSpacing="1">DANA</text>
             </svg>
             <span>Payment</span>
           </button>
