@@ -221,12 +221,11 @@ export function SkinBadgesRow({ skins, hideSawerAndDonorBadges = false }: SkinBa
     }
   }
 
-  // Filter out the virtual donor_badge and sawer_badge entries (we render them separately)
-  // When hideSawerAndDonorBadges is true (Sultan of the Week context), also hide sawer_* skins
-  let displaySkins = sorted.filter(s => s.type !== 'donor_badge' && s.type !== 'sawer_badge');
-  if (hideSawerAndDonorBadges) {
-    displaySkins = displaySkins.filter(s => !isSawerType(s.type) && s.type !== 'donor');
-  }
+  // Filter out donor, donor_badge, sawer_badge, and sawer_* entries (rendered by dedicated DonorHeartBadge/SawerTierBadge)
+  let displaySkins = sorted.filter(s =>
+    s.type !== 'donor_badge' && s.type !== 'donor' &&
+    s.type !== 'sawer_badge' && !isSawerType(s.type)
+  );
 
   return (
     <div className="inline-flex items-center gap-1" role="group" aria-label="Player skins">
