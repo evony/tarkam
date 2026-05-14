@@ -618,7 +618,7 @@ export function Dashboard() {
                                     name: p.gamertag,
                                     maxStreak: 0,
                                     club: undefined,
-                                    division: undefined,
+                                    division: p.division || division,
                                   })}
                                 />
                               ))}
@@ -684,7 +684,7 @@ export function Dashboard() {
                                   name: selectedMvp.gamertag,
                                   maxStreak: 0,
                                   club: undefined,
-                                  division: undefined,
+                                  division: selectedMvp.division || division,
                                   matches: 0,
                                 })}
                               />

@@ -150,10 +150,11 @@ export function PlayerProfile({ player, onClose, rank, skinMap, preferredSkinTyp
   // This ensures male players always show cyan and female players always show purple
   const dt = getDivisionTheme(playerDivision as 'male' | 'female');
 
-  // ═══ Auto-enrich player data when matches/totalWins are missing or 0 ═══
-  // Many callers (Sultan card, MVP card, search, club members) hardcode matches: 0
-  // because they don't have the full player data. This fetches the real data from the
-  // player API so the modal always shows correct winrate/stats.
+  // ═══ Auto-enrich player data from API ═══
+  // Many callers pass incomplete data (matches: 0, weekly stats instead of totals, etc.)
+  // Always fetch authoritative data from the player API so the modal shows correct
+  // winrate/stats regardless of what the caller passes. Uses 60s cache to avoid
+  // redundant fetches when the same player is opened repeatedly.
   const { data: enrichedPlayerData } = useQuery({
     queryKey: ['player-detail', player.id],
     queryFn: async () => {
@@ -161,13 +162,14 @@ export function PlayerProfile({ player, onClose, rank, skinMap, preferredSkinTyp
       if (!res.ok) return null;
       return res.json();
     },
-    // Only fetch when the player data is incomplete (matches === 0 means missing data)
-    enabled: player.matches === 0 && !!player.id,
+    // Always fetch — callers may pass wrong data (weekly stats, zeros, missing fields)
+    enabled: !!player.id,
     staleTime: 60_000,
     gcTime: 60_000,
   });
 
-  // Merge enriched data: use API data for fields that were 0/missing
+  // Merge enriched data: prefer API data when available (authoritative source)
+  // Use `??` so that 0 from API is used correctly (0 is not nullish)
   const totalWins = enrichedPlayerData?.totalWins ?? player.totalWins;
   const matches = enrichedPlayerData?.matches ?? player.matches;
   const maxStreak = enrichedPlayerData?.maxStreak ?? player.maxStreak;

@@ -818,10 +818,10 @@ function CompactTopFormCard({
               onClick={() => onPlayerClick({
                 ...performer,
                 name: performer.gamertag,
-                totalWins: performer.weeklyWins,
+                totalWins: 0,    // will be enriched from API
                 totalMvp: 0,
-                maxStreak: performer.streak,
-                matches: performer.weeklyMatches,
+                maxStreak: 0,    // will be enriched from API
+                matches: 0,      // will be enriched from API (avoid weekly stats as totals)
                 division,
               } as TopPlayer & { division?: string }, division)}
             />
