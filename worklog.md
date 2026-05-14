@@ -624,3 +624,28 @@ Stage Summary:
 - Prizes were awarded 3x (should be 1x) — confirmed the rollback+finalize bug
 - Fix from Task 3 (adding streak_bonus to rollback deletion) prevents this in the future
 - Admin needs to finalize the tournament again to award correct (single) points
+
+---
+Task ID: 5
+Agent: Main Agent
+Task: Verify and restore female player win history after cleanup script deleted all PlayerPoint records
+
+Work Log:
+- Checked current state of female tournament data after previous context ran out
+- Found tournament was already re-finalized (status: "completed") — admin must have done it
+- Verified all 22 PlayerPoint records exist: match_win, streak_bonus, prize_juara1/2/3, prize_mvp
+- Verified player stats are correct:
+  - meatry: 88pts (3W + 2streak + 53juara1 + 30mvp)
+  - Veronicc/Moy: 58pts (3W + 2streak + 53juara1)
+  - reptil/cheeyaqq/Afrona: 42pts (2W + 40juara2)
+  - Indy/ysl/AiTan: 27pts (1W + 26juara3)
+  - Arcalya/ciki_w/Araanii_: 0pts (0W)
+- Verified match history API returns correct data for all female players
+- Verified point-breakdown API returns accurate data with diff=0
+- Dev server running without errors
+
+Stage Summary:
+- Female tournament data is fully restored and correct after admin re-finalized
+- All APIs returning correct data (players, matches, point-breakdown, achievements)
+- Win history visible through match history API and player profile modal
+- No further code changes needed — data is consistent
