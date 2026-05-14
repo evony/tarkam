@@ -364,79 +364,85 @@ function DivisionCard({
       </div>
 
       {/* ── CTA Buttons ── */}
-      <div className="flex flex-wrap items-center gap-2">
-        {/* Daftar / Register — always visible, disabled when registration not open */}
-        <button
-          onClick={isRegistrationOpen ? (e: React.MouseEvent) => { e.stopPropagation(); goToRegister(); } : undefined}
-          aria-disabled={!isRegistrationOpen}
-          disabled={!isRegistrationOpen}
-          className={`group flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-[10px] sm:text-xs font-bold transition-all duration-200 ${
-            isRegistrationOpen
-              ? `${btnPrimary} hover:scale-[1.02] active:scale-95 cursor-pointer`
-              : 'bg-muted/20 border border-border/30 text-muted-foreground cursor-not-allowed opacity-60'
-          }`}
-          title={isRegistrationOpen ? 'Daftar sekarang' : 'Pendaftaran belum dibuka'}
-        >
-          <UserPlus className="w-3.5 h-3.5" />
-          <span>{isRegistrationOpen ? 'Daftar' : 'Belum Buka'}</span>
-          {isRegistrationOpen && <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />}
-        </button>
-
-        {/* Arena Live */}
-        {showLiveBtn && (
+      <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-2">
+        {/* Row 1: Primary actions */}
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Daftar / Register — always visible, disabled when registration not open */}
           <button
-            onClick={(e) => { e.stopPropagation(); goToArenaLive(); }}
-            className="group flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-[10px] sm:text-xs font-bold bg-red-500/15 border border-red-500/30 text-red-400 hover:bg-red-500/25 hover:shadow-[0_0_12px_rgba(239,68,68,0.2)] hover:scale-[1.02] active:scale-95 transition-all duration-200 cursor-pointer"
+            onClick={isRegistrationOpen ? (e: React.MouseEvent) => { e.stopPropagation(); goToRegister(); } : undefined}
+            aria-disabled={!isRegistrationOpen}
+            disabled={!isRegistrationOpen}
+            className={`group flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-[10px] sm:text-xs font-bold transition-all duration-200 ${
+              isRegistrationOpen
+                ? `${btnPrimary} hover:scale-[1.02] active:scale-95 cursor-pointer`
+                : 'bg-muted/20 border border-border/30 text-muted-foreground cursor-not-allowed opacity-60'
+            }`}
+            title={isRegistrationOpen ? 'Daftar sekarang' : 'Pendaftaran belum dibuka'}
           >
-            <Radio className="w-3.5 h-3.5" />
-            <span>Arena Live</span>
-            <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+            <UserPlus className="w-3.5 h-3.5" />
+            <span>{isRegistrationOpen ? 'Daftar' : 'Belum Buka'}</span>
+            {isRegistrationOpen && <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />}
           </button>
-        )}
 
-        {/* Lihat Hasil */}
-        {showResultBtn && (
-          <button
-            onClick={(e) => { e.stopPropagation(); onGoToBracket(); }}
-            className={`group flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-[10px] sm:text-xs font-bold ${btnSecondary} border hover:scale-[1.02] active:scale-95 transition-all duration-200 cursor-pointer`}
-          >
-            <Trophy className="w-3.5 h-3.5" />
-            <span>Hasil</span>
-            <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
-          </button>
-        )}
+          {/* Arena Live */}
+          {showLiveBtn && (
+            <button
+              onClick={(e) => { e.stopPropagation(); goToArenaLive(); }}
+              className="group flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-[10px] sm:text-xs font-bold bg-red-500/15 border border-red-500/30 text-red-400 hover:bg-red-500/25 hover:shadow-[0_0_12px_rgba(239,68,68,0.2)] hover:scale-[1.02] active:scale-95 transition-all duration-200 cursor-pointer"
+            >
+              <Radio className="w-3.5 h-3.5" />
+              <span>Arena Live</span>
+              <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+            </button>
+          )}
 
-        {/* Sawer Prize Pool */}
-        {showSawerBtn && (
-          <button
-            onClick={(e) => { e.stopPropagation(); onSawer?.(); }}
-            className="group flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-[10px] sm:text-xs font-bold bg-idm-gold-warm/10 border border-idm-gold-warm/20 text-idm-gold-warm hover:bg-idm-gold-warm/20 hover:shadow-[0_0_12px_rgba(212,168,83,0.2)] hover:scale-[1.02] active:scale-95 transition-all duration-200 cursor-pointer"
-          >
-            <Gift className="w-3.5 h-3.5" />
-            <span>Sawer</span>
-          </button>
-        )}
+          {/* Lihat Hasil */}
+          {showResultBtn && (
+            <button
+              onClick={(e) => { e.stopPropagation(); onGoToBracket(); }}
+              className={`group flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-[10px] sm:text-xs font-bold ${btnSecondary} border hover:scale-[1.02] active:scale-95 transition-all duration-200 cursor-pointer`}
+            >
+              <Trophy className="w-3.5 h-3.5" />
+              <span>Hasil</span>
+              <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+            </button>
+          )}
+        </div>
 
-        {/* Prize Pool info — always visible */}
-        {tournament && (
-          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] sm:text-xs font-bold bg-idm-gold-warm/10 border border-idm-gold-warm/20 text-idm-gold-warm">
-            <Coins className="w-3.5 h-3.5" />
-            <span>{prizePool > 0 ? formatCurrencyShort(prizePool) : 'Rp 0'}</span>
-          </div>
-        )}
+        {/* Row 2: Secondary actions — Sawer, Prize Pool, Payment */}
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Sawer */}
+          {showSawerBtn && (
+            <button
+              onClick={(e) => { e.stopPropagation(); onSawer?.(); }}
+              className="group flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-[10px] sm:text-xs font-bold bg-idm-gold-warm/10 border border-idm-gold-warm/20 text-idm-gold-warm hover:bg-idm-gold-warm/20 hover:shadow-[0_0_12px_rgba(212,168,83,0.2)] hover:scale-[1.02] active:scale-95 transition-all duration-200 cursor-pointer"
+            >
+              <Gift className="w-3.5 h-3.5" />
+              <span>Sawer</span>
+            </button>
+          )}
 
-        {/* Payment — DANA styled button */}
-        {onPayment && (
-          <button
-            onClick={(e) => { e.stopPropagation(); onPayment(); }}
-            className="group flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-[10px] sm:text-xs font-bold bg-[#108ee9]/15 border border-[#108ee9]/25 text-[#5cb8f5] hover:bg-[#108ee9]/25 hover:shadow-[0_0_12px_rgba(16,142,233,0.2)] hover:scale-[1.02] active:scale-95 transition-all duration-200 cursor-pointer"
-          >
-            <svg className="w-8 h-4 shrink-0" viewBox="0 0 48 16" fill="currentColor">
-              <text x="0" y="13" fontFamily="system-ui, sans-serif" fontWeight="900" fontSize="14" letterSpacing="1.5">DANA</text>
-            </svg>
-            <span>Payment</span>
-          </button>
-        )}
+          {/* Prize Pool info — always visible */}
+          {tournament && (
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] sm:text-xs font-bold bg-idm-gold-warm/10 border border-idm-gold-warm/20 text-idm-gold-warm">
+              <Coins className="w-3.5 h-3.5" />
+              <span>{prizePool > 0 ? formatCurrencyShort(prizePool) : 'Rp 0'}</span>
+            </div>
+          )}
+
+          {/* Payment — DANA styled button */}
+          {onPayment && (
+            <button
+              onClick={(e) => { e.stopPropagation(); onPayment(); }}
+              className="group flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-[10px] sm:text-xs font-bold bg-[#108ee9]/15 border border-[#108ee9]/25 text-[#5cb8f5] hover:bg-[#108ee9]/25 hover:shadow-[0_0_12px_rgba(16,142,233,0.2)] hover:scale-[1.02] active:scale-95 transition-all duration-200 cursor-pointer"
+            >
+              <svg className="w-8 h-4 shrink-0" viewBox="0 0 48 16" fill="currentColor">
+                <text x="0" y="13" fontFamily="system-ui, sans-serif" fontWeight="900" fontSize="14" letterSpacing="1.5">DANA</text>
+              </svg>
+              <span>Payment</span>
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

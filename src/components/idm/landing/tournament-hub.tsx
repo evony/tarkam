@@ -87,7 +87,9 @@ function TournamentCard({
   const totalPlayers = data?.totalPlayers || 0;
   const totalClubs = data?.clubs?.length || 0;
   const totalMatches = data?.recentMatches?.length || 0;
-  const prizePool = data?.totalPrizePool || 0;
+  const prizePool = division.key === 'female'
+    ? (data?.femalePrizePool || data?.totalPrizePool || 0)
+    : (data?.malePrizePool || data?.totalPrizePool || 0);
 
   // Check if registration is open for this division
   // Priority: 1) Full stats data (most accurate), 2) Fast tournament-status prop (fallback during loading)
