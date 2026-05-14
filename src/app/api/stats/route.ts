@@ -324,6 +324,29 @@ export async function GET(request: Request) {
     .sort((a, b) => b._sum.amount - a._sum.amount)
     .slice(0, 5);
 
+  // ═══ Weekly Top Donors — per active/latest tournament (for display in Top Saweran section) ═══
+  // This shows donors for the CURRENT week only, so the list stays clean and relevant.
+  // Season-accumulated data (topDonors) is still available for Sultan of Season calculation.
+  const activeTournamentId = activeTournament?.id;
+  const weeklyDonorAccum = new Map<string, { totalAmount: number; donationCount: number }>();
+  for (const d of seasonDonations) {
+    if (d.type !== 'weekly') continue;
+    if (d.tournamentId !== activeTournamentId) continue;
+    const entry = weeklyDonorAccum.get(d.donorName) ?? { totalAmount: 0, donationCount: 0 };
+    weeklyDonorAccum.set(d.donorName, {
+      totalAmount: entry.totalAmount + d.amount,
+      donationCount: entry.donationCount + 1,
+    });
+  }
+  const weeklyTopDonors = Array.from(weeklyDonorAccum.entries())
+    .map(([donorName, data]) => ({
+      donorName,
+      totalAmount: data.totalAmount,
+      donationCount: data.donationCount,
+    }))
+    .sort((a, b) => b.totalAmount - a.totalAmount)
+    .slice(0, 8);
+
   // Build season lookup for tournament → season mapping
   const seasonLookup = new Map(allSeasons.map((s: { id: string; number: number; status: string }) => [s.id, s]));
 
@@ -1036,6 +1059,7 @@ export async function GET(request: Request) {
     weeklyChampions,
     leagueMatches: flatLeagueMatches,
     topDonors,
+    weeklyTopDonors,
     mvpHallOfFame,
     seasonProgress: {
       totalWeeks: SEASON_TOTAL_WEEKS,

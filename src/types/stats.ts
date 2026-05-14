@@ -263,6 +263,8 @@ export interface StatsData {
   upcomingMatches: UpcomingMatch[];
   seasonProgress: SeasonProgress;
   topDonors: TopDonor[];
+  /** Top donors for the active/latest tournament only (per-week, not per-season) */
+  weeklyTopDonors: TopDonor[];
   clubs: ClubData[];
   weeklyChampions: WeeklyChampion[];
   mvpHallOfFame: MvpHallOfFameEntry[];

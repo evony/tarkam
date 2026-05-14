@@ -872,7 +872,7 @@ export function Dashboard() {
           {/* ── Top Players + Top Saweran (side by side on desktop) ── */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
             <TopPlayersSection data={data} division={toStrictDivision(division)} setSelectedPlayer={handleSelectPlayer} />
-            <TopDonorsWidget onDonate={() => setDonationOpen(true)} />
+            <TopDonorsWidget onDonate={() => setDonationOpen(true)} statsData={data} />
           </div>
 
           {/* ── Activity Feed ── */}

@@ -32,8 +32,9 @@ function getInitials(name: string): string {
 export function CommunityDonors({ maleData, femaleData, onSawer }: CommunityDonorsProps) {
   const dt = useCommunityTheme();
 
-  // Merge topDonors from both divisions and combine same-name donors
-  const { donors, totalDonation } = useMemo(() => {
+  // Merge weeklyTopDonors from both divisions (per active tournament/week)
+  // Falls back to topDonors (season) if weeklyTopDonors is empty
+  const { donors, totalDonation, weekLabel } = useMemo(() => {
     const donorMap = new Map<string, TopDonor>();
 
     const mergeDonors = (donors: TopDonor[]) => {
@@ -52,14 +53,29 @@ export function CommunityDonors({ maleData, femaleData, onSawer }: CommunityDono
       }
     };
 
-    if (maleData?.topDonors) mergeDonors(maleData.topDonors);
-    if (femaleData?.topDonors) mergeDonors(femaleData.topDonors);
+    // Use weeklyTopDonors (per active tournament) if available
+    const maleWeekly = maleData?.weeklyTopDonors;
+    const femaleWeekly = femaleData?.weeklyTopDonors;
+    const hasWeekly = (maleWeekly && maleWeekly.length > 0) || (femaleWeekly && femaleWeekly.length > 0);
+
+    if (hasWeekly) {
+      if (maleWeekly?.length) mergeDonors(maleWeekly);
+      if (femaleWeekly?.length) mergeDonors(femaleWeekly);
+    } else {
+      // Fallback to season-accumulated donors
+      if (maleData?.topDonors) mergeDonors(maleData.topDonors);
+      if (femaleData?.topDonors) mergeDonors(femaleData.topDonors);
+    }
 
     const sorted = Array.from(donorMap.values()).sort((a, b) => b.totalAmount - a.totalAmount);
     const top8 = sorted.slice(0, 8);
     const total = top8.reduce((s, d) => s + d.totalAmount, 0);
 
-    return { donors: top8, totalDonation: total };
+    // Determine week label
+    const weekNum = maleData?.activeTournament?.weekNumber || femaleData?.activeTournament?.weekNumber;
+    const weekLabelText = hasWeekly && weekNum ? `Week ${weekNum}` : 'Season';
+
+    return { donors: top8, totalDonation: total, weekLabel: weekLabelText };
   }, [maleData, femaleData]);
 
   const maxAmount = donors[0]?.totalAmount || 1;
@@ -90,6 +106,7 @@ export function CommunityDonors({ maleData, femaleData, onSawer }: CommunityDono
           <HandCoins className={`w-3 h-3 lg:w-3.5 lg:h-3.5 ${dt.neonText}`} />
         </div>
         <h3 className="text-xs lg:text-sm font-semibold uppercase tracking-wider">Top Saweran</h3>
+        <Badge className={`hidden sm:inline-flex ${dt.casinoBadge} text-[9px]`}>{weekLabel}</Badge>
         <Badge className={`hidden sm:inline-flex ${dt.casinoBadge} ml-auto text-[9px]`}>KOMUNITAS</Badge>
       </div>
 
@@ -97,11 +114,9 @@ export function CommunityDonors({ maleData, femaleData, onSawer }: CommunityDono
         {/* Total donation header */}
         <div className={`flex items-center justify-between mb-4 p-4 sm:p-5 rounded-2xl ${dt.bgSubtle} border ${dt.borderSubtle}`}>
           <div>
-            <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold">Total Saweran → Prize Pool</p>
+            <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold">Total Saweran {weekLabel} → Prize Pool</p>
             <p className={`text-lg font-black ${dt.neonGradient}`}>
-              {formatCurrencyShort(
-                (maleData?.seasonDonationTotal || 0) + (femaleData?.seasonDonationTotal || 0)
-              )}
+              {formatCurrencyShort(totalDonation || 0)}
             </p>
           </div>
           <Sparkles className={`w-5 h-5 ${dt.text} opacity-40`} />

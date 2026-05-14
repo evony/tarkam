@@ -30,6 +30,8 @@ interface TopDonorsData {
 
 interface TopDonorsWidgetProps {
   onDonate: () => void;
+  /** If provided, uses weeklyTopDonors from stats (per active tournament) instead of all-time API */
+  statsData?: import('@/types/stats').StatsData;
 }
 
 /* ─── Helpers ─── */
@@ -174,9 +176,10 @@ function EmptyDonorsState({ onDonate }: { onDonate: () => void }) {
 
 /* ─── Main Component ─── */
 
-export function TopDonorsWidget({ onDonate }: TopDonorsWidgetProps) {
+export function TopDonorsWidget({ onDonate, statsData }: TopDonorsWidgetProps) {
   const dt = useDivisionTheme();
 
+  // Use weeklyTopDonors from stats if provided, otherwise fall back to all-time API
   const { data, isLoading } = useQuery<TopDonorsData>({
     queryKey: ['top-donors'],
     queryFn: async () => {
@@ -185,12 +188,32 @@ export function TopDonorsWidget({ onDonate }: TopDonorsWidgetProps) {
       return res.json();
     },
     staleTime: 30000,
+    enabled: !statsData?.weeklyTopDonors?.length, // Skip API call if stats data available
   });
 
-  if (isLoading) return <LoadingSkeleton />;
+  if (isLoading && !statsData?.weeklyTopDonors?.length) return <LoadingSkeleton />;
 
-  const donors = data?.donors ?? [];
-  const summary = data?.summary;
+  // Prefer weekly-scoped donors from stats, fall back to all-time API data
+  const weeklyDonors = statsData?.weeklyTopDonors;
+  const hasWeekly = weeklyDonors && weeklyDonors.length > 0;
+  const apiSummary = data?.summary;
+
+  const donors = hasWeekly
+    ? weeklyDonors!.map(d => ({
+        donorName: d.donorName,
+        totalAmount: d.totalAmount,
+        donationCount: d.donationCount,
+        latestType: 'weekly',
+        latestDate: null as string | null,
+      }))
+    : (data?.donors ?? []);
+
+  const weekNum = statsData?.activeTournament?.weekNumber;
+  const weekLabel = hasWeekly && weekNum ? `Week ${weekNum}` : '';
+  const totalAmount = hasWeekly
+    ? weeklyDonors!.reduce((s, d) => s + d.totalAmount, 0)
+    : (apiSummary?.totalAmount ?? 0);
+  const totalDonors = hasWeekly ? weeklyDonors!.length : (apiSummary?.totalDonors ?? 0);
 
   if (donors.length === 0) return <EmptyDonorsState onDonate={onDonate} />;
 
@@ -204,14 +227,15 @@ export function TopDonorsWidget({ onDonate }: TopDonorsWidgetProps) {
           <CardTitle className="text-sm flex items-center gap-2">
             <Heart className="w-4 h-4 text-idm-gold-warm" />
             Top Saweran
+            {weekLabel && <Badge className="text-[8px] px-1.5 py-0 h-4 bg-idm-gold-warm/15 text-idm-gold-warm border-0 font-semibold">{weekLabel}</Badge>}
           </CardTitle>
-          {summary && summary.totalAmount > 0 && (
+          {totalAmount > 0 && (
             <div className="text-right">
               <p className={`text-xs font-bold ${dt.neonGradient}`}>
-                {formatRupiah(summary.totalAmount)}
+                {formatRupiah(totalAmount)}
               </p>
               <p className="text-[9px] text-muted-foreground/60">
-                dari {summary.totalDonors} penyawer
+                dari {totalDonors} penyawer
               </p>
             </div>
           )}
