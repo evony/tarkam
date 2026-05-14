@@ -891,12 +891,12 @@ function SultanCard({
             }}
           >
             {/* ─── Left: Portrait Avatar ─── */}
-            <div className="relative w-[45%] shrink-0 overflow-hidden" style={{ minHeight: '320px' }}>
+            <div className="relative w-[58%] shrink-0 overflow-hidden" style={{ minHeight: '320px' }}>
               <Image
                 src={getAvatarUrl(sultan.player!.gamertag, sultanDivision, sultan.player!.avatar)}
                 alt={sultan.player!.gamertag}
                 fill
-                sizes="(max-width: 768px) 45vw, 22vw"
+                sizes="(max-width: 768px) 58vw, 29vw"
                 className="object-cover object-top transition-transform duration-500 group-hover/sultan:scale-105"
                 loading="lazy"
               />
