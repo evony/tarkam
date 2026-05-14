@@ -22,6 +22,7 @@ import { PlayersSection } from './landing/players-section';
 import { SeasonChampionSection } from './landing/season-champion-section';
 import { CTASection } from './landing/cta-section';
 import { LandingFooter } from './landing/landing-footer';
+import { SponsorsSection } from './landing/sponsors-section';
 import { MarqueeTicker } from './marquee-ticker';
 import { LandingSkeleton } from './landing/landing-skeleton';
 
@@ -700,6 +701,11 @@ export function LandingPage() {
         isHistorical={maleData?.isHistorical || femaleData?.isHistorical || false}
       />
       </div>
+
+      <SectionDivider />
+
+      {/* Sponsors — "Didukung Oleh" */}
+      <SponsorsSection />
 
       <SectionDivider />
 

@@ -321,6 +321,7 @@ export function AdminSponsorPanel() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['admin-sponsors'] });
+      qc.invalidateQueries({ queryKey: ['sponsors-active'] });
       toast.success('Sponsor berhasil ditambahkan!');
       setFormOpen(false);
       setFormData(emptyForm);
@@ -341,6 +342,7 @@ export function AdminSponsorPanel() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['admin-sponsors'] });
+      qc.invalidateQueries({ queryKey: ['sponsors-active'] });
       toast.success('Sponsor berhasil diperbarui!');
       setFormOpen(false);
       setEditingSponsor(null);
@@ -360,6 +362,7 @@ export function AdminSponsorPanel() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['admin-sponsors'] });
+      qc.invalidateQueries({ queryKey: ['sponsors-active'] });
       toast.success('Sponsor berhasil dihapus!');
     },
     onError: (e: Error) => toast.error(e.message),
@@ -378,6 +381,7 @@ export function AdminSponsorPanel() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['admin-sponsors'] });
+      qc.invalidateQueries({ queryKey: ['sponsors-active'] });
       toast.success('Status sponsor diperbarui!');
     },
   });
@@ -397,6 +401,7 @@ export function AdminSponsorPanel() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['admin-banners'] });
+      qc.invalidateQueries({ queryKey: ['sponsor-banners'] });
       toast.success('Banner berhasil ditambahkan!');
       setBannerFormOpen(false);
       setBannerFormData(emptyBannerForm);
@@ -415,6 +420,7 @@ export function AdminSponsorPanel() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['admin-banners'] });
+      qc.invalidateQueries({ queryKey: ['sponsor-banners'] });
       toast.success('Banner berhasil dihapus!');
     },
     onError: (e: Error) => toast.error(e.message),
@@ -433,6 +439,7 @@ export function AdminSponsorPanel() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['admin-banners'] });
+      qc.invalidateQueries({ queryKey: ['sponsor-banners'] });
       toast.success('Status banner diperbarui!');
     },
     onError: (e: Error) => toast.error(e.message),

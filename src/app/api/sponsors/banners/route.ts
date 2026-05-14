@@ -17,11 +17,13 @@ export async function GET(request: NextRequest) {
     if (activeOnly) {
       where.isActive = true;
       const now = new Date();
-      where.OR = [
-        { startDate: null, endDate: null },
-        { startDate: null, endDate: { gte: now } },
-        { startDate: { lte: now }, endDate: null },
-        { startDate: { lte: now }, endDate: { gte: now } },
+      where.AND = [
+        { OR: [
+          { startDate: null, endDate: null },
+          { startDate: null, endDate: { gte: now } },
+          { startDate: { lte: now }, endDate: null },
+          { startDate: { lte: now }, endDate: { gte: now } },
+        ] },
       ];
     }
 

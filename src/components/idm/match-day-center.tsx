@@ -22,6 +22,7 @@ import { useCommunityTheme } from '@/hooks/use-community-theme';
 import { formatCurrency, parseWitaDate, formatWIBWeekdayShort } from '@/lib/utils';
 import type { StatsData } from '@/types/stats';
 import { BracketView } from './bracket-view';
+import { SponsorBanner } from './ui/sponsor-banner';
 // container/item removed — replaced with CSS stagger-item classes
 
 /* ─── Live Pulse Indicator ─── */
@@ -323,6 +324,9 @@ function MatchDayContent({ divisionProp }: { divisionProp: 'male' | 'female' }) 
           </div>
         </Card>
       </div>
+
+      {/* Sponsor Banner — Bracket Top */}
+      <SponsorBanner placement="bracket_top" className="flex items-center justify-center gap-4 flex-wrap" />
 
       {/* ═══════ TABS: Bracket / Results ═══════ */}
       <Tabs defaultValue="bracket" className="w-full">

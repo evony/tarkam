@@ -16,6 +16,7 @@ import { useAppStore } from '@/lib/store';
 import { BracketView } from './bracket-view';
 import { MatchDetailModal } from './match-detail-modal';
 import { SectionCard, MatchRow } from './dashboard/shared';
+import { SponsorBanner, PresentedBy, SponsoredPrizes } from './ui/sponsor-banner';
 
 
 /* ═══════════════════════════════════════════
@@ -44,6 +45,7 @@ function DivisionBracketCard({
   const recentMatches = data?.recentMatches ?? [];
   const upcomingMatches = data?.upcomingMatches ?? [];
   const t = data?.activeTournament;
+  const tournamentId = t?.id;
 
   // Auto-detect bracket type from tournament format (not used here, parent handles it)
 
@@ -124,6 +126,17 @@ function DivisionBracketCard({
           </div>
         </div>
       </Card>
+
+      {/* Sponsor Banner — Bracket Top */}
+      <SponsorBanner placement="bracket_top" className="flex items-center justify-center gap-4 flex-wrap" />
+
+      {/* Presented By + Sponsored Prizes — only if tournament exists */}
+      {tournamentId && (
+        <div className="space-y-3">
+          <PresentedBy tournamentId={tournamentId} className="flex items-center gap-2 text-xs text-muted-foreground" />
+          <SponsoredPrizes tournamentId={tournamentId} />
+        </div>
+      )}
 
       {/* Match results */}
       {Object.keys(matchesByWeek).length > 0 && (
