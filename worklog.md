@@ -260,3 +260,26 @@ Stage Summary:
   3. Player clicks "Daftar Ulang" → system reactivates player, resets data, sets pending
   4. Admin approves → player fully active again
 - This will NOT happen again in the future for any deleted player
+
+---
+Task ID: 8
+Agent: Main Agent
+Task: Fix admin approve 500 Internal Server Error at /api/admin/players/approve
+
+Work Log:
+- Investigated 500 error on POST /api/admin/players/approve
+- Tested Prisma operations directly: findUnique+include works, update+include fails
+- Root cause: PrismaNeonHttp adapter doesn't support transactions. When db.player.update() includes `include` with `where` filter on relations (like `clubMembers: { where: { leftAt: null } }`), Prisma internally uses a transaction, causing "Transactions are not supported in HTTP mode" error
+- Fix: Split `db.player.update({ ..., include: { account, clubMembers where... } })` into two separate operations:
+  1. `db.player.update({ ..., data: {...} })` — update only, no include
+  2. `db.player.findUnique({ ..., include: { account, clubMembers where... } })` — read after update
+- Also wrapped `revalidateTag()` in try-catch as safety measure
+- Tested both approve and reject actions through the API — both work correctly now
+- Reset AiTan and Moy back to pending status for admin to test from UI
+- Lint passes with no errors
+
+Stage Summary:
+- Admin approve endpoint now works correctly with Neon HTTP adapter
+- The fix pattern (split update+include-with-where into update + separate findUnique) must be used whenever updating with filtered relation includes on Neon HTTP
+- Scanned entire API codebase: no other update+include-with-where patterns found
+- 6 files with unguarded updateMany() calls noted (potential future issues but not current blockers)

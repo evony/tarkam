@@ -57,13 +57,21 @@ export async function POST(request: Request) {
       const validTiers = ['S', 'A', 'B'];
       const assignedTier = tier && validTiers.includes(tier) ? tier : 'B';
 
-      updatedPlayer = await db.player.update({
+      // NOTE: Neon HTTP adapter doesn't support transactions.
+      // db.player.update() with `include` that has `where` filters on relations
+      // triggers an internal transaction, causing "Transactions are not supported in HTTP mode".
+      // Fix: split update and read into two separate operations.
+      await db.player.update({
         where: { id: playerId },
         data: {
           registrationStatus: 'approved',
           tier: assignedTier,
           isActive: true,
         },
+      });
+
+      updatedPlayer = await db.player.findUnique({
+        where: { id: playerId },
         include: {
           account: { select: { id: true, username: true } },
           clubMembers: {
@@ -81,12 +89,16 @@ export async function POST(request: Request) {
         );
       }
 
-      updatedPlayer = await db.player.update({
+      await db.player.update({
         where: { id: playerId },
         data: {
           registrationStatus: 'rejected',
           isActive: false,
         },
+      });
+
+      updatedPlayer = await db.player.findUnique({
+        where: { id: playerId },
         include: {
           account: { select: { id: true, username: true } },
           clubMembers: {
@@ -98,7 +110,11 @@ export async function POST(request: Request) {
     }
 
     // Invalidate cached data
-    revalidateTag('league-data', 'max');
+    try {
+      revalidateTag('league-data', 'max');
+    } catch (cacheErr) {
+      console.warn('[ADMIN_APPROVE] revalidateTag failed:', cacheErr);
+    }
 
     // Trigger Pusher real-time events
     try {
