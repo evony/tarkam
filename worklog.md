@@ -598,3 +598,29 @@ Stage Summary:
 - Player.points is properly decremented for streak_bonus during rollback
 - No more double points when rollback + re-finalize
 - Current data verified consistent (no stale points)
+
+---
+Task ID: 4
+Agent: Main Agent
+Task: Clean up double-counted female division points (3x prize awards from rollback+finalize cycles)
+
+Work Log:
+- Investigated female player points: meatry had 254 pts (should be ~88), Moy/Veronicc 164 pts (should be ~58)
+- Found PlayerPoint records showed prizes awarded 3 times: prize_juara1=9 records (3 players × 3 times), prize_mvp=3 records (1 player × 3 times)
+- Root cause: Each rollback+finalize cycle created new PlayerPoint records without fully cleaning the old ones (streak_bonus was missing from rollback, and prize records from Phase 0 cleanup may have failed silently)
+- Created cleanup script: scripts/fix-female-points.ts
+- Script actions:
+  1. Deleted all 42 PlayerPoint records for female tournament (cmp56z7yc0001ky044vldr31x)
+  2. Reset all 12 female players: points=0, totalWins=0, totalMvp=0, streak=0, maxStreak=0, matches=0
+  3. Reset 12 Participation records: pointsEarned=0, isWinner=false, isMvp=false
+  4. Reset 4 Team records: rank=null, isWinner=false
+- Used individual updates (not updateMany) to avoid Neon HTTP transaction errors
+- Tournament remains at "finalization" status — admin can re-finalize to get clean points
+- Male players NOT affected
+
+Stage Summary:
+- 42 duplicate PlayerPoint records deleted for female tournament
+- 12 female players reset to 0 pts
+- Prizes were awarded 3x (should be 1x) — confirmed the rollback+finalize bug
+- Fix from Task 3 (adding streak_bonus to rollback deletion) prevents this in the future
+- Admin needs to finalize the tournament again to award correct (single) points
