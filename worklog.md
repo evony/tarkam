@@ -765,3 +765,24 @@ Stage Summary:
 - Male: activeTournamentPrizePool=0 (no base set for week 2) → falls through to malePrizePool=260000 ✅
 - Female: activeTournamentPrizePool=390000 (completed week 1) ✅
 - Files modified: `src/lib/landing-data.ts`, `src/components/idm/landing/tournament-hub.tsx`, `src/components/idm/community-dashboard/community-hero.tsx`
+
+---
+Task ID: 1
+Agent: main
+Task: Fix winrate showing 0% in player profile modal (zmz, meatry, etc.) but correct in leaderboard
+
+Work Log:
+- Investigated the data flow for player profile modal vs leaderboard
+- Found root cause: Many callers (Sultan card, MVP card, search, club members) hardcode `matches: 0` and sometimes `totalWins: 0` when constructing the player object for `setSelectedPlayer`
+- The modal calculates `winRate = player.totalWins / player.matches * 100`, so when matches=0, winrate always shows 0%
+- Instead of fixing 10+ individual callers, implemented auto-enrichment in the PlayerProfile component itself
+- Added a `useQuery` that fetches `/api/players/[id]` when `player.matches === 0` (indicates incomplete data)
+- Created local variables (totalWins, matches, streak, maxStreak, totalMvp, points) that merge enriched API data with original props
+- Replaced all `player.totalWins`, `player.matches`, etc. references in the modal with the enriched local variables
+- The query is only enabled when `player.matches === 0` and results are cached for 60 seconds
+
+Stage Summary:
+- Player profile modal now auto-enriches incomplete data from the API
+- Winrate for zmz: was 0% → now correctly 33% (1W/3 matches)
+- Winrate for all players from Sultan/MVP/Champion/Search cards now shows correctly
+- Files modified: `src/components/idm/player-profile.tsx`

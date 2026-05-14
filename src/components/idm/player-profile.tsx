@@ -150,6 +150,31 @@ export function PlayerProfile({ player, onClose, rank, skinMap, preferredSkinTyp
   // This ensures male players always show cyan and female players always show purple
   const dt = getDivisionTheme(playerDivision as 'male' | 'female');
 
+  // ═══ Auto-enrich player data when matches/totalWins are missing or 0 ═══
+  // Many callers (Sultan card, MVP card, search, club members) hardcode matches: 0
+  // because they don't have the full player data. This fetches the real data from the
+  // player API so the modal always shows correct winrate/stats.
+  const { data: enrichedPlayerData } = useQuery({
+    queryKey: ['player-detail', player.id],
+    queryFn: async () => {
+      const res = await fetch(`/api/players/${player.id}`);
+      if (!res.ok) return null;
+      return res.json();
+    },
+    // Only fetch when the player data is incomplete (matches === 0 means missing data)
+    enabled: player.matches === 0 && !!player.id,
+    staleTime: 60_000,
+    gcTime: 60_000,
+  });
+
+  // Merge enriched data: use API data for fields that were 0/missing
+  const totalWins = enrichedPlayerData?.totalWins ?? player.totalWins;
+  const matches = enrichedPlayerData?.matches ?? player.matches;
+  const maxStreak = enrichedPlayerData?.maxStreak ?? player.maxStreak;
+  const streak = enrichedPlayerData?.streak ?? player.streak;
+  const totalMvp = enrichedPlayerData?.totalMvp ?? player.totalMvp;
+  const points = enrichedPlayerData?.points ?? player.points;
+
   // Skins: use skinMap for ALL players, fall back to logged-in user's skins for self
   const isMe = playerAuth.isAuthenticated && playerAuth.account && playerAuth.account.player.id === player.id;
   const playerSkins = skinMap?.[player.id] || (isMe ? playerAuth.account?.skins || [] : []);
@@ -188,13 +213,13 @@ export function PlayerProfile({ player, onClose, rank, skinMap, preferredSkinTyp
   // Legacy alias: skinColors = frameColors (used by most existing code)
   const skinColors = frameColors;
 
-  const winRate = player.matches > 0 ? Math.round((player.totalWins / player.matches) * 100) : 0;
-  const mvpRate = player.matches > 0 ? Math.round((player.totalMvp / player.matches) * 100) : 0;
-  const losses = player.matches - player.totalWins;
+  const winRate = matches > 0 ? Math.round((totalWins / matches) * 100) : 0;
+  const mvpRate = matches > 0 ? Math.round((totalMvp / matches) * 100) : 0;
+  const losses = matches - totalWins;
   // Only show rank badges when the player has actual competitive results (points or wins)
   // Without this check, ALL players show "Juara" badges when no matches have been played
   // because the topPlayers array order is arbitrary when all points = 0
-  const hasCompetitiveResults = player.points > 0 || player.totalWins > 0;
+  const hasCompetitiveResults = points > 0 || totalWins > 0;
   const effectiveRank = hasCompetitiveResults ? rank : undefined;
   const isChampion = effectiveRank === 1;
   const isTop3 = effectiveRank !== undefined && effectiveRank <= 3;
@@ -242,7 +267,7 @@ export function PlayerProfile({ player, onClose, rank, skinMap, preferredSkinTyp
       const res = await fetch(`/api/players/${player.id}/matches`);
       return res.json();
     },
-    enabled: !!player.id && player.matches > 0,
+    enabled: !!player.id && matches > 0,
     staleTime: 30000,
   });
 
@@ -254,7 +279,7 @@ export function PlayerProfile({ player, onClose, rank, skinMap, preferredSkinTyp
   // No demo data — all data comes from actual organizer-input results only.
   // The game is not integrated with this server, so we cannot show
   // in-game performance metrics or per-match score trends.
-  const hasMatchHistory = player.matches > 0;
+  const hasMatchHistory = matches > 0;
   const avatarSrc = getAvatarUrl(player.gamertag, playerDivision as 'male' | 'female', player.avatar);
 
   // Portal target — render modal directly into document.body to avoid
@@ -522,9 +547,9 @@ export function PlayerProfile({ player, onClose, rank, skinMap, preferredSkinTyp
                 <p className="text-xs text-white/60 mt-0.5">{player.city ? <><MapPin className="w-3 h-3 inline -mt-0.5 mr-0.5" />{player.city}</> : player.name}</p>
                 <div className="flex items-center gap-2 mt-1.5">
 
-                  {player.streak > 1 && (
+                  {streak > 1 && (
                     <Badge className="bg-orange-500/20 text-orange-400 text-[10px] border-0 flex items-center gap-1">
-                      <Flame className="w-3 h-3" /> {player.streak} Streak
+                      <Flame className="w-3 h-3" /> {streak} Streak
                     </Badge>
                   )}
 
@@ -613,10 +638,10 @@ export function PlayerProfile({ player, onClose, rank, skinMap, preferredSkinTyp
 
             {/* ═══ Main Stats Grid — Dance Tournament HUD Style ═══ */}
             <div className="grid grid-cols-4 gap-2 mb-4">
-              <StatBlock icon={Trophy} label="Poin" value={player.points} color={dt.text} highlight size="large" playerDivision={playerDivision as 'male' | 'female'} />
-              <StatBlock icon={Target} label="Win Rate" value={`${winRate}%`} sub={`${player.totalWins}W/${losses}L`} color="text-green-500" playerDivision={playerDivision as 'male' | 'female'} />
-              <StatBlock icon={Crown} label="MVP" value={player.totalMvp} sub={`${mvpRate}% rasio`} color="text-yellow-500" playerDivision={playerDivision as 'male' | 'female'} />
-              <StatBlock icon={Activity} label="Match" value={player.matches} color="text-blue-400" playerDivision={playerDivision as 'male' | 'female'} />
+              <StatBlock icon={Trophy} label="Poin" value={points} color={dt.text} highlight size="large" playerDivision={playerDivision as 'male' | 'female'} />
+              <StatBlock icon={Target} label="Win Rate" value={`${winRate}%`} sub={`${totalWins}W/${losses}L`} color="text-green-500" playerDivision={playerDivision as 'male' | 'female'} />
+              <StatBlock icon={Crown} label="MVP" value={totalMvp} sub={`${mvpRate}% rasio`} color="text-yellow-500" playerDivision={playerDivision as 'male' | 'female'} />
+              <StatBlock icon={Activity} label="Match" value={matches} color="text-blue-400" playerDivision={playerDivision as 'male' | 'female'} />
             </div>
 
             {/* ═══ Performance Overview — based on actual record only ═══ */}
@@ -625,11 +650,11 @@ export function PlayerProfile({ player, onClose, rank, skinMap, preferredSkinTyp
                 <div className="flex items-center gap-2 mb-3">
                   <BarChart3 className={`w-4 h-4 ${dt.text}`} />
                   <span className="text-xs font-semibold">Ringkasan Performa</span>
-                  <Badge className={`${dt.casinoBadge} text-[8px] ml-auto`}>{player.matches} MATCH</Badge>
+                  <Badge className={`${dt.casinoBadge} text-[8px] ml-auto`}>{matches} MATCH</Badge>
                 </div>
                 <div className="grid grid-cols-3 gap-2 text-center">
                   <div className="p-3 sm:p-4 rounded-lg bg-green-500/5 border border-green-500/10">
-                    <p className="text-lg font-bold text-green-500">{player.totalWins}</p>
+                    <p className="text-lg font-bold text-green-500">{totalWins}</p>
                     <p className="text-[9px] text-muted-foreground uppercase">Wins</p>
                   </div>
                   <div className="p-3 sm:p-4 rounded-lg bg-red-500/5 border border-red-500/10">
@@ -637,7 +662,7 @@ export function PlayerProfile({ player, onClose, rank, skinMap, preferredSkinTyp
                     <p className="text-[9px] text-muted-foreground uppercase">Losses</p>
                   </div>
                   <div className="p-3 sm:p-4 rounded-lg bg-yellow-500/5 border border-yellow-500/10">
-                    <p className="text-lg font-bold text-yellow-500">{player.totalMvp}</p>
+                    <p className="text-lg font-bold text-yellow-500">{totalMvp}</p>
                     <p className="text-[9px] text-muted-foreground uppercase">MVP</p>
                   </div>
                 </div>
@@ -696,22 +721,22 @@ export function PlayerProfile({ player, onClose, rank, skinMap, preferredSkinTyp
               ) : (
                 <div className="flex flex-wrap gap-1.5">
                   {/* Fallback badges based on player stats */}
-                  {player.totalWins >= 1 && (
+                  {totalWins >= 1 && (
                     <Badge className="bg-green-500/10 text-green-500 text-[10px] border-0">
                       <Star className="w-3 h-3 mr-1" /> Win Pertama
                     </Badge>
                   )}
-                  {player.totalWins >= 5 && (
+                  {totalWins >= 5 && (
                     <Badge className="bg-blue-500/10 text-blue-400 text-[10px] border-0">
                       <Trophy className="w-3 h-3 mr-1" /> 5 Win
                     </Badge>
                   )}
-                  {player.totalMvp >= 1 && (
+                  {totalMvp >= 1 && (
                     <Badge className="bg-yellow-500/10 text-yellow-500 text-[10px] border-0">
                       <Crown className="w-3 h-3 mr-1" /> MVP
                     </Badge>
                   )}
-                  {player.maxStreak >= 3 && (
+                  {maxStreak >= 3 && (
                     <Badge className="bg-orange-500/10 text-orange-500 text-[10px] border-0">
                       <Flame className="w-3 h-3 mr-1" /> Membara
                     </Badge>
@@ -722,12 +747,12 @@ export function PlayerProfile({ player, onClose, rank, skinMap, preferredSkinTyp
                       <Crown className="w-3 h-3 mr-1" /> Juara
                     </Badge>
                   )}
-                  {player.matches >= 5 && (
+                  {matches >= 5 && (
                     <Badge className="bg-amber-600/10 text-amber-600 text-[10px] border-0">
                       <BarChart3 className="w-3 h-3 mr-1" /> Veteran
                     </Badge>
                   )}
-                  {player.totalWins === 0 && player.totalMvp === 0 && (
+                  {totalWins === 0 && totalMvp === 0 && (
                     <p className="text-xs text-muted-foreground">Belum ada prestasi</p>
                   )}
                 </div>
@@ -740,12 +765,12 @@ export function PlayerProfile({ player, onClose, rank, skinMap, preferredSkinTyp
                 <div className="flex items-center gap-2 mb-2.5">
                   <Calendar className={`w-4 h-4 ${dt.text}`} />
                   <h3 className="text-sm font-semibold">Rekor Match</h3>
-                  <Badge className={`${dt.casinoBadge} text-[8px] ml-auto`}>{player.matches} DIMAINKAN</Badge>
+                  <Badge className={`${dt.casinoBadge} text-[8px] ml-auto`}>{matches} DIMAINKAN</Badge>
                 </div>
                 <div className={`p-4 sm:p-5 rounded-2xl ${dt.bgSubtle} border ${dt.borderSubtle}`}>
                   <div className="grid grid-cols-2 gap-3">
                     <div className="text-center">
-                      <p className="text-2xl font-black text-green-500">{player.totalWins}</p>
+                      <p className="text-2xl font-black text-green-500">{totalWins}</p>
                       <p className="text-[9px] text-muted-foreground uppercase">Wins</p>
                     </div>
                     <div className="text-center">
@@ -753,9 +778,9 @@ export function PlayerProfile({ player, onClose, rank, skinMap, preferredSkinTyp
                       <p className="text-[9px] text-muted-foreground uppercase">Losses</p>
                     </div>
                   </div>
-                  {player.totalMvp > 0 && (
+                  {totalMvp > 0 && (
                     <div className="mt-2 pt-2 border-t border-border/30 text-center">
-                      <p className="text-xs text-yellow-500 font-semibold">{player.totalMvp}x Penghargaan MVP</p>
+                      <p className="text-xs text-yellow-500 font-semibold">{totalMvp}x Penghargaan MVP</p>
                     </div>
                   )}
                 </div>
@@ -862,7 +887,7 @@ export function PlayerProfile({ player, onClose, rank, skinMap, preferredSkinTyp
             <PlayerSeasonHistory
               playerId={player.id}
               playerDivision={playerDivision}
-              currentPoints={player.points}
+              currentPoints={points}
               currentTier={player.tier}
               currentClub={clubToString(player.club) || null}
             />
@@ -878,14 +903,14 @@ export function PlayerProfile({ player, onClose, rank, skinMap, preferredSkinTyp
                   const bd = pointBreakdownData?.breakdown;
                   const pd = pointBreakdownData?.prizeDetail;
                   // Use API data if available, otherwise fall back to calculated values
-                  const matchWinPts = bd?.matchWin ?? player.totalWins * 1;
-                  const streakPts = bd?.streakBonus ?? Math.floor(player.streak / 3) * 2;
+                  const matchWinPts = bd?.matchWin ?? totalWins * 1;
+                  const streakPts = bd?.streakBonus ?? Math.floor(streak / 3) * 2;
                   const prizePts = bd?.prize ?? 0;
                   const otherPts = bd?.other ?? 0;
 
                   const items = [
-                    { label: `Match Win (${player.totalWins} win)`, value: `+${matchWinPts}`, color: dt.text, detail: '+1 pts/win' },
-                    { label: `Streak Bonus`, value: `+${streakPts}`, color: 'text-orange-500', detail: `+2 pts/3x berturut² (streak: ${player.streak})` },
+                    { label: `Match Win (${totalWins} win)`, value: `+${matchWinPts}`, color: dt.text, detail: '+1 pts/win' },
+                    { label: `Streak Bonus`, value: `+${streakPts}`, color: 'text-orange-500', detail: `+2 pts/3x berturut² (streak: ${streak})` },
                   ];
 
                   // Show prize breakdown if any
@@ -920,7 +945,7 @@ export function PlayerProfile({ player, onClose, rank, skinMap, preferredSkinTyp
                 <div className="h-px bg-border my-1" />
                 <div className="flex justify-between font-bold">
                   <span>Total</span>
-                  <span className={dt.neonGradient}>{player.points} pts</span>
+                  <span className={dt.neonGradient}>{points} pts</span>
                 </div>
               </div>
             </div>
