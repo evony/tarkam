@@ -23,11 +23,41 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
   icons: {
     icon: "/logo1.webp",
+    apple: "/og-banner.png",
   },
   other: {
     "apple-mobile-web-app-capable": "yes",
     "mobile-web-app-capable": "yes",
   },
+
+  // ── Open Graph — Rich preview saat share link di WhatsApp, Telegram, dll ──
+  openGraph: {
+    title: "TARKAM IDM — Turnamen Idol Meta Indonesia",
+    description: "Komunitas Idol Meta Indonesia. Turnamen mingguan, leaderboard, MVP, Sultan of the Week, dan lebih banyak lagi. Gabung sekarang!",
+    url: "https://tarkam.vercel.app",
+    siteName: "TARKAM IDM",
+    images: [
+      {
+        url: "/og-banner.png",
+        width: 1344,
+        height: 768,
+        alt: "TARKAM IDM — Turnamen Idol Meta Indonesia",
+      },
+    ],
+    locale: "id_ID",
+    type: "website",
+  },
+
+  // ── Twitter Card — Preview khusus Twitter/X ──
+  twitter: {
+    card: "summary_large_image",
+    title: "TARKAM IDM — Turnamen Idol Meta Indonesia",
+    description: "Komunitas Idol Meta Indonesia. Turnamen mingguan, leaderboard, MVP, dan lebih banyak lagi.",
+    images: ["/og-banner.png"],
+  },
+
+  // ── Keywords untuk SEO ──
+  keywords: ["TARKAM", "IDM", "Idol Meta", "turnamen", "esports", "komunitas", "leaderboard", "MVP"],
 };
 
 export const viewport: Viewport = {
