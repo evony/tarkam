@@ -105,6 +105,7 @@ async function fetchLandingStatsInner(division: 'male' | 'female') {
     batchPlayers,
     batchClubProfiles,
     batchClubMembers,
+    allPlayersForDonorMatching,
   ] = await Promise.all([
     // Total players
     withDbRetry(() => db.player.count({ where: { division: divisionFilter, isActive: true, registrationStatus: 'approved' } })),
@@ -224,6 +225,22 @@ async function fetchLandingStatsInner(division: 'male' | 'female') {
           },
         }))
       : Promise.resolve([] as any[]),
+
+    // ★ Cross-division players for Sultan of the Week donor matching
+    // Sultan donor can be from ANY division, so we must search both male & female players
+    withDbRetry(() => db.player.findMany({
+      where: { isActive: true, registrationStatus: 'approved' },
+      select: {
+        id: true, name: true, gamertag: true, avatar: true, tier: true,
+        points: true, totalWins: true, totalMvp: true, streak: true,
+        division: true, city: true,
+        clubMembers: {
+          where: { leftAt: null },
+          include: { profile: { select: { id: true, name: true, logo: true } } },
+          take: 1,
+        },
+      },
+    })),
   ]);
 
   // ── Build lookup maps from batched results ──
@@ -358,6 +375,85 @@ async function fetchLandingStatsInner(division: 'male' | 'female') {
     )
     .sort((a, b) => +b._sortKey - +a._sortKey)
     .map(({ _sortKey, ...rest }: any) => rest);
+
+  // ── Sultan of the Week — top penyawer per tournament (SSR pre-fetch) ──
+  // Replicates the same logic as /api/stats so the card renders immediately
+  // instead of waiting for client-side React Query.
+  const tournamentMap = new Map(tournaments.map((t: any) => [t.id, t]));
+
+  // Group donations by tournamentId, then by donorName
+  const tournamentDonors = new Map<string, Map<string, { totalAmount: number; donationCount: number }>>();
+  for (const d of seasonDonations as any[]) {
+    if (!d.tournamentId) continue;
+    const tId = d.tournamentId as string;
+    if (!tournamentMap.has(tId)) continue; // Only include donations for tournaments in our list
+
+    let donorMap = tournamentDonors.get(tId);
+    if (!donorMap) {
+      donorMap = new Map();
+      tournamentDonors.set(tId, donorMap);
+    }
+    const entry = donorMap.get(d.donorName) ?? { totalAmount: 0, donationCount: 0 };
+    donorMap.set(d.donorName, {
+      totalAmount: entry.totalAmount + d.amount,
+      donationCount: entry.donationCount + 1,
+    });
+  }
+
+  // Build cross-division player lookup for donor matching
+  const playerByGamertag = new Map(
+    (allPlayersForDonorMatching as any[]).map((p: any) => {
+      const activeClub = p.clubMembers?.[0]?.profile;
+      return [p.gamertag?.toLowerCase(), { ...p, club: activeClub ? { id: activeClub.id, name: activeClub.name, logo: activeClub.logo } : null }];
+    })
+  );
+
+  // For each tournament with donations, find the top donor
+  const sultanOfWeekly: any[] = [];
+  for (const [tId, donorMap] of tournamentDonors) {
+    const tournament = tournamentMap.get(tId);
+    if (!tournament) continue;
+
+    const sortedDonors = Array.from(donorMap.entries())
+      .sort((a, b) => b[1].totalAmount - a[1].totalAmount);
+    if (sortedDonors.length === 0) continue;
+
+    const [topDonorName, topDonorData] = sortedDonors[0];
+
+    // Match donorName to a player (cross-division)
+    const matchedPlayer = playerByGamertag.get(topDonorName?.toLowerCase());
+    let playerInfo: any = null;
+    if (matchedPlayer) {
+      playerInfo = {
+        id: matchedPlayer.id,
+        gamertag: matchedPlayer.gamertag,
+        avatar: matchedPlayer.avatar,
+        tier: matchedPlayer.tier,
+        points: matchedPlayer.points,
+        totalWins: matchedPlayer.totalWins,
+        totalMvp: matchedPlayer.totalMvp,
+        streak: matchedPlayer.streak,
+        division: matchedPlayer.division,
+        city: matchedPlayer.city || null,
+        club: matchedPlayer.club || null,
+      };
+    }
+
+    sultanOfWeekly.push({
+      weekNumber: tournament.weekNumber,
+      tournamentName: tournament.name,
+      tournamentId: tId,
+      tournamentDivision: tournament.division,
+      donorName: topDonorName || 'Anonymous',
+      totalAmount: topDonorData.totalAmount,
+      donationCount: topDonorData.donationCount,
+      player: playerInfo,
+      isCrossDivision: playerInfo ? playerInfo.division !== tournament.division : false,
+    });
+  }
+
+  // Sort by weekNumber ascending
+  sultanOfWeekly.sort((a, b) => a.weekNumber - b.weekNumber);
 
   // ── Batch: player season stats (depends on club member player IDs) ──
   const memberPlayerIds = Array.from(new Set((batchClubMembers as any[]).map((cm: any) => cm.player.id)));
@@ -579,7 +675,7 @@ async function fetchLandingStatsInner(division: 'male' | 'female') {
     // ── Simplified fields: loaded by client-side React Query ──
     skinMap: skinMapResult,
     weeklyTopPerformers: [] as any[],
-    sultanOfWeekly: [] as any[],
+    sultanOfWeekly,
     recentMatches: [] as any[],
     upcomingMatches: [] as any[],
     activeTournament: null as any,

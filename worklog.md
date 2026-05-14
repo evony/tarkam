@@ -725,3 +725,22 @@ Stage Summary:
 - Video avatars auto-play with loop/muted/playsInline for smooth animated display
 - Fallback poster frame auto-generated from Cloudinary for video avatars
 - Zero visual change for existing image avatars — backward compatible
+
+---
+Task ID: 1
+Agent: main
+Task: Fix Sultan of the Week rendering slower than Juara Tarkam and MVP on landing page
+
+Work Log:
+- Investigated the data flow for all three highlight cards (Juara Tarkam, MVP, Sultan of the Week)
+- Found that `sultanOfWeekly` was set to `[] as any[]` in `landing-data.ts` SSR pre-fetch, deferring it entirely to client-side React Query
+- Meanwhile, `weeklyChampions` and `mvpHallOfFame` were fully computed during SSR
+- Added cross-division player query (`allPlayersForDonorMatching`) to the SSR Promise.all
+- Replicated the `sultanOfWeekly` computation logic from `/api/stats/route.ts` into `landing-data.ts`
+- Replaced `sultanOfWeekly: [] as any[]` with `sultanOfWeekly` (actual computed data) in the return statement
+
+Stage Summary:
+- Root cause: `sultanOfWeekly` was empty in SSR, only loaded via client-side React Query, causing delayed rendering
+- Fix: Compute `sultanOfWeekly` during SSR by adding cross-division player query and donation grouping logic
+- Verified: Both male and female SSR now include `sultanOfWeekly` data (e.g., male: Rizal_ with 10K, female: ysl with 100K)
+- Files modified: `src/lib/landing-data.ts`
