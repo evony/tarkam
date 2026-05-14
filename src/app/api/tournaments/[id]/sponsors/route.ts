@@ -49,10 +49,11 @@ export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const admin = await requireAdmin(request);
-  if (admin instanceof NextResponse) return admin;
-
+  let admin;
   try {
+    admin = await requireAdmin(request);
+    if (admin instanceof NextResponse) return admin;
+
     const { id } = await params;
     const body = await request.json();
     const { sponsorId, role, displayOrder } = body;
@@ -94,10 +95,11 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const admin = await requireAdmin(request);
-  if (admin instanceof NextResponse) return admin;
-
+  let admin;
   try {
+    admin = await requireAdmin(request);
+    if (admin instanceof NextResponse) return admin;
+
     const { id } = await params;
     const { searchParams } = new URL(request.url);
     const sponsorId = searchParams.get('sponsorId');

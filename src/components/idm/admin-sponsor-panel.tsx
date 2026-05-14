@@ -604,7 +604,7 @@ export function AdminSponsorPanel() {
   const sponsorList: Sponsor[] = sponsors?.sponsors || [];
   const bannerList: SponsorBanner[] = bannersData?.banners || [];
   const prizeList: SponsoredPrize[] = prizesData?.prizes || [];
-  const tournamentList: Tournament[] = tournamentsData?.tournaments || [];
+  const tournamentList: Tournament[] = Array.isArray(tournamentsData) ? tournamentsData : (tournamentsData?.tournaments || []);
   const tournamentSponsorList: TournamentSponsorLink[] = tournamentSponsorsData?.sponsors || [];
 
   // Filter sponsors

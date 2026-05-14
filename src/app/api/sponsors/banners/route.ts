@@ -46,10 +46,11 @@ export async function GET(request: NextRequest) {
 
 // POST - Create new banner
 export async function POST(request: NextRequest) {
-  const admin = await requireAdmin(request);
-  if (admin instanceof NextResponse) return admin;
-
+  let admin;
   try {
+    admin = await requireAdmin(request);
+    if (admin instanceof NextResponse) return admin;
+
     const body = await request.json();
     const { sponsorId, placement, imageUrl, linkUrl, width, height, displayOrder, startDate, endDate } = body;
 
@@ -89,10 +90,11 @@ export async function POST(request: NextRequest) {
 
 // PUT - Update banner (toggle active, etc.)
 export async function PUT(request: NextRequest) {
-  const admin = await requireAdmin(request);
-  if (admin instanceof NextResponse) return admin;
-
+  let admin;
   try {
+    admin = await requireAdmin(request);
+    if (admin instanceof NextResponse) return admin;
+
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
 
@@ -131,10 +133,11 @@ export async function PUT(request: NextRequest) {
 
 // DELETE - Delete banner by id
 export async function DELETE(request: NextRequest) {
-  const admin = await requireAdmin(request);
-  if (admin instanceof NextResponse) return admin;
-
+  let admin;
   try {
+    admin = await requireAdmin(request);
+    if (admin instanceof NextResponse) return admin;
+
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
 
