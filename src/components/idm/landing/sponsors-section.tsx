@@ -53,13 +53,13 @@ export function SponsorsSection() {
   if (isLoading && sponsors.length === 0) {
     return (
       <section aria-label="Sponsors" className="section-reveal relative py-12 sm:py-16 px-4 overflow-hidden bg-deep">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-center gap-2 mb-8">
             <div className="h-4 w-24 rounded bg-idm-gold-warm/10 animate-pulse" />
           </div>
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3 sm:gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
             {[0, 1, 2, 3, 4, 5].map(i => (
-              <div key={i} className="aspect-[7/3] rounded-xl bg-idm-gold-warm/5 animate-pulse" style={{ animationDelay: `${i * 100}ms` }} />
+              <div key={i} className="aspect-[5/3] rounded-xl bg-idm-gold-warm/5 animate-pulse" style={{ animationDelay: `${i * 100}ms` }} />
             ))}
           </div>
         </div>
@@ -79,7 +79,7 @@ export function SponsorsSection() {
       <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[rgba(212,168,83,0.10)] to-transparent" aria-hidden="true" />
 
       {/* Content */}
-      <div className="relative z-10 max-w-6xl mx-auto">
+      <div className="relative z-10 max-w-7xl mx-auto">
         {/* Header */}
         <SectionHeader
           icon={Gem}
@@ -89,12 +89,12 @@ export function SponsorsSection() {
         />
 
         {/* Sponsor banners — flat grid, no tier grouping */}
-        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3 sm:gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
           {sponsors.map(sponsor => {
             const logo = sponsor.logo;
             const inner = (
               <div
-                className={`group relative rounded-xl border aspect-[7/3] overflow-hidden transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_0_24px_rgba(212,168,83,0.12)] ${CARD_STYLE}`}
+                className={`group relative rounded-xl border aspect-[5/3] overflow-hidden transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_0_24px_rgba(212,168,83,0.12)] ${CARD_STYLE}`}
               >
                 {logo ? (
                   <Image
