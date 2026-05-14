@@ -346,3 +346,18 @@ Stage Summary:
 - Data fix: Manually corrected team ranks, isWinner flags, and awarded prize points for Week 1
 - Cache fix: Added revalidateTag/revalidatePath to finalize route
 - API now returns correct champion data for Week 1
+---
+Task ID: 2
+Agent: Main Agent
+Task: Fix points display on Juara Tarkam card — should show per-season points (45) not lifetime points (5)
+
+Work Log:
+- Identified inconsistency: weeklyChampions and mvpHallOfFame used `tp.player.points` (lifetime Player model points) while leaderboard used `seasonPointsMap` (per-season PlayerPoint aggregation)
+- Changed both stats API and landing-data SSR to use `seasonPointsMap.get(playerId) || player.points` for consistent per-season points
+- Applied fix to: weeklyChampions winnerTeam players, weeklyChampions MVP, mvpHallOfFame entries
+- Verified: predator/zico/Ren now show 45pts, zmz (MVP) shows 31pts — consistent with leaderboard
+
+Stage Summary:
+- Fixed points display in weeklyChampions (both API and SSR) to use per-season points
+- Fixed points display in mvpHallOfFame to use per-season points
+- Points now consistent across all sections: leaderboard, champion cards, MVP

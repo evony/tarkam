@@ -299,7 +299,7 @@ async function fetchLandingStatsInner(division: 'male' | 'female') {
             gamertag: tp.player.gamertag,
             avatar: tp.player.avatar,
             tier: tp.player.tier,
-            points: tp.player.points,
+            points: seasonPointsMap.get(tp.player.id) || tp.player.points,
             totalWins: tp.player.totalWins,
             totalMvp: tp.player.totalMvp,
             streak: tp.player.streak,
@@ -311,7 +311,7 @@ async function fetchLandingStatsInner(division: 'male' | 'female') {
       } : null,
       mvp: mvpPlayer ? {
         id: mvpPlayer.id, gamertag: mvpPlayer.gamertag, avatar: mvpPlayer.avatar,
-        tier: mvpPlayer.tier, totalMvp: mvpPlayer.totalMvp, points: mvpPlayer.points,
+        tier: mvpPlayer.tier, totalMvp: mvpPlayer.totalMvp, points: seasonPointsMap.get(mvpPlayer.id) || mvpPlayer.points,
       } : null,
     };
   });
@@ -350,7 +350,7 @@ async function fetchLandingStatsInner(division: 'male' | 'female') {
       t.participations.map((p: any) => ({
         _sortKey: p.createdAt as Date,
         id: p.player.id, gamertag: p.player.gamertag, avatar: p.player.avatar,
-        tier: p.player.tier, totalMvp: p.player.totalMvp, points: p.player.points,
+        tier: p.player.tier, totalMvp: p.player.totalMvp, points: seasonPointsMap.get(p.player.id) || p.player.points,
         totalWins: p.player.totalWins, streak: p.player.streak,
         weekNumber: t.weekNumber, tournamentName: t.name,
       }))
