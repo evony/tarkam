@@ -444,7 +444,7 @@ export function CloudinaryPicker({ open, onClose, onSelect, currentImage, upload
                       const isVideo = img.resourceType === 'video' || img.url.includes('/video/upload/');
                       return (
                       <div
-                        key={img.public_id}
+                        key={`${img.public_id}-${i}`}
                         className={`stagger-item-fast relative aspect-square rounded-lg overflow-hidden cursor-pointer border-2 transition-all ${
                           selectedImage?.public_id === img.public_id
                             ? 'border-primary ring-2 ring-primary/30'
