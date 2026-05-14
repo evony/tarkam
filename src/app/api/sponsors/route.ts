@@ -28,7 +28,6 @@ export async function GET(request: NextRequest) {
         },
       },
       orderBy: [
-        { tier: 'asc' },
         { name: 'asc' },
       ],
     });
