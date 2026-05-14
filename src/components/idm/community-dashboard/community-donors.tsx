@@ -167,13 +167,13 @@ export function CommunityDonors({ maleData, femaleData, onSawer }: CommunityDono
       <CardContent className="p-4 sm:p-6">
         {/* Total donation header with per-division breakdown */}
         <div className={`flex items-center justify-between mb-4 p-4 sm:p-5 rounded-2xl ${dt.bgSubtle} border ${dt.borderSubtle}`}>
-          <div>
+          <div className="flex-1 min-w-0">
             <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold">Total Saweran {weekLabel} → Prize Pool</p>
             <p className={`text-lg font-black ${dt.neonGradient}`}>
               {formatCurrencyShort(totalDonation || 0)}
             </p>
-            {/* Per-division totals */}
-            <div className="flex items-center gap-3 mt-1">
+            {/* Mobile: per-division breakdown under total on left */}
+            <div className="flex sm:hidden items-center gap-3 mt-1">
               {totalMale > 0 && (
                 <span className="text-[10px] text-idm-male-light/80">
                   ♂ Male {formatRupiahShort(totalMale)}
@@ -186,7 +186,22 @@ export function CommunityDonors({ maleData, femaleData, onSawer }: CommunityDono
               )}
             </div>
           </div>
-          <Sparkles className={`w-5 h-5 ${dt.text} opacity-40`} />
+          <div className="flex flex-col items-end">
+            <Sparkles className={`w-5 h-5 ${dt.text} opacity-40`} />
+            {/* Desktop: per-division breakdown on the right */}
+            <div className="hidden sm:flex items-center gap-2 mt-1">
+              {totalMale > 0 && (
+                <span className="text-[10px] text-idm-male-light/80">
+                  ♂ {formatRupiahShort(totalMale)}
+                </span>
+              )}
+              {totalFemale > 0 && (
+                <span className="text-[10px] text-idm-female-light/80">
+                  ♀ {formatRupiahShort(totalFemale)}
+                </span>
+              )}
+            </div>
+          </div>
         </div>
 
         {/* Donor rows */}
@@ -216,7 +231,11 @@ export function CommunityDonors({ maleData, femaleData, onSawer }: CommunityDono
                   {/* Info */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5 mb-1">
-                      <span className="text-xs font-semibold truncate">{donor.donorName}</span>
+                      <span className={`text-xs font-semibold truncate ${
+                        i === 0
+                          ? 'text-transparent bg-clip-text bg-gradient-to-r from-rose-400 via-pink-400 to-rose-500 animate-pulse'
+                          : ''
+                      }`} style={i === 0 ? { textShadow: '0 0 12px rgba(244,63,94,0.5), 0 0 24px rgba(244,63,94,0.3)' } : undefined}>{donor.donorName}</span>
                       {/* Division badges */}
                       {donor.divisions.map(div => (
                         <DivisionBadge key={div} division={div} />

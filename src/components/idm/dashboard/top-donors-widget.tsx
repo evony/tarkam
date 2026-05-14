@@ -312,12 +312,27 @@ export function TopDonorsWidget({ onDonate, statsData, statsData2 }: TopDonorsWi
               <p className="text-[9px] text-muted-foreground/60">
                 dari {totalDonors} penyawer
               </p>
+              {/* Desktop: per-division breakdown on the right under total */}
+              {totalAmount > 0 && (totalMale > 0 || totalFemale > 0) && (
+                <div className="hidden sm:flex items-center gap-2 mt-0.5 justify-end">
+                  {totalMale > 0 && (
+                    <span className="text-[9px] text-idm-male-light/80">
+                      ♂ {formatRupiahShort(totalMale)}
+                    </span>
+                  )}
+                  {totalFemale > 0 && (
+                    <span className="text-[9px] text-idm-female-light/80">
+                      ♀ {formatRupiahShort(totalFemale)}
+                    </span>
+                  )}
+                </div>
+              )}
             </div>
           )}
         </div>
-        {/* Per-division total breakdown */}
+        {/* Mobile: per-division breakdown below title */}
         {totalAmount > 0 && (totalMale > 0 || totalFemale > 0) && (
-          <div className="flex items-center gap-2 mt-1.5">
+          <div className="flex sm:hidden items-center gap-2 mt-1">
             {totalMale > 0 && (
               <div className="flex items-center gap-1">
                 <span className="inline-flex items-center px-1.5 py-0 rounded text-[8px] font-bold uppercase tracking-wider border bg-idm-male/10 text-idm-male-light border-idm-male/30">
@@ -358,7 +373,11 @@ export function TopDonorsWidget({ onDonate, statsData, statsData2 }: TopDonorsWi
 
                 {/* Name + badges */}
                 <div className="flex-1 min-w-0 flex items-center gap-1.5">
-                  <span className="text-xs font-semibold truncate">
+                  <span className={`text-xs font-semibold truncate ${
+                    i === 0
+                      ? 'text-transparent bg-clip-text bg-gradient-to-r from-rose-400 via-pink-400 to-rose-500 animate-pulse'
+                      : ''
+                  }`} style={i === 0 ? { textShadow: '0 0 12px rgba(244,63,94,0.5), 0 0 24px rgba(244,63,94,0.3)' } : undefined}>
                     {donor.donorName || 'Anonymous'}
                   </span>
                   {/* Division badges */}
