@@ -41,7 +41,7 @@ const TIER_STYLES: Record<string, string> = {
 
 /* ═══════════════════════════════════════════════════════════════
    Sponsors Section — "Didukung Oleh" (Supported By)
-   Horizontally scrollable sponsor logos grouped by tier.
+   Banner-style grid sponsor logos grouped by tier.
    Returns null if no active sponsors exist.
    ═══════════════════════════════════════════════════════════════ */
 export function SponsorsSection() {
@@ -128,54 +128,51 @@ export function SponsorsSection() {
                 <div className="flex-1 h-px bg-idm-gold-warm/10" />
               </div>
 
-              {/* Horizontally scrollable logos */}
-              <div className="overflow-x-auto scrollbar-none">
-                <div className="flex items-center gap-4 sm:gap-6 pb-1 min-w-min">
-                  {items.map(sponsor => {
-                    const logo = sponsor.logo;
-                    const inner = (
-                      <div
-                        className={`group flex items-center justify-center rounded-lg border px-5 py-3 transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(212,168,83,0.10)] ${TIER_STYLES[tier] || TIER_STYLES['other']}`}
-                      >
-                        {logo ? (
-                          <Image
-                            src={logo}
-                            alt={sponsor.name}
-                            width={96}
-                            height={32}
-                            className="h-6 sm:h-8 w-auto object-contain opacity-70 group-hover:opacity-100 transition-opacity duration-300"
-                            unoptimized
-                          />
-                        ) : (
-                          <span className="text-xs sm:text-sm font-semibold text-idm-gold-warm/70 group-hover:text-idm-gold-warm transition-colors">
-                            {sponsor.name}
-                          </span>
-                        )}
-                      </div>
-                    );
+              {/* Banner-style grid logos */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
+                {items.map(sponsor => {
+                  const logo = sponsor.logo;
+                  const inner = (
+                    <div
+                      className={`group flex items-center justify-center rounded-xl border px-4 py-5 sm:px-6 sm:py-6 transition-all duration-300 hover:scale-105 hover:shadow-[0_0_24px_rgba(212,168,83,0.12)] ${TIER_STYLES[tier] || TIER_STYLES['other']}`}
+                    >
+                      {logo ? (
+                        <Image
+                          src={logo}
+                          alt={sponsor.name}
+                          width={140}
+                          height={48}
+                          className="h-10 sm:h-12 w-auto object-contain opacity-75 group-hover:opacity-100 transition-opacity duration-300"
+                          unoptimized
+                        />
+                      ) : (
+                        <span className="text-xs sm:text-sm font-semibold text-idm-gold-warm/70 group-hover:text-idm-gold-warm transition-colors text-center">
+                          {sponsor.name}
+                        </span>
+                      )}
+                    </div>
+                  );
 
-                    if (sponsor.website) {
-                      return (
-                        <a
-                          key={sponsor.id}
-                          href={sponsor.website}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="shrink-0"
-                          aria-label={`Visit ${sponsor.name}`}
-                        >
-                          {inner}
-                        </a>
-                      );
-                    }
-
+                  if (sponsor.website) {
                     return (
-                      <div key={sponsor.id} className="shrink-0">
+                      <a
+                        key={sponsor.id}
+                        href={sponsor.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`Visit ${sponsor.name}`}
+                      >
                         {inner}
-                      </div>
+                      </a>
                     );
-                  })}
-                </div>
+                  }
+
+                  return (
+                    <div key={sponsor.id}>
+                      {inner}
+                    </div>
+                  );
+                })}
               </div>
             </div>
           ))}

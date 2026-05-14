@@ -62,6 +62,7 @@ import { SkinBadgesRow, SkinName } from '../skin-renderer';
 import { getPrimarySkin } from '@/lib/skin-utils';
 import { StatusBadge } from '../status-badge';
 import { ShareButton } from '../ui/share-button';
+import { SponsorBanner } from '../ui/sponsor-banner';
 
 // Import season selector components
 import { SeasonSelector, type SelectedSeason } from './season-selector';
@@ -1636,6 +1637,9 @@ export function CommunityDashboard() {
       <div className="relative z-40 -mx-2 sm:-mx-4 lg:-mx-5 py-2.5 bg-background/90 border-y border-idm-gold-warm/10" style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 48px' }}>
         <MarqueeTicker maleData={maleData} femaleData={femaleData} leagueData={leagueData} />
       </div>
+
+      {/* Sponsor Banner */}
+      <SponsorBanner placement="dashboard" className="flex items-center justify-center gap-4 flex-wrap" />
 
       {/* ═══ 2. Cari Turnamen Kamu — Right below hero, above match results ═══ */}
       <Section sectionId="tour-saya">
