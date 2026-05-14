@@ -125,12 +125,12 @@ export function CTASection({
               {/* Masuk Arena — Primary Gold Button with pulsing glow */}
               <button
                 onClick={onEnterCommunity}
-                className="btn-press focus-ring-premium cta-btn-pulse group relative px-8 py-4 rounded-2xl bg-gradient-to-r from-[#d4a853] to-[#e8d5a3] text-mid font-bold text-sm tracking-wider cursor-pointer overflow-hidden"
+                className="btn-press focus-ring-premium cta-btn-pulse group relative px-8 py-4 rounded-2xl bg-gradient-to-r from-[#c4963a] via-[#d4a853] to-[#b8860b] text-mid font-bold text-sm tracking-wider cursor-pointer overflow-hidden sm:shadow-[0_0_24px_rgba(212,168,83,0.3)] sm:hover:shadow-[0_0_36px_rgba(212,168,83,0.5)] transition-shadow duration-300"
               >
-                {/* Glow ripple on hover */}
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ boxShadow: '0 0 30px 4px rgba(212,168,83,0.35), 0 0 60px 8px rgba(212,168,83,0.15)' }} />
-                {/* Shimmer sweep on hover */}
-                <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
+                {/* Glow ripple on hover — desktop only */}
+                <div className="hidden sm:block absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ boxShadow: '0 0 30px 4px rgba(212,168,83,0.35), 0 0 60px 8px rgba(212,168,83,0.15)' }} />
+                {/* Shimmer sweep on hover — desktop only */}
+                <div className="hidden sm:block absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
                 <Flame className="w-4 h-4 inline mr-2 relative z-10" />
                 <span className="relative z-10">{primaryButtonText}</span>
               </button>

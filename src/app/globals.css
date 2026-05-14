@@ -8631,12 +8631,44 @@ html {
 
 /* ─── CTA: Pulsing glow on primary button ─── */
 .cta-btn-pulse {
-  box-shadow: 0 0 20px rgba(212,168,83,0.2);
   animation: cta-pulse-glow 2.5s ease-in-out infinite;
 }
 @keyframes cta-pulse-glow {
   0%, 100% { box-shadow: 0 0 20px rgba(212,168,83,0.2); }
   50% { box-shadow: 0 0 35px rgba(212,168,83,0.35); }
+}
+
+/* Mobile: reduce CTA shimmer effects — simpler, cleaner look */
+@media (max-width: 639px) {
+  .cta-btn-pulse {
+    animation: none !important;
+    box-shadow: 0 0 12px rgba(212,168,83,0.15) !important;
+  }
+  .cta-rotating-border {
+    display: none !important;
+  }
+  .cta-gold-trail::after {
+    display: none !important;
+  }
+  .cta-particle-1,
+  .cta-particle-2,
+  .cta-particle-3,
+  .cta-particle-4,
+  .cta-particle-5,
+  .cta-particle-6 {
+    display: none !important;
+  }
+  .cta-dot-grid {
+    opacity: 0 !important;
+  }
+  .cta-bottom-glow {
+    opacity: 0.3 !important;
+    filter: none !important;
+  }
+  .cta-badge-ring {
+    box-shadow: none !important;
+    animation: none !important;
+  }
 }
 
 /* ─── Champion: Crown float animation ─── */
