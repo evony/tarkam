@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://tarkam.vercel.app"),
+  metadataBase: new URL("https://idolmeta.vercel.app"),
   title: "Tarkam IDM - Idol Meta Fan Made Edition",
   description: "Idol meta fan made edition - TARKAM. Komunitas Idol Meta Indonesia. Turnamen mingguan, leaderboard, dan lebih banyak lagi.",
   manifest: "/manifest.json",
@@ -35,11 +35,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: "TARKAM IDM — Turnamen Idol Meta Indonesia",
     description: "Komunitas Idol Meta Indonesia. Turnamen mingguan, leaderboard, MVP, Sultan of the Week, dan lebih banyak lagi. Gabung sekarang!",
-    url: "https://tarkam.vercel.app",
+    url: "https://idolmeta.vercel.app",
     siteName: "TARKAM IDM",
     images: [
       {
-        url: "/og-banner.png",
+        url: "https://idolmeta.vercel.app/og-banner.jpg",
         width: 1200,
         height: 630,
         alt: "TARKAM IDM — Turnamen Idol Meta Indonesia",
@@ -54,7 +54,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "TARKAM IDM — Turnamen Idol Meta Indonesia",
     description: "Komunitas Idol Meta Indonesia. Turnamen mingguan, leaderboard, MVP, dan lebih banyak lagi.",
-    images: ["/og-banner.png"],
+    images: ["https://idolmeta.vercel.app/og-banner.jpg"],
   },
 
   // ── Keywords untuk SEO ──
