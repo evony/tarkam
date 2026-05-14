@@ -19,8 +19,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://idolmeta.vercel.app"),
-  title: "Tarkam IDM - Idol Meta Fan Made Edition",
-  description: "Idol meta fan made edition - TARKAM. Komunitas Idol Meta Indonesia. Turnamen mingguan, leaderboard, dan lebih banyak lagi.",
+  title: "TARKAM — Turnamen Idol Meta Indonesia",
+  description: "Komunitas Idol Meta Indonesia. Turnamen dance rhythm mingguan, leaderboard, MVP, Sultan of the Week, dan komunitas terbesar. Gabung sekarang!",
   manifest: "/manifest.json",
   icons: {
     icon: "/logo1.webp",
@@ -31,10 +31,10 @@ export const metadata: Metadata = {
     "mobile-web-app-capable": "yes",
   },
 
-  // ── Open Graph — Rich preview saat share link di WhatsApp, Telegram, dll ──
+  // ── Open Graph ──
   openGraph: {
-    title: "TARKAM IDM — Turnamen Idol Meta Indonesia",
-    description: "Komunitas Idol Meta Indonesia. Turnamen mingguan, leaderboard, MVP, Sultan of the Week, dan lebih banyak lagi. Gabung sekarang!",
+    title: "TARKAM — Turnamen Idol Meta Indonesia",
+    description: "Komunitas Idol Meta Indonesia. Turnamen dance rhythm mingguan, leaderboard, MVP, Sultan of the Week, dan komunitas terbesar. Gabung sekarang!",
     url: "https://idolmeta.vercel.app",
     siteName: "TARKAM IDM",
     images: [
@@ -42,23 +42,22 @@ export const metadata: Metadata = {
         url: "https://idolmeta.vercel.app/og-banner.jpg",
         width: 1200,
         height: 630,
-        alt: "TARKAM IDM — Turnamen Idol Meta Indonesia",
+        alt: "TARKAM — Turnamen Idol Meta Indonesia",
       },
     ],
     locale: "id_ID",
     type: "website",
   },
 
-  // ── Twitter Card — Preview khusus Twitter/X ──
+  // ── Twitter Card ──
   twitter: {
     card: "summary_large_image",
-    title: "TARKAM IDM — Turnamen Idol Meta Indonesia",
-    description: "Komunitas Idol Meta Indonesia. Turnamen mingguan, leaderboard, MVP, dan lebih banyak lagi.",
+    title: "TARKAM — Turnamen Idol Meta Indonesia",
+    description: "Komunitas Idol Meta Indonesia. Turnamen dance rhythm mingguan, leaderboard, MVP, dan komunitas terbesar.",
     images: ["https://idolmeta.vercel.app/og-banner.jpg"],
   },
 
-  // ── Keywords untuk SEO ──
-  keywords: ["TARKAM", "IDM", "Idol Meta", "turnamen", "esports", "komunitas", "leaderboard", "MVP"],
+  keywords: ["TARKAM", "IDM", "Idol Meta", "turnamen", "dance", "rhythm", "komunitas", "leaderboard", "MVP"],
 };
 
 export const viewport: Viewport = {
@@ -83,14 +82,15 @@ export default function RootLayout({
         <link rel="preconnect" href="https://res.cloudinary.com" />
         <link rel="dns-prefetch" href="https://res.cloudinary.com" />
 
-        {/* ── Open Graph meta tags (hardcoded for WhatsApp/Telegram compatibility) ── */}
+        {/* ── Open Graph meta tags (hardcoded for maximum WhatsApp/Telegram compatibility) ── */}
         <meta property="og:url" content="https://idolmeta.vercel.app/" />
         <meta property="og:type" content="website" />
-        <meta property="og:title" content="TARKAM — Idol Meta Fan Made Edition" />
-        <meta property="og:description" content="Komunitas Idol Meta Indonesia" />
+        <meta property="og:title" content="TARKAM — Turnamen Idol Meta Indonesia" />
+        <meta property="og:description" content="Komunitas Idol Meta Indonesia. Turnamen dance rhythm mingguan, leaderboard, MVP, Sultan of the Week, dan komunitas terbesar. Gabung sekarang!" />
         <meta property="og:image" content="https://idolmeta.vercel.app/og-banner.jpg" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content="TARKAM — Turnamen Idol Meta Indonesia" />
         <meta property="og:site_name" content="TARKAM IDM" />
         <meta property="og:locale" content="id_ID" />
 
@@ -98,9 +98,10 @@ export default function RootLayout({
         <meta name="twitter:card" content="summary_large_image" />
         <meta property="twitter:domain" content="idolmeta.vercel.app" />
         <meta property="twitter:url" content="https://idolmeta.vercel.app/" />
-        <meta name="twitter:title" content="TARKAM — Idol Meta Fan Made Edition" />
-        <meta name="twitter:description" content="Komunitas Idol Meta Indonesia" />
+        <meta name="twitter:title" content="TARKAM — Turnamen Idol Meta Indonesia" />
+        <meta name="twitter:description" content="Komunitas Idol Meta Indonesia. Turnamen dance rhythm mingguan, leaderboard, MVP, dan komunitas terbesar." />
         <meta name="twitter:image" content="https://idolmeta.vercel.app/og-banner.jpg" />
+        <meta name="twitter:image:alt" content="TARKAM — Turnamen Idol Meta Indonesia" />
 
         {/* PWA: Register service worker */}
         <script
