@@ -380,7 +380,7 @@ function DivisionCard({
             title={isRegistrationOpen ? 'Daftar sekarang' : 'Pendaftaran belum dibuka'}
           >
             <UserPlus className="w-3.5 h-3.5" />
-            <span>{isRegistrationOpen ? 'Daftar' : 'Belum Buka'}</span>
+            <span>{isRegistrationOpen ? 'Daftar' : 'Selesai'}</span>
             {isRegistrationOpen && <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />}
           </button>
 
