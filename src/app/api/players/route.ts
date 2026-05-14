@@ -244,11 +244,24 @@ export async function DELETE(request: Request) {
   }
 
   try {
-    // Soft delete by setting isActive to false
+    // Soft delete: set inactive + rejected so player can re-register later
+    // ★ registrationStatus='rejected' signals the registration system that this
+    //   player was removed and should be allowed to re-register (reset data)
     const player = await db.player.update({
       where: { id },
-      data: { isActive: false },
+      data: { isActive: false, registrationStatus: 'rejected' },
     });
+
+    // ★ Also invalidate the player's Account session so they can't login while deleted
+    // (We don't delete the Account — just invalidate the session so they must re-register)
+    try {
+      await db.account.updateMany({
+        where: { playerId: id },
+        data: { sessionInvalidatedAt: new Date() },
+      });
+    } catch {
+      // Account might not exist — ignore
+    }
 
     await createAuditLog({
       adminId: authResult.id,
