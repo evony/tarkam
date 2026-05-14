@@ -102,7 +102,7 @@ export function SponsorsSection() {
                     alt={sponsor.name}
                     fill
                     className="object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-300"
-                  style={{ objectPosition: 'center 40%' }}
+                  style={{ objectPosition: 'center 30%' }}
                     unoptimized
                   />
                 ) : (
