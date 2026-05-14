@@ -231,7 +231,11 @@ export function CommunityDonors({ maleData, femaleData, onSawer }: CommunityDono
                   {/* Info */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5 mb-1">
-                      <span className={`text-xs font-semibold truncate ${
+                      {/* #1 Crown emoji badge */}
+                      {i === 0 && (
+                        <span className="text-sm shrink-0" title="Top Saweran">👑</span>
+                      )}
+                      <span className={`text-sm font-semibold truncate ${
                         i === 0
                           ? 'text-idm-gold-warm donor-name-pulse-gold'
                           : 'donor-name-pulse'
@@ -264,7 +268,7 @@ export function CommunityDonors({ maleData, femaleData, onSawer }: CommunityDono
                         );
                       })()}
                       {/* Total amount */}
-                      <span className={`text-xs font-bold ${dt.neonGradient} shrink-0 ml-auto`}>
+                      <span className={`text-sm font-bold ${dt.neonGradient} shrink-0 ml-auto`}>
                         {formatCurrencyShort(donor.totalAmount)}
                       </span>
                     </div>
@@ -274,16 +278,16 @@ export function CommunityDonors({ maleData, femaleData, onSawer }: CommunityDono
                         {/* Per-division amounts */}
                         <div className="flex items-center gap-2 mb-1">
                           {donor.maleAmount > 0 && (
-                            <span className="text-[9px] text-idm-male-light/60">
+                            <span className="text-[10px] text-idm-male-light/60">
                               ♂ {formatRupiahShort(donor.maleAmount)}
                             </span>
                           )}
                           {donor.femaleAmount > 0 && (
-                            <span className="text-[9px] text-idm-female-light/60">
+                            <span className="text-[10px] text-idm-female-light/60">
                               ♀ {formatRupiahShort(donor.femaleAmount)}
                             </span>
                           )}
-                          <span className="text-[9px] text-muted-foreground/40">
+                          <span className="text-[10px] text-muted-foreground/40">
                             {donor.donationCount}x sawer
                           </span>
                         </div>

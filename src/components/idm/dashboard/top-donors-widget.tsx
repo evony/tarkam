@@ -85,8 +85,8 @@ function formatRelativeTime(dateStr: string | null): string {
 function RankBadge({ rank }: { rank: number }) {
   if (rank === 1) {
     return (
-      <div className="w-6 h-6 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center shadow-sm donor-rank-badge">
-        <Trophy className="w-3.5 h-3.5 text-yellow-900" />
+      <div className="w-7 h-7 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center shadow-sm donor-rank-badge">
+        <Trophy className="w-4 h-4 text-yellow-900" />
       </div>
     );
   }
@@ -373,7 +373,11 @@ export function TopDonorsWidget({ onDonate, statsData, statsData2 }: TopDonorsWi
 
                 {/* Name + badges */}
                 <div className="flex-1 min-w-0 flex items-center gap-1.5">
-                  <span className={`text-xs font-semibold truncate ${
+                  {/* #1 Crown emoji badge */}
+                  {i === 0 && (
+                    <span className="text-sm shrink-0" title="Top Saweran">👑</span>
+                  )}
+                  <span className={`text-sm font-semibold truncate ${
                     i === 0
                       ? 'text-idm-gold-warm donor-name-pulse-gold'
                       : 'donor-name-pulse'
@@ -411,7 +415,7 @@ export function TopDonorsWidget({ onDonate, statsData, statsData2 }: TopDonorsWi
 
                 {/* Total amount */}
                 <div className="text-right shrink-0">
-                  <span className="text-[11px] font-bold text-idm-gold-warm donor-amount">
+                  <span className="text-xs font-bold text-idm-gold-warm donor-amount">
                     {formatRupiah(donor.totalAmount)}
                   </span>
                 </div>
@@ -421,12 +425,12 @@ export function TopDonorsWidget({ onDonate, statsData, statsData2 }: TopDonorsWi
               {(donor.maleAmount > 0 || donor.femaleAmount > 0) && donor.divisions.length > 0 && (
                 <div className="flex items-center gap-2 mt-1 ml-8">
                   {donor.maleAmount > 0 && (
-                    <span className="text-[9px] text-idm-male-light/70">
+                    <span className="text-[10px] text-idm-male-light/70">
                       ♂ {formatRupiahShort(donor.maleAmount)}
                     </span>
                   )}
                   {donor.femaleAmount > 0 && (
-                    <span className="text-[9px] text-idm-female-light/70">
+                    <span className="text-[10px] text-idm-female-light/70">
                       ♀ {formatRupiahShort(donor.femaleAmount)}
                     </span>
                   )}
@@ -439,7 +443,7 @@ export function TopDonorsWidget({ onDonate, statsData, statsData2 }: TopDonorsWi
                       </span>
                     </>
                   )}
-                  <span className="text-[9px] text-muted-foreground/40">
+                  <span className="text-[10px] text-muted-foreground/40">
                     {donor.donationCount}x sawer
                   </span>
                 </div>
