@@ -317,9 +317,8 @@ export function isVideoUrl(url: string): boolean {
   const lower = url.toLowerCase();
   // Cloudinary video upload path
   if (lower.includes('/video/upload/')) return true;
-  // Direct video file extensions
-  if (/\.(mp4|webm|mov|avi|mkv|m4v|ogg)(\?|$)/i.test(lower)) return false; // query params might strip ext
-  if (/\.(mp4|webm|mov|avi|mkv|m4v|ogg)$/i.test(lower)) return true;
+  // Direct video file extensions (with or without query params)
+  if (/\.(mp4|webm|mov|avi|mkv|m4v|ogg)(\?.*)?$/i.test(lower)) return true;
   // Cloudinary video format transformation (e.g. f_mp4)
   if (lower.includes('f_mp4') || lower.includes('f_webm')) return true;
   return false;
@@ -358,12 +357,27 @@ export function getOptimizedVideoUrl(url: string): string {
 
 /**
  * Get a video poster/thumbnail URL from a Cloudinary video URL
- * Cloudinary can generate a thumbnail from video by replacing /video/upload/ with /image/upload/
+ * Cloudinary can generate a JPEG thumbnail from video using the video delivery path
+ * with f_jpg transformation — this is the official Cloudinary method for video thumbnails.
  */
 export function getVideoPosterUrl(url: string): string {
   if (!url) return '';
-  // Replace /video/upload/ with /image/upload/ for poster
-  return url.replace('/video/upload/', '/image/upload/so_auto/');
+  if (!isCloudinaryUrl(url)) return '';
+
+  const videoMarker = '/video/upload/';
+  const videoIndex = url.indexOf(videoMarker);
+  if (videoIndex !== -1) {
+    const before = url.substring(0, videoIndex + videoMarker.length);
+    const after = url.substring(videoIndex + videoMarker.length);
+    // If already has transforms, inject f_jpg before them
+    if (after.startsWith('f_') || after.startsWith('q_') || after.startsWith('w_')) {
+      return `${before}f_jpg,q_auto,so_auto/${after}`;
+    }
+    return `${before}f_jpg,q_auto,so_auto/${after}`;
+  }
+
+  // If it's not a /video/upload/ URL, no poster can be generated
+  return '';
 }
 
 /**

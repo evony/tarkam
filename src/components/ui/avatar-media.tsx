@@ -85,6 +85,9 @@ export function AvatarMedia({
     const posterSrc = getVideoPosterUrl(src);
 
     const mergedStyle = { objectPosition, ...style };
+    // Use "auto" preload for priority/above-the-fold content to ensure video loads quickly.
+    // For lazy-loaded cards, "auto" also helps because autoplay requires video data.
+    const preloadStrategy = priority ? 'auto' : 'auto';
 
     if (fill) {
       return (
@@ -98,7 +101,7 @@ export function AvatarMedia({
           className={cn('absolute inset-0 w-full h-full', objectFitClass, className)}
           style={mergedStyle}
           aria-label={alt}
-          preload="metadata"
+          preload={preloadStrategy}
         />
       );
     }
@@ -116,7 +119,7 @@ export function AvatarMedia({
         className={cn(objectFitClass, className)}
         style={mergedStyle}
         aria-label={alt}
-        preload="metadata"
+        preload={preloadStrategy}
       />
     );
   }
