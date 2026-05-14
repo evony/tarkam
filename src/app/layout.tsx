@@ -18,6 +18,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://tarkam.vercel.app"),
   title: "Tarkam IDM - Idol Meta Fan Made Edition",
   description: "Idol meta fan made edition - TARKAM. Komunitas Idol Meta Indonesia. Turnamen mingguan, leaderboard, dan lebih banyak lagi.",
   manifest: "/manifest.json",
@@ -39,8 +40,8 @@ export const metadata: Metadata = {
     images: [
       {
         url: "/og-banner.png",
-        width: 1344,
-        height: 768,
+        width: 1200,
+        height: 630,
         alt: "TARKAM IDM — Turnamen Idol Meta Indonesia",
       },
     ],
