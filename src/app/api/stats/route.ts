@@ -297,11 +297,21 @@ export async function GET(request: Request) {
     completedTournaments: completedTournaments as any[],
   });
 
-  // Total prize pool — filter weekly donations, per division
+  // Total prize pool — base prizePool from tournaments + weekly donations (saweran)
   const weeklyDonations = seasonDonations.filter(d => d.type === 'weekly');
-  const totalPrizePool = weeklyDonations.reduce((sum, d) => sum + d.amount, 0);
-  const malePrizePool = weeklyDonations.filter(d => d.division === 'male').reduce((sum, d) => sum + d.amount, 0);
-  const femalePrizePool = weeklyDonations.filter(d => d.division === 'female').reduce((sum, d) => sum + d.amount, 0);
+  const donationTotal = weeklyDonations.reduce((sum, d) => sum + d.amount, 0);
+  const maleDonationTotal = weeklyDonations.filter(d => d.division === 'male').reduce((sum, d) => sum + d.amount, 0);
+  const femaleDonationTotal = weeklyDonations.filter(d => d.division === 'female').reduce((sum, d) => sum + d.amount, 0);
+
+  // Sum base prize pool from all tournaments in the season (admin-inputted)
+  const basePrizePoolTotal = tournaments.reduce((sum, t) => sum + (t.prizePool || 0), 0);
+  const baseMalePrizePool = tournaments.filter(t => t.division === 'male').reduce((sum, t) => sum + (t.prizePool || 0), 0);
+  const baseFemalePrizePool = tournaments.filter(t => t.division === 'female').reduce((sum, t) => sum + (t.prizePool || 0), 0);
+
+  // Combined: base prize pool (admin) + saweran (donations)
+  const totalPrizePool = basePrizePoolTotal + donationTotal;
+  const malePrizePool = baseMalePrizePool + maleDonationTotal;
+  const femalePrizePool = baseFemalePrizePool + femaleDonationTotal;
 
   // Season donation total
   const seasonDonationTotal = seasonDonations.reduce((sum, d) => sum + d.amount, 0);
