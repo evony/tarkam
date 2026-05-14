@@ -1042,7 +1042,7 @@ export async function GET(request: Request) {
     season,
     allSeasons: allSeasonsInfo,
     seasonForClubs, // Season that has clubs — used by admin club management
-    activeTournament,
+    activeTournament: activeTournament ? { ...activeTournament, division: division as 'male' | 'female' } : null,
     totalPlayers,
     approvedPlayerCount,
     totalPrizePool,

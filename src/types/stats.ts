@@ -55,6 +55,7 @@ export interface ActiveTournament {
   weekNumber: number;
   status: string;
   format?: string;
+  division?: 'male' | 'female';
   prizePool: number;
   bpm: string | null;
   location: string;
