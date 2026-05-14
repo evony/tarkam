@@ -481,7 +481,7 @@ function DivisionCard({
                   }}
                 >
                   {/* Full-body avatar */}
-                  <div className="relative w-full h-full" style={{ minHeight: '360px' }}>
+                  <div className="relative w-full h-full avatar-shimmer-gold" style={{ minHeight: '360px' }}>
                     <Image
                       src={getAvatarUrl(player.gamertag, division, player.avatar)}
                       alt={player.gamertag}
@@ -677,7 +677,7 @@ function MvpCard({
             }}
           >
             {/* Full-body avatar */}
-            <div className="relative w-full" style={{ minHeight: '280px' }}>
+            <div className="relative w-full avatar-shimmer-platinum" style={{ minHeight: '280px' }}>
               <Image
                 src={player.imageUrl || getAvatarUrl(player.gamertag, division)}
                 alt={player.gamertag}
@@ -891,7 +891,7 @@ function SultanCard({
             }}
           >
             {/* ─── Left: Portrait Avatar ─── */}
-            <div className="relative w-[58%] shrink-0 overflow-hidden" style={{ minHeight: '320px' }}>
+            <div className="relative w-[58%] shrink-0 overflow-hidden avatar-shimmer-maroon" style={{ minHeight: '320px' }}>
               <Image
                 src={getAvatarUrl(sultan.player!.gamertag, sultanDivision, sultan.player!.avatar)}
                 alt={sultan.player!.gamertag}

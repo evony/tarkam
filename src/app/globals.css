@@ -8643,6 +8643,134 @@ html {
   50% { opacity: 1; }
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   AVATAR SHIMMER OVERLAYS — Theme-specific elegant shimmer
+   Applied as ::after on avatar container (position: relative + overflow: hidden)
+   Each shimmer uses a diagonal sweep with theme-colored translucent gradient.
+   Slow 6s cycle — subtle, professional, not overwhelming.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Gold Luxury — Juara Tarkam Weekly */
+.avatar-shimmer-gold {
+  position: relative;
+  overflow: hidden;
+}
+.avatar-shimmer-gold::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    rgba(212,168,83,0.18) 45%,
+    rgba(245,215,122,0.22) 50%,
+    rgba(212,168,83,0.18) 55%,
+    transparent 70%
+  );
+  transform: translateX(-120%);
+  animation: avatar-shimmer-sweep 6s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* Platinum — MVP */
+.avatar-shimmer-platinum {
+  position: relative;
+  overflow: hidden;
+}
+.avatar-shimmer-platinum::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    rgba(229,228,226,0.15) 45%,
+    rgba(245,245,245,0.2) 50%,
+    rgba(229,228,226,0.15) 55%,
+    transparent 70%
+  );
+  transform: translateX(-120%);
+  animation: avatar-shimmer-sweep 6s ease-in-out 1s infinite;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* Diamond — Season Champion */
+.avatar-shimmer-diamond {
+  position: relative;
+  overflow: hidden;
+}
+.avatar-shimmer-diamond::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    rgba(185,242,255,0.15) 45%,
+    rgba(220,250,255,0.22) 50%,
+    rgba(185,242,255,0.15) 55%,
+    transparent 70%
+  );
+  transform: translateX(-120%);
+  animation: avatar-shimmer-sweep 6s ease-in-out 2s infinite;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* Emerald — Season Sultan */
+.avatar-shimmer-emerald {
+  position: relative;
+  overflow: hidden;
+}
+.avatar-shimmer-emerald::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    rgba(80,200,120,0.15) 45%,
+    rgba(134,239,172,0.2) 50%,
+    rgba(80,200,120,0.15) 55%,
+    transparent 70%
+  );
+  transform: translateX(-120%);
+  animation: avatar-shimmer-sweep 6s ease-in-out 0.5s infinite;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* Maroon — Sultan of the Week */
+.avatar-shimmer-maroon {
+  position: relative;
+  overflow: hidden;
+}
+.avatar-shimmer-maroon::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    rgba(212,87,106,0.15) 45%,
+    rgba(245,198,203,0.2) 50%,
+    rgba(212,87,106,0.15) 55%,
+    transparent 70%
+  );
+  transform: translateX(-120%);
+  animation: avatar-shimmer-sweep 6s ease-in-out 1.5s infinite;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* Shared shimmer sweep keyframe — smooth diagonal pass */
+@keyframes avatar-shimmer-sweep {
+  0% { transform: translateX(-120%); }
+  100% { transform: translateX(120%); }
+}
+
 /* ─── Club card: Premium hover with subtle gold lift ─── */
 .club-card {
   transition: border-color 0.3s ease, box-shadow 0.4s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -8684,6 +8812,11 @@ html {
   .cta-count-up,
   .champion-crown-float,
   .champion-gold-shimmer::after,
+  .avatar-shimmer-gold::after,
+  .avatar-shimmer-platinum::after,
+  .avatar-shimmer-diamond::after,
+  .avatar-shimmer-emerald::after,
+  .avatar-shimmer-maroon::after,
   .mvp-spotlight-bg,
   .hero-particle {
     animation: none !important;
