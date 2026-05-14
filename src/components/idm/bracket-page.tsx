@@ -230,7 +230,22 @@ export function BracketPage() {
   const { setCurrentView } = useAppStore();
   const ct = useCommunityTheme();
 
-  const [bracketType, setBracketType] = useState<string>('swiss');
+  // ── Auto-detect bracket format from tournament data ──
+  // Query male stats to get the active tournament's format.
+  // Both divisions share the same format within a season, so one query is enough.
+  const { data: maleData } = useQuery<StatsData>({
+    queryKey: ['stats', 'male'],
+    queryFn: async () => {
+      const res = await fetch('/api/stats?division=male');
+      return res.json();
+    },
+    staleTime: 2 * 60 * 1000,
+  });
+
+  const detectedFormat = maleData?.activeTournament?.format;
+  const [bracketTypeManual, setBracketTypeManual] = useState<string | null>(null);
+  // Auto-detect from tournament format, but allow manual override
+  const bracketType = bracketTypeManual || detectedFormat || 'swiss';
   const [selectedMatchId, setSelectedMatchId] = useState<string | null>(null);
   const [matchPreview, setMatchPreview] = useState<any>(null);
 
@@ -279,10 +294,13 @@ export function BracketPage() {
               { value: 'group_stage', label: 'Fase Grup', icon: Users },
               { value: 'round_robin', label: 'Round Robin', icon: Calendar },
               { value: 'upper_semi', label: 'Upper Semi', icon: Swords },
-            ].map(bt => (
+            ].map(bt => {
+              // Show a dot indicator on the format that matches the tournament
+              const isAutoDetected = !bracketTypeManual && detectedFormat === bt.value;
+              return (
               <button
                 key={bt.value}
-                onClick={() => setBracketType(bt.value)}
+                onClick={() => setBracketTypeManual(bt.value)}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[11px] font-medium transition-all whitespace-nowrap ${
                   bracketType === bt.value
                     ? 'bg-idm-gold-warm/15 text-idm-gold-warm border border-idm-gold-warm/25 shadow-sm'
@@ -291,8 +309,12 @@ export function BracketPage() {
               >
                 <bt.icon className="w-3.5 h-3.5" />
                 {bt.label}
+                {isAutoDetected && bracketType === bt.value && (
+                  <span className="w-1.5 h-1.5 rounded-full bg-green-400 shrink-0" title="Auto-detected" />
+                )}
               </button>
-            ))}
+              );
+            })}
           </div>
         </Card>
       </div>

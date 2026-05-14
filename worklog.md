@@ -361,3 +361,22 @@ Stage Summary:
 - Fixed points display in weeklyChampions (both API and SSR) to use per-season points
 - Fixed points display in mvpHallOfFame to use per-season points
 - Points now consistent across all sections: leaderboard, champion cards, MVP
+---
+Task ID: 3
+Agent: Main Agent
+Task: Fix bracket page to auto-detect tournament format and default to it
+
+Work Log:
+- Identified issue: BracketPage hard-coded `useState('swiss')` as default bracket type
+- Tournament format `upper_semi` was 4th in the tab list, so users had to manually click it
+- Fixed BracketPage to auto-detect format from tournament data (same pattern as match-day-center.tsx)
+- Added useQuery to fetch male stats data and read `activeTournament.format`
+- Changed from `useState('swiss')` to `bracketTypeManual || detectedFormat || 'swiss'` pattern
+- Added green dot indicator on auto-detected format tab for clarity
+- Manual override still works — clicking any tab sets bracketTypeManual which takes priority
+
+Stage Summary:
+- Bracket page now auto-detects tournament format (e.g., upper_semi) and selects it by default
+- Users no longer need to manually find the correct format tab
+- Manual override still available via clicking other tabs
+- Green dot indicator shows which format is auto-detected from tournament data
