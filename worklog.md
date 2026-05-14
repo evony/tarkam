@@ -380,3 +380,82 @@ Stage Summary:
 - Users no longer need to manually find the correct format tab
 - Manual override still available via clicking other tabs
 - Green dot indicator shows which format is auto-detected from tournament data
+
+---
+Task ID: 9
+Agent: Main Agent
+Task: Fix CloudinaryPicker upload error on Vercel (4.5MB serverless body limit)
+
+Work Log:
+- Identified root cause: Vercel serverless functions have a 4.5MB body limit, causing upload failures for larger images
+- Implemented signed upload (client-to-Cloudinary direct) to bypass Vercel's body limit entirely
+- Created /api/cloudinary/sign-upload route for server-side signature generation (requires admin auth)
+- Modified cloudinary-picker.tsx: uploadViaSignedUrl() gets signed params then uploads directly to Cloudinary API from client
+- Added client-side image compression before preview (target under 3MB)
+- Always uses signed upload — no fallback to server upload
+- Added video support with resourceType: 'video' for direct-to-Cloudinary video uploads
+
+Stage Summary:
+- CloudinaryPicker now uses signed upload, bypassing Vercel's 4.5MB serverless body limit
+- Client-side compression reduces image size before upload
+- Server only generates signatures (small request), actual upload goes directly to Cloudinary
+- Video uploads also supported via signed upload
+
+---
+Task ID: 10
+Agent: Main Agent
+Task: Fix player deletion not reflecting in UI list
+
+Work Log:
+- Found deletePlayer mutation's onSuccess callback was incomplete
+- Added proper cache invalidation after player deletion:
+  1. qc.invalidateQueries({ queryKey: ['admin-players', storeDivision] }) — refresh player list
+  2. qc.invalidateQueries({ queryKey: ['admin-pending-registrations'] }) — refresh pending list
+  3. setAllPlayerPages([]) + setPlayerOffset(0) — reset pagination to avoid stale "load more" pages
+  4. invalidateLandingCache() — update landing page stats/league data
+- toast.success shown after successful deletion
+
+Stage Summary:
+- Player deletion now properly reflects in UI immediately
+- All relevant caches invalidated: admin players, pending registrations, landing page
+- Pagination state reset to avoid showing stale data
+
+---
+Task ID: 11
+Agent: Main Agent
+Task: Fix donorBadgeCount calculation — use actual approved donation count, never increment
+
+Work Log:
+- Found that donorBadgeCount was being incremented instead of recalculated from actual donations
+- This caused incorrect badge counts when donations were rejected/revoked
+- Fixed in /api/donations/route.ts: When a donation is approved, donorBadgeCount is set to the actual count of approved donations (db.donation.count with status='approved')
+- Applied fix to both donation approval paths (weekly and other types)
+- buildSkinMap utility queries donorBadgeCount from Account records for skin display
+- DonorHeartBadge component renders the count in SkinBadgesRow
+
+Stage Summary:
+- donorBadgeCount now always reflects the actual number of approved donations
+- No more double-increment or stale count issues
+- Count is recalculated (not incremented) each time a donation is approved
+
+---
+Task ID: 12
+Agent: Main Agent
+Task: Sultan of the Week display on landing page and dashboard
+
+Work Log:
+- Landing page: SultanCard component in highlights-section.tsx renders Sultan of the Week
+  - Picks the Sultan with the highest totalAmount across both divisions
+  - Shows: player avatar, gamertag, total donation amount, donation count, week number, tier
+  - Side-by-side layout with avatar on left and info on right
+- Dashboard: SultanOfWeekSection component in community-champions.tsx
+  - Per-division Sultan display in a tab alongside Top 3 champions
+  - Cross-division badge when Sultan's division differs from tournament division
+  - PlayerCard integration with skin support
+- Stats API: sultanOfWeekly computed from season donations grouped by tournament
+  - Cross-division donor matching (searches ALL players regardless of division)
+
+Stage Summary:
+- Sultan of the Week fully visible on both landing page and community dashboard
+- Cross-division support: donors can be Sultan even if division differs from tournament
+- Stats API provides complete Sultan data including city, avatar, and donation details
