@@ -18,6 +18,13 @@ interface CommunityDonorsProps {
   onSawer?: () => void;
 }
 
+/** Enriched donor with per-division breakdown */
+interface DivisionDonor extends TopDonor {
+  maleAmount: number;
+  femaleAmount: number;
+  divisions: ('male' | 'female')[];
+}
+
 const RANK_MEDALS = ['🥇', '🥈', '🥉'];
 
 function getInitials(name: string): string {
@@ -29,15 +36,39 @@ function getInitials(name: string): string {
     .slice(0, 2);
 }
 
+/** Compact Rupiah — e.g. "10K", "150K", "1.5jt" */
+function formatRupiahShort(amount: number): string {
+  if (amount === 0) return 'Rp0';
+  if (amount >= 1_000_000) return `Rp${(amount / 1_000_000).toFixed(1).replace('.0', '')}jt`;
+  if (amount >= 100_000) return `Rp${(amount / 1000).toFixed(0)}K`;
+  if (amount >= 10_000) return `Rp${(amount / 1000).toFixed(0)}K`;
+  return `Rp${amount.toLocaleString('id-ID')}`;
+}
+
+/** Division badge — color-coded male/female */
+function DivisionBadge({ division }: { division: 'male' | 'female' }) {
+  return (
+    <span
+      className={`inline-flex items-center px-1.5 py-0 rounded text-[8px] font-bold uppercase tracking-wider border ${
+        division === 'male'
+          ? 'bg-idm-male/10 text-idm-male-light border-idm-male/30'
+          : 'bg-idm-female/10 text-idm-female-light border-idm-female/30'
+      }`}
+    >
+      {division === 'male' ? '♂ M' : '♀ F'}
+    </span>
+  );
+}
+
 export function CommunityDonors({ maleData, femaleData, onSawer }: CommunityDonorsProps) {
   const dt = useCommunityTheme();
 
   // Merge weeklyTopDonors from both divisions (per active tournament/week)
   // Falls back to topDonors (season) if weeklyTopDonors is empty
-  const { donors, totalDonation, weekLabel } = useMemo(() => {
-    const donorMap = new Map<string, TopDonor>();
+  const { donors, totalDonation, weekLabel, totalMale, totalFemale } = useMemo(() => {
+    const donorMap = new Map<string, { donorName: string; totalAmount: number; donationCount: number; maleAmount: number; femaleAmount: number }>();
 
-    const mergeDonors = (donors: TopDonor[]) => {
+    const mergeDonors = (donors: TopDonor[], division: 'male' | 'female') => {
       for (const d of donors) {
         const key = d.donorName.toLowerCase().trim();
         const existing = donorMap.get(key);
@@ -46,9 +77,17 @@ export function CommunityDonors({ maleData, femaleData, onSawer }: CommunityDono
             donorName: d.donorName,
             totalAmount: existing.totalAmount + d.totalAmount,
             donationCount: existing.donationCount + d.donationCount,
+            maleAmount: existing.maleAmount + (division === 'male' ? d.totalAmount : 0),
+            femaleAmount: existing.femaleAmount + (division === 'female' ? d.totalAmount : 0),
           });
         } else {
-          donorMap.set(key, { ...d });
+          donorMap.set(key, {
+            donorName: d.donorName,
+            totalAmount: d.totalAmount,
+            donationCount: d.donationCount,
+            maleAmount: division === 'male' ? d.totalAmount : 0,
+            femaleAmount: division === 'female' ? d.totalAmount : 0,
+          });
         }
       }
     };
@@ -59,23 +98,38 @@ export function CommunityDonors({ maleData, femaleData, onSawer }: CommunityDono
     const hasWeekly = (maleWeekly && maleWeekly.length > 0) || (femaleWeekly && femaleWeekly.length > 0);
 
     if (hasWeekly) {
-      if (maleWeekly?.length) mergeDonors(maleWeekly);
-      if (femaleWeekly?.length) mergeDonors(femaleWeekly);
+      if (maleWeekly?.length) mergeDonors(maleWeekly, 'male');
+      if (femaleWeekly?.length) mergeDonors(femaleWeekly, 'female');
     } else {
       // Fallback to season-accumulated donors
-      if (maleData?.topDonors) mergeDonors(maleData.topDonors);
-      if (femaleData?.topDonors) mergeDonors(femaleData.topDonors);
+      if (maleData?.topDonors) mergeDonors(maleData.topDonors, 'male');
+      if (femaleData?.topDonors) mergeDonors(femaleData.topDonors, 'female');
     }
 
-    const sorted = Array.from(donorMap.values()).sort((a, b) => b.totalAmount - a.totalAmount);
+    const sorted = Array.from(donorMap.values())
+      .sort((a, b) => b.totalAmount - a.totalAmount)
+      .map(d => ({
+        donorName: d.donorName,
+        totalAmount: d.totalAmount,
+        donationCount: d.donationCount,
+        maleAmount: d.maleAmount,
+        femaleAmount: d.femaleAmount,
+        divisions: [
+          ...(d.maleAmount > 0 ? ['male' as const] : []),
+          ...(d.femaleAmount > 0 ? ['female' as const] : []),
+        ],
+      }));
+
     const top8 = sorted.slice(0, 8);
     const total = top8.reduce((s, d) => s + d.totalAmount, 0);
+    const tMale = top8.reduce((s, d) => s + d.maleAmount, 0);
+    const tFemale = top8.reduce((s, d) => s + d.femaleAmount, 0);
 
     // Determine week label
     const weekNum = maleData?.activeTournament?.weekNumber || femaleData?.activeTournament?.weekNumber;
     const weekLabelText = hasWeekly && weekNum ? `Week ${weekNum}` : 'Season';
 
-    return { donors: top8, totalDonation: total, weekLabel: weekLabelText };
+    return { donors: top8, totalDonation: total, weekLabel: weekLabelText, totalMale: tMale, totalFemale: tFemale };
   }, [maleData, femaleData]);
 
   const maxAmount = donors[0]?.totalAmount || 1;
@@ -111,13 +165,26 @@ export function CommunityDonors({ maleData, femaleData, onSawer }: CommunityDono
       </div>
 
       <CardContent className="p-4 sm:p-6">
-        {/* Total donation header */}
+        {/* Total donation header with per-division breakdown */}
         <div className={`flex items-center justify-between mb-4 p-4 sm:p-5 rounded-2xl ${dt.bgSubtle} border ${dt.borderSubtle}`}>
           <div>
             <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold">Total Saweran {weekLabel} → Prize Pool</p>
             <p className={`text-lg font-black ${dt.neonGradient}`}>
               {formatCurrencyShort(totalDonation || 0)}
             </p>
+            {/* Per-division totals */}
+            <div className="flex items-center gap-3 mt-1">
+              {totalMale > 0 && (
+                <span className="text-[10px] text-idm-male-light/80">
+                  ♂ Male {formatRupiahShort(totalMale)}
+                </span>
+              )}
+              {totalFemale > 0 && (
+                <span className="text-[10px] text-idm-female-light/80">
+                  ♀ Female {formatRupiahShort(totalFemale)}
+                </span>
+              )}
+            </div>
           </div>
           <Sparkles className={`w-5 h-5 ${dt.text} opacity-40`} />
         </div>
@@ -131,73 +198,99 @@ export function CommunityDonors({ maleData, femaleData, onSawer }: CommunityDono
             return (
               <div
                 key={donor.donorName}
-                className="group flex items-center gap-3 p-3 sm:p-4 rounded-2xl hover:${dt.hoverBgSubtle} transition-colors duration-200 animate-fade-enter-sm"
+                className="group p-3 sm:p-4 rounded-2xl transition-colors duration-200 animate-fade-enter-sm"
                 style={{ animationDelay: `${i * 50}ms` }}
               >
-                {/* Rank */}
-                <span className="w-6 text-center text-sm shrink-0">
-                  {medal || <span className="text-xs text-muted-foreground font-bold">{i + 1}</span>}
-                </span>
+                {/* Row 1: Rank + Avatar + Name + Division Badges + Tier + Total */}
+                <div className="flex items-center gap-2.5">
+                  {/* Rank */}
+                  <span className="w-6 text-center text-sm shrink-0">
+                    {medal || <span className="text-xs text-muted-foreground font-bold">{i + 1}</span>}
+                  </span>
 
-                {/* Initials avatar */}
-                <div className={`w-8 h-8 rounded-lg ${dt.iconBg} flex items-center justify-center shrink-0`}>
-                  <span className={`text-[10px] font-bold ${dt.text}`}>{getInitials(donor.donorName)}</span>
-                </div>
+                  {/* Initials avatar */}
+                  <div className={`w-8 h-8 rounded-lg ${dt.iconBg} flex items-center justify-center shrink-0`}>
+                    <span className={`text-[10px] font-bold ${dt.text}`}>{getInitials(donor.donorName)}</span>
+                  </div>
 
-                {/* Info */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs font-semibold truncate">{donor.donorName}</span>
-                  {(() => {
-                    const sawerTier = getSawerTier(donor.totalAmount);
-                    if (!sawerTier) return null;
-                    const tierColors: Record<string, { bg: string; border: string; text: string }> = {
-                      sawer_diamond: { bg: 'rgba(87,181,255,0.15)', border: 'rgba(87,181,255,0.4)', text: 'text-idm-male-light' },
-                      sawer_gold: { bg: 'rgba(250,204,21,0.15)', border: 'rgba(250,204,21,0.4)', text: 'text-yellow-300' },
-                      sawer_silver: { bg: 'rgba(156,163,175,0.15)', border: 'rgba(156,163,175,0.4)', text: 'text-muted-foreground' },
-                      sawer_bronze: { bg: 'rgba(180,83,9,0.15)', border: 'rgba(180,83,9,0.4)', text: 'text-amber-400' },
-                    };
-                    const tc = tierColors[sawerTier] || tierColors.sawer_bronze;
-                    const tierLabel = sawerTier.replace('sawer_', '').charAt(0).toUpperCase() + sawerTier.replace('sawer_', '').slice(1);
-                    const tierEmoji = sawerTier === 'sawer_diamond' ? '💎' : sawerTier === 'sawer_gold' ? '🥇' : sawerTier === 'sawer_silver' ? '🥈' : '🥉';
-                    return (
-                      <span
-                        className={`inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-bold shrink-0 border ${tc.text}`}
-                        style={{
-                          backgroundColor: tc.bg,
-                          borderColor: tc.border,
-                        }}
-                        title={`Sawer ${tierLabel}`}
-                      >
-                        {tierEmoji} {tierLabel}
+                  {/* Info */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-1.5 mb-1">
+                      <span className="text-xs font-semibold truncate">{donor.donorName}</span>
+                      {/* Division badges */}
+                      {donor.divisions.map(div => (
+                        <DivisionBadge key={div} division={div} />
+                      ))}
+                      {/* Sawer tier */}
+                      {(() => {
+                        const sawerTier = getSawerTier(donor.totalAmount);
+                        if (!sawerTier) return null;
+                        const tierColors: Record<string, { bg: string; border: string; text: string }> = {
+                          sawer_diamond: { bg: 'rgba(87,181,255,0.15)', border: 'rgba(87,181,255,0.4)', text: 'text-idm-male-light' },
+                          sawer_gold: { bg: 'rgba(250,204,21,0.15)', border: 'rgba(250,204,21,0.4)', text: 'text-yellow-300' },
+                          sawer_silver: { bg: 'rgba(156,163,175,0.15)', border: 'rgba(156,163,175,0.4)', text: 'text-muted-foreground' },
+                          sawer_bronze: { bg: 'rgba(180,83,9,0.15)', border: 'rgba(180,83,9,0.4)', text: 'text-amber-400' },
+                        };
+                        const tc = tierColors[sawerTier] || tierColors.sawer_bronze;
+                        const tierLabel = sawerTier.replace('sawer_', '').charAt(0).toUpperCase() + sawerTier.replace('sawer_', '').slice(1);
+                        const tierEmoji = sawerTier === 'sawer_diamond' ? '💎' : sawerTier === 'sawer_gold' ? '🥇' : sawerTier === 'sawer_silver' ? '🥈' : '🥉';
+                        return (
+                          <span
+                            className={`inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-bold shrink-0 border ${tc.text}`}
+                            style={{ backgroundColor: tc.bg, borderColor: tc.border }}
+                            title={`Sawer ${tierLabel}`}
+                          >
+                            {tierEmoji} {tierLabel}
+                          </span>
+                        );
+                      })()}
+                      {/* Total amount */}
+                      <span className={`text-xs font-bold ${dt.neonGradient} shrink-0 ml-auto`}>
+                        {formatCurrencyShort(donor.totalAmount)}
                       </span>
-                    );
-                  })()}
-                    <span className={`text-xs font-bold ${dt.neonGradient} shrink-0 ml-2`}>
-                      {formatCurrencyShort(donor.totalAmount)}
-                    </span>
-                  </div>
-                  {/* Progress bar */}
-                  <div className={`h-1.5 rounded-full ${dt.casinoBar} overflow-hidden`}>
-                    <div
-                      className={`h-full rounded-full bg-gradient-to-r ${
-                        i === 0
-                          ? 'from-yellow-500 to-amber-400'
-                          : i === 1
-                          ? 'from-gray-300 to-gray-400'
-                          : i === 2
-                          ? 'from-amber-600 to-amber-500'
-                          : 'from-idm-gold-warm/60 to-idm-gold-warm/40'
-                      }`}
-                      style={{ width: `${progress}%` }}
-                    />
+                    </div>
+                    {/* Row 2: Per-division breakdown + progress bar */}
+                    <div className="flex items-center gap-2">
+                      <div className="flex-1">
+                        {/* Per-division amounts */}
+                        <div className="flex items-center gap-2 mb-1">
+                          {donor.maleAmount > 0 && (
+                            <span className="text-[9px] text-idm-male-light/60">
+                              ♂ {formatRupiahShort(donor.maleAmount)}
+                            </span>
+                          )}
+                          {donor.femaleAmount > 0 && (
+                            <span className="text-[9px] text-idm-female-light/60">
+                              ♀ {formatRupiahShort(donor.femaleAmount)}
+                            </span>
+                          )}
+                          <span className="text-[9px] text-muted-foreground/40">
+                            {donor.donationCount}x sawer
+                          </span>
+                        </div>
+                        {/* Progress bar */}
+                        <div className={`h-1.5 rounded-full ${dt.casinoBar} overflow-hidden`}>
+                          <div
+                            className={`h-full rounded-full bg-gradient-to-r ${
+                              i === 0
+                                ? 'from-yellow-500 to-amber-400'
+                                : i === 1
+                                ? 'from-gray-300 to-gray-400'
+                                : i === 2
+                                ? 'from-amber-600 to-amber-500'
+                                : 'from-idm-gold-warm/60 to-idm-gold-warm/40'
+                            }`}
+                            style={{ width: `${progress}%` }}
+                          />
+                        </div>
+                      </div>
+                      {/* Donation count badge */}
+                      <Badge className={`text-[8px] shrink-0 ${dt.badgeBg} border`}>
+                        {donor.donationCount}x
+                      </Badge>
+                    </div>
                   </div>
                 </div>
-
-                {/* Donation count badge */}
-                <Badge className={`text-[8px] shrink-0 ${dt.badgeBg} border`}>
-                  {donor.donationCount}x
-                </Badge>
               </div>
             );
           })}

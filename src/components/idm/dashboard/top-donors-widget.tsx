@@ -19,6 +19,18 @@ interface TopDonor {
   latestDate: string | null;
 }
 
+/** Enriched donor with per-division breakdown */
+interface DivisionDonor {
+  donorName: string;
+  totalAmount: number;
+  donationCount: number;
+  latestType: string;
+  latestDate: string | null;
+  maleAmount: number;
+  femaleAmount: number;
+  divisions: ('male' | 'female')[];
+}
+
 interface TopDonorsData {
   donors: TopDonor[];
   summary: {
@@ -41,6 +53,15 @@ interface TopDonorsWidgetProps {
 /** Format Indonesian Rupiah — compact for widget display */
 function formatRupiah(amount: number): string {
   return formatCurrency(amount);
+}
+
+/** Compact Rupiah — e.g. "10K", "150K", "1.5jt" */
+function formatRupiahShort(amount: number): string {
+  if (amount === 0) return 'Rp0';
+  if (amount >= 1_000_000) return `Rp${(amount / 1_000_000).toFixed(1).replace('.0', '')}jt`;
+  if (amount >= 100_000) return `Rp${(amount / 1000).toFixed(0)}K`;
+  if (amount >= 10_000) return `Rp${(amount / 1000).toFixed(0)}K`;
+  return `Rp${amount.toLocaleString('id-ID')}`;
 }
 
 /** Relative time in Indonesian */
@@ -90,19 +111,18 @@ function RankBadge({ rank }: { rank: number }) {
   );
 }
 
-/** Donation type badge */
-function DonationTypeBadge({ type }: { type: string }) {
-  const isSeason = type === 'season';
+/** Division badge — color-coded male/female */
+function DivisionBadge({ division }: { division: 'male' | 'female' }) {
   return (
-    <Badge
-      className={`text-[9px] px-1.5 py-0 h-4 font-semibold border-0 ${
-        isSeason
-          ? 'bg-amber-500/15 text-amber-400 hover:bg-amber-500/20'
-          : 'bg-idm-gold-warm/15 text-idm-gold-warm hover:bg-idm-gold-warm/20'
+    <span
+      className={`inline-flex items-center px-1.5 py-0 rounded text-[8px] font-bold uppercase tracking-wider border ${
+        division === 'male'
+          ? 'bg-idm-male/10 text-idm-male-light border-idm-male/30'
+          : 'bg-idm-female/10 text-idm-female-light border-idm-female/30'
       }`}
     >
-      {isSeason ? 'Season' : 'Weekly'}
-    </Badge>
+      {division === 'male' ? '♂ M' : '♀ F'}
+    </span>
   );
 }
 
@@ -149,7 +169,6 @@ function EmptyDonorsState({ onDonate }: { onDonate: () => void }) {
       </CardHeader>
       <CardContent className="pt-0 flex-1 flex items-center justify-center">
         <div className="flex flex-col items-center justify-center py-6 text-center donor-empty-state">
-          {/* Floating heart icon with glow */}
           <div className="relative inline-flex items-center justify-center mb-3">
             <div className="empty-glow-ring absolute inset-0 rounded-full bg-idm-gold-warm/10" />
             <div className="empty-icon-float relative z-10">
@@ -190,15 +209,16 @@ export function TopDonorsWidget({ onDonate, statsData, statsData2 }: TopDonorsWi
       return res.json();
     },
     staleTime: 30000,
-    enabled: !statsData?.weeklyTopDonors?.length && !statsData2?.weeklyTopDonors?.length, // Skip API call if stats data available
+    enabled: !statsData?.weeklyTopDonors?.length && !statsData2?.weeklyTopDonors?.length,
   });
 
   const hasAnyWeekly = (statsData?.weeklyTopDonors?.length ?? 0) > 0 || (statsData2?.weeklyTopDonors?.length ?? 0) > 0;
   if (isLoading && !hasAnyWeekly) return <LoadingSkeleton />;
 
-  // Merge weeklyTopDonors from both divisions
-  const donorMap = new Map<string, { donorName: string; totalAmount: number; donationCount: number }>();
-  const mergeWeeklyDonors = (donors: import('@/types/stats').TopDonor[]) => {
+  // Merge weeklyTopDonors from both divisions — track per-division amounts
+  const donorMap = new Map<string, { donorName: string; totalAmount: number; donationCount: number; maleAmount: number; femaleAmount: number }>();
+
+  const mergeWeeklyDonors = (donors: import('@/types/stats').TopDonor[], division: 'male' | 'female') => {
     for (const d of donors) {
       const key = d.donorName.toLowerCase().trim();
       const existing = donorMap.get(key);
@@ -207,9 +227,17 @@ export function TopDonorsWidget({ onDonate, statsData, statsData2 }: TopDonorsWi
           donorName: d.donorName,
           totalAmount: existing.totalAmount + d.totalAmount,
           donationCount: existing.donationCount + d.donationCount,
+          maleAmount: existing.maleAmount + (division === 'male' ? d.totalAmount : 0),
+          femaleAmount: existing.femaleAmount + (division === 'female' ? d.totalAmount : 0),
         });
       } else {
-        donorMap.set(key, { donorName: d.donorName, totalAmount: d.totalAmount, donationCount: d.donationCount });
+        donorMap.set(key, {
+          donorName: d.donorName,
+          totalAmount: d.totalAmount,
+          donationCount: d.donationCount,
+          maleAmount: division === 'male' ? d.totalAmount : 0,
+          femaleAmount: division === 'female' ? d.totalAmount : 0,
+        });
       }
     }
   };
@@ -220,11 +248,15 @@ export function TopDonorsWidget({ onDonate, statsData, statsData2 }: TopDonorsWi
   const hasWeekly = (weekly1 && weekly1.length > 0) || (weekly2 && weekly2.length > 0);
   const apiSummary = data?.summary;
 
-  let donors: { donorName: string; totalAmount: number; donationCount: number; latestType: string; latestDate: string | null }[];
+  // Determine which statsData is male/female
+  const div1 = statsData?.activeTournament?.division || 'male';
+  const div2 = statsData2?.activeTournament?.division || 'female';
+
+  let donors: DivisionDonor[];
 
   if (hasWeekly) {
-    if (weekly1?.length) mergeWeeklyDonors(weekly1);
-    if (weekly2?.length) mergeWeeklyDonors(weekly2);
+    if (weekly1?.length) mergeWeeklyDonors(weekly1, div1 as 'male' | 'female');
+    if (weekly2?.length) mergeWeeklyDonors(weekly2, div2 as 'male' | 'female');
     donors = Array.from(donorMap.values())
       .sort((a, b) => b.totalAmount - a.totalAmount)
       .map(d => ({
@@ -233,16 +265,29 @@ export function TopDonorsWidget({ onDonate, statsData, statsData2 }: TopDonorsWi
         donationCount: d.donationCount,
         latestType: 'weekly',
         latestDate: null as string | null,
+        maleAmount: d.maleAmount,
+        femaleAmount: d.femaleAmount,
+        divisions: [
+          ...(d.maleAmount > 0 ? ['male' as const] : []),
+          ...(d.femaleAmount > 0 ? ['female' as const] : []),
+        ],
       }));
   } else {
-    donors = data?.donors ?? [];
+    donors = (data?.donors ?? []).map(d => ({
+      ...d,
+      maleAmount: d.totalAmount,
+      femaleAmount: 0,
+      divisions: ['male' as const],
+    }));
   }
 
   const weekNum = statsData?.activeTournament?.weekNumber || statsData2?.activeTournament?.weekNumber;
   const weekLabel = hasWeekly && weekNum ? `Week ${weekNum}` : '';
-  const totalAmount = hasWeekly
-    ? donors.reduce((s, d) => s + d.totalAmount, 0)
-    : (apiSummary?.totalAmount ?? 0);
+
+  // Calculate totals per division
+  const totalMale = donors.reduce((s, d) => s + d.maleAmount, 0);
+  const totalFemale = donors.reduce((s, d) => s + d.femaleAmount, 0);
+  const totalAmount = totalMale + totalFemale;
   const totalDonors = hasWeekly ? donors.length : (apiSummary?.totalDonors ?? 0);
 
   if (donors.length === 0) return <EmptyDonorsState onDonate={onDonate} />;
@@ -270,6 +315,31 @@ export function TopDonorsWidget({ onDonate, statsData, statsData2 }: TopDonorsWi
             </div>
           )}
         </div>
+        {/* Per-division total breakdown */}
+        {totalAmount > 0 && (totalMale > 0 || totalFemale > 0) && (
+          <div className="flex items-center gap-2 mt-1.5">
+            {totalMale > 0 && (
+              <div className="flex items-center gap-1">
+                <span className="inline-flex items-center px-1.5 py-0 rounded text-[8px] font-bold uppercase tracking-wider border bg-idm-male/10 text-idm-male-light border-idm-male/30">
+                  ♂ Male
+                </span>
+                <span className="text-[10px] font-semibold text-idm-male-light">
+                  {formatRupiahShort(totalMale)}
+                </span>
+              </div>
+            )}
+            {totalFemale > 0 && (
+              <div className="flex items-center gap-1">
+                <span className="inline-flex items-center px-1.5 py-0 rounded text-[8px] font-bold uppercase tracking-wider border bg-idm-female/10 text-idm-female-light border-idm-female/30">
+                  ♀ Female
+                </span>
+                <span className="text-[10px] font-semibold text-idm-female-light">
+                  {formatRupiahShort(totalFemale)}
+                </span>
+              </div>
+            )}
+          </div>
+        )}
       </CardHeader>
 
       <CardContent className="pt-0">
@@ -278,19 +348,24 @@ export function TopDonorsWidget({ onDonate, statsData, statsData2 }: TopDonorsWi
           {donors.map((donor, i) => (
             <div
               key={donor.donorName}
-              className="donor-row-enter flex items-center gap-2 p-3 rounded-lg hover:bg-idm-gold-warm/5 transition-colors group"
+              className="donor-row-enter p-2.5 rounded-lg hover:bg-idm-gold-warm/5 transition-colors group"
               style={{ animationDelay: `${i * 60}ms` }}
             >
-              {/* Rank */}
-              <RankBadge rank={i + 1} />
+              {/* Row 1: Rank + Name + Tier Badge + Total */}
+              <div className="flex items-center gap-2">
+                {/* Rank */}
+                <RankBadge rank={i + 1} />
 
-              {/* Name + info */}
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-1.5">
+                {/* Name + badges */}
+                <div className="flex-1 min-w-0 flex items-center gap-1.5">
                   <span className="text-xs font-semibold truncate">
                     {donor.donorName || 'Anonymous'}
                   </span>
-                  <DonationTypeBadge type={donor.latestType} />
+                  {/* Division badges */}
+                  {donor.divisions.map(div => (
+                    <DivisionBadge key={div} division={div} />
+                  ))}
+                  {/* Sawer tier badge */}
                   {(() => {
                     const sawerTier = donor.latestType === 'weekly' ? getSawerTier(donor.totalAmount) : null;
                     if (!sawerTier) return null;
@@ -302,14 +377,11 @@ export function TopDonorsWidget({ onDonate, statsData, statsData2 }: TopDonorsWi
                     };
                     const tc = tierColors[sawerTier] || tierColors.sawer_bronze;
                     const tierLabel = sawerTier.replace('sawer_', '').charAt(0).toUpperCase() + sawerTier.replace('sawer_', '').slice(1);
-                    const tierEmoji = sawerTier === 'sawer_diamond' ? '💎' : sawerTier === 'sawer_gold' ? '🥇' : sawerTier === 'sawer_silver' ? '🥈' : '🥉';
+                    const tierEmoji = sawerTier === 'sawer_diamond' ? '💎' : sawerTier === 'sawer_gold' ? '🥇' : sawerTier === 'sawer_gold' ? '🥈' : '🥉';
                     return (
                       <span
                         className={`inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-bold shrink-0 border ${tc.text}`}
-                        style={{
-                          backgroundColor: tc.bg,
-                          borderColor: tc.border,
-                        }}
+                        style={{ backgroundColor: tc.bg, borderColor: tc.border }}
                         title={`Sawer ${tierLabel}`}
                       >
                         {tierEmoji} {tierLabel}
@@ -317,28 +389,42 @@ export function TopDonorsWidget({ onDonate, statsData, statsData2 }: TopDonorsWi
                     );
                   })()}
                 </div>
-                <div className="flex items-center gap-1.5 mt-0.5">
-                  {donor.latestDate && (
-                    <>
-                      <Clock className="w-2.5 h-2.5 text-muted-foreground/40" />
-                      <span className="text-[9px] text-muted-foreground/60">
-                        {formatRelativeTime(donor.latestDate)}
-                      </span>
-                      <span className="text-[9px] text-muted-foreground/30">·</span>
-                    </>
-                  )}
-                  <span className="text-[9px] text-muted-foreground/50">
-                    {donor.donationCount}x sawer
+
+                {/* Total amount */}
+                <div className="text-right shrink-0">
+                  <span className="text-[11px] font-bold text-idm-gold-warm donor-amount">
+                    {formatRupiah(donor.totalAmount)}
                   </span>
                 </div>
               </div>
 
-              {/* Amount */}
-              <div className="text-right shrink-0">
-                <span className="text-[11px] font-bold text-idm-gold-warm donor-amount">
-                  {formatRupiah(donor.totalAmount)}
-                </span>
-              </div>
+              {/* Row 2: Per-division breakdown */}
+              {(donor.maleAmount > 0 || donor.femaleAmount > 0) && donor.divisions.length > 0 && (
+                <div className="flex items-center gap-2 mt-1 ml-8">
+                  {donor.maleAmount > 0 && (
+                    <span className="text-[9px] text-idm-male-light/70">
+                      ♂ {formatRupiahShort(donor.maleAmount)}
+                    </span>
+                  )}
+                  {donor.femaleAmount > 0 && (
+                    <span className="text-[9px] text-idm-female-light/70">
+                      ♀ {formatRupiahShort(donor.femaleAmount)}
+                    </span>
+                  )}
+                  {donor.latestDate && (
+                    <>
+                      <span className="text-[9px] text-muted-foreground/30">·</span>
+                      <span className="flex items-center gap-0.5 text-[9px] text-muted-foreground/50">
+                        <Clock className="w-2.5 h-2.5" />
+                        {formatRelativeTime(donor.latestDate)}
+                      </span>
+                    </>
+                  )}
+                  <span className="text-[9px] text-muted-foreground/40">
+                    {donor.donationCount}x sawer
+                  </span>
+                </div>
+              )}
             </div>
           ))}
         </div>
