@@ -625,9 +625,13 @@ export function TournamentManager({ division, dt, stats, setConfirmDialog }: Tou
       .reduce((sum: number, d: { amount: number }) => sum + d.amount, 0);
   }, [tournamentDonations, selectedId, seasonId]);
 
+  const basePrizePoolRef = useMemo(() => {
+    return approvedParticipations.length * 20000;
+  }, [approvedParticipations.length]);
+
   const referencePrizePool = useMemo(() => {
-    return (approvedParticipations.length * 20000) + approvedSawer;
-  }, [approvedParticipations.length, approvedSawer]);
+    return basePrizePoolRef + approvedSawer;
+  }, [basePrizePoolRef, approvedSawer]);
 
   const matchesByBracket = (() => {
     if (!Array.isArray(selected?.matches)) return {};
@@ -1879,12 +1883,13 @@ export function TournamentManager({ division, dt, stats, setConfirmDialog }: Tou
                 </div>
                 <div className="p-2.5 rounded-lg bg-idm-gold-warm/5 border border-idm-gold-warm/20 text-[10px]">
                   <p className="font-semibold text-idm-gold-warm mb-1">📋 Info Prize Pool (Referensi)</p>
-                  <div className="flex justify-between"><span>Dari Pendaftaran:</span><span>{approvedParticipations.length} × Rp 20.000 = {formatCurrency(approvedParticipations.length * 20000)}</span></div>
-                  {approvedSawer > 0 && <div className="flex justify-between"><span>Dari Sawer:</span><span>{formatCurrency(approvedSawer)}</span></div>}
-                  <div className="flex justify-between font-semibold text-idm-gold-warm border-t border-idm-gold-warm/10 pt-1 mt-1"><span>Total Referensi:</span><span>{formatCurrency(referencePrizePool)}</span></div>
-                  {selected.prizePool > 0 && selected.prizePool !== referencePrizePool && (
+                  <div className="flex justify-between"><span>Dari Pendaftaran:</span><span>{approvedParticipations.length} × Rp 20.000 = {formatCurrency(basePrizePoolRef)}</span></div>
+                  {approvedSawer > 0 && <div className="flex justify-between"><span>Dari Sawer:</span><span>{formatCurrency(approvedSawer)} <span className="text-idm-gold-warm">(otomatis +)</span></span></div>}
+                  <div className="flex justify-between font-semibold text-idm-gold-warm border-t border-idm-gold-warm/10 pt-1 mt-1"><span>Total Tampilan:</span><span>{formatCurrency(referencePrizePool)}</span></div>
+                  <p className="text-[8px] text-muted-foreground mt-1">💡 Input hanya prize pool dasar (tanpa sawer). Sawer ditambahkan otomatis saat ditampilkan.</p>
+                  {selected.prizePool > 0 && selected.prizePool !== basePrizePoolRef && (
                     <div className="flex justify-between mt-1 pt-1 border-t border-idm-gold-warm/10">
-                      <span>Prize Pool Aktif:</span>
+                      <span>Base Prize Pool Aktif:</span>
                       <span className="font-semibold">{formatCurrency(selected.prizePool)}</span>
                     </div>
                   )}
@@ -1892,23 +1897,23 @@ export function TournamentManager({ division, dt, stats, setConfirmDialog }: Tou
                 {showPrizeConfig && (
                   <div className="space-y-2 pt-2 border-t border-border/20">
                     <div className="space-y-1.5">
-                      <Label className="text-[10px] font-semibold">💰 Total Prize Pool</Label>
+                      <Label className="text-[10px] font-semibold">💰 Base Prize Pool (tanpa sawer)</Label>
                       <div className="flex items-center gap-2">
                         <span className="text-[10px] text-muted-foreground">Rp</span>
                         <Input
                           type="number"
-                          placeholder={String(referencePrizePool)}
+                          placeholder={String(basePrizePoolRef)}
                           value={manualPrizePool}
                           onChange={e => setManualPrizePool(e.target.value)}
                           className="h-7 text-[10px] flex-1"
                         />
-                        {manualPrizePool && parseInt(manualPrizePool) !== referencePrizePool && (
-                          <span className={`text-[9px] font-medium ${parseInt(manualPrizePool) > referencePrizePool ? 'text-green-500' : 'text-red-500'}`}>
-                            {parseInt(manualPrizePool) > referencePrizePool ? '+' : ''}{formatCurrency(parseInt(manualPrizePool) - referencePrizePool)} dari referensi
+                        {manualPrizePool && parseInt(manualPrizePool) !== basePrizePoolRef && (
+                          <span className={`text-[9px] font-medium ${parseInt(manualPrizePool) > basePrizePoolRef ? 'text-green-500' : 'text-red-500'}`}>
+                            {parseInt(manualPrizePool) > basePrizePoolRef ? '+' : ''}{formatCurrency(parseInt(manualPrizePool) - basePrizePoolRef)} dari base
                           </span>
                         )}
                       </div>
-                      <p className="text-[9px] text-muted-foreground">💡 Isi sesuai kebutuhan. Jika kosong, menggunakan nilai referensi ({formatCurrency(referencePrizePool)}).</p>
+                      <p className="text-[9px] text-muted-foreground">💡 Isi hanya prize pool dasar. Sawer ({formatCurrency(approvedSawer)}) ditambah otomatis. Total tampilan: {formatCurrency(referencePrizePool)}</p>
                     </div>
 
                     <div className="flex items-center gap-2">
@@ -2780,12 +2785,12 @@ export function TournamentManager({ division, dt, stats, setConfirmDialog }: Tou
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <Label className="text-xs">Prize Pool (IDR)</Label>
+                <Label className="text-xs">Base Prize Pool (tanpa sawer)</Label>
                 <Input
                   type="number"
                   value={editForm.prizePool}
                   onChange={e => setEditForm(f => ({ ...f, prizePool: e.target.value }))}
-                  placeholder="Prize Pool"
+                  placeholder="Prize Pool dasar"
                   className="h-9 text-sm"
                 />
               </div>

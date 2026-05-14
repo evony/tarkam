@@ -553,3 +553,27 @@ Stage Summary:
 - Club profile Rincian Poin now shows correct formula: Win (×1pt) + Selisih Game = Total
 - unified-profile API now returns per-season player points (not stale lifetime points)
 - point-breakdown API returns totalCalculated instead of Player.points
+
+---
+Task ID: 2
+Agent: Main Agent
+Task: Fix PrizePool double counting — admin should input base prize pool only (without sawer)
+
+Work Log:
+- Identified the double counting bug: stats API does `basePrizePool + donationTotal`, but if admin already includes sawer in their prizePool input, sawer gets counted twice
+- Added `basePrizePoolRef` separate from `referencePrizePool` in tournament-manager.tsx
+- Updated "Info Prize Pool (Referensi)" section: now shows "Dari Pendaftaran", "Dari Sawer (otomatis +)", "Total Tampilan", and a note about inputting base only
+- Changed manualPrizePool input label from "Total Prize Pool" to "Base Prize Pool (tanpa sawer)"
+- Changed placeholder from `referencePrizePool` to `basePrizePoolRef` (base only)
+- Updated diff indicator to compare against base, not total
+- Updated helper text: "Isi hanya prize pool dasar. Sawer ditambah otomatis."
+- Changed edit dialog label from "Prize Pool (IDR)" to "Base Prize Pool (tanpa sawer)"
+- Stats API unchanged (already correct: base + donation = total display)
+- Lint passes, dev server running fine
+
+Stage Summary:
+- Admin now inputs BASE prize pool only (without saweran)
+- Saweran is auto-added by stats API when displaying PrizePool on frontend
+- "Total Tampilan" in admin panel shows base + sawer = what users see
+- Admin uses "Total Tampilan" as reference to set TournamentPrize distribution (which determines points)
+- No more double counting of saweran
