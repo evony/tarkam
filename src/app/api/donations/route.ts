@@ -37,15 +37,17 @@ export async function POST(request: Request) {
       resolvedSeasonId = activeSeason?.id || null;
     }
 
-    // Find active tournament for weekly type if not provided
-    // Include all non-completed statuses so donations can be linked even during finalization
+    // Find tournament for weekly type if not provided
+    // Use the latest tournament in the season (including completed) so that
+    // donations are always linked even after the tournament ends.
+    // Sultan of the Week grouping requires tournamentId to work correctly.
     let resolvedTournamentId = tournamentId;
     if (donationType === 'weekly' && !resolvedTournamentId && resolvedSeasonId) {
-      const activeTournament = await db.tournament.findFirst({
-        where: { seasonId: resolvedSeasonId, status: { not: 'completed' } },
+      const latestTournament = await db.tournament.findFirst({
+        where: { seasonId: resolvedSeasonId },
         orderBy: { weekNumber: 'desc' },
       });
-      resolvedTournamentId = activeTournament?.id || null;
+      resolvedTournamentId = latestTournament?.id || null;
     }
 
     // ═══ Auto-approve logic ═══
