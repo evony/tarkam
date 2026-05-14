@@ -101,7 +101,7 @@ export function SponsorsSection() {
                     src={logo}
                     alt={sponsor.name}
                     fill
-                    className="object-contain p-3 opacity-80 group-hover:opacity-100 transition-opacity duration-300"
+                    className="object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-300"
                     unoptimized
                   />
                 ) : (
