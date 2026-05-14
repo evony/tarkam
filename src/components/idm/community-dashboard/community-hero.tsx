@@ -407,9 +407,21 @@ function DivisionCard({
               <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
             </button>
           )}
+
+          {/* DANA Payment */}
+          {onPayment && (
+            <button
+              onClick={(e) => { e.stopPropagation(); onPayment(); }}
+              className="group flex items-center gap-1 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-[10px] sm:text-xs font-bold bg-[#108ee9]/15 border border-[#108ee9]/25 text-[#5cb8f5] hover:bg-[#108ee9]/25 hover:shadow-[0_0_12px_rgba(16,142,233,0.2)] hover:scale-[1.02] active:scale-95 transition-all duration-200 cursor-pointer"
+            >
+              <svg className="w-7 h-3.5 shrink-0" viewBox="0 0 48 16" fill="currentColor">
+                <text x="0" y="13" fontFamily="system-ui, sans-serif" fontWeight="900" fontSize="14" letterSpacing="1.5">DANA</text>
+              </svg>
+            </button>
+          )}
         </div>
 
-        {/* Row 2: Secondary actions — Sawer, Prize Pool, Payment */}
+        {/* Row 2: Secondary — Sawer, Prize Pool */}
         <div className="flex flex-wrap items-center gap-2">
           {/* Sawer */}
           {showSawerBtn && (
@@ -428,19 +440,6 @@ function DivisionCard({
               <Coins className="w-3.5 h-3.5" />
               <span>{prizePool > 0 ? formatCurrencyShort(prizePool) : 'Rp 0'}</span>
             </div>
-          )}
-
-          {/* Payment — DANA styled button */}
-          {onPayment && (
-            <button
-              onClick={(e) => { e.stopPropagation(); onPayment(); }}
-              className="group flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-[10px] sm:text-xs font-bold bg-[#108ee9]/15 border border-[#108ee9]/25 text-[#5cb8f5] hover:bg-[#108ee9]/25 hover:shadow-[0_0_12px_rgba(16,142,233,0.2)] hover:scale-[1.02] active:scale-95 transition-all duration-200 cursor-pointer"
-            >
-              <svg className="w-8 h-4 shrink-0" viewBox="0 0 48 16" fill="currentColor">
-                <text x="0" y="13" fontFamily="system-ui, sans-serif" fontWeight="900" fontSize="14" letterSpacing="1.5">DANA</text>
-              </svg>
-              <span>Payment</span>
-            </button>
           )}
         </div>
       </div>
