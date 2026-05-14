@@ -661,7 +661,7 @@ export function Dashboard() {
                   />
                   <StatusBadge status={t?.status || 'registration'} />
                 </div>
-                <span className="px-2.5 py-1 rounded bg-black/60 text-xs font-bold text-idm-gold-warm">💰 {formatCurrencyShort(t?.prizePool || data.totalPrizePool)}</span>
+                <span className="px-2.5 py-1 rounded bg-black/60 text-xs font-bold text-idm-gold-warm">💰 {formatCurrencyShort(data.activeTournamentPrizePool || t?.prizePool || data.totalPrizePool)}</span>
               </div>
             </div>
 
@@ -697,7 +697,7 @@ export function Dashboard() {
             </div>
             <div className="flex flex-col items-center gap-1.5">
               <p className="text-[10px] lg:text-xs text-white/40 uppercase tracking-[0.2em] font-semibold">Prize Pool</p>
-              <p className="px-3 py-2 lg:px-5 lg:py-2.5 rounded-2xl bg-black/60 text-base lg:text-2xl font-black text-idm-gold-warm drop-shadow-[0_0_16px_rgba(229,190,74,0.45)] whitespace-nowrap">{formatCurrency(t?.prizePool || data.totalPrizePool)}</p>
+              <p className="px-3 py-2 lg:px-5 lg:py-2.5 rounded-2xl bg-black/60 text-base lg:text-2xl font-black text-idm-gold-warm drop-shadow-[0_0_16px_rgba(229,190,74,0.45)] whitespace-nowrap">{formatCurrency(data.activeTournamentPrizePool || t?.prizePool || data.totalPrizePool)}</p>
               <p className="text-[8px] text-idm-gold-warm/50 font-medium">💰 dari saweran komunitas</p>
             </div>
             <button

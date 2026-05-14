@@ -256,6 +256,8 @@ export interface StatsData {
   totalPrizePool: number;
   malePrizePool: number;
   femalePrizePool: number;
+  /** Prize pool for the ACTIVE tournament only (base + that tournament's weekly donations). Resets each week. */
+  activeTournamentPrizePool: number;
   seasonDonationTotal: number;
   topPlayers: TopPlayer[];
   /** Map of playerId → active skin data array (for displaying skins on any player) */

@@ -233,9 +233,10 @@ function DivisionCard({
   const schedule = parseSchedule(tournament?.scheduledAt ?? null);
   const bpm = tournament?.bpm;
   const location = tournament?.location;
-  const prizePool = division === 'female'
+  // PrizePool: use per-tournament prize pool (resets each week), fallback to season aggregate
+  const prizePool = data?.activeTournamentPrizePool ?? (division === 'female'
     ? (data?.femalePrizePool || data?.totalPrizePool || 0)
-    : (data?.malePrizePool || data?.totalPrizePool || 0);
+    : (data?.malePrizePool || data?.totalPrizePool || 0));
 
   // Status pill colors
   const statusPill = (() => {

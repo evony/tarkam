@@ -205,7 +205,7 @@ export function MarqueeTicker({ maleData, femaleData, leagueData }: UnifiedMarqu
 
     // Calculate aggregate stats
     const totalPlayers = (maleData?.totalPlayers || 0) + (femaleData?.totalPlayers || 0);
-    const totalPrizePool = (maleData?.totalPrizePool || 0) + (femaleData?.totalPrizePool || 0);
+    const totalPrizePool = (maleData?.activeTournamentPrizePool || maleData?.totalPrizePool || 0) + (femaleData?.activeTournamentPrizePool || femaleData?.totalPrizePool || 0);
     const totalMatches = leagueData?.stats?.totalMatches || (maleData?.recentMatches?.length || 0) + (femaleData?.recentMatches?.length || 0);
     const totalClubs = leagueData?.stats?.totalClubs || (maleData?.clubs?.length || 0) + (femaleData?.clubs?.length || 0);
     const completedMatches = leagueData?.stats?.completedMatches || 0;

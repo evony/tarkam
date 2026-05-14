@@ -57,6 +57,7 @@ async function fetchLandingStatsInner(division: 'male' | 'female') {
       totalPrizePool: 0,
       malePrizePool: 0,
       femalePrizePool: 0,
+      activeTournamentPrizePool: 0,
       seasonDonationTotal: 0,
       seasonProgress: { totalWeeks: SEASON_TOTAL_WEEKS, completedWeeks: 0, percentage: 0 },
       activeTournament: null,
@@ -567,6 +568,7 @@ async function fetchLandingStatsInner(division: 'male' | 'female') {
     totalPrizePool,
     malePrizePool,
     femalePrizePool,
+    activeTournamentPrizePool: 0, // SSR doesn't have activeTournament; client-side React Query will provide the real value
     seasonDonationTotal,
     topDonors,
     seasonProgress: {

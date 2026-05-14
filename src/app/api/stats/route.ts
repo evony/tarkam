@@ -308,10 +308,17 @@ export async function GET(request: Request) {
   const baseMalePrizePool = tournaments.filter(t => t.division === 'male').reduce((sum, t) => sum + (t.prizePool || 0), 0);
   const baseFemalePrizePool = tournaments.filter(t => t.division === 'female').reduce((sum, t) => sum + (t.prizePool || 0), 0);
 
-  // Combined: base prize pool (admin) + saweran (donations)
+  // Combined: base prize pool (admin) + saweran (donations) — SEASON AGGREGATE
   const totalPrizePool = basePrizePoolTotal + donationTotal;
   const malePrizePool = baseMalePrizePool + maleDonationTotal;
   const femalePrizePool = baseFemalePrizePool + femaleDonationTotal;
+
+  // ═══ Active tournament prize pool — PER TOURNAMENT (for hero banner display) ═══
+  // The hero banner should show only the CURRENT week's prize pool, not the season total.
+  const activeTournamentBasePrizePool = activeTournament?.prizePool || 0;
+  const activeTournamentWeeklyDonations = weeklyDonations.filter(d => d.tournamentId === activeTournament?.id);
+  const activeTournamentDonationTotal = activeTournamentWeeklyDonations.reduce((sum, d) => sum + d.amount, 0);
+  const activeTournamentPrizePool = activeTournamentBasePrizePool + activeTournamentDonationTotal;
 
   // Season donation total
   const seasonDonationTotal = seasonDonations.reduce((sum, d) => sum + d.amount, 0);
@@ -1058,6 +1065,7 @@ export async function GET(request: Request) {
     totalPrizePool,
     malePrizePool,
     femalePrizePool,
+    activeTournamentPrizePool,
     seasonDonationTotal,
     topPlayers,
     skinMap,

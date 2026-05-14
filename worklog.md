@@ -649,3 +649,29 @@ Stage Summary:
 - All APIs returning correct data (players, matches, point-breakdown, achievements)
 - Win history visible through match history API and player profile modal
 - No further code changes needed — data is consistent
+
+---
+Task ID: 6
+Agent: Main Agent
+Task: Fix PrizePool not resetting to 0 when Week 2 opens — still showing Week 1 total
+
+Work Log:
+- Investigated stats API: found `malePrizePool`/`femalePrizePool` are calculated as SEASON AGGREGATE (sum of ALL tournaments' prizePools + ALL weekly donations in the season)
+- This means when Week 1 had prizePool=300000 and Week 2 has prizePool=0, the banner showed 300000+0+donations = still Week 1's amount
+- Added `activeTournamentPrizePool` field to stats API: calculated as active tournament's `prizePool` + that specific tournament's weekly donations only
+- Updated 5 components to use `activeTournamentPrizePool` (with fallback to season aggregate):
+  1. community-hero.tsx (DivisionCard banner)
+  2. tournament-hub.tsx (landing page)
+  3. dashboard/index.tsx (2 places: inline prize and prize pool display)
+  4. dashboard.tsx (3 places: progress bar, quick stats, donation section)
+  5. marquee-ticker.tsx (combined prize pool stat)
+- Added `activeTournamentPrizePool` to StatsData type definition
+- Added default value (0) in landing-data.ts SSR
+- Verified: male Week 2 shows `activeTournamentPrizePool: 0`, female Week 1 shows `390000` (correct)
+- Lint passes clean, dev server running without errors
+
+Stage Summary:
+- New API field: `activeTournamentPrizePool` — per-tournament prize pool (base + that tournament's donations)
+- Banner now shows current week's prize pool, resets to 0 when new week opens
+- Season aggregate (`malePrizePool`/`femalePrizePool`/`totalPrizePool`) still available for other uses
+- Male Week 2: activeTournamentPrizePool=0 ✅ (was showing 260000 from season aggregate)
