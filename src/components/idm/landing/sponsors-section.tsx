@@ -22,26 +22,12 @@ interface Sponsor {
   };
 }
 
-/* ── Tier display config — order matters for rendering priority ── */
-const TIER_ORDER = ['platinum', 'gold', 'silver', 'bronze'] as const;
-const TIER_LABELS: Record<string, string> = {
-  platinum: 'Platinum',
-  gold: 'Gold',
-  silver: 'Silver',
-  bronze: 'Bronze',
-  other: 'Partner',
-};
-const TIER_STYLES: Record<string, string> = {
-  platinum: 'border-idm-gold-warm/25 bg-idm-gold-warm/[0.04]',
-  gold: 'border-idm-amber/20 bg-idm-amber/[0.03]',
-  silver: 'border-border/30 bg-muted/5',
-  bronze: 'border-idm-gold-warm/10 bg-idm-gold-warm/[0.02]',
-  other: 'border-idm-gold-warm/10 bg-idm-gold-warm/[0.02]',
-};
+/* ── Card style — uniform for all sponsors ── */
+const CARD_STYLE = 'border-idm-gold-warm/15 bg-idm-gold-warm/[0.03]';
 
 /* ═══════════════════════════════════════════════════════════════
    Sponsors Section — "Didukung Oleh" (Supported By)
-   Banner-style grid sponsor logos grouped by tier.
+   Flat banner grid — all sponsors displayed equally, no tier grouping.
    Returns null if no active sponsors exist.
    ═══════════════════════════════════════════════════════════════ */
 export function SponsorsSection() {
@@ -63,20 +49,6 @@ export function SponsorsSection() {
   // Don't render anything if no sponsors or still loading with no prior data
   if (!isLoading && sponsors.length === 0) return null;
 
-  // Group by tier
-  const grouped = TIER_ORDER.reduce<Record<string, Sponsor[]>>((acc, tier) => {
-    const items = sponsors.filter(s => s.tier === tier);
-    if (items.length > 0) acc[tier] = items;
-    return acc;
-  }, {});
-
-  // Also handle any tiers not in our standard list
-  const standardTierSet = new Set(TIER_ORDER);
-  const otherSponsors = sponsors.filter(s => !standardTierSet.has(s.tier as any));
-  if (otherSponsors.length > 0) {
-    grouped['other'] = otherSponsors;
-  }
-
   // Still loading and no data yet — show skeleton
   if (isLoading && sponsors.length === 0) {
     return (
@@ -85,9 +57,9 @@ export function SponsorsSection() {
           <div className="flex items-center justify-center gap-2 mb-8">
             <div className="h-4 w-24 rounded bg-idm-gold-warm/10 animate-pulse" />
           </div>
-          <div className="flex items-center justify-center gap-6">
-            {[0, 1, 2, 3].map(i => (
-              <div key={i} className="h-10 w-24 rounded-lg bg-idm-gold-warm/5 animate-pulse" style={{ animationDelay: `${i * 100}ms` }} />
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
+            {[0, 1, 2, 3, 4, 5].map(i => (
+              <div key={i} className="aspect-[2/1] rounded-xl bg-idm-gold-warm/5 animate-pulse" style={{ animationDelay: `${i * 100}ms` }} />
             ))}
           </div>
         </div>
@@ -116,65 +88,50 @@ export function SponsorsSection() {
           subtitle="Mendukung ekosistem Tarkam IDM"
         />
 
-        {/* Sponsor tiers */}
-        <div className="space-y-6">
-          {Object.entries(grouped).map(([tier, items]) => (
-            <div key={tier}>
-              {/* Tier label — small, subtle */}
-              <div className="flex items-center gap-3 mb-3">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-idm-gold-warm/60">
-                  {TIER_LABELS[tier] || tier}
-                </span>
-                <div className="flex-1 h-px bg-idm-gold-warm/10" />
+        {/* Sponsor banners — flat grid, no tier grouping */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
+          {sponsors.map(sponsor => {
+            const logo = sponsor.logo;
+            const inner = (
+              <div
+                className={`group relative rounded-xl border aspect-[2/1] overflow-hidden transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_0_24px_rgba(212,168,83,0.12)] ${CARD_STYLE}`}
+              >
+                {logo ? (
+                  <Image
+                    src={logo}
+                    alt={sponsor.name}
+                    fill
+                    className="object-contain p-2 opacity-80 group-hover:opacity-100 transition-opacity duration-300"
+                    unoptimized
+                  />
+                ) : (
+                  <span className="absolute inset-0 flex items-center justify-center text-xs sm:text-sm font-semibold text-idm-gold-warm/70 group-hover:text-idm-gold-warm transition-colors text-center px-2">
+                    {sponsor.name}
+                  </span>
+                )}
               </div>
+            );
 
-              {/* Banner-style grid logos */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
-                {items.map(sponsor => {
-                  const logo = sponsor.logo;
-                  const inner = (
-                    <div
-                      className={`group relative rounded-xl border aspect-[2/1] overflow-hidden transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_0_24px_rgba(212,168,83,0.12)] ${TIER_STYLES[tier] || TIER_STYLES['other']}`}
-                    >
-                      {logo ? (
-                        <Image
-                          src={logo}
-                          alt={sponsor.name}
-                          fill
-                          className="object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-300"
-                          unoptimized
-                        />
-                      ) : (
-                        <span className="absolute inset-0 flex items-center justify-center text-xs sm:text-sm font-semibold text-idm-gold-warm/70 group-hover:text-idm-gold-warm transition-colors text-center px-2">
-                          {sponsor.name}
-                        </span>
-                      )}
-                    </div>
-                  );
+            if (sponsor.website) {
+              return (
+                <a
+                  key={sponsor.id}
+                  href={sponsor.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Visit ${sponsor.name}`}
+                >
+                  {inner}
+                </a>
+              );
+            }
 
-                  if (sponsor.website) {
-                    return (
-                      <a
-                        key={sponsor.id}
-                        href={sponsor.website}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={`Visit ${sponsor.name}`}
-                      >
-                        {inner}
-                      </a>
-                    );
-                  }
-
-                  return (
-                    <div key={sponsor.id}>
-                      {inner}
-                    </div>
-                  );
-                })}
+            return (
+              <div key={sponsor.id}>
+                {inner}
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
