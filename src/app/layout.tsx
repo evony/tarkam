@@ -82,6 +82,26 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://res.cloudinary.com" />
         <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+
+        {/* ── Open Graph meta tags (hardcoded for WhatsApp/Telegram compatibility) ── */}
+        <meta property="og:url" content="https://idolmeta.vercel.app/" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="TARKAM — Idol Meta Fan Made Edition" />
+        <meta property="og:description" content="Komunitas Idol Meta Indonesia" />
+        <meta property="og:image" content="https://idolmeta.vercel.app/og-banner.jpg" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:site_name" content="TARKAM IDM" />
+        <meta property="og:locale" content="id_ID" />
+
+        {/* ── Twitter Card meta tags ── */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta property="twitter:domain" content="idolmeta.vercel.app" />
+        <meta property="twitter:url" content="https://idolmeta.vercel.app/" />
+        <meta name="twitter:title" content="TARKAM — Idol Meta Fan Made Edition" />
+        <meta name="twitter:description" content="Komunitas Idol Meta Indonesia" />
+        <meta name="twitter:image" content="https://idolmeta.vercel.app/og-banner.jpg" />
+
         {/* PWA: Register service worker */}
         <script
           dangerouslySetInnerHTML={{
