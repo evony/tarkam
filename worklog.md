@@ -675,3 +675,24 @@ Stage Summary:
 - Banner now shows current week's prize pool, resets to 0 when new week opens
 - Season aggregate (`malePrizePool`/`femalePrizePool`/`totalPrizePool`) still available for other uses
 - Male Week 2: activeTournamentPrizePool=0 ✅ (was showing 260000 from season aggregate)
+
+---
+Task ID: 7
+Agent: Main Agent
+Task: Fix season progress in sidebar showing "Week 0/? • 0%"
+
+Work Log:
+- Investigated sidebar season progress in app-shell.tsx: uses `/api/league` data for `completedWeeks`/`totalWeeks`
+- Found root cause: `/api/league` computed `totalWeeks` and `playedWeeks` from `leagueMatch` records only. In Tarkam mode (tournament-based), there are no league matches, so both were 0 → "Week 0/? • 0%"
+- Fixed `/api/league/route.ts`: Added tournament count queries; when tournaments exist, uses `SEASON_TOTAL_WEEKS=10` for totalWeeks and `completedTournamentCount` for playedWeeks, with league match fallback
+- Fixed sidebar `app-shell.tsx`: Added React Query for `/api/stats?division=male` and `/api/stats?division=female` to get per-division `seasonProgress` data
+- Created `seasonProgress` computed value: uses per-division stats when available, falls back to league summary, then defaults to {0, 10, 0}
+- Updated all sidebar progress display elements (progress bar, week dots, text, collapsed mini) to use `seasonProgress` instead of `leagueSummary`
+- `leagueSummary` still used for `seasonNumber` and `status` badge
+- Verified: Male shows `Week 1/10 • 10%`, Female shows `Week 1/10 • 10%`
+- Lint passes clean
+
+Stage Summary:
+- Sidebar now shows correct per-division season progress (e.g., "Week 1/10 • 10%")
+- League API also fixed to use tournament-based week counting (with league match fallback)
+- No more "Week 0/? • 0%" when in Tarkam mode

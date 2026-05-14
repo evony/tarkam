@@ -170,6 +170,18 @@ function DesktopSidebar({ onOpenAccountModal, onOpenAdminModal }: { onOpenAccoun
     // user yang switch tab balik akan auto-refresh kalau data sudah stale
   });
 
+  // Per-division season progress from stats API (more accurate than league API)
+  const { data: maleStats } = useQuery({ queryKey: ['stats', 'male'], queryFn: () => fetch('/api/stats?division=male').then(r => r.json()), staleTime: 300_000, refetchOnMount: false });
+  const { data: femaleStats } = useQuery({ queryKey: ['stats', 'female'], queryFn: () => fetch('/api/stats?division=female').then(r => r.json()), staleTime: 300_000, refetchOnMount: false });
+
+  // Use per-division progress when available, fallback to league summary
+  const divisionStats = division === 'female' ? femaleStats : maleStats;
+  const seasonProgress = divisionStats?.seasonProgress
+    ? { completedWeeks: divisionStats.seasonProgress.completedWeeks, totalWeeks: divisionStats.seasonProgress.totalWeeks, percentage: divisionStats.seasonProgress.percentage }
+    : leagueSummary
+      ? { completedWeeks: leagueSummary.completedWeeks, totalWeeks: leagueSummary.totalWeeks, percentage: leagueSummary.percentage }
+      : { completedWeeks: 0, totalWeeks: 10, percentage: 0 };
+
   const handleLogout = async () => {
     try { await fetch('/api/auth/logout', { method: 'POST' }); } catch { /* ignore */ }
     clearAdminAuth();
@@ -233,16 +245,16 @@ function DesktopSidebar({ onOpenAccountModal, onOpenAdminModal }: { onOpenAccoun
               <div className="w-full h-1.5 rounded-full bg-muted overflow-hidden">
                 <div
                   className={`h-full rounded-full bg-gradient-to-r ${currentView === 'community' ? 'from-idm-gold-warm to-idm-amber' : division === 'male' ? 'from-idm-male to-idm-male-light' : 'from-idm-female to-idm-female-light'} transition-all duration-700`}
-                  style={{ width: `${leagueSummary.percentage || 0}%` }}
+                  style={{ width: `${seasonProgress.percentage || 0}%` }}
                 />
               </div>
               {/* Week dots indicator */}
               <div className="flex items-center gap-1 mt-2">
-                {Array.from({ length: leagueSummary.totalWeeks || 10 }).map((_, i) => (
+                {Array.from({ length: seasonProgress.totalWeeks || 10 }).map((_, i) => (
                   <div
                     key={i}
                     className={`h-1 flex-1 rounded-full transition-colors ${
-                      i < (leagueSummary.completedWeeks || 0)
+                      i < (seasonProgress.completedWeeks || 0)
                         ? division === 'male' ? 'bg-idm-male' : 'bg-idm-female'
                         : 'bg-muted'
                     }`
@@ -251,7 +263,7 @@ function DesktopSidebar({ onOpenAccountModal, onOpenAdminModal }: { onOpenAccoun
                 ))}
               </div>
               <p className="text-[9px] text-muted-foreground mt-1.5 text-center">
-                Week {leagueSummary.completedWeeks}/{leagueSummary.totalWeeks || '?'} • {leagueSummary.percentage}%
+                Week {seasonProgress.completedWeeks}/{seasonProgress.totalWeeks || '?'} • {seasonProgress.percentage}%
               </p>
             </>
           ) : (
@@ -277,9 +289,9 @@ function DesktopSidebar({ onOpenAccountModal, onOpenAdminModal }: { onOpenAccoun
       {collapsed && leagueSummary && (
         <div className="px-2 py-1 flex flex-col items-center gap-1">
           <div className={`w-8 h-8 rounded-lg ${dt.cardPremium} border border-border/40 flex flex-col items-center justify-center`}
-            title={`IDM TARKAM Season ${leagueSummary.seasonNumber} — Week ${leagueSummary.completedWeeks}/${leagueSummary.totalWeeks}`}>
-            <span className={`text-[8px] font-bold ${dt.text}`}>S{leagueSummary.seasonNumber}</span>
-            <span className="text-[6px] text-muted-foreground">{leagueSummary.completedWeeks}/{leagueSummary.totalWeeks || '?'}</span>
+            title={`IDM TARKAM Season ${leagueSummary?.seasonNumber || '?'} — Week ${seasonProgress.completedWeeks}/${seasonProgress.totalWeeks}`}>
+            <span className={`text-[8px] font-bold ${dt.text}`}>S{leagueSummary?.seasonNumber || '?'}</span>
+            <span className="text-[6px] text-muted-foreground">{seasonProgress.completedWeeks}/{seasonProgress.totalWeeks || '?'}</span>
           </div>
         </div>
       )}

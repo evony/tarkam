@@ -212,14 +212,32 @@ export async function GET() {
     take: 5,
   }));
 
-  // Stats
+  // Stats — derive week progress from tournaments (Tarkam mode) with league match fallback
   const totalClubs = dedupedClubs.length;
   const totalMatches = leagueMatches.length;
   const completedMatches = leagueMatches.filter(m => m.status === 'completed').length;
   const liveMatches = leagueMatches.filter(m => m.status === 'live').length;
-  const weeks = [...new Set(leagueMatches.map(m => m.week))].sort((a: number, b: number) => a - b);
-  const totalWeeks = weeks.length > 0 ? Math.max(...weeks) : 0;
-  const isPreSeason = dedupedClubs.length > 0 && leagueMatches.length === 0;
+
+  // Count tournaments per week for progress calculation
+  const tournamentCount = await withDbRetry(() => db.tournament.count({
+    where: { seasonId: { in: allSeasonIds } },
+  }));
+  const completedTournamentCount = await withDbRetry(() => db.tournament.count({
+    where: { seasonId: { in: allSeasonIds }, status: 'completed' },
+  }));
+
+  // Use tournament-based weeks (Tarkam mode) if tournaments exist, otherwise fall back to league matches
+  const SEASON_TOTAL_WEEKS = 10;
+  const leagueWeeks = [...new Set(leagueMatches.map(m => m.week))].sort((a: number, b: number) => a - b);
+  const leagueTotalWeeks = leagueWeeks.length > 0 ? Math.max(...leagueWeeks) : 0;
+
+  const totalWeeks = tournamentCount > 0
+    ? SEASON_TOTAL_WEEKS
+    : leagueTotalWeeks;
+  const playedWeeks = tournamentCount > 0
+    ? completedTournamentCount
+    : leagueWeeks.length;
+  const isPreSeason = dedupedClubs.length > 0 && leagueMatches.length === 0 && tournamentCount === 0;
 
   return NextResponse.json({
     hasData: true,
@@ -251,7 +269,7 @@ export async function GET() {
       totalWins: mp.player.totalWins, streak: mp.player.streak,
       avatar: mp.player.avatar, division: mp.player.division,
     })),
-    stats: { totalClubs, totalMatches, completedMatches, liveMatches, totalWeeks, playedWeeks: weeks.length },
+    stats: { totalClubs, totalMatches, completedMatches, liveMatches, totalWeeks, playedWeeks },
     teamFormat: {
       size: 5, main: 3, substitute: 2,
       rule: 'Peserta bebas mix atau tidak mix dari divisi male dan female. Skuad champion dapat memilih anggota dari divisi mana saja.',
