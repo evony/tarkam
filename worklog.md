@@ -505,3 +505,25 @@ Stage Summary:
 - Donor names now pulse/blink with a neon gold glow effect on desktop
 - Rank #1 has a more intense pulse than other donors
 - Mobile view is unaffected (animation only triggers on sm: breakpoint and up)
+
+---
+Task ID: 22
+Agent: Main Agent
+Task: Rearrange CTA buttons in division card + fix PrizePool display + investigate female points issue
+
+Work Log:
+- Rearranged community-hero.tsx DivisionCard CTA buttons: Sawer moved next to Hasil on same row, PrizePool shown as standalone row below with "PrizePool" label
+- Removed ArrowRight icon from Hasil button to save horizontal space on mobile
+- Centered PrizePool row text (added `justify-center` to the flex container)
+- Investigated female division points discrepancy:
+  - Male top players: zico 45pts (3 match wins + 2 streak + 40 Juara 1 prize)
+  - Female top players: Veronicc 5pts (3 match wins + 2 streak, NO prizes)
+  - Root cause: Male tournament has TournamentPrize records (Juara 1=120000→40pts, Juara 2=100000→33pts, MVP=30000→30pts), but Female tournament has NO prizes configured at all
+  - Prize points are awarded during tournament finalization based on TournamentPrize records
+  - This is an admin configuration issue — the admin needs to add prizes for the female tournament
+
+Stage Summary:
+- CTA buttons: Daftar, Hasil, Sawer in one row; PrizePool centered below
+- ArrowRight removed from Hasil for mobile space saving
+- Female points discrepancy is NOT a code bug — admin didn't configure prizes for the female tournament
+- Male tournament has 3 prizes (Juara 1=40pts, Juara 2=33pts, MVP=30pts), female has 0 prizes

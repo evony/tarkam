@@ -392,7 +392,6 @@ function DivisionCard({
             >
               <Trophy className="w-3.5 h-3.5" />
               <span>Hasil</span>
-              <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
             </button>
           )}
 
@@ -434,7 +433,7 @@ function DivisionCard({
 
         {/* Row 2: PrizePool — standalone below */}
         {tournament && (
-          <div className="flex items-center gap-2 px-3 py-2 rounded-lg text-[10px] sm:text-xs font-bold bg-idm-gold-warm/10 border border-idm-gold-warm/20 text-idm-gold-warm">
+          <div className="flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-[10px] sm:text-xs font-bold bg-idm-gold-warm/10 border border-idm-gold-warm/20 text-idm-gold-warm">
             <Coins className="w-4 h-4" />
             <span className="uppercase tracking-wider text-[9px] sm:text-[10px] opacity-70">PrizePool</span>
             <span className="text-xs sm:text-sm font-black">{prizePool > 0 ? formatCurrencyShort(prizePool) : 'Rp 0'}</span>
