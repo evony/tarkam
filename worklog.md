@@ -577,3 +577,24 @@ Stage Summary:
 - "Total Tampilan" in admin panel shows base + sawer = what users see
 - Admin uses "Total Tampilan" as reference to set TournamentPrize distribution (which determines points)
 - No more double counting of saweran
+
+---
+Task ID: 3
+Agent: Main Agent
+Task: Fix double points when rollback + re-finalize — streak_bonus not cleaned up during rollback
+
+Work Log:
+- Investigated rollback code in /api/tournaments/[id]/route.ts
+- Found root cause: rollback Phase 2a deletes PlayerPoint records with reasons ['participation', 'match_win', 'match_draw'] but does NOT include 'streak_bonus'
+- When rollback happens: match_win deleted ✅, streak_bonus NOT deleted ❌, Player.points not decremented for streak_bonus ❌
+- When re-finalize: new match_win + streak_bonus created → double streak_bonus points
+- Fixed by replacing ALL instances of ['participation', 'match_win', 'match_draw'] with ['participation', 'match_win', 'match_draw', 'streak_bonus'] in the rollback route (15 occurrences)
+- This ensures streak_bonus records are also deleted and Player.points is decremented correctly during rollback
+- Ran recalculate-points to verify current data is consistent — no diffs found
+- Lint passes, dev server running fine
+
+Stage Summary:
+- Rollback now correctly cleans up streak_bonus PlayerPoint records (not just match_win/match_draw)
+- Player.points is properly decremented for streak_bonus during rollback
+- No more double points when rollback + re-finalize
+- Current data verified consistent (no stale points)
