@@ -48,6 +48,15 @@ export async function POST(request: Request) {
       resolvedTournamentId = activeTournament?.id || null;
     }
 
+    // Check if admin is adding the donation — auto-approve if so
+    const isAdmin = await (async () => {
+      try {
+        const { requireAdmin } = await import('@/lib/api-auth');
+        const result = await requireAdmin(request);
+        return !(result instanceof NextResponse);
+      } catch { return false; }
+    })();
+
     const donation = await db.donation.create({
       data: {
         donorName: donorName.trim(),
@@ -55,7 +64,7 @@ export async function POST(request: Request) {
         message: message?.trim() || null,
         type: donationType,
         division: donationDivision,
-        status: 'pending',
+        status: isAdmin ? 'approved' : 'pending',
         tournamentId: donationType === 'weekly' ? resolvedTournamentId : null,
         seasonId: resolvedSeasonId,
       },
@@ -63,10 +72,11 @@ export async function POST(request: Request) {
 
     // ═══ Auto-resolve playerId from donorName ↔ gamertag matching ═══
     // This links donations directly to players for reliable cross-division Sultan of the Week matching
+    // Uses case-insensitive matching so admin can type "rizal_" and it matches "Rizal_"
     try {
       const matchedPlayer = await db.player.findFirst({
         where: {
-          gamertag: { equals: donorName.trim() },
+          gamertag: { equals: donorName.trim(), mode: 'insensitive' },
           isActive: true,
         },
         select: { id: true },
@@ -82,9 +92,69 @@ export async function POST(request: Request) {
       console.warn('[DONATIONS_PLAYER_MATCH] Failed:', matchError);
     }
 
+    // ★ If auto-approved (admin added), trigger the same award logic as manual approval
+    if (isAdmin && donation.status === 'approved' && donationType === 'weekly') {
+      try {
+        const { autoAwardSawerSkin } = await import('@/lib/sawer-auto-award');
+        await autoAwardSawerSkin(donation.donorName);
+      } catch (awardError) {
+        console.warn('[SAWER_AUTO_AWARD] Failed on admin add:', awardError);
+      }
+
+      // Auto-award donor skin (Maroon Heart) to Sultan of the Week
+      try {
+        const donorPlayerId = donation.playerId || (await db.player.findFirst({
+          where: { gamertag: { equals: donation.donorName, mode: 'insensitive' } },
+          select: { id: true },
+        }))?.id;
+
+        if (donorPlayerId) {
+          const account = await db.account.findUnique({
+            where: { playerId: donorPlayerId },
+          });
+          if (account) {
+            const donorSkin = await db.skin.findUnique({ where: { type: 'donor' } });
+            if (donorSkin) {
+              const expiresAt = new Date();
+              expiresAt.setDate(expiresAt.getDate() + 7);
+
+              const existing = await db.playerSkin.findUnique({
+                where: { accountId_skinId: { accountId: account.id, skinId: donorSkin.id } },
+              });
+              if (existing) {
+                await db.playerSkin.update({
+                  where: { id: existing.id },
+                  data: { expiresAt, reason: 'Sultan of the Week — donasi skin extended' },
+                });
+              } else {
+                await db.playerSkin.create({
+                  data: {
+                    accountId: account.id,
+                    skinId: donorSkin.id,
+                    reason: 'Sultan of the Week — donasi skin awarded',
+                    expiresAt,
+                  },
+                });
+              }
+
+              await db.account.update({
+                where: { id: account.id },
+                data: { donorBadgeCount: { increment: 1 } },
+              });
+            }
+          }
+        }
+      } catch (donorSkinError) {
+        console.warn('[DONOR_SKIN_AWARD] Failed on admin add:', donorSkinError);
+      }
+    }
+
     // Pusher: Notify real-time clients about new donation
     void pusherTrigger(PUSHER_CHANNELS.FEED, PUSHER_EVENTS.FEED_UPDATED, {
-      type: 'donation-created', donationId: donation.id, amount: donation.amount, donorName: donation.donorName,
+      type: isAdmin ? 'donation-approved' : 'donation-created',
+      donationId: donation.id,
+      amount: donation.amount,
+      donorName: donation.donorName,
     });
 
     // ★ Audit log: player donation (if player is authenticated)
@@ -220,7 +290,7 @@ export async function PATCH(request: Request) {
       // Use playerId if available, otherwise fall back to gamertag matching.
       try {
         const donorPlayerId = donation.playerId || (await db.player.findFirst({
-          where: { gamertag: { equals: donation.donorName } },
+          where: { gamertag: { equals: donation.donorName, mode: 'insensitive' } },
           select: { id: true },
         }))?.id;
 

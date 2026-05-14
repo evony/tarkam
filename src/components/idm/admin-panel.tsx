@@ -399,7 +399,7 @@ export function AdminPanel() {
   // Liga scoring mutations removed — Liga feature is deprecated
 
   // State
-  const [newDonation, setNewDonation] = useState({ donorName: '', amount: '', message: '', type: 'season' });
+  const [newDonation, setNewDonation] = useState({ donorName: '', amount: '', message: '', type: 'weekly' });
   const [paymentFormState, setPaymentForm] = useState<Record<string, string> | null>(null);
   const cmsSettingsBase = cmsSettings || {};
   const paymentForm = paymentFormState ?? cmsSettingsBase;
