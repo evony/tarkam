@@ -57,24 +57,30 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'sponsorId, placement, and imageUrl are required' }, { status: 400 });
     }
 
+    // Neon HTTP adapter doesn't support transactions — split create + include into separate calls
     const banner = await db.sponsorBanner.create({
       data: {
         sponsorId,
         placement,
         imageUrl,
-        linkUrl,
-        width,
-        height,
+        linkUrl: linkUrl || null,
+        width: width || null,
+        height: height || null,
         displayOrder: displayOrder || 0,
         startDate: startDate ? new Date(startDate) : null,
         endDate: endDate ? new Date(endDate) : null,
       },
+    });
+
+    // Fetch with sponsor relation separately
+    const bannerWithSponsor = await db.sponsorBanner.findUnique({
+      where: { id: banner.id },
       include: {
         sponsor: { select: { id: true, name: true } },
       },
     });
 
-    return NextResponse.json({ banner });
+    return NextResponse.json({ banner: bannerWithSponsor });
   } catch (error) {
     console.error('Error creating banner:', error);
     return NextResponse.json({ error: 'Failed to create banner' }, { status: 500 });
@@ -102,16 +108,21 @@ export async function PUT(request: NextRequest) {
       data: {
         ...(isActive !== undefined && { isActive }),
         ...(displayOrder !== undefined && { displayOrder }),
-        ...(linkUrl !== undefined && { linkUrl }),
+        ...(linkUrl !== undefined && { linkUrl: linkUrl || null }),
         ...(startDate !== undefined && { startDate: startDate ? new Date(startDate) : null }),
         ...(endDate !== undefined && { endDate: endDate ? new Date(endDate) : null }),
       },
+    });
+
+    // Fetch with sponsor relation separately (Neon HTTP compat)
+    const bannerWithSponsor = await db.sponsorBanner.findUnique({
+      where: { id },
       include: {
         sponsor: { select: { id: true, name: true, logo: true } },
       },
     });
 
-    return NextResponse.json({ banner });
+    return NextResponse.json({ banner: bannerWithSponsor });
   } catch (error) {
     console.error('Error updating banner:', error);
     return NextResponse.json({ error: 'Failed to update banner' }, { status: 500 });
