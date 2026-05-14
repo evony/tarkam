@@ -283,3 +283,23 @@ Stage Summary:
 - The fix pattern (split update+include-with-where into update + separate findUnique) must be used whenever updating with filtered relation includes on Neon HTTP
 - Scanned entire API codebase: no other update+include-with-where patterns found
 - 6 files with unguarded updateMany() calls noted (potential future issues but not current blockers)
+
+---
+Task ID: 1
+Agent: main
+Task: Redesign SultanCard avatar to look elegant in wider card layout
+
+Work Log:
+- Analyzed the existing SultanCard component which used a full-width avatar with only 280px height, causing the avatar to look like a letterbox/cinematic crop in the wider 2-column grid layout
+- Redesigned to a side-by-side layout: Portrait avatar on the left (45% width) + Info panel on the right (55%)
+- Left side: Full-body avatar with `object-cover object-top` in a constrained portrait area, with maroon gradient overlays and heart badge + sultan label overlays
+- Right side: Gamertag (large), city/club subtitle, maroon divider, stats with icons (Total Saweran with Crown, Jumlah Sawer with Heart), tier + division badges
+- Added right-edge gradient fade on avatar that blends into the info panel background for seamless transition
+- No-player fallback state also updated with matching 320px minHeight
+- Lint check passed clean, page compiles successfully
+
+Stage Summary:
+- SultanCard now uses a side-by-side layout instead of full-width overlay
+- Avatar is properly framed in a portrait container on the left
+- Info panel on the right shows structured data with icons, labels, and values
+- More elegant and professional look for a wider card

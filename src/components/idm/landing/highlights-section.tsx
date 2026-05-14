@@ -863,11 +863,11 @@ function SultanCard({
         </div>
 
         {hasPlayer ? (
-          /* Full avatar card */
+          /* ═══ Side-by-side layout: Portrait Avatar + Info ═══ */
           <div
-            className="relative rounded-2xl overflow-hidden cursor-pointer group/sultan transition-all duration-300 hover:shadow-lg"
+            className="relative rounded-2xl overflow-hidden cursor-pointer group/sultan transition-all duration-300 hover:shadow-lg flex"
             style={{
-              minHeight: '280px',
+              minHeight: '320px',
               border: `1px solid rgba(${MAROON.rgb},0.15)`,
               boxShadow: `0 4px 16px rgba(${MAROON.rgb},0.08), 0 4px 12px rgba(${divisionRgb},0.06), inset 0 1px 0 rgba(255,255,255,0.03)`,
               background: `linear-gradient(165deg, rgba(${MAROON.rgb},0.08) 0%, var(--bg-mid) 40%, rgba(${divisionRgb},0.02) 100%)`,
@@ -890,93 +890,130 @@ function SultanCard({
               }
             }}
           >
-            {/* Full-body avatar */}
-            <div className="relative w-full" style={{ minHeight: '280px' }}>
+            {/* ─── Left: Portrait Avatar ─── */}
+            <div className="relative w-[45%] shrink-0 overflow-hidden" style={{ minHeight: '320px' }}>
               <Image
                 src={getAvatarUrl(sultan.player!.gamertag, sultanDivision, sultan.player!.avatar)}
                 alt={sultan.player!.gamertag}
                 fill
-                sizes="(max-width: 768px) 100vw, 50vw"
+                sizes="(max-width: 768px) 45vw, 22vw"
                 className="object-cover object-top transition-transform duration-500 group-hover/sultan:scale-105"
                 loading="lazy"
               />
-              {/* Bottom gradient overlay */}
-              <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, var(--bg-mid) 0%, color-mix(in srgb, var(--bg-mid) 60%, transparent) 25%, transparent 55%)' }} />
-              {/* Maroon + division accent glow at bottom */}
-              <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(ellipse at 50% 90%, rgba(${MAROON.rgb},0.1), rgba(${divisionRgb},0.08), transparent 60%)` }} />
-            </div>
+              {/* Right edge gradient fade into info panel */}
+              <div className="absolute inset-0" style={{ background: `linear-gradient(to right, transparent 60%, var(--bg-mid) 100%)` }} />
+              {/* Bottom gradient for subtle depth */}
+              <div className="absolute inset-0 pointer-events-none" style={{ background: `linear-gradient(to top, rgba(${MAROON.rgb},0.15) 0%, transparent 40%)` }} />
+              {/* Maroon glow at bottom */}
+              <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(ellipse at 50% 90%, rgba(${MAROON.rgb},0.12), transparent 60%)` }} />
 
-            {/* Heart badge top-right */}
-            <div className="absolute top-2.5 right-2.5 z-20">
-              <div
-                className="w-8 h-8 rounded-full flex items-center justify-center shadow-lg"
-                style={{
-                  background: `linear-gradient(135deg, ${MAROON.nameLight}, ${MAROON.nameDark})`,
-                  boxShadow: `0 2px 10px ${MAROON.glow}, 0 0 20px ${MAROON.glow}`,
-                }}
-              >
-                <span className="text-sm" style={{ filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.5))' }}>❤️</span>
+              {/* Heart badge top-right of avatar */}
+              <div className="absolute top-3 right-3 z-20">
+                <div
+                  className="w-8 h-8 rounded-full flex items-center justify-center shadow-lg"
+                  style={{
+                    background: `linear-gradient(135deg, ${MAROON.nameLight}, ${MAROON.nameDark})`,
+                    boxShadow: `0 2px 10px ${MAROON.glow}, 0 0 20px ${MAROON.glow}`,
+                  }}
+                >
+                  <span className="text-sm" style={{ filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.5))' }}>❤️</span>
+                </div>
+              </div>
+
+              {/* Sultan label badge top-left */}
+              <div className="absolute top-3 left-3 z-20">
+                <span
+                  className="text-[8px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider"
+                  style={{
+                    backgroundColor: `rgba(${MAROON.rgb},0.25)`,
+                    color: MAROON.nameLight,
+                    border: `1px solid rgba(${MAROON.rgb},0.4)`,
+                    backdropFilter: 'blur(8px)',
+                  }}
+                >
+                  ❤️ SULTAN
+                </span>
               </div>
             </div>
 
-            {/* Sultan label badge top-left */}
-            <div className="absolute top-2.5 left-2.5 z-20">
-              <span
-                className="text-[8px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider"
-                style={{
-                  backgroundColor: `rgba(${MAROON.rgb},0.2)`,
-                  color: MAROON.nameLight,
-                  border: `1px solid rgba(${MAROON.rgb},0.35)`,
-                  backdropFilter: 'blur(8px)',
-                }}
-              >
-                ❤️ SULTAN
-              </span>
-            </div>
-
-            {/* Player info at bottom */}
-            <div className="absolute bottom-0 inset-x-0 px-3 pb-3 pt-10 z-10">
+            {/* ─── Right: Player Info Panel ─── */}
+            <div className="flex-1 flex flex-col justify-center px-4 sm:px-5 py-4 relative z-10">
               {/* Gamertag */}
               <p
-                className="text-base sm:text-lg font-black truncate drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]"
+                className="text-xl sm:text-2xl font-black leading-tight"
                 style={{
                   color: MAROON.nameLight,
-                  textShadow: `0 0 6px ${MAROON.glow}, 0 0 16px ${MAROON.glow}`,
+                  textShadow: `0 0 8px ${MAROON.glow}`,
                 }}
               >
                 {sultan.player!.gamertag}
               </p>
 
-              {/* Stats row */}
-              <div className="flex items-center gap-1.5 mt-1 flex-wrap">
-                <span
-                  className="text-[8px] font-bold px-1.5 py-0.5 rounded"
-                  style={{
-                    backgroundColor: `rgba(${MAROON.rgb},0.12)`,
-                    color: MAROON.nameLight,
-                    border: `1px solid rgba(${MAROON.rgb},0.18)`,
-                  }}
-                >
-                  Rp {sultan.totalAmount >= 1000 ? `${(sultan.totalAmount / 1000).toFixed(0)}K` : sultan.totalAmount}
-                </span>
-                <span
-                  className="text-[8px] font-bold px-1.5 py-0.5 rounded"
-                  style={{
-                    backgroundColor: `rgba(${MAROON.rgb},0.08)`,
-                    color: MAROON.nameMid,
-                    border: `1px solid rgba(${MAROON.rgb},0.12)`,
-                  }}
-                >
-                  {sultan.donationCount}x sawer
-                </span>
-                {sultan.player!.tier && (
-                  <span
-                    className="text-[8px] font-bold px-1.5 py-0.5 rounded"
-                    style={{ backgroundColor: 'rgba(212,168,83,0.12)', color: COLORS.gold }}
+              {/* City / Club subtitle */}
+              {(sultan.player!.city || sultan.player!.club) && (
+                <p className="text-[10px] font-medium mt-1 truncate" style={{ color: COLORS.secondaryText }}>
+                  {[sultan.player!.city, typeof sultan.player!.club === 'string' ? sultan.player!.club : sultan.player!.club?.name].filter(Boolean).join(' · ')}
+                </p>
+              )}
+
+              {/* Divider */}
+              <div className="my-3 h-px w-12 rounded-full" style={{ background: `linear-gradient(90deg, ${MAROON.nameMid}, transparent)` }} />
+
+              {/* Stats grid */}
+              <div className="flex flex-col gap-2">
+                {/* Total Saweran */}
+                <div className="flex items-center gap-2">
+                  <div
+                    className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
+                    style={{ backgroundColor: `rgba(${MAROON.rgb},0.15)`, border: `1px solid rgba(${MAROON.rgb},0.25)` }}
                   >
-                    {sultan.player!.tier}
+                    <Crown className="w-3.5 h-3.5" style={{ color: MAROON.nameMid }} />
+                  </div>
+                  <div>
+                    <p className="text-[8px] font-semibold uppercase tracking-wider" style={{ color: COLORS.secondaryText }}>Total Saweran</p>
+                    <p className="text-sm font-black" style={{ color: MAROON.nameLight }}>
+                      Rp {sultan.totalAmount >= 1000 ? `${(sultan.totalAmount / 1000).toFixed(0)}K` : sultan.totalAmount}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Jumlah Sawer */}
+                <div className="flex items-center gap-2">
+                  <div
+                    className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
+                    style={{ backgroundColor: `rgba(${MAROON.rgb},0.15)`, border: `1px solid rgba(${MAROON.rgb},0.25)` }}
+                  >
+                    <Heart className="w-3.5 h-3.5" style={{ color: MAROON.nameMid }} />
+                  </div>
+                  <div>
+                    <p className="text-[8px] font-semibold uppercase tracking-wider" style={{ color: COLORS.secondaryText }}>Jumlah Sawer</p>
+                    <p className="text-sm font-black" style={{ color: MAROON.nameLight }}>
+                      {sultan.donationCount}x
+                    </p>
+                  </div>
+                </div>
+
+                {/* Tier badge row */}
+                <div className="flex items-center gap-1.5 mt-1 flex-wrap">
+                  {sultan.player!.tier && (
+                    <span
+                      className="text-[8px] font-bold px-2 py-0.5 rounded"
+                      style={{ backgroundColor: 'rgba(212,168,83,0.12)', color: COLORS.gold, border: '1px solid rgba(212,168,83,0.2)' }}
+                    >
+                      Tier {sultan.player!.tier}
+                    </span>
+                  )}
+                  <span
+                    className="text-[8px] font-bold px-2 py-0.5 rounded"
+                    style={{
+                      backgroundColor: `rgba(${divisionRgb},0.1)`,
+                      color: divisionAccentLight,
+                      border: `1px solid rgba(${divisionRgb},0.2)`,
+                    }}
+                  >
+                    {divisionLabel}
                   </span>
-                )}
+                </div>
               </div>
             </div>
           </div>
@@ -985,7 +1022,7 @@ function SultanCard({
           <div
             className="flex flex-col items-center justify-center gap-3 rounded-2xl"
             style={{
-              minHeight: '280px',
+              minHeight: '320px',
               backgroundColor: `rgba(${MAROON.rgb},0.05)`,
               border: `1px solid rgba(${MAROON.rgb},0.15)`,
             }}
