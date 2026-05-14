@@ -426,6 +426,28 @@ export function PlayerProfile({ player, onClose, rank, skinMap, preferredSkinTyp
             {/* Full avatar as background */}
             <AvatarMedia src={avatarSrc} alt={player.gamertag} fill sizes="(max-width: 640px) 100vw, 512px" objectPosition="center 37%" />
 
+            {/* ═══ Shimmer overlay — theme-colored diagonal sweep ═══ */}
+            {/* Only shown when player has a skin (champion, MVP, sultan, etc.) */}
+            {skinColors && (
+              <motion.div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: `linear-gradient(
+                    105deg,
+                    transparent 25%,
+                    ${skinColors.frame}18 40%,
+                    ${skinColors.glow.replace(/[\d.]+\)$/, '0.22)')} 50%,
+                    ${skinColors.frame}18 60%,
+                    transparent 75%
+                  )`,
+                  zIndex: 3,
+                }}
+                animate={{ x: ['-120%', '120%'] }}
+                transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', repeatDelay: 3 }}
+                aria-hidden="true"
+              />
+            )}
+
             {/* Dark overlay gradient — natural fade from bottom for text readability */}
             <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
             <div className="absolute inset-0 bg-gradient-to-b from-background/20 via-transparent to-transparent" />

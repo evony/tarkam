@@ -265,7 +265,7 @@ function BintangMingguIniDuo({
         </div>
 
         {/* Male side */}
-        <div className="relative flex-1 avatar-shimmer-gold">
+        <div className="relative flex-1">
           {hasMale ? (
             <>
               <Image
@@ -339,7 +339,7 @@ function BintangMingguIniDuo({
         </div>
 
         {/* Female side */}
-        <div className="relative flex-1 avatar-shimmer-gold">
+        <div className="relative flex-1">
           {hasFemale ? (
             <>
               <Image
@@ -464,7 +464,7 @@ function SultanOfSeasonCard({ sultans, setSelectedPlayer }: {
         });
       }}>
         {/* Avatar */}
-        <div className="relative w-14 h-14 sm:w-16 sm:h-16 shrink-0 rounded-xl overflow-hidden avatar-shimmer-emerald border-2"
+        <div className="relative w-14 h-14 sm:w-16 sm:h-16 shrink-0 rounded-xl overflow-hidden border-2"
           style={{ borderColor: SULTAN_EMERALD, boxShadow: `0 0 12px ${hexToRgba(SULTAN_EMERALD, 0.3)}` }}>
           <Image
             src={getAvatarUrl(sultan.gamertag, sultan.division === 'female' ? 'female' : 'male', sultan.avatar)}
@@ -643,7 +643,7 @@ function DuoChampionCard({
             }}>
               {/* Avatar panel — 3/4 aspect ratio — always male division color ring */}
               <div
-                className="relative w-24 sm:w-32 lg:w-36 shrink-0 rounded-2xl overflow-hidden avatar-shimmer-diamond bg-gradient-to-br from-idm-male/25 to-idm-male/5 border-idm-male/30"
+                className="relative w-24 sm:w-32 lg:w-36 shrink-0 rounded-2xl overflow-hidden bg-gradient-to-br from-idm-male/25 to-idm-male/5 border-idm-male/30"
                 style={{ aspectRatio: '3/4' }}
               >
                 <Image
@@ -783,7 +783,7 @@ function DuoChampionCard({
             }}>
               {/* Avatar panel — 3/4 aspect ratio — always female division color ring */}
               <div
-                className="relative w-24 sm:w-32 lg:w-36 shrink-0 rounded-2xl overflow-hidden avatar-shimmer-diamond bg-gradient-to-br from-idm-female/25 to-idm-female/5 border-idm-female/30"
+                className="relative w-24 sm:w-32 lg:w-36 shrink-0 rounded-2xl overflow-hidden bg-gradient-to-br from-idm-female/25 to-idm-female/5 border-idm-female/30"
                 style={{ aspectRatio: '3/4' }}
               >
                 <Image
@@ -941,7 +941,7 @@ function DuoChampionCard({
                           });
                         }}
                       >
-                        <div className="relative w-8 h-8 rounded-full overflow-hidden shrink-0 avatar-shimmer-diamond" style={{ border: `1.5px solid ${hexToRgba(maleAccent, 0.3)}` }}>
+                        <div className="relative w-8 h-8 rounded-full overflow-hidden shrink-0" style={{ border: `1.5px solid ${hexToRgba(maleAccent, 0.3)}` }}>
                           <Image
                             src={getAvatarUrl(male.player.gamertag, 'male', male.player.avatar)}
                             alt={male.player.gamertag}
@@ -990,7 +990,7 @@ function DuoChampionCard({
                           });
                         }}
                       >
-                        <div className="relative w-8 h-8 rounded-full overflow-hidden shrink-0 avatar-shimmer-diamond" style={{ border: `1.5px solid ${hexToRgba(femaleAccent, 0.3)}` }}>
+                        <div className="relative w-8 h-8 rounded-full overflow-hidden shrink-0" style={{ border: `1.5px solid ${hexToRgba(femaleAccent, 0.3)}` }}>
                           <Image
                             src={getAvatarUrl(female.player.gamertag, 'female', female.player.avatar)}
                             alt={female.player.gamertag}
@@ -1227,7 +1227,7 @@ function ClubChampionCard({
                 {allMembers.slice(0, 5).map((member, i) => (
                   <div key={`squad-${member.id}`} className="group/member relative flex flex-col items-center">
                     <div
-                      className={`w-14 h-14 sm:w-16 sm:h-16 rounded-2xl overflow-hidden avatar-shimmer-diamond border transition-all duration-200 hover:scale-110 cursor-default ${
+                      className={`w-14 h-14 sm:w-16 sm:h-16 rounded-2xl overflow-hidden border transition-all duration-200 hover:scale-110 cursor-default ${
                         member.division === 'male'
                           ? 'border-idm-male/15 hover:border-idm-male/30'
                           : 'border-idm-female/15 hover:border-idm-female/30'

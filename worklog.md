@@ -303,3 +303,25 @@ Stage Summary:
 - Avatar is properly framed in a portrait container on the left
 - Info panel on the right shows structured data with icons, labels, and values
 - More elegant and professional look for a wider card
+
+---
+Task ID: 4
+Agent: main
+Task: Move shimmer effect from card avatars to profile modal avatar, make it animated
+
+Work Log:
+- Reverted all shimmer CSS classes from highlights-section.tsx (DivisionCard, MvpCard, SultanCard)
+- Reverted all shimmer CSS classes from season-champion-section.tsx (BintangMingguIniDuo, DuoChampionCard, SultanOfSeasonCard, previous champions, squad members)
+- Found PlayerProfile component at /home/z/my-project/src/components/idm/player-profile.tsx
+- Added framer-motion animated shimmer overlay inside the hero banner avatar area (line 429-449)
+- Shimmer uses skinColors (theme-aware) — gold for champion, platinum for MVP, emerald for sultan, maroon for sultan weekly
+- Animated with motion.div: x from -120% to 120%, 5s duration, 3s pause between cycles
+- Diagonal 105deg gradient using skinColors.frame and skinColors.glow
+- Only appears when player has a skin (skinColors is truthy)
+- zIndex: 3 sits above avatar but below text overlays
+
+Stage Summary:
+- Shimmer now only appears on profile modal avatar, not on card avatars
+- Shimmer is fully animated (moving diagonal sweep) using framer-motion
+- Theme-aware: automatically uses the correct skin color (gold/platinum/diamond/emerald/maroon)
+- CSS shimmer classes in globals.css kept for potential future use
