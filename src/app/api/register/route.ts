@@ -611,9 +611,9 @@ export async function GET(request: Request) {
     return sanitizedJson({ exists: false, similar: [], isBlocked: false }, { headers });
   }
 
+  // ★ Include inactive players so soft-deleted users can re-register
   const allPlayers = await db.player.findMany({
     where: {
-      isActive: true,
       ...(division && { division }),
     },
     select: {

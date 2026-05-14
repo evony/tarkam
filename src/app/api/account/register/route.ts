@@ -133,15 +133,32 @@ export async function POST(request: NextRequest) {
         const samePerson = existingPlayerByPhone.name.toLowerCase().trim() === trimmedName.toLowerCase().trim();
 
         if (samePerson) {
-          // Same person — just create Account for the existing player
+          // Same person — reactivate if inactive, then create Account
+          // ★ If player was soft-deleted (isActive: false), reactivate them first
+          if (!existingPlayerByPhone.isActive) {
+            await db.player.update({
+              where: { id: existingPlayerByPhone.id },
+              data: {
+                isActive: true,
+                registrationStatus: 'pending',
+                name: trimmedName,
+                city: trimmedCity,
+                phone: normalizedPhone,
+                waNumber: normalizedPhone,
+                division,
+              },
+            });
+          }
+
           // Check if player already has an account
           const existingAccount = await db.account.findUnique({
             where: { playerId: existingPlayerByPhone.id },
           });
 
           if (existingAccount) {
+            // ★ If they already have an account but player was inactive, just reactivate and let them login
             return NextResponse.json(
-              { error: 'Pemain ini sudah memiliki akun. Silakan login.' },
+              { error: 'Pemain ini sudah memiliki akun. Silakan login dengan nickname dan password Anda.' },
               { status: 409, headers: { 'Cache-Control': 'no-store' } }
             );
           }
@@ -304,14 +321,31 @@ export async function POST(request: NextRequest) {
         const phoneMatches = dbPhoneNorm && phonesMatch(normalizedPhone, dbPhoneNorm);
 
         if (phoneMatches) {
-          // Same person — just create Account for the existing player
+          // Same person — reactivate if inactive, then create Account
+          // ★ If player was soft-deleted (isActive: false), reactivate them first
+          if (!existingPlayerByGamertag.isActive) {
+            await db.player.update({
+              where: { id: existingPlayerByGamertag.id },
+              data: {
+                isActive: true,
+                registrationStatus: 'pending',
+                name: trimmedName,
+                city: trimmedCity,
+                phone: normalizedPhone,
+                waNumber: normalizedPhone,
+                division,
+              },
+            });
+          }
+
+          // Check if player already has an account
           const existingAccount = await db.account.findUnique({
             where: { playerId: existingPlayerByGamertag.id },
           });
 
           if (existingAccount) {
             return NextResponse.json(
-              { error: 'Pemain ini sudah memiliki akun. Silakan login.' },
+              { error: 'Pemain ini sudah memiliki akun. Silakan login dengan nickname dan password Anda.' },
               { status: 409, headers: { 'Cache-Control': 'no-store' } }
             );
           }
