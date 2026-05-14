@@ -419,7 +419,7 @@ export function Dashboard() {
             <span className={`text-lg font-bold ${dt.neonGradient}`}>{formatCurrency(t?.prizePool || 0)}</span>
           </div>
           <Progress value={data.activeTournamentPrizePool > 0 ? Math.min((data.activeTournamentPrizePool / (data.activeTournamentPrizePool * 2 || 1)) * 100, 100) : 0} className="mt-2 h-1.5" />
-          <p className="text-[10px] text-muted-foreground mt-1">Terkumpul: {formatCurrency(data.activeTournamentPrizePool || data.totalPrizePool)}</p>
+          <p className="text-[10px] text-muted-foreground mt-1">Terkumpul: {formatCurrency(data.activeTournamentPrizePool ?? data.totalPrizePool)}</p>
         </div>
       </motion.div>
 
@@ -428,7 +428,7 @@ export function Dashboard() {
         {[
           { icon: Users, value: `${data.totalPlayers}`, label: 'Players', color: 'from-idm-male to-idm-male-light' },
           { icon: Shield, value: `${data.clubs?.length || 0}`, label: 'Clubs', color: 'from-idm-female to-idm-female-light' },
-          { icon: Wallet, value: formatCurrency(data.activeTournamentPrizePool || data.totalPrizePool).replace('Rp', '').trim(), label: 'Prize Pool', color: 'from-[#d4a853] to-[#b8860b]' },
+          { icon: Wallet, value: formatCurrency(data.activeTournamentPrizePool ?? data.totalPrizePool).replace('Rp', '').trim(), label: 'Prize Pool', color: 'from-[#d4a853] to-[#b8860b]' },
           { icon: Target, value: `${data.seasonProgress?.percentage || 0}%`, label: 'Progress', color: 'from-green-500 to-green-600' },
         ].map((stat, i) => (
           <motion.div key={i} whileHover={{ scale: 1.03, y: -2 }} className="group">
@@ -738,8 +738,8 @@ export function Dashboard() {
               <SectionCard title="Donasi & Sawer" icon={Gift} badge="LIVE">
                 <div className={`p-4 sm:p-5 rounded-xl ${dt.bgSubtle} ${dt.border} mb-3`}>
                   <p className="text-xs text-muted-foreground mb-1">Total Prize Pool</p>
-                  <p className={`text-xl font-bold ${dt.neonGradient}`}>{formatCurrency(data.activeTournamentPrizePool || data.totalPrizePool)}</p>
-                  <Progress value={(data.activeTournamentPrizePool || data.totalPrizePool) > 0 ? Math.min(((data.activeTournamentPrizePool || data.totalPrizePool) / ((data.activeTournamentPrizePool || data.totalPrizePool) * 2 || 1)) * 100, 100) : 0} className="mt-2 h-1.5" />
+                  <p className={`text-xl font-bold ${dt.neonGradient}`}>{formatCurrency(data.activeTournamentPrizePool ?? data.totalPrizePool)}</p>
+                  <Progress value={(data.activeTournamentPrizePool ?? data.totalPrizePool) > 0 ? Math.min(((data.activeTournamentPrizePool ?? data.totalPrizePool) / ((data.activeTournamentPrizePool ?? data.totalPrizePool) * 2 || 1)) * 100, 100) : 0} className="mt-2 h-1.5" />
                 </div>
                 <div className="space-y-2">
                   <p className="text-xs font-semibold text-muted-foreground">Donatur Teratas</p>

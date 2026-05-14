@@ -478,8 +478,12 @@ async function fetchLandingStatsInner(division: 'male' | 'female') {
     || null;
 
   // Compute activeTournamentPrizePool: base prize pool + that tournament's weekly donations
-  const activeTournamentBasePrizePool = activeTournamentData?.prizePool || 0;
-  const activeTournamentWeeklyDonations = weeklyDonations.filter(d => d.tournamentId === activeTournamentData?.id);
+  // When the "active" tournament is actually completed (no new week yet), prize pool resets to 0.
+  const isActiveTournamentActuallyActive = activeTournamentData && activeTournamentData.status !== 'completed';
+  const activeTournamentBasePrizePool = isActiveTournamentActuallyActive ? (activeTournamentData.prizePool || 0) : 0;
+  const activeTournamentWeeklyDonations = isActiveTournamentActuallyActive
+    ? weeklyDonations.filter(d => d.tournamentId === activeTournamentData?.id)
+    : [];
   const activeTournamentDonationTotal = activeTournamentWeeklyDonations.reduce((sum, d) => sum + d.amount, 0);
   const activeTournamentPrizePool = activeTournamentBasePrizePool + activeTournamentDonationTotal;
 

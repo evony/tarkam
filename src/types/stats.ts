@@ -165,6 +165,7 @@ export interface MvpHallOfFameEntry {
   points: number;
   totalWins: number;
   streak: number;
+  matches: number;
   weekNumber: number;
   tournamentName: string;
   division?: 'male' | 'female';

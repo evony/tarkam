@@ -315,8 +315,13 @@ export async function GET(request: Request) {
 
   // ═══ Active tournament prize pool — PER TOURNAMENT (for hero banner display) ═══
   // The hero banner should show only the CURRENT week's prize pool, not the season total.
-  const activeTournamentBasePrizePool = activeTournament?.prizePool || 0;
-  const activeTournamentWeeklyDonations = weeklyDonations.filter(d => d.tournamentId === activeTournament?.id);
+  // When the "active" tournament is actually completed (fallback scenario — no new week yet),
+  // the prize pool resets to 0. No active tournament = no active prize pool.
+  const isActiveTournamentActuallyActive = activeTournament && activeTournament.status !== 'completed';
+  const activeTournamentBasePrizePool = isActiveTournamentActuallyActive ? (activeTournament.prizePool || 0) : 0;
+  const activeTournamentWeeklyDonations = isActiveTournamentActuallyActive
+    ? weeklyDonations.filter(d => d.tournamentId === activeTournament.id)
+    : [];
   const activeTournamentDonationTotal = activeTournamentWeeklyDonations.reduce((sum, d) => sum + d.amount, 0);
   const activeTournamentPrizePool = activeTournamentBasePrizePool + activeTournamentDonationTotal;
 
@@ -420,6 +425,7 @@ export async function GET(request: Request) {
         points: seasonPointsMap.get(p.player.id) || p.player.points,
         totalWins: p.player.totalWins,
         streak: p.player.streak,
+        matches: p.player.matches,
         weekNumber: t.weekNumber,
         tournamentName: t.name,
         prizePool: t.prizePool,

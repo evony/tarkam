@@ -653,7 +653,7 @@ function CompactMvpCard({
         streak: mvpEntry.streak,
         maxStreak: mvpEntry.streak,
         totalMvp: mvpEntry.totalMvp,
-        matches: 0,
+        matches: mvpEntry.matches || 0,
         division,
       }
     : topPlayer
