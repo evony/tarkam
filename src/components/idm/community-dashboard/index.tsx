@@ -2106,17 +2106,27 @@ export function CommunityDashboard() {
         {/* ═══ 6. Peringkat/Standings — People check ranking changes after match ═══ */}
         <Section sectionId="rankings">
           <AnimatedSection variant="fadeUp">
-            <DivisionStandingsSection
-              maleData={maleData}
-              femaleData={femaleData}
-              selectedDivision={selectedDivision}
-              onPlayerClick={handlePlayerClick}
-              onClubClick={handleClubClick}
-              leaderboardSort={leaderboardSort}
-              onLeaderboardSortChange={setLeaderboardSort}
-              divisionFilter={leaderboardDivisionFilter}
-              onDivisionFilterChange={setLeaderboardDivisionFilter}
-            />
+            <div className="space-y-4">
+              <PeringkatHeader
+                leaderboardSort={leaderboardSort}
+                onLeaderboardSortChange={setLeaderboardSort}
+                divisionFilter={leaderboardDivisionFilter}
+                onDivisionFilterChange={setLeaderboardDivisionFilter}
+                maleData={maleData}
+                femaleData={femaleData}
+              />
+              <DivisionStandingsSection
+                maleData={maleData}
+                femaleData={femaleData}
+                selectedDivision={selectedDivision}
+                onPlayerClick={handlePlayerClick}
+                onClubClick={handleClubClick}
+                leaderboardSort={leaderboardSort}
+                onLeaderboardSortChange={setLeaderboardSort}
+                divisionFilter={leaderboardDivisionFilter}
+                onDivisionFilterChange={setLeaderboardDivisionFilter}
+              />
+            </div>
           </AnimatedSection>
         </Section>
       </div>
