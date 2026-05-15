@@ -335,7 +335,7 @@ function buildVideoHighlights(
     if (season.status === 'COMPLETED' || season.number === maleData?.season?.number) {
       videos.push({
         id: `season-highlights-male-s${season.number}`,
-        title: `Season ${season.number} Highlights — Male`,
+        title: `Season ${season.number} Highlights — Cowo`,
         seasonNumber: season.number,
         division: 'male',
         type: 'highlights',
@@ -378,7 +378,7 @@ function buildVideoHighlights(
     if (!videos.find(v => v.division === 'male' && v.type === 'highlights')) {
       placeholders.push({
         id: `season-highlights-male-s${maleSn}`,
-        title: `Season ${maleSn} Highlights — Male`,
+        title: `Season ${maleSn} Highlights — Cowo`,
         seasonNumber: maleSn,
         division: 'male',
         type: 'highlights',

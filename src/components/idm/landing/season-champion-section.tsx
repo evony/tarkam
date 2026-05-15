@@ -729,7 +729,7 @@ function DuoChampionCard({
                 <Music className="w-8 h-8 text-idm-male/30" />
               </div>
               <div className="flex-1 min-w-0 flex flex-col justify-center py-0.5">
-                <p className="text-sm font-bold text-muted-foreground">Male Champion</p>
+                <p className="text-sm font-bold text-muted-foreground">Champion Cowo</p>
                 <p className="text-[10px] text-muted-foreground/60">Belum ada juara</p>
               </div>
             </div>
@@ -869,7 +869,7 @@ function DuoChampionCard({
                 <Shield className="w-8 h-8 text-idm-female/30" />
               </div>
               <div className="flex-1 min-w-0 flex flex-col justify-center py-0.5">
-                <p className="text-sm font-bold text-muted-foreground">Female Champion</p>
+                <p className="text-sm font-bold text-muted-foreground">Champion Cewe</p>
                 <p className="text-[10px] text-muted-foreground/60">Belum ada juara</p>
               </div>
             </div>
@@ -1204,7 +1204,7 @@ function ClubChampionCard({
               <div className="flex items-center gap-3 mt-3">
                 {maleMembers.length > 0 && (
                   <span className="bg-idm-male/8 text-idm-male/70 text-[10px] border border-idm-male/12 px-2.5 py-1 rounded-md font-bold flex items-center gap-1">
-                    <Users className="w-3 h-3" />{maleMembers.length} Male
+                    <Users className="w-3 h-3" />{maleMembers.length} Cowo
                   </span>
                 )}
                 {femaleMembers.length > 0 && (

@@ -237,7 +237,7 @@ export function ChampionsSection({
                             }}
                           >
                             <Users className="w-3 h-3" />
-                            {leagueData.ligaChampion.members.filter((m: { division: string }) => m.division === 'male').length} Male
+                            {leagueData.ligaChampion.members.filter((m: { division: string }) => m.division === 'male').length} Cowo
                           </span>
                           <span
                             className="text-[10px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1"

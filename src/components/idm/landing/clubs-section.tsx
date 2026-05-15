@@ -311,12 +311,12 @@ export function ClubsSection({ maleData, femaleData, isDataLoading, cmsSections,
                                   <div className="flex items-center justify-center gap-1.5 mt-2.5">
                                     {maleMembers > 0 && (
                                       <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#2E9FFF]/10 text-[#57B5FF] border border-[#2E9FFF]/15">
-                                        <Music className="w-2.5 h-2.5" />{maleMembers} Male
+                                        <Music className="w-2.5 h-2.5" />{maleMembers} Cowo
                                       </span>
                                     )}
                                     {femaleMembers > 0 && (
                                       <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#FF2D78]/10 text-[#FF5C9A] border border-[#FF2D78]/15">
-                                        <Shield className="w-2.5 h-2.5" />{femaleMembers} Fem
+                                        <Shield className="w-2.5 h-2.5" />{femaleMembers} Cewe
                                       </span>
                                     )}
                                   </div>

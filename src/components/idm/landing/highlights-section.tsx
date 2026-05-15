@@ -393,7 +393,7 @@ function DivisionCard({
   const accentColor = isMale ? COLORS.maleAccent : COLORS.femaleAccent;
   const accentLight = isMale ? COLORS.maleAccentLight : COLORS.femaleAccentLight;
   const DivisionIcon = isMale ? Music : Shield;
-  const divisionLabel = isMale ? 'MALE DIVISION' : 'FEMALE DIVISION';
+  const divisionLabel = isMale ? 'COWO' : 'CEWE';
   const colorRgb = isMale ? '46,159,255' : '255,45,120';
 
   return (
@@ -544,7 +544,7 @@ function DivisionCard({
               Musim Baru Dimulai
             </p>
             <p className="text-[10px] text-center" style={{ color: COLORS.secondaryText }}>
-              Juara divisi {isMale ? 'male' : 'female'} akan muncul di sini
+              Juara divisi {isMale ? 'cowo' : 'cewe'} akan muncul di sini
             </p>
           </div>
         )}
@@ -574,7 +574,7 @@ function MvpCard({
   const accentLight = isMale ? COLORS.maleAccentLight : COLORS.femaleAccentLight;
   const DivisionIcon = isMale ? Music : Shield;
   const isEmpty = !player || player.isEmpty;
-  const divisionLabel = isMale ? 'MALE' : 'FEMALE';
+  const divisionLabel = isMale ? 'COWO' : 'CEWE';
   const colorRgb = isMale ? '46,159,255' : '255,45,120';
 
   return (
