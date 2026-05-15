@@ -1885,13 +1885,14 @@ export function CommunityDashboard() {
   const [leaderboardDivisionFilter, setLeaderboardDivisionFilter] = useState<'all' | 'male' | 'female'>('all');
   // Track if rankings section is visible — hide sticky champion header when it is
   const [isRankingsVisible, setIsRankingsVisible] = useState(false);
-  const rankingsRef = useCallback((node: HTMLElement | null) => {
-    if (!node) return;
+  useEffect(() => {
+    const el = document.getElementById('section-rankings');
+    if (!el) return;
     const observer = new IntersectionObserver(
       ([entry]) => setIsRankingsVisible(entry.isIntersecting),
-      { threshold: 0, rootMargin: '-80px 0px 0px 0px' } // trigger when section top passes sticky header
+      { threshold: 0, rootMargin: '-60px 0px 0px 0px' }
     );
-    observer.observe(node);
+    observer.observe(el);
     return () => observer.disconnect();
   }, []);
   // Peringkat is no longer sticky — no need for intersection observer
@@ -2115,8 +2116,7 @@ export function CommunityDashboard() {
         </Section>
 
         {/* ═══ 6. Peringkat/Standings — People check ranking changes after match ═══ */}
-        <Section sectionId="rankings">
-          <div ref={rankingsRef}>
+        <Section sectionId="rankings" skipContentVisibility>
           <AnimatedSection variant="fadeUp">
             <div className="space-y-4">
               <PeringkatHeader
@@ -2140,7 +2140,6 @@ export function CommunityDashboard() {
               />
             </div>
           </AnimatedSection>
-          </div>
         </Section>
       </div>
 
