@@ -7677,11 +7677,27 @@ html {
   contain: layout style;
 }
 
+/* ─── CSS Marquee Animation — Zero main-thread cost ───
+   Replaces JS requestAnimationFrame loop for smooth scrolling.
+   Runs entirely on the compositor thread — no JS overhead. */
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.marquee-track {
+  animation: marquee-scroll linear infinite;
+  will-change: transform;
+  contain: layout style;
+}
+
 /* ─── Section Reveal Animation — CLS-optimized (no translateY) ─── */
 .section-reveal {
   opacity: 0;
   will-change: opacity;
   transition: opacity 0.35s ease-out;
+  content-visibility: auto;
+  contain-intrinsic-size: 0 500px;
 }
 
 .section-reveal.section-reveal--visible {

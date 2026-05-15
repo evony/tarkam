@@ -32,6 +32,7 @@ export function useParallax(layers: ParallaxLayer[]) {
   const rafRef = useRef<number>(0);
   const cacheRef = useRef<CachedLayer[]>([]);
   const scrollYRef = useRef(0);
+  const lastAppliedRef = useRef(0); // Track last applied scroll to skip no-op frames
 
   // Stabilize layers with a key-based comparison to avoid re-subscribe cascade
   const layersKey = layers.map(l => `${l.selector}:${l.speed}`).join('|');
@@ -57,6 +58,10 @@ export function useParallax(layers: ParallaxLayer[]) {
     const tick = () => {
       rafRef.current = 0;
       const scrollY = scrollYRef.current;
+
+      // Skip if scroll hasn't changed since last apply
+      if (scrollY === lastAppliedRef.current) return;
+      lastAppliedRef.current = scrollY;
 
       for (const c of cacheRef.current) {
         const offset = Math.max(-300, Math.min(300, scrollY * c.speed));

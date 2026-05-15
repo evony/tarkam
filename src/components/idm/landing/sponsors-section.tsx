@@ -101,9 +101,9 @@ export function SponsorsSection() {
                     src={logo}
                     alt={sponsor.name}
                     fill
+                    sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 16vw"
                     className="object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-300"
-                  style={{ objectPosition: 'center 30%' }}
-                    unoptimized
+                    style={{ objectPosition: 'center 30%' }}
                   />
                 ) : (
                   <span className="absolute inset-0 flex items-center justify-center text-xs sm:text-sm font-semibold text-idm-gold-warm/70 group-hover:text-idm-gold-warm transition-colors text-center px-2">

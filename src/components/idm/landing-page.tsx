@@ -3,13 +3,12 @@
 import { useQuery } from '@tanstack/react-query';
 import { useAppStore } from '@/lib/store';
 import { useCrossTabInvalidation } from '@/lib/cross-tab-sync';
-import { usePusherRealtime } from '@/hooks/use-pusher';
 
 import Image from 'next/image';
 import { Crown, Trophy, Swords, Music, LogIn, UserCircle, LogOut, Shield, Play, Sun, Moon } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useSyncExternalStore } from 'react';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import type { StatsData } from '@/types/stats';
 
 // ★ Above-fold: keep synchronous for instant render
@@ -292,7 +291,7 @@ export function LandingPage() {
 
   /* Cross-tab cache sync — invalidates when admin updates logo/banner in another tab */
   useCrossTabInvalidation();
-  usePusherRealtime(); // Enable real-time Pusher updates on landing page
+  // Note: usePusherRealtime() is already called in AppShell — no duplicate needed here
 
   /* Fast tournament status — lightweight query for registration button (loads in <100ms) */
   const { data: tournamentStatus } = useQuery<{
@@ -410,9 +409,18 @@ export function LandingPage() {
   /* Nav scroll state */
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('');
+  const scrollTickingRef = useRef(false);
 
   useEffect(() => {
-    const onScroll = () => { setScrolled(window.scrollY > 20); };
+    const onScroll = () => {
+      // Throttle scroll events using rAF — only 1 update per frame
+      if (scrollTickingRef.current) return;
+      scrollTickingRef.current = true;
+      requestAnimationFrame(() => {
+        setScrolled(window.scrollY > 20);
+        scrollTickingRef.current = false;
+      });
+    };
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);

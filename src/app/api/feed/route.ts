@@ -238,7 +238,7 @@ export async function GET() {
 
   return NextResponse.json({ items: feedItems.slice(0, 30) }, {
     headers: {
-      'Cache-Control': 'public, s-maxage=10, stale-while-revalidate=30',
+      'Cache-Control': 'public, s-maxage=30, stale-while-revalidate=60',
       'Surrogate-Key': 'feed',
       'Vary': 'Accept-Encoding',
     },

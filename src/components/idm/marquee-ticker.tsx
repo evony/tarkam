@@ -8,8 +8,7 @@ import type { StatsData } from '@/types/stats';
 /* ═══════════════════════════════════════════════════════════════
    TARKAM IDM — ESPN-STYLE MARQUEE TICKER
    Stats + Live Feed in one seamless scrolling bar
-   JS-driven animation with dynamic duration based on content width
-   for consistent speed across desktop and mobile
+   CSS-driven animation for zero main-thread overhead
    ═══════════════════════════════════════════════════════════════ */
 
 /* ========== Speed Configuration ========== */
@@ -153,10 +152,6 @@ export function MarqueeTicker({ maleData, femaleData, leagueData }: UnifiedMarqu
   const trackRef = useRef<HTMLDivElement>(null);
   const [animationDuration, setAnimationDuration] = useState<string | null>(null);
   const [isPaused, setIsPaused] = useState(false);
-  const animationRef = useRef<number | null>(null);
-  const positionRef = useRef(0);
-  const lastTimeRef = useRef(0);
-  const speedRef = useRef(DESKTOP_SPEED);
 
   const { data } = useQuery<{ items: FeedItem[] }>({
     queryKey: ['feed'],
@@ -165,8 +160,8 @@ export function MarqueeTicker({ maleData, femaleData, leagueData }: UnifiedMarqu
       if (!res.ok) throw new Error('Feed fetch failed');
       return res.json();
     },
-    staleTime: 30000,
-    refetchInterval: 60000,
+    staleTime: 60000,
+    refetchInterval: 120000,
     refetchOnWindowFocus: true,
     refetchOnReconnect: true,
   });
@@ -251,7 +246,7 @@ export function MarqueeTicker({ maleData, femaleData, leagueData }: UnifiedMarqu
     return elements;
   }, [combinedItems]);
 
-  // Calculate animation duration based on track width
+  // Calculate animation duration based on track width — ONE-TIME, no continuous rAF
   const calculateDuration = useCallback(() => {
     if (!trackRef.current) return;
     const trackWidth = trackRef.current.scrollWidth / 2; // Half because content is duplicated
@@ -260,7 +255,6 @@ export function MarqueeTicker({ maleData, femaleData, leagueData }: UnifiedMarqu
     // Use slower speed on mobile for readability
     const isMobile = window.innerWidth < MOBILE_BREAKPOINT;
     const speed = isMobile ? MOBILE_SPEED : DESKTOP_SPEED;
-    speedRef.current = speed;
 
     // Duration = distance / speed
     const duration = trackWidth / speed;
@@ -276,52 +270,6 @@ export function MarqueeTicker({ maleData, femaleData, leagueData }: UnifiedMarqu
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, [calculateDuration, trackContent]);
-
-  // JS-driven animation for smooth, consistent scrolling
-  // This replaces the CSS animation which had fixed duration issues
-  useEffect(() => {
-    if (!trackRef.current || !animationDuration) return;
-
-    const track = trackRef.current;
-    const halfWidth = track.scrollWidth / 2;
-
-    // Reset position & time reference to prevent jump on effect restart
-    positionRef.current = 0;
-    lastTimeRef.current = 0;
-    track.style.transform = 'translateX(0)';
-
-    const animate = (timestamp: number) => {
-      if (!lastTimeRef.current) {
-        lastTimeRef.current = timestamp;
-      }
-
-      const delta = timestamp - lastTimeRef.current;
-      lastTimeRef.current = timestamp;
-
-      if (!isPaused && halfWidth > 0) {
-        // Move at consistent pixels per second
-        const pixelsToMove = (speedRef.current * delta) / 1000;
-        positionRef.current -= pixelsToMove;
-
-        // Reset when we've scrolled past the first copy
-        if (Math.abs(positionRef.current) >= halfWidth) {
-          positionRef.current = positionRef.current % halfWidth;
-        }
-
-        track.style.transform = `translateX(${positionRef.current}px)`;
-      }
-
-      animationRef.current = requestAnimationFrame(animate);
-    };
-
-    animationRef.current = requestAnimationFrame(animate);
-
-    return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
-    };
-  }, [animationDuration, isPaused, trackContent]);
 
   // Pause on hover
   const handleMouseEnter = () => setIsPaused(true);
@@ -345,11 +293,15 @@ export function MarqueeTicker({ maleData, femaleData, leagueData }: UnifiedMarqu
         style={{ background: 'linear-gradient(to left, hsl(var(--background)), transparent)' }}
       />
 
-      {/* Scrolling track — 2x for seamless loop, JS animation driven */}
+      {/* Scrolling track — 2x for seamless loop, CSS animation driven (zero main-thread cost) */}
       <div
         ref={trackRef}
-        className="flex items-center"
-        style={{ width: 'max-content', willChange: 'transform' }}
+        className="flex items-center marquee-track"
+        style={{
+          width: 'max-content',
+          animationDuration: animationDuration ?? '30s',
+          animationPlayState: isPaused ? 'paused' : 'running',
+        }}
       >
         {trackContent}
         {trackContent}

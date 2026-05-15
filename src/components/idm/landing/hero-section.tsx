@@ -105,8 +105,8 @@ export function HeroSection({
   const totalClubs = maleClubs + femaleClubs;
   const totalMatches = maleMatches + femaleMatches;
 
-  /* ─── Particles — reduced from 28 to 12 ─── */
-  const particles = useParticles(12);
+  /* ─── Particles — reduced to 6 for performance ─── */
+  const particles = useParticles(6);
 
   /* ─── Season Champions (latest completed season) ─── */
   const maleChampionSeason = !isSeasonDataPlaceholder ? maleData?.allSeasons?.find(s => s.status === 'completed' && s.championPlayer) : undefined;
@@ -274,7 +274,7 @@ export function HeroSection({
         <div className="hero-geo-accent hero-geo-diamond-2" aria-hidden="true" />
         <div className="hero-geo-accent hero-geo-hex" aria-hidden="true" />
 
-        {/* ── Floating Particles — reduced to 12 for performance ── */}
+        {/* ── Floating Particles — reduced to 6 for performance ── */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
           {particles.map((p) => (
             <div

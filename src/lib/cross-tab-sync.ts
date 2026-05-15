@@ -76,13 +76,12 @@ export function useCrossTabInvalidation() {
     ch.onmessage = (event: MessageEvent<InvalidationMessage>) => {
       const { type, keys } = event.data;
       if (type === 'invalidate' && keys.length > 0) {
-        // Invalidate each query key — React Query will refetch on next render
+        // Invalidate only the specific query keys — React Query will refetch on next render
         for (const key of keys) {
           queryClient.invalidateQueries({ queryKey: [key] });
         }
-        // Also invalidate any queries that contain these keys as prefixes
-        // This catches 'stats', 'league', etc.
-        queryClient.invalidateQueries();
+        // NOTE: Removed blanket invalidateQueries() — it was nuking ALL caches
+        // causing mass refetching that blocks the main thread (INP +200-400ms)
       }
     };
 
