@@ -246,22 +246,26 @@ export function MarqueeTicker({ maleData, femaleData, leagueData }: UnifiedMarqu
     return elements;
   }, [combinedItems]);
 
-  // Calculate animation duration based on track width — ONE-TIME, no continuous rAF
+  // Calculate animation duration based on track width
   const calculateDuration = useCallback(() => {
     if (!trackRef.current) return;
-    const trackWidth = trackRef.current.scrollWidth / 2; // Half because content is duplicated
-    if (trackWidth <= 0) return;
+    // Use requestAnimationFrame to ensure layout is settled before measuring
+    requestAnimationFrame(() => {
+      if (!trackRef.current) return;
+      const trackWidth = trackRef.current.scrollWidth / 2; // Half because content is duplicated
+      if (trackWidth <= 0) return;
 
-    // Use slower speed on mobile for readability
-    const isMobile = window.innerWidth < MOBILE_BREAKPOINT;
-    const speed = isMobile ? MOBILE_SPEED : DESKTOP_SPEED;
+      // Use slower speed on mobile for readability
+      const isMobile = window.innerWidth < MOBILE_BREAKPOINT;
+      const speed = isMobile ? MOBILE_SPEED : DESKTOP_SPEED;
 
-    // Duration = distance / speed
-    const duration = trackWidth / speed;
-    setAnimationDuration(`${duration}s`);
+      // Duration = distance / speed
+      const duration = trackWidth / speed;
+      setAnimationDuration(`${duration}s`);
+    });
   }, []);
 
-  // Calculate duration after content is rendered
+  // Calculate duration after content is rendered + when feed data arrives
   useEffect(() => {
     calculateDuration();
 
@@ -269,7 +273,7 @@ export function MarqueeTicker({ maleData, femaleData, leagueData }: UnifiedMarqu
     const handleResize = () => calculateDuration();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [calculateDuration, trackContent]);
+  }, [calculateDuration, trackContent, data]);
 
   // Pause on hover
   const handleMouseEnter = () => setIsPaused(true);

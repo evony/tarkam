@@ -7674,7 +7674,6 @@ html {
 .marquee-track {
   animation: marquee-scroll linear infinite;
   will-change: transform;
-  contain: layout style;
 }
 
 /* ─── Section Reveal Animation — CLS-optimized (no translateY) ───
@@ -11053,16 +11052,7 @@ main, [role="main"] {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
 
-/* ═══ Marquee ticker — CSS animation (replaces JS rAF for lower CPU) ═══ */
-@keyframes marquee-scroll {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-.marquee-track {
-  animation: marquee-scroll 45s linear infinite;
-  will-change: transform;
-  contain: layout style;
-}
+/* ═══ Marquee ticker — animation is defined in component via inline style ═══ */
 .marquee-track:hover {
   animation-play-state: paused;
 }
