@@ -404,3 +404,28 @@ Stage Summary:
 - No sticky collision between champion and peringkat headers
 - Hasil Pertandingan section added below Cari Turnamen
 - All changes compile and lint cleanly
+---
+Task ID: 1
+Agent: main
+Task: Replace old MatchesSection with bracket-style Hasil Pertandingan section
+
+Work Log:
+- Checked marquee speed - already at 60/40 (DESKTOP_SPEED=60, MOBILE_SPEED=40)
+- Checked Peringkat sticky - already implemented with IntersectionObserver
+- Checked sticky collision prevention - already implemented (peringkatVisible state hides champion sticky)
+- Replaced old MatchesSection (which used CommunityMatches + UpcomingMatches with tabs) with new BracketHasilSection
+- New section clones the "Hasil Match" content from Arena Live > Bracket > DivisionBracketCard
+- Added SectionCard + MatchRow imports from dashboard/shared
+- Added Gamepad2 icon import
+- New BracketHasilSection shows completed matches grouped by week per division
+- Male and Female divisions shown side by side on desktop (lg:grid-cols-2)
+- Each division uses DivisionHasilCard with SectionCard wrapper and MatchRow components
+- Matches sorted by week descending, showing up to 3 weeks with 5 matches per week
+- Empty state with Gamepad2 icon when no matches exist
+
+Stage Summary:
+- Marquee speed already 60/40 ✓
+- Peringkat sticky already implemented ✓
+- Sticky collision already prevented ✓
+- New BracketHasilSection replaces old MatchesSection ✓
+- Lint clean, dev server running ✓

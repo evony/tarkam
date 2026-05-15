@@ -6,7 +6,7 @@ import {
   Users, Trophy, Crown,
   Radio, Star,
   Target, Calendar,
-  Clock, Gift, Zap, Shield, Music,
+  Clock, Gift, Zap, Shield, Music, Gamepad2,
   Search, Play, CheckCircle2, XCircle,
   ChevronDown, ChevronUp,
   Flame, TrendingUp,
@@ -76,6 +76,9 @@ import { usePusherRealtime } from '@/hooks/use-pusher';
 
 // Import landing shared components for visual enhancements
 import { AnimatedSection } from '../landing/shared';
+
+// Import dashboard shared components for bracket-style hasil section
+import { SectionCard, MatchRow } from '../dashboard/shared';
 
 
 /* ═══════════════════════════════════════════
@@ -873,54 +876,142 @@ function CompactTopFormCard({
 
 
 /* ═══════════════════════════════════════════
-   Matches Section — Tabbed (Jadwal / Hasil)
+   Hasil Pertandingan Section — Bracket-style match results
+   Cloned from Arena Live > Bracket > Hasil tab
+   Shows completed matches grouped by week per division
    ═══════════════════════════════════════════ */
-type MatchesTabType = 'schedule' | 'results';
-
-function MatchesSection({
+function BracketHasilSection({
   maleData,
   femaleData,
-  selectedDivision,
 }: {
   maleData?: StatsData;
   femaleData?: StatsData;
-  selectedDivision: DivisionFilter;
 }) {
-  const [activeTab, setActiveTab] = useState<MatchesTabType>('results');
-  const dt = useCommunityTheme();
+  const ct = useCommunityTheme();
 
-  const tabs: { id: MatchesTabType; label: string; icon: typeof Trophy }[] = [
-    { id: 'results', label: 'Hasil', icon: Trophy },
-    { id: 'schedule', label: 'Jadwal', icon: Clock },
-  ];
+  // Group matches by week per division
+  const maleMatchesByWeek = useMemo(() => {
+    const map: Record<number, StatsData['recentMatches']> = {};
+    for (const m of (maleData?.recentMatches ?? [])) {
+      const w = m.week;
+      if (!map[w]) map[w] = [];
+      map[w].push(m);
+    }
+    return map;
+  }, [maleData?.recentMatches]);
+
+  const femaleMatchesByWeek = useMemo(() => {
+    const map: Record<number, StatsData['recentMatches']> = {};
+    for (const m of (femaleData?.recentMatches ?? [])) {
+      const w = m.week;
+      if (!map[w]) map[w] = [];
+      map[w].push(m);
+    }
+    return map;
+  }, [femaleData?.recentMatches]);
+
+  const maleMatches = maleData?.recentMatches ?? [];
+  const femaleMatches = femaleData?.recentMatches ?? [];
+  const hasMaleMatches = Object.keys(maleMatchesByWeek).length > 0;
+  const hasFemaleMatches = Object.keys(femaleMatchesByWeek).length > 0;
+  const hasAnyMatches = hasMaleMatches || hasFemaleMatches;
 
   return (
     <div className="space-y-4">
-      <div className="space-y-2 lg:flex lg:items-center lg:gap-2.5 lg:space-y-0">
-        <div className="flex items-center gap-2.5">
-          <div className={`w-5 h-5 rounded ${dt.iconBg} flex items-center justify-center shrink-0`}>
-            <Radio className={`w-3 h-3 ${dt.neonText}`} />
-          </div>
-          <h3 className="text-xs font-semibold uppercase tracking-wider shrink-0" style={{
-            background: 'linear-gradient(135deg, #FAF0DC 0%, #EFF923 30%, #F9CB25 50%, #F9CB25 70%, #EFF923 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-          }}>Hasil Pertandingan</h3>
+      {/* Section Header */}
+      <div className="flex items-center gap-2.5">
+        <div className={`w-5 h-5 rounded ${ct.iconBg} flex items-center justify-center shrink-0`}>
+          <Radio className={`w-3 h-3 ${ct.neonText}`} />
         </div>
-        <div className="lg:ml-auto">
-          <SectionTabBar tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab} />
-        </div>
+        <h3 className="text-xs font-semibold uppercase tracking-wider shrink-0" style={{
+          background: 'linear-gradient(135deg, #FAF0DC 0%, #EFF923 30%, #F9CB25 50%, #F9CB25 70%, #EFF923 100%)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+        }}>Hasil Pertandingan</h3>
+        <Badge className="bg-idm-gold-warm/15 text-idm-gold-warm border border-idm-gold-warm/25 ml-auto text-[9px] font-bold">
+          {maleMatches.length + femaleMatches.length} Match
+        </Badge>
       </div>
 
-      <div key={activeTab} className="animate-fade-enter-sm">
-          {activeTab === 'schedule' && (
-            <UpcomingMatches maleData={maleData} femaleData={femaleData} selectedDivision={selectedDivision} />
+      {/* Division grid — Male & Female side by side on desktop */}
+      {hasAnyMatches ? (
+        <div className={`grid gap-4 ${hasMaleMatches && hasFemaleMatches ? 'grid-cols-1 lg:grid-cols-2' : 'grid-cols-1'}`}>
+          {/* Male Division Results */}
+          {hasMaleMatches && (
+            <DivisionHasilCard
+              division="male"
+              matchesByWeek={maleMatchesByWeek}
+              totalMatches={maleMatches.length}
+            />
           )}
-          {activeTab === 'results' && (
-            <CommunityMatches maleData={maleData} femaleData={femaleData} selectedDivision={selectedDivision} />
+          {/* Female Division Results */}
+          {hasFemaleMatches && (
+            <DivisionHasilCard
+              division="female"
+              matchesByWeek={femaleMatchesByWeek}
+              totalMatches={femaleMatches.length}
+            />
           )}
         </div>
+      ) : (
+        <Card className={`${ct.casinoCard} overflow-hidden`}>
+          <div className={ct.casinoBar} />
+          <div className="p-8 text-center">
+            <Gamepad2 className="w-10 h-10 text-muted-foreground/40 mx-auto mb-2" />
+            <h3 className="text-xs font-bold text-muted-foreground mb-0.5">Belum Ada Hasil Pertandingan</h3>
+            <p className="text-[10px] text-muted-foreground/60">Hasil match akan muncul setelah pertandingan selesai</p>
+          </div>
+        </Card>
+      )}
     </div>
+  );
+}
+
+
+/* ─── Division Hasil Card — Per-division match results grouped by week ─── */
+function DivisionHasilCard({
+  division,
+  matchesByWeek,
+  totalMatches,
+}: {
+  division: 'male' | 'female';
+  matchesByWeek: Record<number, StatsData['recentMatches']>;
+  totalMatches: number;
+}) {
+  const dt = getDivisionTheme(division);
+  const emoji = division === 'male' ? '🕺' : '💃';
+
+  return (
+    <SectionCard title={`${emoji} Hasil Match`} icon={Trophy} badge={`${totalMatches} Match`}>
+      <div className="space-y-4">
+        {Object.entries(matchesByWeek)
+          .sort(([a], [b]) => Number(b) - Number(a))
+          .slice(0, 3)
+          .map(([week, matches]) => (
+            <div key={week}>
+              <div className="flex items-center gap-3 mb-2">
+                <div className={`px-2 py-0.5 rounded-md ${dt.bg} ${dt.text} text-[9px] font-bold uppercase tracking-wider`}>
+                  Week {week}
+                </div>
+                <div className={`flex-1 h-px ${dt.borderSubtle}`} />
+                <span className="text-[8px] text-muted-foreground">{matches.length} match</span>
+              </div>
+              <div className="space-y-1.5">
+                {matches.slice(0, 5).map(m => (
+                  <MatchRow
+                    key={m.id}
+                    club1={m.club1.name}
+                    club2={m.club2.name}
+                    score1={m.score1}
+                    score2={m.score2}
+                    status="completed"
+                  />
+                ))}
+              </div>
+            </div>
+          ))}
+      </div>
+    </SectionCard>
   );
 }
 
@@ -1693,10 +1784,10 @@ export function CommunityDashboard() {
         <TourSayaSection selectedDivision={selectedDivision} />
       </Section>
 
-      {/* ═══ 3. Hasil Pertandingan — Match results from Bracket ═══ */}
+      {/* ═══ 3. Hasil Pertandingan — Bracket-style match results ═══ */}
       <Section sectionId="matches">
         <AnimatedSection variant="fadeUp">
-          <MatchesSection maleData={maleData} femaleData={femaleData} selectedDivision="all" />
+          <BracketHasilSection maleData={maleData} femaleData={femaleData} />
         </AnimatedSection>
       </Section>
 
