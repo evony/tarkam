@@ -122,39 +122,21 @@ export function SharePopup({
     }
   }, [shareUrl]);
 
-  const openShareLink = useCallback((url: string) => {
-    // Instagram has no share URL — copy link first, then open app
-    if (url === 'instagram') {
-      navigator.clipboard.writeText(shareUrl).catch(() => {
-        const ta = document.createElement('textarea');
-        ta.value = shareUrl;
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand('copy');
-        document.body.removeChild(ta);
-      });
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-
-      const isMobile = /Mobi|Android|iPhone/i.test(navigator.userAgent);
-      if (isMobile) {
-        window.location.href = 'instagram://story-camera';
-      } else {
-        window.open('https://www.instagram.com/', '_blank', 'noopener,noreferrer');
-      }
-      setShowPicker(false);
-      return;
-    }
-
-    // On mobile, open in same window so OS can intercept deep links (wa.me, etc.)
-    // On desktop, open in new tab
-    const isMobile = /Mobi|Android|iPhone/i.test(navigator.userAgent);
-    if (isMobile) {
-      window.location.href = url;
-    } else {
-      window.open(url, '_blank', 'noopener,noreferrer');
-    }
-    setShowPicker(false);
+  // Copy link + close picker after sharing
+  const handleInstagramClick = useCallback(() => {
+    // Instagram has no direct share URL — copy link first, then open Instagram
+    navigator.clipboard.writeText(shareUrl).catch(() => {
+      const ta = document.createElement('textarea');
+      ta.value = shareUrl;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    });
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+    // Close picker after a short delay so user sees "Link Tersalin!" feedback
+    setTimeout(() => setShowPicker(false), 600);
   }, [shareUrl]);
 
   const socialLinks = [
@@ -162,25 +144,29 @@ export function SharePopup({
       name: 'WhatsApp',
       icon: <WhatsAppIcon className="w-5 h-5" />,
       color: 'bg-[#25D366] hover:bg-[#20BD5A]',
-      url: `https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`,
+      href: `https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`,
+      isInstagram: false,
     },
     {
       name: 'Facebook',
       icon: <FacebookIcon className="w-5 h-5" />,
       color: 'bg-[#1877F2] hover:bg-[#1565D8]',
-      url: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`,
+      href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`,
+      isInstagram: false,
     },
     {
       name: 'Instagram',
       icon: <InstagramIcon className="w-5 h-5" />,
       color: 'bg-gradient-to-br from-[#833AB4] via-[#FD1D1D] to-[#F77737] hover:opacity-90',
-      url: 'instagram',
+      href: 'https://www.instagram.com/',
+      isInstagram: true,
     },
     {
       name: 'X / Twitter',
       icon: <TwitterIcon className="w-5 h-5" />,
       color: 'bg-foreground hover:bg-foreground/80',
-      url: `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`,
+      href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`,
+      isInstagram: false,
     },
   ];
 
@@ -251,17 +237,20 @@ export function SharePopup({
                 </div>
               )}
 
-              {/* Social buttons grid */}
+              {/* Social buttons grid — using <a> tags for reliable link opening (no popup blocker issues) */}
               <div className="px-4 pb-3 grid grid-cols-2 gap-2">
                 {socialLinks.map(s => (
-                  <button
+                  <a
                     key={s.name}
-                    onClick={() => openShareLink(s.url)}
-                    className={`flex items-center gap-2 px-3 py-2.5 rounded-xl text-white text-xs font-semibold transition-all duration-200 active:scale-95 cursor-pointer ${s.color}`}
+                    href={s.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={s.isInstagram ? (e) => { e.preventDefault(); handleInstagramClick(); } : () => setShowPicker(false)}
+                    className={`flex items-center gap-2 px-3 py-2.5 rounded-xl text-white text-xs font-semibold transition-all duration-200 active:scale-95 cursor-pointer no-underline ${s.color}`}
                   >
                     {s.icon}
                     <span>{s.name}</span>
-                  </button>
+                  </a>
                 ))}
               </div>
 
