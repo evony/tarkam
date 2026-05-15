@@ -879,6 +879,7 @@ function CompactTopFormCard({
    Hasil Pertandingan Section — Bracket-style match results
    Cloned from Arena Live > Bracket > Hasil tab
    Shows completed matches grouped by week per division
+   With Semua/Male/Female tabs
    ═══════════════════════════════════════════ */
 function BracketHasilSection({
   maleData,
@@ -888,6 +889,7 @@ function BracketHasilSection({
   femaleData?: StatsData;
 }) {
   const ct = useCommunityTheme();
+  const [hasilDivision, setHasilDivision] = useState<DivisionFilter>('all');
 
   // Group matches by week per division
   const maleMatchesByWeek = useMemo(() => {
@@ -916,41 +918,93 @@ function BracketHasilSection({
   const hasFemaleMatches = Object.keys(femaleMatchesByWeek).length > 0;
   const hasAnyMatches = hasMaleMatches || hasFemaleMatches;
 
+  // Compute total match count based on selected tab
+  const totalMatchCount = hasilDivision === 'all'
+    ? maleMatches.length + femaleMatches.length
+    : hasilDivision === 'male' ? maleMatches.length : femaleMatches.length;
+
   return (
     <div className="space-y-4">
-      {/* Section Header */}
-      <div className="flex items-center gap-2.5">
-        <div className={`w-5 h-5 rounded ${ct.iconBg} flex items-center justify-center shrink-0`}>
-          <Radio className={`w-3 h-3 ${ct.neonText}`} />
+      {/* Section Header + Division Tabs */}
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2.5">
+          <div className={`w-5 h-5 rounded ${ct.iconBg} flex items-center justify-center shrink-0`}>
+            <Radio className={`w-3 h-3 ${ct.neonText}`} />
+          </div>
+          <h3 className="text-xs font-semibold uppercase tracking-wider shrink-0" style={{
+            background: 'linear-gradient(135deg, #FAF0DC 0%, #EFF923 30%, #F9CB25 50%, #F9CB25 70%, #EFF923 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+          }}>Hasil Pertandingan</h3>
         </div>
-        <h3 className="text-xs font-semibold uppercase tracking-wider shrink-0" style={{
-          background: 'linear-gradient(135deg, #FAF0DC 0%, #EFF923 30%, #F9CB25 50%, #F9CB25 70%, #EFF923 100%)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-        }}>Hasil Pertandingan</h3>
-        <Badge className="bg-idm-gold-warm/15 text-idm-gold-warm border border-idm-gold-warm/25 ml-auto text-[9px] font-bold">
-          {maleMatches.length + femaleMatches.length} Match
-        </Badge>
+
+        {/* Division pills — compact, right-aligned (same style as Champion) */}
+        <div className="flex items-center gap-1 p-1 rounded-lg bg-idm-gold-warm/5 border border-idm-gold-warm/10">
+          {([
+            { key: 'all' as DivisionFilter, label: 'Semua' },
+            { key: 'male' as DivisionFilter, label: 'Male' },
+            { key: 'female' as DivisionFilter, label: 'Female' },
+          ]).map(div => (
+            <button
+              key={div.key}
+              onClick={() => setHasilDivision(div.key)}
+              className={`px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider transition-all whitespace-nowrap ${
+                hasilDivision === div.key
+                  ? 'bg-idm-gold-warm/15 text-idm-gold-warm shadow-sm shadow-idm-gold-warm/10 border border-idm-gold-warm/25'
+                  : 'text-muted-foreground/70 hover:text-foreground border border-transparent hover:bg-muted/40'
+              }`}
+            >
+              {div.label}
+            </button>
+          ))}
+        </div>
       </div>
 
-      {/* Division grid — Male & Female side by side on desktop */}
+      {/* Results based on selected tab */}
       {hasAnyMatches ? (
-        <div className={`grid gap-4 ${hasMaleMatches && hasFemaleMatches ? 'grid-cols-1 lg:grid-cols-2' : 'grid-cols-1'}`}>
-          {/* Male Division Results */}
-          {hasMaleMatches && (
+        <div className="space-y-4">
+          {/* Semua tab — show both divisions */}
+          {hasilDivision === 'all' && (
+            <div className={`grid gap-4 ${hasMaleMatches && hasFemaleMatches ? 'grid-cols-1 lg:grid-cols-2' : 'grid-cols-1'}`}>
+              {hasMaleMatches && (
+                <DivisionHasilCard
+                  division="male"
+                  matchesByWeek={maleMatchesByWeek}
+                  totalMatches={maleMatches.length}
+                />
+              )}
+              {hasFemaleMatches && (
+                <DivisionHasilCard
+                  division="female"
+                  matchesByWeek={femaleMatchesByWeek}
+                  totalMatches={femaleMatches.length}
+                />
+              )}
+            </div>
+          )}
+
+          {/* Male tab — show only male division */}
+          {hasilDivision === 'male' && hasMaleMatches && (
             <DivisionHasilCard
               division="male"
               matchesByWeek={maleMatchesByWeek}
               totalMatches={maleMatches.length}
             />
           )}
-          {/* Female Division Results */}
-          {hasFemaleMatches && (
+          {hasilDivision === 'male' && !hasMaleMatches && (
+            <EmptyDivisionCard division="male" />
+          )}
+
+          {/* Female tab — show only female division */}
+          {hasilDivision === 'female' && hasFemaleMatches && (
             <DivisionHasilCard
               division="female"
               matchesByWeek={femaleMatchesByWeek}
               totalMatches={femaleMatches.length}
             />
+          )}
+          {hasilDivision === 'female' && !hasFemaleMatches && (
+            <EmptyDivisionCard division="female" />
           )}
         </div>
       ) : (
@@ -964,6 +1018,25 @@ function BracketHasilSection({
         </Card>
       )}
     </div>
+  );
+}
+
+
+/* ─── Empty Division Card — Shown when a specific division tab has no matches ─── */
+function EmptyDivisionCard({ division }: { division: 'male' | 'female' }) {
+  const ct = useCommunityTheme();
+  const emoji = division === 'male' ? '🕺' : '💃';
+  const label = division === 'male' ? 'Male' : 'Female';
+
+  return (
+    <Card className={`${ct.casinoCard} overflow-hidden`}>
+      <div className={ct.casinoBar} />
+      <div className="p-6 text-center">
+        <div className="text-2xl mb-2">{emoji}</div>
+        <h3 className="text-xs font-bold text-muted-foreground mb-0.5">Belum Ada Hasil Divisi {label}</h3>
+        <p className="text-[10px] text-muted-foreground/60">Hasil match divisi {label.toLowerCase()} akan muncul setelah pertandingan selesai</p>
+      </div>
+    </Card>
   );
 }
 
