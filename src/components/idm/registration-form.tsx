@@ -691,7 +691,7 @@ export function RegistrationForm() {
             <CardContent className="p-5 relative z-10 space-y-4">
               {/* Division Selector */}
               <div>
-                <label className="text-xs font-semibold text-muted-foreground mb-2 block">Pilih Divisimu Sesuai Gender</label>
+                <label className="text-xs font-semibold text-muted-foreground mb-2 block">Pilih Divisimu</label>
                 <div className="flex items-center bg-muted rounded-2xl p-1 gap-1">
                   <button
                     type="button"
@@ -716,10 +716,7 @@ export function RegistrationForm() {
                     💃 Cewe
                   </button>
                 </div>
-                <p className="text-[10px] text-idm-gold-warm mt-1 flex items-center gap-1">
-                  <Info className="w-3 h-3 shrink-0" />
-                  Pastikan sesuai gender: Perempuan pilih 💃 Cewe, Laki-laki pilih 🕺 Cowo
-                </p>
+
               </div>
 
               {/* Nama/Nick - Wajib */}
