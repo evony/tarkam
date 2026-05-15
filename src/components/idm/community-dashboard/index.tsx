@@ -878,7 +878,7 @@ function CompactTopFormCard({
 /* ═══════════════════════════════════════════
    Hasil Pertandingan Section — Bracket-style match results
    Cloned from Arena Live > Bracket > Hasil tab
-   Shows completed matches grouped by week per division
+   Shows completed matches grouped by round/bracket per division
    Uses BOTH LeagueMatch (recentMatches) AND Tournament matches (activeTournament.matches)
    With Semua/Male/Female tabs
    ═══════════════════════════════════════════ */
@@ -890,8 +890,52 @@ interface UnifiedMatchResult {
   name2: string;
   score1: number | null;
   score2: number | null;
-  week: number;
+  round: number;
+  bracket: string | null; // 'upper' | 'lower' | 'grand_final' | null (league matches)
+  matchNumber: number | null;
   source: 'league' | 'tournament';
+}
+
+/* Get human-readable label for a bracket+round combination */
+function getRoundLabel(bracket: string | null, round: number): string {
+  if (!bracket) return `Round ${round}`;
+  switch (bracket) {
+    case 'grand_final':
+      return '🏆 Grand Final';
+    case 'upper':
+      if (round === 1) return '⬆️ Semi Final Upper';
+      if (round === 2) return '⬆️ Final Upper';
+      return `⬆️ Upper R${round}`;
+    case 'lower':
+      if (round === 1) return '⬇️ Semi Final Lower';
+      if (round === 2) return '⬇️ Final Lower';
+      return `⬇️ Lower R${round}`;
+    case 'winners':
+      return `🏆 Winners R${round}`;
+    case 'losers':
+      return `💀 Losers R${round}`;
+    default:
+      return `Round ${round}`;
+  }
+}
+
+/* Sort key for bracket+round (determines display order) */
+function getRoundSortKey(bracket: string | null, round: number): number {
+  if (!bracket) return round * 10;
+  // Order: upper rounds → lower rounds → grand final
+  switch (bracket) {
+    case 'upper': return round * 10;
+    case 'lower': return 100 + round * 10;
+    case 'grand_final': return 999;
+    case 'winners': return round * 10;
+    case 'losers': return 100 + round * 10;
+    default: return 500 + round * 10;
+  }
+}
+
+/* Group key combining bracket and round */
+function getGroupKey(m: UnifiedMatchResult): string {
+  return m.bracket ? `${m.bracket}-${m.round}` : `round-${m.round}`;
 }
 
 function BracketHasilSection({
@@ -915,32 +959,29 @@ function BracketHasilSection({
         name2: m.club2.name,
         score1: m.score1,
         score2: m.score2,
-        week: m.week,
+        round: m.week,
+        bracket: null,
+        matchNumber: null,
         source: 'league',
       });
     }
     // 2. Tournament matches (activeTournament.matches — team-vs-team)
     const tMatches = maleData?.activeTournament?.matches?.filter(m => m.status === 'completed') ?? [];
-    const tWeek = maleData?.activeTournament?.weekNumber ?? 1;
-    // Avoid duplicates: if league matches already cover this week, skip tournament matches for same week
-    const leagueWeeks = new Set(results.map(m => m.week));
     for (const m of tMatches) {
-      const week = m.round ?? tWeek;
-      // Only add if no league matches for this week (avoid duplication)
-      if (!leagueWeeks.has(week) || results.length === 0) {
-        results.push({
-          id: m.id,
-          name1: m.team1?.name ?? 'TBD',
-          name2: m.team2?.name ?? 'TBD',
-          score1: m.score1,
-          score2: m.score2,
-          week,
-          source: 'tournament',
-        });
-      }
+      results.push({
+        id: m.id,
+        name1: m.team1?.name ?? 'TBD',
+        name2: m.team2?.name ?? 'TBD',
+        score1: m.score1,
+        score2: m.score2,
+        round: m.round ?? 1,
+        bracket: m.bracket ?? null,
+        matchNumber: m.matchNumber ?? null,
+        source: 'tournament',
+      });
     }
     return results;
-  }, [maleData?.recentMatches, maleData?.activeTournament?.matches, maleData?.activeTournament?.weekNumber]);
+  }, [maleData?.recentMatches, maleData?.activeTournament?.matches]);
 
   const femaleMatches = useMemo<UnifiedMatchResult[]>(() => {
     const results: UnifiedMatchResult[] = [];
@@ -952,49 +993,67 @@ function BracketHasilSection({
         name2: m.club2.name,
         score1: m.score1,
         score2: m.score2,
-        week: m.week,
+        round: m.week,
+        bracket: null,
+        matchNumber: null,
         source: 'league',
       });
     }
     // 2. Tournament matches
     const tMatches = femaleData?.activeTournament?.matches?.filter(m => m.status === 'completed') ?? [];
-    const tWeek = femaleData?.activeTournament?.weekNumber ?? 1;
-    const leagueWeeks = new Set(results.map(m => m.week));
     for (const m of tMatches) {
-      const week = m.round ?? tWeek;
-      if (!leagueWeeks.has(week) || results.length === 0) {
-        results.push({
-          id: m.id,
-          name1: m.team1?.name ?? 'TBD',
-          name2: m.team2?.name ?? 'TBD',
-          score1: m.score1,
-          score2: m.score2,
-          week,
-          source: 'tournament',
-        });
-      }
+      results.push({
+        id: m.id,
+        name1: m.team1?.name ?? 'TBD',
+        name2: m.team2?.name ?? 'TBD',
+        score1: m.score1,
+        score2: m.score2,
+        round: m.round ?? 1,
+        bracket: m.bracket ?? null,
+        matchNumber: m.matchNumber ?? null,
+        source: 'tournament',
+      });
     }
     return results;
-  }, [femaleData?.recentMatches, femaleData?.activeTournament?.matches, femaleData?.activeTournament?.weekNumber]);
+  }, [femaleData?.recentMatches, femaleData?.activeTournament?.matches]);
 
-  // Group matches by week per division
-  const maleMatchesByWeek = useMemo(() => {
-    const map: Record<number, UnifiedMatchResult[]> = {};
+  // Group matches by round/bracket per division
+  const maleMatchesGrouped = useMemo(() => {
+    const map: Record<string, UnifiedMatchResult[]> = {};
     for (const m of maleMatches) {
-      if (!map[m.week]) map[m.week] = [];
-      map[m.week].push(m);
+      const key = getGroupKey(m);
+      if (!map[key]) map[key] = [];
+      map[key].push(m);
+    }
+    // Sort each group by matchNumber
+    for (const key of Object.keys(map)) {
+      map[key].sort((a, b) => (a.matchNumber ?? 0) - (b.matchNumber ?? 0));
     }
     return map;
   }, [maleMatches]);
 
-  const femaleMatchesByWeek = useMemo(() => {
-    const map: Record<number, UnifiedMatchResult[]> = {};
+  const femaleMatchesGrouped = useMemo(() => {
+    const map: Record<string, UnifiedMatchResult[]> = {};
     for (const m of femaleMatches) {
-      if (!map[m.week]) map[m.week] = [];
-      map[m.week].push(m);
+      const key = getGroupKey(m);
+      if (!map[key]) map[key] = [];
+      map[key].push(m);
+    }
+    for (const key of Object.keys(map)) {
+      map[key].sort((a, b) => (a.matchNumber ?? 0) - (b.matchNumber ?? 0));
     }
     return map;
   }, [femaleMatches]);
+
+  // Sort group keys by round order (upper → lower → grand final)
+  const sortGroupKeys = (keys: string[], matches: Record<string, UnifiedMatchResult[]>): string[] => {
+    return keys.sort((a, b) => {
+      const mA = matches[a]?.[0];
+      const mB = matches[b]?.[0];
+      if (!mA || !mB) return 0;
+      return getRoundSortKey(mA.bracket, mA.round) - getRoundSortKey(mB.bracket, mB.round);
+    });
+  };
 
   const hasMaleMatches = maleMatches.length > 0;
   const hasFemaleMatches = femaleMatches.length > 0;
@@ -1040,48 +1099,42 @@ function BracketHasilSection({
       {/* Results based on selected tab */}
       {hasAnyMatches ? (
         <div className="space-y-4">
-          {/* Semua tab — show both divisions */}
+          {/* Semua tab — show both divisions (always show both, ghost empty for missing) */}
           {hasilDivision === 'all' && (
-            <div className={`grid gap-4 ${hasMaleMatches && hasFemaleMatches ? 'grid-cols-1 lg:grid-cols-2' : 'grid-cols-1'}`}>
-              {hasMaleMatches && (
-                <DivisionHasilCard
-                  division="male"
-                  matchesByWeek={maleMatchesByWeek}
-                  totalMatches={maleMatches.length}
-                />
-              )}
-              {hasFemaleMatches && (
-                <DivisionHasilCard
-                  division="female"
-                  matchesByWeek={femaleMatchesByWeek}
-                  totalMatches={femaleMatches.length}
-                />
-              )}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <DivisionHasilCard
+                division="male"
+                matchesGrouped={maleMatchesGrouped}
+                totalMatches={maleMatches.length}
+                isEmpty={!hasMaleMatches}
+              />
+              <DivisionHasilCard
+                division="female"
+                matchesGrouped={femaleMatchesGrouped}
+                totalMatches={femaleMatches.length}
+                isEmpty={!hasFemaleMatches}
+              />
             </div>
           )}
 
           {/* Male tab — show only male division */}
-          {hasilDivision === 'male' && hasMaleMatches && (
+          {hasilDivision === 'male' && (
             <DivisionHasilCard
               division="male"
-              matchesByWeek={maleMatchesByWeek}
+              matchesGrouped={maleMatchesGrouped}
               totalMatches={maleMatches.length}
+              isEmpty={!hasMaleMatches}
             />
-          )}
-          {hasilDivision === 'male' && !hasMaleMatches && (
-            <EmptyDivisionCard division="male" />
           )}
 
           {/* Female tab — show only female division */}
-          {hasilDivision === 'female' && hasFemaleMatches && (
+          {hasilDivision === 'female' && (
             <DivisionHasilCard
               division="female"
-              matchesByWeek={femaleMatchesByWeek}
+              matchesGrouped={femaleMatchesGrouped}
               totalMatches={femaleMatches.length}
+              isEmpty={!hasFemaleMatches}
             />
-          )}
-          {hasilDivision === 'female' && !hasFemaleMatches && (
-            <EmptyDivisionCard division="female" />
           )}
         </div>
       ) : (
@@ -1099,55 +1152,75 @@ function BracketHasilSection({
 }
 
 
-/* ─── Empty Division Card — Shown when a specific division tab has no matches ─── */
-function EmptyDivisionCard({ division }: { division: 'male' | 'female' }) {
-  const ct = useCommunityTheme();
-  const emoji = division === 'male' ? '🕺' : '💃';
-  const label = division === 'male' ? 'Male' : 'Female';
-
-  return (
-    <Card className={`${ct.casinoCard} overflow-hidden`}>
-      <div className={ct.casinoBar} />
-      <div className="p-6 text-center">
-        <div className="text-2xl mb-2">{emoji}</div>
-        <h3 className="text-xs font-bold text-muted-foreground mb-0.5">Belum Ada Hasil Divisi {label}</h3>
-        <p className="text-[10px] text-muted-foreground/60">Hasil match divisi {label.toLowerCase()} akan muncul setelah pertandingan selesai</p>
-      </div>
-    </Card>
-  );
-}
-
-
-/* ─── Division Hasil Card — Per-division match results grouped by week ─── */
+/* ─── Division Hasil Card — Per-division match results grouped by round/bracket ─── */
 function DivisionHasilCard({
   division,
-  matchesByWeek,
+  matchesGrouped,
   totalMatches,
+  isEmpty,
 }: {
   division: 'male' | 'female';
-  matchesByWeek: Record<number, UnifiedMatchResult[]>;
+  matchesGrouped: Record<string, UnifiedMatchResult[]>;
   totalMatches: number;
+  isEmpty: boolean;
 }) {
   const dt = getDivisionTheme(division);
   const emoji = division === 'male' ? '🕺' : '💃';
 
+  // Sort group keys by round order
+  const sortedKeys = Object.keys(matchesGrouped).sort((a, b) => {
+    const mA = matchesGrouped[a]?.[0];
+    const mB = matchesGrouped[b]?.[0];
+    if (!mA || !mB) return 0;
+    return getRoundSortKey(mA.bracket, mA.round) - getRoundSortKey(mB.bracket, mB.round);
+  });
+
+  // Ghost empty state — show skeleton rounds
+  if (isEmpty) {
+    return (
+      <SectionCard title={`${emoji} Hasil Match`} icon={Trophy} badge="0 Match">
+        <div className="space-y-3">
+          {/* Ghost round placeholders */}
+          {['⬆️ Semi Final', '⬇️ Semi Final', '🏆 Grand Final'].map((label, idx) => (
+            <div key={idx} className="opacity-30">
+              <div className="flex items-center gap-3 mb-2">
+                <div className={`px-2 py-0.5 rounded-md ${dt.bg} ${dt.text} text-[9px] font-bold uppercase tracking-wider`}>
+                  {label}
+                </div>
+                <div className={`flex-1 h-px ${dt.borderSubtle}`} />
+                <span className="text-[8px] text-muted-foreground">—</span>
+              </div>
+              <div className="space-y-1.5">
+                <div className={`rounded-lg ${dt.bgSubtle} ${dt.borderSubtle} border h-[52px] flex items-center justify-center`}>
+                  <span className="text-[10px] text-muted-foreground/40 italic">Belum ada hasil</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </SectionCard>
+    );
+  }
+
   return (
     <SectionCard title={`${emoji} Hasil Match`} icon={Trophy} badge={`${totalMatches} Match`}>
       <div className="space-y-4">
-        {Object.entries(matchesByWeek)
-          .sort(([a], [b]) => Number(b) - Number(a))
-          .slice(0, 3)
-          .map(([week, matches]) => (
-            <div key={week}>
+        {sortedKeys.map(key => {
+          const matches = matchesGrouped[key];
+          const firstMatch = matches[0];
+          const roundLabel = firstMatch ? getRoundLabel(firstMatch.bracket, firstMatch.round) : `Round ${key}`;
+
+          return (
+            <div key={key}>
               <div className="flex items-center gap-3 mb-2">
-                <div className={`px-2 py-0.5 rounded-md ${dt.bg} ${dt.text} text-[9px] font-bold uppercase tracking-wider`}>
-                  Week {week}
+                <div className={`px-2 py-0.5 rounded-md ${dt.bg} ${dt.text} text-[9px] font-bold uppercase tracking-wider whitespace-nowrap`}>
+                  {roundLabel}
                 </div>
                 <div className={`flex-1 h-px ${dt.borderSubtle}`} />
                 <span className="text-[8px] text-muted-foreground">{matches.length} match</span>
               </div>
               <div className="space-y-1.5">
-                {matches.slice(0, 5).map(m => (
+                {matches.map(m => (
                   <MatchRow
                     key={m.id}
                     club1={m.name1}
@@ -1159,7 +1232,8 @@ function DivisionHasilCard({
                 ))}
               </div>
             </div>
-          ))}
+          );
+        })}
       </div>
     </SectionCard>
   );
