@@ -163,7 +163,7 @@ function MatchDayContent({ divisionProp }: { divisionProp: 'male' | 'female' }) 
                 <div className="flex items-center gap-2">
                   <ShareButton
                     title={t?.name || 'Tarkam IDM'}
-                    description={`Week ${t?.weekNumber ?? '-'} — ${divisionProp === 'male' ? 'Male' : 'Female'} Division`}
+                    description={`Week ${t?.weekNumber ?? '-'} — ${divisionProp === 'male' ? 'Pria' : 'Wanita'} Division`}
                     variant="icon"
                   />
                   {(selectedMatch?.status === 'live' || selectedMatch?.status === 'main_event') ? (
@@ -543,8 +543,8 @@ export function MatchDayCenter() {
         <div className="flex items-center gap-1 p-1 rounded-2xl bg-muted/20 border border-border/10">
           {([
             { key: 'semua' as const, label: 'Semua' },
-            { key: 'male' as const, label: 'Male' },
-            { key: 'female' as const, label: 'Female' },
+            { key: 'male' as const, label: 'Pria' },
+            { key: 'female' as const, label: 'Wanita' },
           ]).map(div => (
             <button
               key={div.key}

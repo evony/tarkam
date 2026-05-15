@@ -107,7 +107,7 @@ export function Sidebar() {
     },
     {
       key: 'MALE' as const,
-      label: 'Male',
+      label: 'Pria',
       icon: Swords,
       activeBg: 'bg-idm-male/15',
       activeBorder: 'border-idm-male/30',
@@ -117,7 +117,7 @@ export function Sidebar() {
     },
     {
       key: 'FEMALE' as const,
-      label: 'Female',
+      label: 'Wanita',
       icon: Flower2,
       activeBg: 'bg-pink-300/15',
       activeBorder: 'border-pink-300/30',

@@ -166,13 +166,13 @@ export function PlayersSection({
 
         {isDataLoading ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {['Male', 'Female'].map(div => (
+            {['Pria', 'Wanita'].map(div => (
               <div key={div}>
                 <div className="flex items-center justify-center mb-6">
                   <span className={`inline-flex items-center gap-1.5 text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                    div === 'Male' ? 'bg-[#2E9FFF]/10 text-[#57B5FF] border border-[#2E9FFF]/15' : 'bg-[#FF2D78]/10 text-[#FF5C9A] border border-[#FF2D78]/15'
+                    div === 'Pria' ? 'bg-[#2E9FFF]/10 text-[#57B5FF] border border-[#2E9FFF]/15' : 'bg-[#FF2D78]/10 text-[#FF5C9A] border border-[#FF2D78]/15'
                   }`}>
-                    {div === 'Male' ? '♂' : '♀'} {div} Division
+                    {div === 'Pria' ? '♂' : '♀'} {div}
                   </span>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4">

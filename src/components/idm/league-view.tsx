@@ -84,7 +84,7 @@ function RuleCard({ icon: Icon, title, items, accentColor }: {
 export function LeagueView() {
   const { division } = useAppStore();
   const ct = useCommunityTheme();
-  const divisionLabel = division === 'semua' ? 'Semua' : division === 'male' ? 'Male' : 'Female';
+  const divisionLabel = division === 'semua' ? 'Semua' : division === 'male' ? 'Pria' : 'Wanita';
 
   /* ── Fetch CMS settings ── */
   const { data: settingsData, isLoading } = useQuery({

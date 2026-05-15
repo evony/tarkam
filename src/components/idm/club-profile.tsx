@@ -548,7 +548,7 @@ export function ClubProfile({ club, onClose, rank, onPlayerClick }: ClubProfileP
                           <div className="flex items-center gap-2">
                             <span className="text-sm font-medium truncate">{p.gamertag}</span>
                             {/* Division indicator — subtle, just for info */}
-                            <span className={`w-1.5 h-1.5 rounded-full shrink-0 bg-idm-gold-warm/50`} title={`Divisi ${isMale ? 'Male' : 'Female'}`} />
+                            <span className={`w-1.5 h-1.5 rounded-full shrink-0 bg-idm-gold-warm/50`} title={`Divisi ${isMale ? 'Pria' : 'Wanita'}`} />
                             {p.role === 'captain' && (
                               <span className="text-[8px] font-bold px-1 py-0.5 rounded bg-idm-gold-warm/15 text-idm-gold-warm">CPT</span>
                             )}

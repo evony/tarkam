@@ -72,12 +72,12 @@ export function NoTournamentState({ data, setSelectedPlayer }: NoTournamentState
               Season {data.season?.number || 1}
             </Badge>
             <Badge className={`${dt.divisionBadge} px-2 py-0.5`}>
-              {division === 'male' ? 'Male' : 'Female'}
+              {division === 'male' ? 'Pria' : 'Wanita'}
             </Badge>
             <Badge className="bg-green-500/15 text-green-400 border border-green-500/20 text-[9px]">AKTIF</Badge>
           </div>
           <h2 className={`text-2xl lg:text-3xl font-black ${dt.neonGradient}`}>{data.season?.name || `Season ${data.season?.number || 1}`}</h2>
-          <p className="text-xs text-muted-foreground mt-0.5">Tarkam {division === 'male' ? 'Male' : 'Female'} sedang berlangsung</p>
+          <p className="text-xs text-muted-foreground mt-0.5">Tarkam {division === 'male' ? 'Pria' : 'Wanita'} sedang berlangsung</p>
         </div>
       </div>
 

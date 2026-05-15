@@ -234,7 +234,7 @@ function DivisionWeeklyChampions({
           <Trophy className={`w-3 h-3 lg:w-3.5 lg:h-3.5 ${dt.neonText}`} />
         </div>
         <h3 className="text-xs lg:text-sm font-semibold uppercase tracking-wider">
-          {division === 'male' ? '🕺 Male' : '💃 Female'} Juara Tarkam
+          {division === 'male' ? '🕺 Pria' : '💃 Wanita'} Juara Tarkam
         </h3>
         {champions.length > 0 && (
           <Badge className={`hidden sm:inline-flex ${dt.casinoBadge} ml-auto text-[9px]`}>
@@ -283,7 +283,7 @@ export function CommunityWeeklyChampions({ maleData, femaleData, selectedDivisio
               <Trophy className={`w-3 h-3 lg:w-3.5 lg:h-3.5 ${dt.neonText}`} />
             </div>
             <h3 className="text-xs lg:text-sm font-semibold uppercase tracking-wider">
-              {division === 'male' ? '🕺 Male' : '💃 Female'} Juara Tarkam
+              {division === 'male' ? '🕺 Pria' : '💃 Wanita'} Juara Tarkam
             </h3>
           </div>
           <div className="p-4 lg:p-6">
@@ -359,7 +359,7 @@ export function CommunityWeeklyChampions({ maleData, femaleData, selectedDivisio
               <div className={`p-4 lg:p-5 rounded-2xl ${maleDt.bgSubtle} ${maleDt.borderSubtle} opacity-55`}>
                 <div className="flex items-center gap-1.5 mb-3">
                   <Music className="w-3 h-3 shrink-0" style={{ color: '#2E9FFF' }} />
-                  <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: '#2E9FFF' }}>Male ♂</span>
+                  <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: '#2E9FFF' }}>Pria ♂</span>
                 </div>
                 <div className="space-y-3">
                   <div className={`flex items-center gap-3 p-4 sm:p-5 rounded-2xl ${maleDt.bgSubtle} ${maleDt.border}`}>
@@ -384,7 +384,7 @@ export function CommunityWeeklyChampions({ maleData, femaleData, selectedDivisio
               <div className={`p-4 lg:p-5 rounded-2xl ${femaleDt.bgSubtle} ${femaleDt.borderSubtle} opacity-55`}>
                 <div className="flex items-center gap-1.5 mb-3">
                   <Shield className="w-3 h-3 shrink-0" style={{ color: '#FF2D78' }} />
-                  <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: '#FF2D78' }}>Female ♀</span>
+                  <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: '#FF2D78' }}>Wanita ♀</span>
                 </div>
                 <div className="space-y-3">
                   <div className={`flex items-center gap-3 p-4 sm:p-5 rounded-2xl ${femaleDt.bgSubtle} ${femaleDt.border}`}>

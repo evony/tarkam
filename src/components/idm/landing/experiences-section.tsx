@@ -488,8 +488,8 @@ function FilterTabs({
 }) {
   const tabs: { key: 'all' | 'male' | 'female'; label: string; color: string; count: number }[] = [
     { key: 'all', label: 'Semua', color: COLORS.gold, count: counts.all },
-    { key: 'male', label: 'Male', color: COLORS.cyan, count: counts.male },
-    { key: 'female', label: 'Female', color: COLORS.purple, count: counts.female },
+    { key: 'male', label: 'Pria', color: COLORS.cyan, count: counts.male },
+    { key: 'female', label: 'Wanita', color: COLORS.purple, count: counts.female },
   ];
 
   return (

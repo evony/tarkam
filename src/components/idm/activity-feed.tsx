@@ -106,7 +106,7 @@ function ActivityItem({ activity }: { activity: Activity }) {
           <span className="text-[10px] text-muted-foreground/80">{formatRelativeTime(activity.timestamp)}</span>
           {activity.division && (
             <span className="text-[10px] text-muted-foreground/60">
-              · {activity.division === 'male' ? 'Male' : 'Female'}
+              · {activity.division === 'male' ? 'Pria' : 'Wanita'}
             </span>
           )}
         </div>

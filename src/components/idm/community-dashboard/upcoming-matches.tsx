@@ -65,7 +65,7 @@ function MatchCard({ match, index }: { match: EnrichedMatch; index: number }) {
           {/* Division badge */}
           <div className="flex items-center justify-between mb-2.5">
             <Badge className={`${dt.badgeBg} text-[8px] border`}>
-              {match.division === 'male' ? '🕺 Male' : '💃 Female'}
+              {match.division === 'male' ? '🕺 Pria' : '💃 Wanita'}
             </Badge>
             <div className="flex items-center gap-1 text-[9px] text-muted-foreground">
               <Calendar className="w-2.5 h-2.5" />

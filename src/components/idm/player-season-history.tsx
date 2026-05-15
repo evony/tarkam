@@ -289,7 +289,7 @@ export function PlayerSeasonHistory({
     // Create an active season entry from current live stats
     allEntries.push({
       seasonId: 'current',
-      seasonName: `Season 2 - ${playerDivision === 'male' ? 'Male' : 'Female'}`,
+      seasonName: `Season 2 - ${playerDivision === 'male' ? 'Pria' : 'Wanita'}`,
       seasonNumber: 2,
       seasonStatus: 'active',
       division: playerDivision,

@@ -100,7 +100,7 @@ export function TournamentView() {
 
                   <h3 className={`text-xl font-bold ${dt.neonGradient} mb-2`}>Belum Ada Tournament</h3>
                   <p className="text-sm text-muted-foreground max-w-md mb-6 leading-relaxed">
-                    Belum ada tournament yang dibuat untuk divisi {division === 'male' ? 'Male' : 'Female'} saat ini.
+                    Belum ada tournament yang dibuat untuk divisi {division === 'male' ? 'Pria' : 'Wanita'} saat ini.
                     Tournament mingguan akan muncul di sini begitu admin membuatnya.
                   </p>
 

@@ -542,18 +542,18 @@ export function AdminPanel() {
                   : 'text-muted-foreground hover:text-foreground/70'
               }`}
             >
-              🕺 Male
+              🕺 Pria
             </button>
             <button
               type="button"
-              onClick={() => setDivision('female')}
+              onClick={() => setDivision('female')
               className={`px-2.5 py-1 rounded-md text-[10px] font-bold transition-all duration-200 cursor-pointer ${
                 storeDivision === 'female'
                   ? 'bg-purple-500/20 text-purple-400 shadow-sm'
                   : 'text-muted-foreground hover:text-foreground/70'
               }`}
             >
-              💃 Female
+              💃 Wanita
             </button>
           </div>
         </div>
@@ -880,7 +880,7 @@ export function AdminPanel() {
                         : 'text-muted-foreground hover:text-foreground'
                     }`}
                   >
-                    🕺 Male
+                    🕺 Pria
                   </button>
                   <button
                     type="button"
@@ -891,7 +891,7 @@ export function AdminPanel() {
                         : 'text-muted-foreground hover:text-foreground'
                     }`}
                   >
-                    💃 Female
+                    💃 Wanita
                   </button>
                 </div>
               </div>

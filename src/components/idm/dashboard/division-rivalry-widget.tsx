@@ -159,7 +159,7 @@ function SingleDivisionRivalryCard({
           <h3 className="text-xs font-semibold uppercase tracking-wider">Rivalitas Puncak</h3>
           {showDivisionLabel && (
             <Badge className={`${dt.badgeBg} text-[8px] border ml-1`}>
-              {division === 'male' ? '🕺 Male' : '💃 Female'}
+              {division === 'male' ? '🕺 Pria' : '💃 Wanita'}
             </Badge>
           )}
           <Badge className={`${dt.casinoBadge} ml-auto text-[9px] opacity-40`}>
@@ -278,7 +278,7 @@ function SingleDivisionRivalryCard({
         <h3 className="text-xs font-semibold uppercase tracking-wider">Rivalitas Puncak</h3>
         {showDivisionLabel && (
           <Badge className={`${dt.badgeBg} text-[8px] border ml-1`}>
-            {division === 'male' ? '🕺 Male' : '💃 Female'}
+            {division === 'male' ? '🕺 Pria' : '💃 Wanita'}
           </Badge>
         )}
         <Badge className={`${dt.casinoBadge} ml-auto text-[9px]`}>

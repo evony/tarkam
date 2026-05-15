@@ -560,7 +560,7 @@ export function DonationModal({ open, onOpenChange, defaultType = 'season', defa
                       <p className="text-sm text-muted-foreground mb-0.5">{donorName} — {formatCurrency(finalAmount)}</p>
                       {effectiveType === 'weekly' && (
                         <p className={`text-xs font-semibold ${selectedDivision === 'male' ? 'text-idm-male' : 'text-idm-female'}`}>
-                          Prize Pool {selectedDivision === 'male' ? '🕺 Male' : '💃 Female'}
+                          Prize Pool {selectedDivision === 'male' ? '🕺 Pria' : '💃 Wanita'}
                         </p>
                       )}
                       <p className="text-xs text-muted-foreground/70 mt-0.5">{submitResult.message}</p>

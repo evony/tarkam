@@ -684,7 +684,7 @@ function DuoChampionCard({
                       <span className="text-[9px] lg:text-[10px] text-muted-foreground/70 truncate">{clubToString(latestMale.player.club)}</span>
                     )}
                     <span className="bg-idm-male/15 text-idm-male-light text-[7px] lg:text-[8px] border border-idm-male/20 px-1.5 py-0.5 rounded font-bold">
-                      🕺 Male
+                      🕺 Pria
                     </span>
                   </div>
                 </div>
@@ -824,7 +824,7 @@ function DuoChampionCard({
                       <span className="text-[9px] lg:text-[10px] text-muted-foreground/70 truncate">{clubToString(latestFemale.player.club)}</span>
                     )}
                     <span className="bg-idm-female/15 text-idm-female-light text-[7px] lg:text-[8px] border border-idm-female/20 px-1.5 py-0.5 rounded font-bold">
-                      💃 Female
+                      💃 Wanita
                     </span>
                   </div>
                 </div>

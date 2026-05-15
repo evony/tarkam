@@ -649,14 +649,14 @@ export function Dashboard() {
                   🐉 Season {data.season?.number || 1}
                 </Badge>
                 <Badge className={`${dt.divisionBadge} px-2 py-0.5 text-[9px] sm:text-[10px]`}>
-                  {division === 'male' ? '🕺 Male' : '💃 Female'}
+                  {division === 'male' ? '🕺 Pria' : '💃 Wanita'}
                 </Badge>
               </div>
               <div className="flex sm:hidden flex-col items-end gap-1">
                 <div className="flex items-center gap-1.5">
                   <ShareButton
                     title={t?.name || 'Tarkam IDM'}
-                    description={`Week ${t?.weekNumber || '-'} — ${division === 'male' ? 'Male' : 'Female'} Tarkam`}
+                    description={`Week ${t?.weekNumber || '-'} — ${division === 'male' ? 'Pria' : 'Wanita'} Tarkam`}
                     variant="icon"
                   />
                   <StatusBadge status={t?.status || 'registration'} />
@@ -691,7 +691,7 @@ export function Dashboard() {
             <div className="flex items-center gap-2">
               <ShareButton
                 title={t?.name || 'Tarkam IDM'}
-                description={`Week ${t?.weekNumber || '-'} — ${division === 'male' ? 'Male' : 'Female'} Tarkam`}
+                description={`Week ${t?.weekNumber || '-'} — ${division === 'male' ? 'Pria' : 'Wanita'} Tarkam`}
                 variant="icon"
               />
               <StatusBadge status={t?.status || 'registration'} />
