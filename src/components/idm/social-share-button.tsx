@@ -90,15 +90,10 @@ export function SocialShareButton({ playerGamertag, playerId, className = '' }: 
     }
   }, [playerGamertag, playerUrl, shareText]);
 
-  const handleClick = useCallback(async () => {
-    // On mobile with native share API, use it directly
-    if (navigator.share && /Mobi|Android|iPhone/i.test(navigator.userAgent)) {
-      const shared = await handleNativeShare();
-      if (shared) return;
-    }
-    // Otherwise show the social picker popup
+  const handleClick = useCallback(() => {
+    // Always show custom social picker (includes Instagram which native share sheet lacks)
     setShowPicker(prev => !prev);
-  }, [handleNativeShare]);
+  }, []);
 
   const copyLink = useCallback(async () => {
     try {
@@ -258,7 +253,7 @@ export function SocialShareButton({ playerGamertag, playerId, className = '' }: 
               </div>
 
               {/* Copy link */}
-              <div className="px-4 pb-4">
+              <div className="px-4 pb-3">
                 <button
                   onClick={copyLink}
                   className={`w-full flex items-center gap-2 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 active:scale-95 cursor-pointer ${
@@ -283,6 +278,22 @@ export function SocialShareButton({ playerGamertag, playerId, className = '' }: 
                   )}
                 </button>
               </div>
+
+              {/* More apps via native share — only on mobile where navigator.share exists */}
+              {typeof navigator !== 'undefined' && navigator.share && (
+                <div className="px-4 pb-4">
+                  <button
+                    onClick={async () => {
+                      await handleNativeShare();
+                      setShowPicker(false);
+                    }}
+                    className="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 active:scale-95 cursor-pointer bg-idm-gold-warm/10 text-idm-gold-warm hover:bg-idm-gold-warm/20 border border-idm-gold-warm/15"
+                  >
+                    <Share2 className="w-4 h-4" />
+                    <span>Lainnya...</span>
+                  </button>
+                </div>
+              )}
             </motion.div>
           </motion.div>
         </AnimatePresence>,
