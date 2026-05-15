@@ -329,7 +329,7 @@ function checkDuplicates(
         alreadyInTournament: false,
         reRegisterPlayerId: exactNamePlayer.id,
         similarPlayers: [exactNamePlayer],
-        message: `Nama "${name}" sudah terdaftar sebelumnya tapi ditolak/nonaktif. Anda bisa mendaftar ulang untuk masuk antrian persetujuan admin.`,
+        message: `Nama "${name}" sudah terdaftar sebelumnya tapi ditolak/nonaktif. Anda bisa mendaftar untuk masuk antrian persetujuan admin.`,
       };
     }
 
@@ -356,7 +356,7 @@ function checkDuplicates(
       alreadyInTournament: false,
       reRegisterPlayerId: exactNamePlayer.id,
       similarPlayers: [exactNamePlayer],
-      message: `Nama "${name}" sudah terdaftar sebagai peserta aktif (nickname: "${exactNamePlayer.gamertag}"). Klik "Daftar Ulang" untuk mendaftar di turnamen minggu ini.`,
+      message: `Nama "${name}" sudah terdaftar sebagai peserta aktif (nickname: "${exactNamePlayer.gamertag}"). Klik "Daftar" untuk mendaftar di turnamen minggu ini.`,
     };
   }
 
@@ -437,7 +437,7 @@ function checkDuplicates(
         alreadyInTournament: false,
         reRegisterPlayerId: phoneMatchPlayer.id,
         similarPlayers: [phoneMatchPlayer],
-        message: `Nomor WhatsApp ini sudah terdaftar sebelumnya dengan nama "${phoneMatchPlayer.name}" tapi ditolak/nonaktif. Anda bisa mendaftar ulang.`,
+        message: `Nomor WhatsApp ini sudah terdaftar sebelumnya dengan nama "${phoneMatchPlayer.name}" tapi ditolak/nonaktif. Anda bisa mendaftar.`,
       };
     }
 
@@ -463,7 +463,7 @@ function checkDuplicates(
       alreadyInTournament: false,
       reRegisterPlayerId: phoneMatchPlayer.id,
       similarPlayers: [phoneMatchPlayer],
-      message: `Nomor WhatsApp ini sudah terdaftar atas nama "${phoneMatchPlayer.name}" (nickname: "${phoneMatchPlayer.gamertag}"). Klik "Daftar Ulang" untuk mendaftar di turnamen minggu ini.`,
+      message: `Nomor WhatsApp ini sudah terdaftar atas nama "${phoneMatchPlayer.name}" (nickname: "${phoneMatchPlayer.gamertag}"). Klik "Daftar" untuk mendaftar di turnamen minggu ini.`,
     };
   }
 
@@ -840,7 +840,7 @@ export async function POST(request: Request) {
           // Player was updated but already in tournament
           return sanitizedJson({
             success: true,
-            message: `Pendaftaran ulang berhasil!${tournamentMsg} Menunggu persetujuan admin.`,
+            message: `Pendaftaran berhasil!${tournamentMsg} Menunggu persetujuan admin.`,
             player: {
               id: updatedPlayer.id,
               name: updatedPlayer.name,
@@ -858,8 +858,8 @@ export async function POST(request: Request) {
         return sanitizedJson({
           success: true,
           message: tournament
-            ? `Pendaftaran ulang berhasil!${tournamentMsg} Menunggu persetujuan admin.`
-            : 'Pendaftaran ulang berhasil! Menunggu persetujuan admin.',
+            ? `Pendaftaran berhasil!${tournamentMsg} Menunggu persetujuan admin.`
+            : 'Pendaftaran berhasil! Menunggu persetujuan admin.',
           player: {
             id: updatedPlayer.id,
             name: updatedPlayer.name,
@@ -999,7 +999,7 @@ export async function POST(request: Request) {
                 isApprovedPlayer: false,
                 isHighRisk: false,
                 reRegisterPlayerId: p.id,
-                message: `Nomor WhatsApp ini sudah terdaftar dengan nama "${p.name}" tapi ditolak/nonaktif. Anda bisa mendaftar ulang.`,
+                message: `Nomor WhatsApp ini sudah terdaftar dengan nama "${p.name}" tapi ditolak/nonaktif. Anda bisa mendaftar.`,
                 similarPlayers: [{
                   id: p.id, name: p.name, gamertag: p.gamertag, division: p.division,
                   city: p.city, phone: p.phone, registrationStatus: p.registrationStatus, isActive: p.isActive,
@@ -1015,7 +1015,7 @@ export async function POST(request: Request) {
               isApprovedPlayer: true,
               isHighRisk: false,
               reRegisterPlayerId: p.id,
-              message: `Nomor WhatsApp ini sudah terdaftar atas nama "${p.name}" (nickname: "${p.gamertag}"). Klik "Daftar Ulang" untuk mendaftar di turnamen minggu ini.`,
+              message: `Nomor WhatsApp ini sudah terdaftar atas nama "${p.name}" (nickname: "${p.gamertag}"). Klik "Daftar" untuk mendaftar di turnamen minggu ini.`,
               similarPlayers: [{
                 id: p.id, name: p.name, gamertag: p.gamertag, division: p.division,
                 city: p.city, phone: p.phone, registrationStatus: p.registrationStatus, isActive: p.isActive,

@@ -225,7 +225,7 @@ export function AdminPlayersTab({
                 onClick={() => setConfirmDialog({
                   open: true,
                   title: 'Hapus Player?',
-                  description: `Hapus "${p.name}" (@${p.gamertag}). Player akan dinonaktifkan, tapi bisa mendaftar ulang kembali.`,
+                  description: `Hapus "${p.name}" (@${p.gamertag}). Player akan dinonaktifkan, tapi bisa mendaftar kembali.`,
                   onConfirm: () => deletePlayer.mutate(p.id)
                 })}
               >

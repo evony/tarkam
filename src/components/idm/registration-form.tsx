@@ -256,7 +256,7 @@ export function RegistrationForm() {
         });
         setFormData({ name: '', joki: '', phone: '', city: '', clubProfileId: '' });
         setWarningState(null);
-        toast.success('Daftar ulang berhasil!', { description: 'Silakan lakukan pembayaran registrasi di bawah.' });
+        toast.success('Daftar berhasil!', { description: 'Silakan lakukan pembayaran registrasi di bawah.' });
       } else if (data.registrationClosed) {
         setSubmitResult({
           success: false,
@@ -265,7 +265,7 @@ export function RegistrationForm() {
       } else {
         setSubmitResult({
           success: false,
-          message: data.error || 'Gagal mendaftar ulang',
+          message: data.error || 'Gagal mendaftar',
         });
       }
     } catch {
@@ -421,8 +421,8 @@ export function RegistrationForm() {
                           : 'Pendaftaran Diblokir!'
                         : warningState.canReRegister
                           ? warningState.isApprovedPlayer
-                            ? 'Daftar Ulang Turnamen!'
-                            : 'Daftar Ulang Tersedia!'
+                            ? 'Daftar Turnamen!'
+                            : 'Daftar Tersedia!'
                           : warningState.isHighRisk
                             ? 'Kemungkinan Duplikat!'
                             : 'Nama Mirip Terdeteksi!'}
@@ -491,7 +491,7 @@ export function RegistrationForm() {
                     <div className="flex items-start gap-2">
                       <Music className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
                       <div className="text-xs text-green-400">
-                        <p><strong>Daftar Ulang Turnamen:</strong> Data Anda sudah terverifikasi. Anda akan didaftarkan ke turnamen minggu ini. Admin akan menyetujui dan menentukan tier Anda.</p>
+                        <p><strong>Daftar Turnamen:</strong> Data Anda sudah terverifikasi. Anda akan didaftarkan ke turnamen minggu ini. Admin akan menyetujui dan menentukan tier Anda.</p>
                       </div>
                     </div>
                   </div>
@@ -503,7 +503,7 @@ export function RegistrationForm() {
                     <div className="flex items-start gap-2">
                       <UserPlus className="w-4 h-4 text-cyan-400 mt-0.5 flex-shrink-0" />
                       <div className="text-xs text-cyan-400">
-                        <p><strong>Daftar Ulang:</strong> Data Anda akan diperbarui dan status dikembalikan ke &quot;Menunggu Persetujuan&quot;. Anda juga otomatis terdaftar di turnamen minggu ini.</p>
+                        <p><strong>Daftar:</strong> Data Anda akan diperbarui dan status dikembalikan ke &quot;Menunggu Persetujuan&quot;. Anda juga otomatis terdaftar di turnamen minggu ini.</p>
                         <p className="mt-1 text-muted-foreground">Tier akan di-reset ke B dan admin akan menentukan tier yang sesuai.</p>
                       </div>
                     </div>
@@ -550,7 +550,7 @@ export function RegistrationForm() {
                 {warningState.isHighRisk && !warningState.isBlocked && !warningState.canReRegister && (
                   <div className="mb-4 p-4 sm:p-5 rounded-lg bg-orange-500/10 border border-orange-500/20">
                     <p className="text-xs text-orange-400">
-                      <strong>Perhatian:</strong> Jika ini adalah Anda, tidak perlu mendaftar ulang. Hubungi admin jika lupa nickname.
+                      <strong>Perhatian:</strong> Jika ini adalah Anda, tidak perlu mendaftar lagi. Hubungi admin jika lupa nickname.
                     </p>
                   </div>
                 )}
@@ -584,7 +584,7 @@ export function RegistrationForm() {
                       ) : (
                         <UserPlus className="w-4 h-4 mr-1" />
                       )}
-                      {isSubmitting ? 'Memproses...' : 'Daftar Ulang'}
+                      {isSubmitting ? 'Memproses...' : 'Daftar'}
                     </Button>
                   )}
                   {!warningState.isBlocked && !warningState.canReRegister && (
