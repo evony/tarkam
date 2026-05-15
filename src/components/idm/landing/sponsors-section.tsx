@@ -3,7 +3,6 @@
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import { Gem } from 'lucide-react';
-import { useRef, useEffect } from 'react';
 import { SectionHeader } from './shared';
 
 /* ── Sponsor data shape from API ── */
@@ -27,30 +26,9 @@ interface Sponsor {
    Mobile-first redesign:
    - Mobile: Horizontal scroll carousel with larger cards
    - Desktop: Grid layout with premium cards
-   - Self-contained reveal observer (fixes dynamic import visibility bug)
+   - Uses parent useScrollReveal() + MutationObserver for reveal
    ═══════════════════════════════════════════════════════════════ */
 export function SponsorsSection() {
-  const sectionRef = useRef<HTMLElement>(null);
-
-  /* ── Self-contained reveal: since this component is loaded via dynamic()
-        with ssr: false, the parent useScrollReveal() observer won't detect it.
-        We use our own IntersectionObserver to add the visible class. ── */
-  useEffect(() => {
-    const el = sectionRef.current;
-    if (!el) return;
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          el.classList.add('section-reveal--visible');
-          io.disconnect();
-        }
-      },
-      { threshold: 0.05 }
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-
   const { data, isLoading } = useQuery<{ sponsors: Sponsor[] }>({
     queryKey: ['sponsors-active'],
     queryFn: async () => {
@@ -94,7 +72,6 @@ export function SponsorsSection() {
 
   return (
     <section
-      ref={sectionRef}
       aria-label="Didukung Oleh"
       className="section-reveal relative py-10 sm:py-16 overflow-hidden bg-deep"
     >

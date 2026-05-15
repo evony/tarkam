@@ -179,18 +179,48 @@ export function useScrollReveal() {
       { rootMargin: '0px 0px', threshold: 0.01 }
     );
 
-    // Observe all existing .reveal elements that haven't been revealed yet
-    document.querySelectorAll('.reveal:not(.reveal--visible)').forEach((el) => {
-      io.observe(el);
+    // Helper: observe all un-revealed elements
+    const observeAll = () => {
+      document.querySelectorAll('.reveal:not(.reveal--visible)').forEach((el) => {
+        io.observe(el);
+      });
+      document.querySelectorAll('.section-reveal:not(.section-reveal--visible)').forEach((el) => {
+        io.observe(el);
+      });
+    };
+
+    // Observe all existing elements on mount
+    observeAll();
+
+    // ★ MutationObserver: catches dynamically-added .section-reveal elements
+    // (e.g. from dynamic() components loaded with ssr: false)
+    // Without this, elements added after mount are never observed and stay opacity: 0.
+    const mutObs = new MutationObserver((mutations) => {
+      let hasNewReveal = false;
+      for (const mutation of mutations) {
+        for (const node of mutation.addedNodes) {
+          if (node instanceof HTMLElement) {
+            if (
+              node.classList?.contains('section-reveal') ||
+              node.classList?.contains('reveal') ||
+              node.querySelector?.('.section-reveal:not(.section-reveal--visible)') ||
+              node.querySelector?.('.reveal:not(.reveal--visible)')
+            ) {
+              hasNewReveal = true;
+              break;
+            }
+          }
+        }
+        if (hasNewReveal) break;
+      }
+      if (hasNewReveal) observeAll();
     });
 
-    // Observe all existing .section-reveal elements that haven't been revealed yet
-    document.querySelectorAll('.section-reveal:not(.section-reveal--visible)').forEach((el) => {
-      io.observe(el);
-    });
+    mutObs.observe(document.body, { childList: true, subtree: true });
 
     return () => {
       io.disconnect();
+      mutObs.disconnect();
     };
   }, []);
 }

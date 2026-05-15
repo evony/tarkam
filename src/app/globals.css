@@ -7691,13 +7691,16 @@ html {
   contain: layout style;
 }
 
-/* ─── Section Reveal Animation — CLS-optimized (no translateY) ─── */
+/* ─── Section Reveal Animation — CLS-optimized (no translateY) ───
+   NOTE: content-visibility: auto REMOVED — it sets contain-intrinsic-size: 0 500px
+   which gives elements 0 width when off-screen. IntersectionObserver cannot detect
+   0-width elements entering the viewport, so section-reveal--visible never gets added
+   and sections stay invisible (opacity: 0). The .landing-section class already
+   provides content-visibility: auto for performance, so we don't need it here. */
 .section-reveal {
   opacity: 0;
   will-change: opacity;
   transition: opacity 0.35s ease-out;
-  content-visibility: auto;
-  contain-intrinsic-size: 0 500px;
 }
 
 .section-reveal.section-reveal--visible {
