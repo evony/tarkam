@@ -131,7 +131,16 @@ export const CommunityLeaderboard = React.memo(function CommunityLeaderboard({
   }, [maleData, femaleData, divisionFilter]);
 
   const displayedPlayers = showAllPlayers ? mergedPlayers : mergedPlayers.slice(0, 10);
-  const clubs = tarkamClubData?.clubs || [];
+  const rawClubs = tarkamClubData?.clubs || [];
+  // Filter clubs by division: male-only clubs, female-only clubs, or all
+  const clubs = useMemo(() => {
+    if (divisionFilter === 'all') return rawClubs;
+    return rawClubs.filter(c => {
+      if (divisionFilter === 'male') return c.maleMemberCount > 0;
+      if (divisionFilter === 'female') return c.femaleMemberCount > 0;
+      return true;
+    });
+  }, [rawClubs, divisionFilter]);
   const displayedClubs = showAllClubs ? clubs : clubs.slice(0, 6);
 
   return (
@@ -459,32 +468,30 @@ export const PeringkatHeader = React.memo(function PeringkatHeader({
             </button>
           </div>
 
-          {/* Division filter pills — only shown for players */}
-          {leaderboardSort === 'players' && (
-            <div className="flex items-center gap-1 p-1 rounded-lg bg-idm-gold-warm/5 border border-idm-gold-warm/10">
-              {([
-                { key: 'all' as DivisionFilter, label: 'Semua' },
-                { key: 'male' as DivisionFilter, label: 'Male' },
-                { key: 'female' as DivisionFilter, label: 'Female' },
-              ]).map(f => (
-                <button
-                  key={f.key}
-                  onClick={() => onDivisionFilterChange(f.key)}
-                  className={`px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded-md transition-all whitespace-nowrap ${
-                    divisionFilter === f.key
-                      ? f.key === 'male'
-                        ? 'bg-idm-male text-white shadow-sm'
-                        : f.key === 'female'
-                        ? 'bg-idm-female text-white shadow-sm'
-                        : 'bg-idm-gold-warm/15 text-idm-gold-warm shadow-sm shadow-idm-gold-warm/10 border border-idm-gold-warm/25'
-                      : 'text-muted-foreground/70 hover:text-foreground border border-transparent hover:bg-muted/40'
-                  }`}
-                >
-                  {f.label}
-                </button>
-              ))}
-            </div>
-          )}
+          {/* Division filter pills — shown for both players and clubs */}
+          <div className="flex items-center gap-1 p-1 rounded-lg bg-idm-gold-warm/5 border border-idm-gold-warm/10">
+            {([
+              { key: 'all' as DivisionFilter, label: 'Semua' },
+              { key: 'male' as DivisionFilter, label: 'Male' },
+              { key: 'female' as DivisionFilter, label: 'Female' },
+            ]).map(f => (
+              <button
+                key={f.key}
+                onClick={() => onDivisionFilterChange(f.key)}
+                className={`px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded-md transition-all whitespace-nowrap ${
+                  divisionFilter === f.key
+                    ? f.key === 'male'
+                      ? 'bg-idm-male text-white shadow-sm'
+                      : f.key === 'female'
+                      ? 'bg-idm-female text-white shadow-sm'
+                      : 'bg-idm-gold-warm/15 text-idm-gold-warm shadow-sm shadow-idm-gold-warm/10 border border-idm-gold-warm/25'
+                    : 'text-muted-foreground/70 hover:text-foreground border border-transparent hover:bg-muted/40'
+                }`}
+              >
+                {f.label}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
     </div>
