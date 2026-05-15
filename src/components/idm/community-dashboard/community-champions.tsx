@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Crown, TrendingUp, Flame, BarChart3, Music, Shield, Gem, Heart, Banknote } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
@@ -20,7 +20,7 @@ interface CommunityChampionsProps {
   onPlayerClick: (player: TopPlayer & { division?: string }, division: 'male' | 'female') => void;
 }
 
-export function CommunityChampions({ maleData, femaleData, selectedDivision = 'all', onPlayerClick }: CommunityChampionsProps) {
+export const CommunityChampions = React.memo(function CommunityChampions({ maleData, femaleData, selectedDivision = 'all', onPlayerClick }: CommunityChampionsProps) {
   const [activeTab, setActiveTab] = useState<'top3' | 'sultan'>('top3');
 
   return (
@@ -97,10 +97,10 @@ export function CommunityChampions({ maleData, femaleData, selectedDivision = 'a
       )}
     </div>
   );
-}
+});
 
 /* ─── Per-division Champions Card ─── */
-function ChampionsSection({
+const ChampionsSection = React.memo(function ChampionsSection({
   title,
   emoji,
   division,
@@ -164,10 +164,10 @@ function ChampionsSection({
       </div>
     </Card>
   );
-}
+});
 
 /* ─── Sultan of the Week Section — Top Penyawer per division ─── */
-export function SultanOfWeekSection({
+export const SultanOfWeekSection = React.memo(function SultanOfWeekSection({
   division,
   sultanData,
   skinMap,
@@ -356,10 +356,10 @@ export function SultanOfWeekSection({
       </div>
     </Card>
   );
-}
+});
 
 /* ─── Top Form Section — Weekly Best Performer per division (LEGACY — kept for backward compat) ─── */
-export function TopFormSection({
+export const TopFormSection = React.memo(function TopFormSection({
   division,
   performer,
   onPlayerClick,
@@ -532,7 +532,7 @@ export function TopFormSection({
       </div>
     </Card>
   );
-}
+});
 
 /** Compact currency formatting for widget display */
 function formatCurrencyShort(amount: number): string {

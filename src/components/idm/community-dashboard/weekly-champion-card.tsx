@@ -28,7 +28,7 @@ interface WeeklyChampionCardProps {
    Per-Division Champion Card (Dashboard)
    Clean version — no excessive effects
    ═══════════════════════════════════════════ */
-function DivisionChampionCard({
+const DivisionChampionCard = React.memo(function DivisionChampionCard({
   division,
   champions,
   totalWeeks,
@@ -257,7 +257,7 @@ function DivisionChampionCard({
       )}
     </div>
   );
-}
+});
 
 
 /* ═══════════════════════════════════════════
@@ -265,7 +265,7 @@ function DivisionChampionCard({
    "all" → both divisions stacked (or side by side on desktop)
    specific division → single division card
    ═══════════════════════════════════════════ */
-export function WeeklyChampionCard({ maleData, femaleData, selectedDivision = 'all', onPlayerClick }: WeeklyChampionCardProps) {
+export const WeeklyChampionCard = React.memo(function WeeklyChampionCard({ maleData, femaleData, selectedDivision = 'all', onPlayerClick }: WeeklyChampionCardProps) {
   const showMale = selectedDivision === 'all' || selectedDivision === 'male';
   const showFemale = selectedDivision === 'all' || selectedDivision === 'female';
 
@@ -317,4 +317,4 @@ export function WeeklyChampionCard({ maleData, femaleData, selectedDivision = 'a
       onPlayerClick={onPlayerClick}
     />
   );
-}
+});

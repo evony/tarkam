@@ -198,7 +198,7 @@ function EmptyDonorsState({ onDonate }: { onDonate: () => void }) {
 
 /* ─── Main Component ─── */
 
-export function TopDonorsWidget({ onDonate, statsData, statsData2 }: TopDonorsWidgetProps) {
+export const TopDonorsWidget = React.memo(function TopDonorsWidget({ onDonate, statsData, statsData2 }: TopDonorsWidgetProps) {
   const dt = useDivisionTheme();
 
   // Use weeklyTopDonors from stats if provided, otherwise fall back to all-time API
@@ -213,89 +213,103 @@ export function TopDonorsWidget({ onDonate, statsData, statsData2 }: TopDonorsWi
     enabled: !statsData?.weeklyTopDonors?.length && !statsData2?.weeklyTopDonors?.length,
   });
 
-  const hasAnyWeekly = (statsData?.weeklyTopDonors?.length ?? 0) > 0 || (statsData2?.weeklyTopDonors?.length ?? 0) > 0;
+  const hasWeekly = (statsData?.weeklyTopDonors?.length ?? 0) > 0 || (statsData2?.weeklyTopDonors?.length ?? 0) > 0;
 
-  // Merge weeklyTopDonors from both divisions — track per-division amounts
-  const donorMap = new Map<string, { donorName: string; totalAmount: number; donationCount: number; maleAmount: number; femaleAmount: number }>();
+  // Memoize the entire donor processing pipeline to avoid recomputation on every render
+  const { allDonors, maleDonors, femaleDonors, totalMale, totalFemale, totalAmount } = React.useMemo(() => {
+    // Merge weeklyTopDonors from both divisions — track per-division amounts
+    const donorMap = new Map<string, { donorName: string; totalAmount: number; donationCount: number; maleAmount: number; femaleAmount: number }>();
 
-  const mergeWeeklyDonors = (donors: import('@/types/stats').TopDonor[], division: 'male' | 'female') => {
-    for (const d of donors) {
-      const key = d.donorName.toLowerCase().trim();
-      const existing = donorMap.get(key);
-      if (existing) {
-        donorMap.set(key, {
-          donorName: d.donorName,
-          totalAmount: existing.totalAmount + d.totalAmount,
-          donationCount: existing.donationCount + d.donationCount,
-          maleAmount: existing.maleAmount + (division === 'male' ? d.totalAmount : 0),
-          femaleAmount: existing.femaleAmount + (division === 'female' ? d.totalAmount : 0),
-        });
-      } else {
-        donorMap.set(key, {
+    const mergeWeeklyDonors = (donors: import('@/types/stats').TopDonor[], division: 'male' | 'female') => {
+      for (const d of donors) {
+        const key = d.donorName.toLowerCase().trim();
+        const existing = donorMap.get(key);
+        if (existing) {
+          donorMap.set(key, {
+            donorName: d.donorName,
+            totalAmount: existing.totalAmount + d.totalAmount,
+            donationCount: existing.donationCount + d.donationCount,
+            maleAmount: existing.maleAmount + (division === 'male' ? d.totalAmount : 0),
+            femaleAmount: existing.femaleAmount + (division === 'female' ? d.totalAmount : 0),
+          });
+        } else {
+          donorMap.set(key, {
+            donorName: d.donorName,
+            totalAmount: d.totalAmount,
+            donationCount: d.donationCount,
+            maleAmount: division === 'male' ? d.totalAmount : 0,
+            femaleAmount: division === 'female' ? d.totalAmount : 0,
+          });
+        }
+      }
+    };
+
+    // Prefer weekly-scoped donors from stats, fall back to all-time API data
+    const weekly1 = statsData?.weeklyTopDonors;
+    const weekly2 = statsData2?.weeklyTopDonors;
+    const isWeekly = (weekly1 && weekly1.length > 0) || (weekly2 && weekly2.length > 0);
+
+    // Determine which statsData is male/female
+    const div1 = statsData?.activeTournament?.division || 'male';
+    const div2 = statsData2?.activeTournament?.division || 'female';
+
+    let allDonors: DivisionDonor[];
+
+    if (isWeekly) {
+      if (weekly1?.length) mergeWeeklyDonors(weekly1, div1 as 'male' | 'female');
+      if (weekly2?.length) mergeWeeklyDonors(weekly2, div2 as 'male' | 'female');
+      allDonors = Array.from(donorMap.values())
+        .sort((a, b) => b.totalAmount - a.totalAmount)
+        .map(d => ({
           donorName: d.donorName,
           totalAmount: d.totalAmount,
           donationCount: d.donationCount,
-          maleAmount: division === 'male' ? d.totalAmount : 0,
-          femaleAmount: division === 'female' ? d.totalAmount : 0,
-        });
-      }
-    }
-  };
-
-  // Prefer weekly-scoped donors from stats, fall back to all-time API data
-  const weekly1 = statsData?.weeklyTopDonors;
-  const weekly2 = statsData2?.weeklyTopDonors;
-  const hasWeekly = (weekly1 && weekly1.length > 0) || (weekly2 && weekly2.length > 0);
-  const apiSummary = data?.summary;
-
-  // Determine which statsData is male/female
-  const div1 = statsData?.activeTournament?.division || 'male';
-  const div2 = statsData2?.activeTournament?.division || 'female';
-
-  let allDonors: DivisionDonor[];
-
-  if (hasWeekly) {
-    if (weekly1?.length) mergeWeeklyDonors(weekly1, div1 as 'male' | 'female');
-    if (weekly2?.length) mergeWeeklyDonors(weekly2, div2 as 'male' | 'female');
-    allDonors = Array.from(donorMap.values())
-      .sort((a, b) => b.totalAmount - a.totalAmount)
-      .map(d => ({
-        donorName: d.donorName,
-        totalAmount: d.totalAmount,
-        donationCount: d.donationCount,
-        latestType: 'weekly',
-        latestDate: null as string | null,
-        maleAmount: d.maleAmount,
-        femaleAmount: d.femaleAmount,
-        divisions: [
-          ...(d.maleAmount > 0 ? ['male' as const] : []),
-          ...(d.femaleAmount > 0 ? ['female' as const] : []),
-        ],
+          latestType: 'weekly',
+          latestDate: null as string | null,
+          maleAmount: d.maleAmount,
+          femaleAmount: d.femaleAmount,
+          divisions: [
+            ...(d.maleAmount > 0 ? ['male' as const] : []),
+            ...(d.femaleAmount > 0 ? ['female' as const] : []),
+          ],
+        }));
+    } else {
+      allDonors = (data?.donors ?? []).map(d => ({
+        ...d,
+        maleAmount: d.totalAmount,
+        femaleAmount: 0,
+        divisions: ['male' as const],
       }));
-  } else {
-    allDonors = (data?.donors ?? []).map(d => ({
-      ...d,
-      maleAmount: d.totalAmount,
-      femaleAmount: 0,
-      divisions: ['male' as const],
-    }));
-  }
+    }
 
-  // Split donors per division
-  const maleDonors = allDonors.filter(d => d.maleAmount > 0).sort((a, b) => b.maleAmount - a.maleAmount);
-  const femaleDonors = allDonors.filter(d => d.femaleAmount > 0).sort((a, b) => b.femaleAmount - a.femaleAmount);
+    // Split donors per division
+    const maleDonors = allDonors.filter(d => d.maleAmount > 0).sort((a, b) => b.maleAmount - a.maleAmount);
+    const femaleDonors = allDonors.filter(d => d.femaleAmount > 0).sort((a, b) => b.femaleAmount - a.femaleAmount);
 
-  // Early return for loading — AFTER computations
-  if (isLoading && !hasAnyWeekly) return <LoadingSkeleton />;
+    // Calculate totals per division
+    const totalMale = maleDonors.reduce((s, d) => s + d.maleAmount, 0);
+    const totalFemale = femaleDonors.reduce((s, d) => s + d.femaleAmount, 0);
+    const totalAmount = totalMale + totalFemale;
 
-  const weekNum = statsData?.activeTournament?.weekNumber || statsData2?.activeTournament?.weekNumber;
-  const weekLabel = hasWeekly && weekNum ? `Week ${weekNum}` : '';
+    return { allDonors, maleDonors, femaleDonors, totalMale, totalFemale, totalAmount };
+  }, [
+    statsData?.weeklyTopDonors,
+    statsData2?.weeklyTopDonors,
+    data?.donors,
+    data?.summary,
+    statsData?.activeTournament?.division,
+    statsData2?.activeTournament?.division,
+    hasWeekly,
+  ]);
 
-  // Calculate totals per division
-  const totalMale = maleDonors.reduce((s, d) => s + d.maleAmount, 0);
-  const totalFemale = femaleDonors.reduce((s, d) => s + d.femaleAmount, 0);
-  const totalAmount = totalMale + totalFemale;
+  // Memoize weekLabel computation
+  const weekLabel = React.useMemo(() => {
+    const weekNum = statsData?.activeTournament?.weekNumber || statsData2?.activeTournament?.weekNumber;
+    return hasWeekly && weekNum ? `Week ${weekNum}` : '';
+  }, [statsData?.activeTournament?.weekNumber, statsData2?.activeTournament?.weekNumber, hasWeekly]);
 
+  // Early returns AFTER all hooks
+  if (isLoading && !hasWeekly) return <LoadingSkeleton />;
   if (allDonors.length === 0) return <EmptyDonorsState onDonate={onDonate} />;
 
   return (
@@ -424,4 +438,4 @@ export function TopDonorsWidget({ onDonate, statsData, statsData2 }: TopDonorsWi
       </CardContent>
     </Card>
   );
-}
+});

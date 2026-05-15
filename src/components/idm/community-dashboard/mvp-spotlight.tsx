@@ -30,7 +30,7 @@ interface MvpSpotlightProps {
    add a small division label so users know which division
    they're looking at inside the unified card.
    ═══════════════════════════════════════════ */
-function MvpDivisionCard({
+const MvpDivisionCard = React.memo(function MvpDivisionCard({
   division,
   data,
   onPlayerClick,
@@ -333,7 +333,7 @@ function MvpDivisionCard({
       {mvpContent}
     </Card>
   );
-}
+});
 
 /* ═══════════════════════════════════════════
    Main Component — MVP Spotlight
@@ -341,7 +341,7 @@ function MvpDivisionCard({
      male & female MVPs side by side (desktop) / stacked (mobile)
    When specific division → single card as before
    ═══════════════════════════════════════════ */
-export function MvpSpotlight({ maleData, femaleData, selectedDivision = 'all', onPlayerClick }: MvpSpotlightProps) {
+export const MvpSpotlight = React.memo(function MvpSpotlight({ maleData, femaleData, selectedDivision = 'all', onPlayerClick }: MvpSpotlightProps) {
   const ct = getCommunityTheme();
 
   const showMale = selectedDivision === 'all' || selectedDivision === 'male';
@@ -437,4 +437,4 @@ export function MvpSpotlight({ maleData, femaleData, selectedDivision = 'all', o
       )}
     </div>
   );
-}
+});

@@ -86,7 +86,7 @@ import { SectionCard, MatchRow } from '../dashboard/shared';
    Desktop: Segmented control with larger targets
    Mobile: Horizontal scroll, no wrapping
    ═══════════════════════════════════════════ */
-function SectionTabBar<T extends string>({
+const SectionTabBar = React.memo(function SectionTabBar<T extends string>({
   tabs,
   activeTab,
   onTabChange,
@@ -119,13 +119,13 @@ function SectionTabBar<T extends string>({
       </div>
     </div>
   );
-}
+});
 
 
 /* ═══════════════════════════════════════════
    Tournament Progress Steps — ported from dashboard
    ═══════════════════════════════════════════ */
-function TournamentProgress({ status, divisionTheme }: { status: string; divisionTheme: ReturnType<typeof getDivisionTheme> }) {
+const TournamentProgress = React.memo(function TournamentProgress({ status, divisionTheme }: { status: string; divisionTheme: ReturnType<typeof getDivisionTheme> }) {
   const dt = divisionTheme;
   const steps = [
     { key: 'setup', label: 'Setup' },
@@ -164,7 +164,7 @@ function TournamentProgress({ status, divisionTheme }: { status: string; divisio
       })}
     </div>
   );
-}
+});
 
 
 /* ═══════════════════════════════════════════
@@ -191,7 +191,7 @@ type DivisionFilter = 'all' | 'male' | 'female';
    Champion Header — Sticky heading with division filter tabs
    Extracted so it can be made sticky across sections
    ═══════════════════════════════════════════ */
-function ChampionsMvpHeader({
+const ChampionsMvpHeader = React.memo(function ChampionsMvpHeader({
   selectedDivision,
   onDivisionChange,
 }: {
@@ -235,13 +235,13 @@ function ChampionsMvpHeader({
       </div>
     </div>
   );
-}
+});
 
 
 /* ═══════════════════════════════════════════
    Champion Content — Cards below the sticky header
    ═══════════════════════════════════════════ */
-function ChampionsMvpContent({
+const ChampionsMvpContent = React.memo(function ChampionsMvpContent({
   maleData,
   femaleData,
   selectedDivision,
@@ -300,7 +300,7 @@ function ChampionsMvpContent({
       </div>
     </div>
   );
-}
+});
 
 
 /* ═══════════════════════════════════════════
@@ -311,7 +311,7 @@ function ChampionsMvpContent({
    When specific division → just that division's champion.
    ═══════════════════════════════════════════ */
 
-function ReigningChampionPlaque({
+const ReigningChampionPlaque = React.memo(function ReigningChampionPlaque({
   maleData,
   femaleData,
   selectedDivision,
@@ -413,11 +413,11 @@ function ReigningChampionPlaque({
       </div>
     </div>
   );
-}
+});
 
 
 /* ─── Champion Badge — Single champion compact plaque ─── */
-function ChampionBadge({
+const ChampionBadge = React.memo(function ChampionBadge({
   champion,
   seasonNumber,
   division,
@@ -473,11 +473,11 @@ function ChampionBadge({
       <ChevronDown className="w-4 h-4 text-muted-foreground/30 -rotate-90 shrink-0 group-hover:text-idm-gold-warm/60 transition-colors" />
     </button>
   );
-}
+});
 
 
 /* ─── Ghost Champion Badge — Empty state matching ChampionBadge layout ─── */
-function GhostChampionBadge({ division }: { division: 'male' | 'female' }) {
+const GhostChampionBadge = React.memo(function GhostChampionBadge({ division }: { division: 'male' | 'female' }) {
   const dt = getDivisionTheme(division);
   const DivisionIcon = division === 'male' ? Music : Shield;
   const genderSymbol = division === 'male' ? '♂' : '♀';
@@ -511,7 +511,7 @@ function GhostChampionBadge({ division }: { division: 'male' | 'female' }) {
       </div>
     </div>
   );
-}
+});
 
 
 /* ═══════════════════════════════════════════
@@ -519,7 +519,7 @@ function GhostChampionBadge({ division }: { division: 'male' | 'female' }) {
    ═══════════════════════════════════════════ */
 
 /* ─── Compact Weekly Champion Card ─── */
-function CompactWeeklyChampionCard({
+const CompactWeeklyChampionCard = React.memo(function CompactWeeklyChampionCard({
   division,
   data,
 }: {
@@ -638,11 +638,11 @@ function CompactWeeklyChampionCard({
       )}
     </Card>
   );
-}
+});
 
 
 /* ─── Compact MVP Card ─── */
-function CompactMvpCard({
+const CompactMvpCard = React.memo(function CompactMvpCard({
   division,
   data,
   onPlayerClick,
@@ -774,11 +774,11 @@ function CompactMvpCard({
       </div>
     </Card>
   );
-}
+});
 
 
 /* ─── Compact Top Form Card ─── */
-function CompactTopFormCard({
+const CompactTopFormCard = React.memo(function CompactTopFormCard({
   division,
   performer,
   onPlayerClick,
@@ -872,7 +872,7 @@ function CompactTopFormCard({
       </div>
     </Card>
   );
-}
+});
 
 
 /* ═══════════════════════════════════════════
@@ -938,7 +938,7 @@ function getGroupKey(m: UnifiedMatchResult): string {
   return m.bracket ? `${m.bracket}-${m.round}` : `round-${m.round}`;
 }
 
-function BracketHasilSection({
+const BracketHasilSection = React.memo(function BracketHasilSection({
   maleData,
   femaleData,
 }: {
@@ -1149,11 +1149,11 @@ function BracketHasilSection({
       )}
     </div>
   );
-}
+});
 
 
 /* ─── Division Hasil Card — Per-division match results grouped by round/bracket ─── */
-function DivisionHasilCard({
+const DivisionHasilCard = React.memo(function DivisionHasilCard({
   division,
   matchesGrouped,
   totalMatches,
@@ -1279,14 +1279,14 @@ function DivisionHasilCard({
       </div>
     </SectionCard>
   );
-}
+});
 
 
 /* ═══════════════════════════════════════════
    Division Standings Section — Community Leaderboard
    ═══════════════════════════════════════════ */
 
-function DivisionStandingsSection({
+const DivisionStandingsSection = React.memo(function DivisionStandingsSection({
   maleData,
   femaleData,
   selectedDivision,
@@ -1319,14 +1319,14 @@ function DivisionStandingsSection({
       onDivisionFilterChange={onDivisionFilterChange}
     />
   );
-}
+});
 
 
 
 /* ═══════════════════════════════════════════
    Tour Saya / Cari Turnamen Kamu Section
    ═══════════════════════════════════════════ */
-function TourSayaSection({
+const TourSayaSection = React.memo(function TourSayaSection({
   selectedDivision,
 }: {
   selectedDivision: DivisionFilter;
@@ -1753,13 +1753,13 @@ function TourSayaSection({
       </div>
     </div>
   );
-}
+});
 
 
 /* ═══════════════════════════════════════════
    LayoutRow — pairs sections side-by-side on desktop
    ═══════════════════════════════════════════ */
-function LayoutRow({ children, cols = '2', className = '' }: { children: React.ReactNode; cols?: '2' | '3-2' | '2-3'; className?: string }) {
+const LayoutRow = React.memo(function LayoutRow({ children, cols = '2', className = '' }: { children: React.ReactNode; cols?: '2' | '3-2' | '2-3'; className?: string }) {
   const gridClass = cols === '3-2'
     ? 'lg:grid-cols-5'
     : cols === '2-3'
@@ -1771,19 +1771,20 @@ function LayoutRow({ children, cols = '2', className = '' }: { children: React.R
       {children}
     </div>
   );
-}
+});
 
 
 /* ═══════════════════════════════════════════
    Section wrapper with staggered reveal
    ═══════════════════════════════════════════ */
-function Section({
+const Section = React.memo(function Section({
   children,
   className = '',
   title,
   icon: Icon,
   iconColor = 'text-idm-gold-warm',
   sectionId,
+  skipContentVisibility = false,
 }: {
   children: React.ReactNode;
   className?: string;
@@ -1791,11 +1792,14 @@ function Section({
   icon?: typeof Trophy;
   iconColor?: string;
   sectionId?: string;
+  /** Skip content-visibility for elements that are always visible on load (e.g. hero) or use position:sticky */
+  skipContentVisibility?: boolean;
 }) {
   return (
     <section
       className={className}
       id={sectionId ? `section-${sectionId}` : undefined}
+      style={skipContentVisibility ? undefined : { contentVisibility: 'auto', containIntrinsicSize: '0 600px' }}
     >
       {title && Icon && (
         <div className="flex items-center gap-2 mb-3">
@@ -1807,13 +1811,13 @@ function Section({
       {children}
     </section>
   );
-}
+});
 
 
 /* ═══════════════════════════════════════════
    Loading Skeleton
    ═══════════════════════════════════════════ */
-function CommunityDashboardSkeleton() {
+const CommunityDashboardSkeleton = React.memo(function CommunityDashboardSkeleton() {
   return (
     <div className="space-y-6 animate-pulse">
       <div className="rounded-2xl bg-idm-gold-warm/5 border border-idm-gold-warm/10 p-8">
@@ -1854,7 +1858,7 @@ function CommunityDashboardSkeleton() {
       </div>
     </div>
   );
-}
+});
 
 
 
@@ -1892,22 +1896,22 @@ export function CommunityDashboard() {
 
   // When division changes while viewing a past season, reset to active season
   // (since past seasons are per-division and may not exist for the other division)
-  const handleDivisionChange = (d: DivisionFilter) => {
+  const handleDivisionChange = useCallback((d: DivisionFilter) => {
     setSelectedDivision(d);
     if (selectedSeason) {
       // Reset season when switching divisions
       setSelectedSeason(null);
     }
-  };
+  }, [selectedSeason]);
 
   // Handle season change
-  const handleSeasonChange = (season: SelectedSeason | null) => {
+  const handleSeasonChange = useCallback((season: SelectedSeason | null) => {
     setSelectedSeason(season);
     // If selecting a season for a specific division, auto-switch division filter
     if (season && season.division !== effectiveDivision) {
       setSelectedDivision(season.division);
     }
-  };
+  }, [effectiveDivision]);
 
 
 
@@ -1982,13 +1986,27 @@ export function CommunityDashboard() {
   });
 
   // Player click handler
-  const handlePlayerClick = (player: TopPlayer & { division?: string }, division: 'male' | 'female') => {
+  const handlePlayerClick = useCallback((player: TopPlayer & { division?: string }, division: 'male' | 'female') => {
     setSelectedPlayer({
       ...player,
       division,
       club: clubToString(player.club as Parameters<typeof clubToString>[0]) || undefined,
     });
-  };
+  }, []);
+
+  // Memoized modal callbacks for INP optimization
+  const handleDonate = useCallback(() => setDonationOpen(true), []);
+  const handleRegister = useCallback(() => setRegistrationOpen(true), []);
+  const handleCloseRegistration = useCallback(() => setRegistrationOpen(false), []);
+  const handlePayment = useCallback((div: 'male' | 'female') => {
+    setPaymentDivision(div);
+    setPaymentOpen(true);
+  }, []);
+  const handleClosePayment = useCallback(() => setPaymentOpen(false), []);
+  const handleClubClick = useCallback((club: StatsData['clubs'][0]) => setSelectedClub(club), []);
+  const handleBackToActive = useCallback(() => setSelectedSeason(null), []);
+  const handleClosePlayer = useCallback(() => setSelectedPlayer(null), []);
+  const handleCloseClub = useCallback(() => setSelectedClub(null), []);
 
   return (
     <div className="space-y-4 sm:space-y-6 lg:space-y-8">
@@ -2018,13 +2036,13 @@ export function CommunityDashboard() {
         </div>
       </div>
 
-      {/* ═══ 1. Hero — top of unified surface ═══ */}
-      <Section sectionId="hero">
-        <CommunityHero maleData={maleData} femaleData={femaleData} leagueData={leagueData} onSawer={() => setDonationOpen(true)} onRegister={() => setRegistrationOpen(true)} onPayment={(div) => { setPaymentDivision(div); setPaymentOpen(true); }} />
+      {/* ═══ 1. Hero — top of unified surface (skip content-visibility: always visible on load) ═══ */}
+      <Section sectionId="hero" skipContentVisibility>
+        <CommunityHero maleData={maleData} femaleData={femaleData} leagueData={leagueData} onSawer={handleDonate} onRegister={handleRegister} onPayment={handlePayment} />
       </Section>
 
-      {/* ═══ Marquee Ticker — Live activity feed (full-bleed within surface) ═══ */}
-      <div className="relative z-40 -mx-2 sm:-mx-4 lg:-mx-5 py-2.5 bg-background/90 border-y border-idm-gold-warm/10" style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 48px' }}>
+      {/* ═══ Marquee Ticker — Live activity feed (full-bleed within surface, no content-visibility: always visible) ═══ */}
+      <div className="relative z-40 -mx-2 sm:-mx-4 lg:-mx-5 py-2.5 bg-background/90 border-y border-idm-gold-warm/10">
         <MarqueeTicker maleData={maleData} femaleData={femaleData} leagueData={leagueData} />
       </div>
 
@@ -2045,7 +2063,7 @@ export function CommunityDashboard() {
 
       {/* ═══ 4. Top Saweran ═══ */}
       <Section sectionId="saweran">
-        <TopDonorsWidget onDonate={() => setDonationOpen(true)} statsData={selectedDivision === 'female' ? femaleData : maleData} statsData2={selectedDivision === 'female' ? maleData : femaleData} />
+        <TopDonorsWidget onDonate={handleDonate} statsData={selectedDivision === 'female' ? femaleData : maleData} statsData2={selectedDivision === 'female' ? maleData : femaleData} />
       </Section>
 
       {/* ═══ 4. Season Selector ═══ */}
@@ -2065,7 +2083,7 @@ export function CommunityDashboard() {
       {isViewingPastSeason && selectedSeason ? (
         <HistoricalSeasonView
           season={selectedSeason}
-          onBack={() => setSelectedSeason(null)}
+          onBack={handleBackToActive}
         />
       ) : (
       <>
@@ -2099,7 +2117,7 @@ export function CommunityDashboard() {
               femaleData={femaleData}
               selectedDivision={selectedDivision}
               onPlayerClick={handlePlayerClick}
-              onClubClick={(club) => setSelectedClub(club)}
+              onClubClick={handleClubClick}
               leaderboardSort={leaderboardSort}
               onLeaderboardSortChange={setLeaderboardSort}
               divisionFilter={leaderboardDivisionFilter}
@@ -2142,13 +2160,13 @@ export function CommunityDashboard() {
       {/* ═══ Registration Modal ═══ */}
       <RegistrationModal
         open={registrationOpen}
-        onClose={() => setRegistrationOpen(false)}
+        onClose={handleCloseRegistration}
       />
 
       {/* ═══ Payment Modal ═══ */}
       <PaymentModal
         open={paymentOpen}
-        onClose={() => setPaymentOpen(false)}
+        onClose={handleClosePayment}
         division={paymentDivision}
       />
 
@@ -2156,7 +2174,7 @@ export function CommunityDashboard() {
       {selectedPlayer && (
         <PlayerProfile
           player={selectedPlayer}
-          onClose={() => setSelectedPlayer(null)}
+          onClose={handleClosePlayer}
           rank={((selectedPlayer.division === 'female' ? femaleData : maleData)?.topPlayers?.findIndex(p => p.id === selectedPlayer.id) ?? -1) + 1}
           skinMap={(selectedPlayer.division === 'female' ? femaleData : maleData)?.skinMap}
         />
@@ -2164,7 +2182,7 @@ export function CommunityDashboard() {
       {selectedClub && (
         <ClubProfile
           club={selectedClub}
-          onClose={() => setSelectedClub(null)}
+          onClose={handleCloseClub}
           onPlayerClick={(p) => {
             setSelectedPlayer({
               id: p.id,
