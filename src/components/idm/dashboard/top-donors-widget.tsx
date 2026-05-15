@@ -9,6 +9,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useDivisionTheme } from '@/hooks/use-division-theme';
 import { formatCurrency } from '@/lib/utils';
 import { getSawerTier } from '@/lib/skin-utils';
+import React, { useState, useMemo } from 'react';
 
 /* ─── Types ─── */
 interface TopDonor {
@@ -199,6 +200,7 @@ function EmptyDonorsState({ onDonate }: { onDonate: () => void }) {
 
 export function TopDonorsWidget({ onDonate, statsData, statsData2 }: TopDonorsWidgetProps) {
   const dt = useDivisionTheme();
+  const [saweranDivision, setSaweranDivision] = useState<'all' | 'male' | 'female'>('all');
 
   // Use weeklyTopDonors from stats if provided, otherwise fall back to all-time API
   const { data, isLoading } = useQuery<TopDonorsData>({
@@ -213,7 +215,6 @@ export function TopDonorsWidget({ onDonate, statsData, statsData2 }: TopDonorsWi
   });
 
   const hasAnyWeekly = (statsData?.weeklyTopDonors?.length ?? 0) > 0 || (statsData2?.weeklyTopDonors?.length ?? 0) > 0;
-  if (isLoading && !hasAnyWeekly) return <LoadingSkeleton />;
 
   // Merge weeklyTopDonors from both divisions — track per-division amounts
   const donorMap = new Map<string, { donorName: string; totalAmount: number; donationCount: number; maleAmount: number; femaleAmount: number }>();
@@ -252,12 +253,12 @@ export function TopDonorsWidget({ onDonate, statsData, statsData2 }: TopDonorsWi
   const div1 = statsData?.activeTournament?.division || 'male';
   const div2 = statsData2?.activeTournament?.division || 'female';
 
-  let donors: DivisionDonor[];
+  let allDonors: DivisionDonor[];
 
   if (hasWeekly) {
     if (weekly1?.length) mergeWeeklyDonors(weekly1, div1 as 'male' | 'female');
     if (weekly2?.length) mergeWeeklyDonors(weekly2, div2 as 'male' | 'female');
-    donors = Array.from(donorMap.values())
+    allDonors = Array.from(donorMap.values())
       .sort((a, b) => b.totalAmount - a.totalAmount)
       .map(d => ({
         donorName: d.donorName,
@@ -273,7 +274,7 @@ export function TopDonorsWidget({ onDonate, statsData, statsData2 }: TopDonorsWi
         ],
       }));
   } else {
-    donors = (data?.donors ?? []).map(d => ({
+    allDonors = (data?.donors ?? []).map(d => ({
       ...d,
       maleAmount: d.totalAmount,
       femaleAmount: 0,
@@ -281,16 +282,41 @@ export function TopDonorsWidget({ onDonate, statsData, statsData2 }: TopDonorsWi
     }));
   }
 
+  // Filter and sort donors based on selected division tab
+  const donors = saweranDivision === 'all'
+    ? [...allDonors].sort((a, b) => b.totalAmount - a.totalAmount)
+    : saweranDivision === 'male'
+      ? allDonors.filter(d => d.maleAmount > 0).sort((a, b) => b.maleAmount - a.maleAmount)
+      : allDonors.filter(d => d.femaleAmount > 0).sort((a, b) => b.femaleAmount - a.femaleAmount);
+
+  // Early return for loading/empty — AFTER hooks and computations
+  if (isLoading && !hasAnyWeekly) return <LoadingSkeleton />;
+
+  // Compute display amount based on selected tab
+  const getDisplayAmount = (d: DivisionDonor): number => {
+    if (saweranDivision === 'male') return d.maleAmount;
+    if (saweranDivision === 'female') return d.femaleAmount;
+    return d.totalAmount;
+  };
+
   const weekNum = statsData?.activeTournament?.weekNumber || statsData2?.activeTournament?.weekNumber;
   const weekLabel = hasWeekly && weekNum ? `Week ${weekNum}` : '';
 
   // Calculate totals per division
-  const totalMale = donors.reduce((s, d) => s + d.maleAmount, 0);
-  const totalFemale = donors.reduce((s, d) => s + d.femaleAmount, 0);
+  const totalMale = allDonors.reduce((s, d) => s + d.maleAmount, 0);
+  const totalFemale = allDonors.reduce((s, d) => s + d.femaleAmount, 0);
   const totalAmount = totalMale + totalFemale;
-  const totalDonors = hasWeekly ? donors.length : (apiSummary?.totalDonors ?? 0);
+  const totalDonors = hasWeekly ? allDonors.length : (apiSummary?.totalDonors ?? 0);
 
-  if (donors.length === 0) return <EmptyDonorsState onDonate={onDonate} />;
+  // Division-specific totals for header
+  const displayedTotal = saweranDivision === 'male' ? totalMale : saweranDivision === 'female' ? totalFemale : totalAmount;
+  const displayedDonorCount = saweranDivision === 'male'
+    ? allDonors.filter(d => d.maleAmount > 0).length
+    : saweranDivision === 'female'
+      ? allDonors.filter(d => d.femaleAmount > 0).length
+      : totalDonors;
+
+  if (allDonors.length === 0) return <EmptyDonorsState onDonate={onDonate} />;
 
   return (
     <Card className="overflow-hidden relative glassmorphism-donor-card h-full flex flex-col">
@@ -304,63 +330,64 @@ export function TopDonorsWidget({ onDonate, statsData, statsData2 }: TopDonorsWi
             Top Saweran
             {weekLabel && <Badge className="text-[8px] px-1.5 py-0 h-4 bg-idm-gold-warm/15 text-idm-gold-warm border-0 font-semibold">{weekLabel}</Badge>}
           </CardTitle>
-          {totalAmount > 0 && (
+          {displayedTotal > 0 && (
             <div className="text-right">
               <p className={`text-xs font-bold ${dt.neonGradient}`}>
-                {formatRupiah(totalAmount)}
+                {formatRupiah(displayedTotal)}
               </p>
               <p className="text-[9px] text-muted-foreground/60">
-                dari {totalDonors} penyawer
+                dari {displayedDonorCount} penyawer
               </p>
-              {/* Desktop: per-division breakdown on the right under total */}
-              {totalAmount > 0 && (totalMale > 0 || totalFemale > 0) && (
-                <div className="hidden sm:flex items-center gap-2 mt-0.5 justify-end">
-                  {totalMale > 0 && (
-                    <span className="text-[9px] text-idm-male-light/80">
-                      ♂ {formatRupiahShort(totalMale)}
-                    </span>
-                  )}
-                  {totalFemale > 0 && (
-                    <span className="text-[9px] text-idm-female-light/80">
-                      ♀ {formatRupiahShort(totalFemale)}
-                    </span>
-                  )}
-                </div>
+            </div>
+          )}
+        </div>
+
+        {/* Division tabs + per-division breakdown */}
+        <div className="flex items-center justify-between gap-2 mt-1">
+          {/* Division pills */}
+          <div className="flex items-center gap-1 p-0.5 rounded-lg bg-idm-gold-warm/5 border border-idm-gold-warm/10">
+            {([
+              { key: 'all' as const, label: 'Semua' },
+              { key: 'male' as const, label: '♂ Male' },
+              { key: 'female' as const, label: '♀ Female' },
+            ]).map(div => (
+              <button
+                key={div.key}
+                onClick={() => setSaweranDivision(div.key)}
+                className={`px-2 py-1 rounded-md text-[9px] font-bold uppercase tracking-wider transition-all whitespace-nowrap ${
+                  saweranDivision === div.key
+                    ? 'bg-idm-gold-warm/15 text-idm-gold-warm shadow-sm shadow-idm-gold-warm/10 border border-idm-gold-warm/25'
+                    : 'text-muted-foreground/70 hover:text-foreground border border-transparent hover:bg-muted/40'
+                }`}
+              >
+                {div.label}
+              </button>
+            ))}
+          </div>
+          {/* Per-division amounts (when Semua tab) */}
+          {saweranDivision === 'all' && totalAmount > 0 && (totalMale > 0 || totalFemale > 0) && (
+            <div className="hidden sm:flex items-center gap-2 shrink-0">
+              {totalMale > 0 && (
+                <span className="text-[9px] text-idm-male-light/80">
+                  ♂ {formatRupiahShort(totalMale)}
+                </span>
+              )}
+              {totalFemale > 0 && (
+                <span className="text-[9px] text-idm-female-light/80">
+                  ♀ {formatRupiahShort(totalFemale)}
+                </span>
               )}
             </div>
           )}
         </div>
-        {/* Mobile: per-division breakdown below title */}
-        {totalAmount > 0 && (totalMale > 0 || totalFemale > 0) && (
-          <div className="flex sm:hidden items-center gap-2 mt-1">
-            {totalMale > 0 && (
-              <div className="flex items-center gap-1">
-                <span className="inline-flex items-center px-1.5 py-0 rounded text-[8px] font-bold uppercase tracking-wider border bg-idm-male/10 text-idm-male-light border-idm-male/30">
-                  ♂ Male
-                </span>
-                <span className="text-[10px] font-semibold text-idm-male-light">
-                  {formatRupiahShort(totalMale)}
-                </span>
-              </div>
-            )}
-            {totalFemale > 0 && (
-              <div className="flex items-center gap-1">
-                <span className="inline-flex items-center px-1.5 py-0 rounded text-[8px] font-bold uppercase tracking-wider border bg-idm-female/10 text-idm-female-light border-idm-female/30">
-                  ♀ Female
-                </span>
-                <span className="text-[10px] font-semibold text-idm-female-light">
-                  {formatRupiahShort(totalFemale)}
-                </span>
-              </div>
-            )}
-          </div>
-        )}
       </CardHeader>
 
       <CardContent className="pt-0">
         {/* Donor list */}
         <div className="max-h-80 lg:max-h-64 overflow-y-auto overflow-x-hidden custom-scrollbar space-y-1 pr-1 flex-1">
-          {donors.map((donor, i) => (
+          {donors.length > 0 ? donors.map((donor, i) => {
+            const displayAmt = getDisplayAmount(donor);
+            return (
             <div
               key={donor.donorName}
               className="donor-row-enter p-2.5 rounded-lg hover:bg-idm-gold-warm/5 transition-colors group"
@@ -384,13 +411,13 @@ export function TopDonorsWidget({ onDonate, statsData, statsData2 }: TopDonorsWi
                   }`}>
                     {donor.donorName || 'Anonymous'}
                   </span>
-                  {/* Division badges */}
-                  {donor.divisions.map(div => (
+                  {/* Division badges — show relevant ones based on tab */}
+                  {(saweranDivision === 'all' ? donor.divisions : [saweranDivision]).filter(div => div === 'male' ? donor.maleAmount > 0 : donor.femaleAmount > 0).map(div => (
                     <DivisionBadge key={div} division={div} />
                   ))}
                   {/* Sawer tier badge */}
                   {(() => {
-                    const sawerTier = donor.latestType === 'weekly' ? getSawerTier(donor.totalAmount) : null;
+                    const sawerTier = donor.latestType === 'weekly' ? getSawerTier(displayAmt) : null;
                     if (!sawerTier) return null;
                     const tierColors: Record<string, { bg: string; border: string; text: string }> = {
                       sawer_diamond: { bg: 'rgba(87,181,255,0.15)', border: 'rgba(87,181,255,0.4)', text: 'text-idm-male-light' },
@@ -416,13 +443,13 @@ export function TopDonorsWidget({ onDonate, statsData, statsData2 }: TopDonorsWi
                 {/* Total amount */}
                 <div className="text-right shrink-0">
                   <span className="text-xs font-bold text-idm-gold-warm donor-amount">
-                    {formatRupiah(donor.totalAmount)}
+                    {formatRupiah(displayAmt)}
                   </span>
                 </div>
               </div>
 
-              {/* Row 2: Per-division breakdown */}
-              {(donor.maleAmount > 0 || donor.femaleAmount > 0) && donor.divisions.length > 0 && (
+              {/* Row 2: Per-division breakdown (only on Semua tab or when donor has both divisions) */}
+              {saweranDivision === 'all' && (donor.maleAmount > 0 || donor.femaleAmount > 0) && donor.divisions.length > 0 && (
                 <div className="flex items-center gap-2 mt-1 ml-8">
                   {donor.maleAmount > 0 && (
                     <span className="text-[10px] text-idm-male-light/70">
@@ -449,7 +476,14 @@ export function TopDonorsWidget({ onDonate, statsData, statsData2 }: TopDonorsWi
                 </div>
               )}
             </div>
-          ))}
+            );
+          }) : (
+            <div className="py-6 text-center">
+              <p className="text-xs text-muted-foreground/50">
+                Belum ada penyawer divisi {saweranDivision === 'male' ? 'Male' : 'Female'}
+              </p>
+            </div>
+          )}
         </div>
 
         {/* CTA button — compact & centered */}
