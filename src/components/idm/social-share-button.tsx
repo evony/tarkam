@@ -179,21 +179,21 @@ export function SocialShareButton({ playerGamertag, playerId, className = '' }: 
     <div className="relative" ref={pickerRef}>
       <button
         onClick={handleClick}
-        className={`inline-flex items-center justify-center w-8 h-8 rounded-lg transition-all duration-200 cursor-pointer ${
+        className={`inline-flex items-center justify-center w-9 h-9 rounded-lg transition-all duration-200 cursor-pointer ${
           copied
             ? 'bg-green-500/15 text-green-400'
             : showPicker
-            ? 'bg-idm-gold-warm/15 text-idm-gold-warm'
-            : 'bg-muted/30 text-muted-foreground hover:text-idm-gold-warm hover:bg-idm-gold-warm/10'
+            ? 'bg-idm-gold-warm/20 text-idm-gold-warm'
+            : 'bg-idm-gold-warm/10 text-idm-gold-warm/80 hover:text-idm-gold-warm hover:bg-idm-gold-warm/20'
         } ${className}`}
         title="Bagikan profil"
         aria-label="Bagikan profil"
         aria-expanded={showPicker}
       >
         {copied ? (
-          <Check className="w-3.5 h-3.5" />
+          <Check className="w-4 h-4" />
         ) : (
-          <Share2 className="w-3.5 h-3.5" />
+          <Share2 className="w-4 h-4" />
         )}
       </button>
 
