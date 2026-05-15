@@ -80,6 +80,9 @@ import { AnimatedSection } from '../landing/shared';
 // Import dashboard shared components for bracket-style hasil section
 import { SectionCard, MatchRow } from '../dashboard/shared';
 
+// Import SharePopup for social sharing
+import { SharePopup } from '../social-share-button';
+
 
 /* ═══════════════════════════════════════════
    Internal Tab Bar — reusable within sections
@@ -357,6 +360,14 @@ const ReigningChampionPlaque = React.memo(function ReigningChampionPlaque({
             <Crown className={`w-3 h-3 ${ct.neonText}`} />
           </div>
           <span className="text-[10px] font-bold uppercase tracking-wider text-idm-gold-warm">Reigning Champion</span>
+          <SharePopup
+            shareUrl={typeof window !== 'undefined' ? `${window.location.origin}/?view=champion` : ''}
+            title="Bagikan Juara"
+            subtitle="Reigning Champion"
+            shareText="Lihat juara Tarkam IDM!"
+            buttonLabel="Bagikan juara"
+            size="sm"
+          />
           {seasonNumber > 0 ? (
             <Badge className="bg-idm-gold-warm/15 text-idm-gold-warm border border-idm-gold-warm/25 ml-auto text-[9px] font-bold">
               <Crown className="w-2.5 h-2.5 mr-0.5" />S{seasonNumber}
@@ -1072,6 +1083,14 @@ const BracketHasilSection = React.memo(function BracketHasilSection({
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
           }}>Hasil Pertandingan</h3>
+          <SharePopup
+            shareUrl={typeof window !== 'undefined' ? `${window.location.origin}/?view=hasil` : ''}
+            title="Bagikan Hasil"
+            subtitle="Hasil Pertandingan"
+            shareText="Lihat hasil pertandingan Tarkam IDM!"
+            buttonLabel="Bagikan hasil"
+            size="sm"
+          />
         </div>
 
         {/* Division pills — compact, right-aligned (same style as Champion) */}
@@ -2013,6 +2032,23 @@ export function CommunityDashboard() {
   const handleCloseClub = useCallback(() => setSelectedClub(null), []);
   const handleClubClick = useCallback((club: StatsData['clubs'][0]) => setSelectedClub(club), []);
   const handleBackToActive = useCallback(() => setSelectedSeason(null), []);
+
+  // Listen for deep-link club open events (from ?view=club&name=XXX URL param)
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const { name } = (e as CustomEvent).detail || {};
+      if (!name) return;
+      // Find club in already-loaded data
+      const allClubs = [
+        ...(maleData?.clubs || []),
+        ...(femaleData?.clubs || []),
+      ];
+      const club = allClubs.find(c => c.name.toLowerCase() === name.toLowerCase());
+      if (club) setSelectedClub(club);
+    };
+    window.addEventListener('tarkam:open-club', handler);
+    return () => window.removeEventListener('tarkam:open-club', handler);
+  }, [maleData, femaleData]);
 
   return (
     <div className="space-y-4 sm:space-y-6 lg:space-y-8">

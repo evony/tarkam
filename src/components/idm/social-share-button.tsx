@@ -1,13 +1,28 @@
 'use client';
 
-import { Share2, Check, X, MessageCircle, Send } from 'lucide-react';
-import { useState, useCallback, useEffect, useRef } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
+import { Share2, Check, X } from 'lucide-react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
-interface SocialShareButtonProps {
-  playerGamertag: string;
-  playerId: string;
+/* -------------------------------------------------------------------------- */
+/*  SharePopup — generic social share popup for any content type              */
+/* -------------------------------------------------------------------------- */
+
+interface SharePopupProps {
+  /** The URL to share */
+  shareUrl: string;
+  /** Title shown in the popup header, e.g. "Bagikan Profil" or "Bagikan Bracket" */
+  title: string;
+  /** Subtitle shown below title, e.g. "Profil PlayerX" or "Bracket Male Division" */
+  subtitle?: React.ReactNode;
+  /** The text to include in share messages */
+  shareText: string;
+  /** Label for the trigger button aria-label and title */
+  buttonLabel?: string;
+  /** Size variant: 'sm' for inline compact, 'md' for default */
+  size?: 'sm' | 'md';
+  /** Additional CSS classes for the trigger button */
   className?: string;
 }
 
@@ -27,10 +42,6 @@ function FacebookIcon({ className = '' }: { className?: string }) {
   );
 }
 
-function TelegramIcon({ className = '' }: { className?: string }) {
-  return null; // removed — replaced by Instagram
-}
-
 function InstagramIcon({ className = '' }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" className={className} fill="currentColor">
@@ -47,21 +58,20 @@ function TwitterIcon({ className = '' }: { className?: string }) {
   );
 }
 
-/**
- * Social share button for player profiles.
- * Shows a social media picker popup with WhatsApp, Facebook, Telegram, X, Copy Link.
- * Falls back to Web Share API on mobile when available.
- */
-export function SocialShareButton({ playerGamertag, playerId, className = '' }: SocialShareButtonProps) {
+export function SharePopup({
+  shareUrl,
+  title,
+  subtitle,
+  shareText,
+  buttonLabel = 'Bagikan',
+  size = 'md',
+  className = '',
+}: SharePopupProps) {
   const [showPicker, setShowPicker] = useState(false);
   const [copied, setCopied] = useState(false);
   const pickerRef = useRef<HTMLDivElement>(null);
 
-  // Build the player stats URL
-  const playerUrl = typeof window !== 'undefined'
-    ? `${window.location.origin}/?player=${encodeURIComponent(playerId)}`
-    : '';
-  const shareText = `Lihat profil ${playerGamertag} di Tarkam IDM!`;
+  const isSm = size === 'sm';
 
   // Close picker on outside click
   useEffect(() => {
@@ -79,31 +89,30 @@ export function SocialShareButton({ playerGamertag, playerId, className = '' }: 
     if (!navigator.share) return false;
     try {
       await navigator.share({
-        title: `${playerGamertag} — Tarkam IDM Profile`,
+        title,
         text: shareText,
-        url: playerUrl,
+        url: shareUrl,
       });
       setShowPicker(false);
       return true;
     } catch {
       return false;
     }
-  }, [playerGamertag, playerUrl, shareText]);
+  }, [title, shareUrl, shareText]);
 
   const handleClick = useCallback(() => {
-    // Always show custom social picker (includes Instagram which native share sheet lacks)
     setShowPicker(prev => !prev);
   }, []);
 
   const copyLink = useCallback(async () => {
     try {
-      await navigator.clipboard.writeText(playerUrl);
+      await navigator.clipboard.writeText(shareUrl);
       setCopied(true);
       setTimeout(() => { setCopied(false); setShowPicker(false); }, 1500);
     } catch {
       // Fallback: textarea copy
       const ta = document.createElement('textarea');
-      ta.value = playerUrl;
+      ta.value = shareUrl;
       document.body.appendChild(ta);
       ta.select();
       document.execCommand('copy');
@@ -111,14 +120,14 @@ export function SocialShareButton({ playerGamertag, playerId, className = '' }: 
       setCopied(true);
       setTimeout(() => { setCopied(false); setShowPicker(false); }, 1500);
     }
-  }, [playerUrl]);
+  }, [shareUrl]);
 
   const openShareLink = useCallback((url: string) => {
     // Instagram has no share URL — copy link first, then open app
     if (url === 'instagram') {
-      navigator.clipboard.writeText(playerUrl).catch(() => {
+      navigator.clipboard.writeText(shareUrl).catch(() => {
         const ta = document.createElement('textarea');
-        ta.value = playerUrl;
+        ta.value = shareUrl;
         document.body.appendChild(ta);
         ta.select();
         document.execCommand('copy');
@@ -146,20 +155,20 @@ export function SocialShareButton({ playerGamertag, playerId, className = '' }: 
       window.open(url, '_blank', 'noopener,noreferrer');
     }
     setShowPicker(false);
-  }, [playerUrl]);
+  }, [shareUrl]);
 
   const socialLinks = [
     {
       name: 'WhatsApp',
       icon: <WhatsAppIcon className="w-5 h-5" />,
       color: 'bg-[#25D366] hover:bg-[#20BD5A]',
-      url: `https://wa.me/?text=${encodeURIComponent(shareText + ' ' + playerUrl)}`,
+      url: `https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`,
     },
     {
       name: 'Facebook',
       icon: <FacebookIcon className="w-5 h-5" />,
       color: 'bg-[#1877F2] hover:bg-[#1565D8]',
-      url: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(playerUrl)}&quote=${encodeURIComponent(shareText)}`,
+      url: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`,
     },
     {
       name: 'Instagram',
@@ -171,7 +180,7 @@ export function SocialShareButton({ playerGamertag, playerId, className = '' }: 
       name: 'X / Twitter',
       icon: <TwitterIcon className="w-5 h-5" />,
       color: 'bg-foreground hover:bg-foreground/80',
-      url: `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(playerUrl)}`,
+      url: `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`,
     },
   ];
 
@@ -179,21 +188,23 @@ export function SocialShareButton({ playerGamertag, playerId, className = '' }: 
     <div className="relative" ref={pickerRef}>
       <button
         onClick={handleClick}
-        className={`inline-flex items-center justify-center w-9 h-9 rounded-lg transition-all duration-200 cursor-pointer ${
+        className={`inline-flex items-center justify-center rounded-lg transition-all duration-200 cursor-pointer ${
+          isSm ? 'w-7 h-7' : 'w-9 h-9'
+        } ${
           copied
             ? 'bg-green-500/15 text-green-400'
             : showPicker
             ? 'bg-idm-gold-warm/20 text-idm-gold-warm'
             : 'bg-idm-gold-warm/10 text-idm-gold-warm/80 hover:text-idm-gold-warm hover:bg-idm-gold-warm/20'
         } ${className}`}
-        title="Bagikan profil"
-        aria-label="Bagikan profil"
+        title={buttonLabel}
+        aria-label={buttonLabel}
         aria-expanded={showPicker}
       >
         {copied ? (
-          <Check className="w-4 h-4" />
+          <Check className={isSm ? 'w-3.5 h-3.5' : 'w-4 h-4'} />
         ) : (
-          <Share2 className="w-4 h-4" />
+          <Share2 className={isSm ? 'w-3.5 h-3.5' : 'w-4 h-4'} />
         )}
       </button>
 
@@ -220,7 +231,7 @@ export function SocialShareButton({ playerGamertag, playerId, className = '' }: 
               <div className="flex items-center justify-between px-4 py-3 border-b border-idm-gold-warm/10 bg-idm-gold-warm/[0.03]">
                 <div className="flex items-center gap-2">
                   <Share2 className="w-4 h-4 text-idm-gold-warm" />
-                  <span className="text-sm font-bold text-foreground">Bagikan Profil</span>
+                  <span className="text-sm font-bold text-foreground">{title}</span>
                 </div>
                 <button
                   onClick={() => setShowPicker(false)}
@@ -231,12 +242,14 @@ export function SocialShareButton({ playerGamertag, playerId, className = '' }: 
                 </button>
               </div>
 
-              {/* Player name */}
-              <div className="px-4 pt-3 pb-2">
-                <p className="text-xs text-muted-foreground">
-                  Profil <span className="font-semibold text-idm-gold-warm">{playerGamertag}</span>
-                </p>
-              </div>
+              {/* Subtitle */}
+              {subtitle && (
+                <div className="px-4 pt-3 pb-2">
+                  <p className="text-xs text-muted-foreground">
+                    {subtitle}
+                  </p>
+                </div>
+              )}
 
               {/* Social buttons grid */}
               <div className="px-4 pb-3 grid grid-cols-2 gap-2">
@@ -280,7 +293,7 @@ export function SocialShareButton({ playerGamertag, playerId, className = '' }: 
               </div>
 
               {/* More apps via native share — only on mobile where navigator.share exists */}
-              {typeof navigator !== 'undefined' && navigator.share && (
+              {typeof navigator !== 'undefined' && 'share' in navigator && (
                 <div className="px-4 pb-4">
                   <button
                     onClick={async () => {
@@ -300,5 +313,39 @@ export function SocialShareButton({ playerGamertag, playerId, className = '' }: 
         document.body
       )}
     </div>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/*  SocialShareButton — backward-compatible player-profile wrapper             */
+/* -------------------------------------------------------------------------- */
+
+interface SocialShareButtonProps {
+  playerGamertag: string;
+  playerId: string;
+  className?: string;
+}
+
+/**
+ * Social share button for player profiles.
+ * Backward-compatible wrapper around SharePopup.
+ */
+export function SocialShareButton({ playerGamertag, playerId, className }: SocialShareButtonProps) {
+  const playerUrl = typeof window !== 'undefined'
+    ? `${window.location.origin}/?player=${encodeURIComponent(playerId)}`
+    : '';
+
+  const shareText = `Lihat profil ${playerGamertag} di Tarkam IDM!`;
+
+  return (
+    <SharePopup
+      shareUrl={playerUrl}
+      title="Bagikan Profil"
+      subtitle={<>Profil <span className="font-semibold text-idm-gold-warm">{playerGamertag}</span></>}
+      shareText={shareText}
+      buttonLabel="Bagikan profil"
+      size="md"
+      className={className}
+    />
   );
 }

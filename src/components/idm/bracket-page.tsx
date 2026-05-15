@@ -16,6 +16,7 @@ import { useAppStore } from '@/lib/store';
 import { BracketView } from './bracket-view';
 import { MatchDetailModal } from './match-detail-modal';
 import { SectionCard, MatchRow } from './dashboard/shared';
+import { SharePopup } from './social-share-button';
 import { SponsorBanner, PresentedBy, SponsoredPrizes } from './ui/sponsor-banner';
 
 
@@ -290,8 +291,16 @@ export function BracketPage() {
               <p className="text-[10px] text-muted-foreground">Bagan pertandingan & hasil</p>
             </div>
           </div>
-          {/* Both division badges */}
+          {/* Both division badges + Share button */}
           <div className="flex items-center gap-1.5 ml-auto">
+            <SharePopup
+              shareUrl={typeof window !== 'undefined' ? `${window.location.origin}/?view=bracket` : ''}
+              title="Bagikan Bracket"
+              subtitle="Bracket Turnamen"
+              shareText="Lihat bracket turnamen Tarkam IDM!"
+              buttonLabel="Bagikan bracket"
+              size="sm"
+            />
             <Badge className="bg-idm-male/15 text-idm-male border-idm-male/25 text-[9px] border">🕺 Male</Badge>
             <Badge className="bg-idm-female/15 text-idm-female border-idm-female/25 text-[9px] border">💃 Female</Badge>
           </div>

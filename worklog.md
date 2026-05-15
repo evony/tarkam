@@ -568,3 +568,102 @@ Stage Summary:
 - Fix #3: content-visibility: auto on 7 off-screen sections, skipped on hero (always visible)
 - Fix #4: AnimatedNumber now uses ref-based DOM updates instead of setState — eliminates ~30-60 re-renders per number animation
 - Fix #6: TopDonorsWidget donor merge logic memoized — only recomputes when donor data changes
+
+---
+Task ID: 1
+Agent: Refactor Agent
+Task: Refactor SocialShareButton into a Generic Share Component (SharePopup + backward-compatible SocialShareButton)
+
+Work Log:
+- Read worklog.md and existing social-share-button.tsx (304 lines) before starting
+- Confirmed player-profile.tsx imports: `import { SocialShareButton } from './social-share-button'` with props `playerGamertag` and `playerId`
+- Refactored social-share-button.tsx to export TWO components:
+  1. `SharePopup` — generic share popup accepting: shareUrl, title, subtitle, shareText, buttonLabel, size, className
+  2. `SocialShareButton` — backward-compatible wrapper using SharePopup internally (same props: playerGamertag, playerId, className)
+- Removed unused imports: `MessageCircle`, `Send` (old Telegram leftovers)
+- Removed dead `TelegramIcon` component (returned null)
+- Added `size` prop with 'sm' | 'md' variants:
+  - md (default): w-9 h-9 button, Share2/Check icon w-4 h-4
+  - sm: w-7 h-7 button, Share2/Check icon w-3.5 h-3.5
+- Changed `subtitle` type from `string` to `React.ReactNode` to support JSX content (player name with gold styling)
+- Fixed TS2774: Changed `navigator.share` check to `'share' in navigator` (avoids "always truthy" error)
+- All social links, Instagram flow, openShareLink logic, native share, portal rendering, and animations preserved identically
+- player-profile.tsx import path and usage unchanged
+
+Verification:
+- `npx tsc --noEmit`: passed (zero errors)
+
+Stage Summary:
+- SharePopup is now reusable for any content type (brackets, results, standings, champions, clubs, etc.)
+- SocialShareButton fully backward-compatible — no changes needed in player-profile.tsx
+- Dead code removed (TelegramIcon, unused MessageCircle/Send imports)
+- Size variants added for compact inline use (sm) and default (md)
+
+---
+Task ID: 2-6
+Agent: Share Buttons Agent
+Task: Add Share Buttons to Bracket Page, Hasil Section, Peringkat, Champions, and Club Profile
+
+Work Log:
+- Confirmed SharePopup component already exists and is exported from social-share-button.tsx (created by Task 1 refactor agent)
+- Added SharePopup to 5 sections across 4 files:
+
+1. **bracket-page.tsx** — Added SharePopup in page header row (before division badges at ml-auto position)
+   - shareUrl: `/?view=bracket`, title: "Bagikan Bracket", subtitle: "Bracket Turnamen", shareText: "Lihat bracket turnamen Tarkam IDM!", size: "sm"
+
+2. **community-dashboard/index.tsx (BracketHasilSection)** — Added SharePopup after "Hasil Pertandingan" title text
+   - shareUrl: `/?view=hasil`, title: "Bagikan Hasil", subtitle: "Hasil Pertandingan", shareText: "Lihat hasil pertandingan Tarkam IDM!", size: "sm"
+
+3. **community-leaderboard.tsx (PeringkatHeader)** — Added SharePopup after "Peringkat" gradient text in title row
+   - shareUrl: `/?view=peringkat`, title: "Bagikan Peringkat", subtitle: "Peringkat Pemain", shareText: "Lihat peringkat pemain Tarkam IDM!", size: "sm"
+
+4. **community-dashboard/index.tsx (ReigningChampionPlaque)** — Added SharePopup after "Reigning Champion" label in plaque header
+   - shareUrl: `/?view=champion`, title: "Bagikan Juara", subtitle: "Reigning Champion", shareText: "Lihat juara Tarkam IDM!", size: "sm"
+
+5. **club-profile.tsx** — Added SharePopup in banner top-right corner (absolute positioned, z-20)
+   - shareUrl: `/?view=club&name=<clubName>`, title: "Bagikan Klub", subtitle with club name in gold, shareText: "Lihat klub {club.name} di Tarkam IDM!", size: "sm"
+
+Verification:
+- `npx tsc --noEmit`: zero errors
+- `bun run lint`: zero errors
+- Dev server running (GET / 200)
+
+Stage Summary:
+- 5 SharePopup buttons added across 4 files
+- All use size="sm" for compact inline placement
+- All share URLs use window.location.origin for dynamic origin detection
+- Club profile share URL includes club name as query parameter
+- No existing functionality broken
+
+---
+Task ID: 7
+Agent: Main
+Task: Add URL parameter handling for deep links (?view=bracket, ?view=peringkat, etc.) + club event listener
+
+Work Log:
+- Added ?view= deep link handler in landing-page.tsx (after existing ?player= handler)
+- Deep link behaviors:
+  - ?view=bracket → setCurrentView('bracket')
+  - ?view=peringkat → navigate to community + scroll to #section-rankings
+  - ?view=hasil → navigate to community + scroll to #section-matches
+  - ?view=champion → navigate to community + scroll to #section-champions
+  - ?view=club&name=XXX → navigate to community + dispatch custom event to open club profile
+- Added tarkam:open-club event listener in community-dashboard/index.tsx
+- Event listener finds club by name in maleData/femaleData and opens ClubProfile modal
+- Uses sharedViewRef to ensure deep link only processed once
+- Cleans URL with history.replaceState after processing
+- Uses queueMicrotask + setTimeout to wait for community dashboard render before scrolling
+
+Verification:
+- npx tsc --noEmit: zero errors
+- bun run lint: zero errors
+- Dev server running normally
+
+Stage Summary:
+- Deep link handling for all share URLs implemented
+- ?view=bracket → Bracket page
+- ?view=peringkat → Community + scroll to rankings
+- ?view=hasil → Community + scroll to matches
+- ?view=champion → Community + scroll to champions
+- ?view=club&name=X → Community + open club profile
+- ?player=X → Player profile modal (already existed)

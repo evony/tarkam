@@ -15,6 +15,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { getAvatarUrl, hashString } from '@/lib/utils';
 import { ClubLogoImage } from '@/components/idm/club-logo-image';
+import { SharePopup } from './social-share-button';
 
 interface ClubProfileProps {
   club: {
@@ -372,6 +373,18 @@ export function ClubProfile({ club, onClose, rank, onPlayerClick }: ClubProfileP
               <ArrowLeft className="w-4 h-4" />
               <span className="text-xs font-semibold">Kembali</span>
             </button>
+
+            {/* Share button — top right */}
+            <div className="absolute top-3 right-3 z-20">
+              <SharePopup
+                shareUrl={typeof window !== 'undefined' ? `${window.location.origin}/?view=club&name=${encodeURIComponent(club.name)}` : ''}
+                title="Bagikan Klub"
+                subtitle={<>Klub <span className="font-semibold text-idm-gold-warm">{club.name}</span></>}
+                shareText={`Lihat klub ${club.name} di Tarkam IDM!`}
+                buttonLabel="Bagikan klub"
+                size="sm"
+              />
+            </div>
 
             {/* Rank Badge — top left, below back button */}
             {rank && rank <= 3 && (

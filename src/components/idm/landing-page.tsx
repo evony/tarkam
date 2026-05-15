@@ -519,6 +519,56 @@ export function LandingPage() {
       .catch(() => {});
   }, [maleData, femaleData]);
 
+  /* Handle shared view deep links — ?view=bracket, ?view=peringkat, ?view=hasil, ?view=champion, ?view=club
+     Reads URL param once on mount, navigates to the correct view/section. */
+  const sharedViewRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (sharedViewRef.current) return; // already processed
+    const params = new URLSearchParams(window.location.search);
+    const view = params.get('view');
+    if (!view) return;
+    sharedViewRef.current = view;
+    window.history.replaceState({}, '', window.location.pathname);
+
+    // Navigate based on view type
+    switch (view) {
+      case 'bracket':
+        queueMicrotask(() => setCurrentView('bracket'));
+        break;
+      case 'peringkat':
+      case 'hasil':
+      case 'champion':
+        // Navigate to community dashboard, then scroll to the section
+        queueMicrotask(() => {
+          setCurrentView('community');
+          // Use setTimeout to wait for the community dashboard to render
+          setTimeout(() => {
+            const sectionId = view === 'peringkat' ? 'section-rankings'
+              : view === 'hasil' ? 'section-matches'
+              : 'section-champions';
+            const el = document.getElementById(sectionId);
+            if (el) {
+              el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+          }, 500);
+        });
+        break;
+      case 'club': {
+        const clubName = params.get('name');
+        if (clubName) {
+          queueMicrotask(() => {
+            setCurrentView('community');
+            setTimeout(() => {
+              // Trigger club profile opening via custom event
+              window.dispatchEvent(new CustomEvent('tarkam:open-club', { detail: { name: clubName } }));
+            }, 500);
+          });
+        }
+        break;
+      }
+    }
+  }, [setCurrentView]);
+
   useSwipeNavigation();
   useScrollReveal();
 

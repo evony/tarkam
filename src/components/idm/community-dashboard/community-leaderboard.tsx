@@ -22,6 +22,7 @@ import { getDivisionTheme } from '@/hooks/use-division-theme';
 import { useCommunityTheme } from '@/hooks/use-community-theme';
 import { useAppStore } from '@/lib/store';
 import type { StatsData, TopPlayer } from '@/types/stats';
+import { SharePopup } from '../social-share-button';
 
 /* ═══════════════════════════════════════════════════════
    Tarkam Club type — from /api/clubs/leaderboard?type=tarkam
@@ -443,6 +444,14 @@ export const PeringkatHeader = React.memo(function PeringkatHeader({
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
         }}>Peringkat</h3>
+        <SharePopup
+          shareUrl={typeof window !== 'undefined' ? `${window.location.origin}/?view=peringkat` : ''}
+          title="Bagikan Peringkat"
+          subtitle="Peringkat Pemain"
+          shareText="Lihat peringkat pemain Tarkam IDM!"
+          buttonLabel="Bagikan peringkat"
+          size="sm"
+        />
       </div>
 
       {/* Filter controls — scrollable on mobile, inline on desktop */}
