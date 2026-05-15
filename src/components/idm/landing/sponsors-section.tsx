@@ -230,7 +230,7 @@ function SponsorCarousel({ sponsors }: { sponsors: Sponsor[] }) {
               key={i}
               onClick={() => { goTo(i); setIsPaused(true); if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current); pauseTimerRef.current = setTimeout(() => setIsPaused(false), 6000); }}
               aria-label={`Go to sponsor ${i + 1}`}
-              className={`transition-all duration-300 rounded-full cursor-pointer ${
+              className={`carousel-dot transition-all duration-300 rounded-full cursor-pointer ${
                 i === activeIndex
                   ? 'w-4 h-1 bg-idm-gold-warm shadow-[0_0_4px_rgba(212,168,83,0.4)]'
                   : 'w-1 h-1 bg-idm-gold-warm/25 hover:bg-idm-gold-warm/50'

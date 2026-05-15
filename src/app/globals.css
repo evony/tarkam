@@ -5854,6 +5854,13 @@ html {
     min-width: 44px;
   }
   
+  /* ★ Exception: carousel dots should stay tiny — 
+     the parent container provides the 44px touch area instead */
+  button.carousel-dot {
+    min-height: unset;
+    min-width: unset;
+  }
+  
   .landing-scroll button {
     min-height: 44px;
   }
