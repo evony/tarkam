@@ -879,7 +879,7 @@ export function RegistrationModal({ open, onClose, defaultDivision }: Registrati
                         />
                         <div className="flex-1">
                           <span className="text-xs font-semibold text-foreground group-hover:text-idm-gold-warm transition-colors">Buat akun login?</span>
-                          <p className="text-[10px] text-idm-gold-warm">Dengan membuat akun, kamu bisa login untuk melihat statistik dan progress kamu</p>
+                          <p className="text-[10px] text-idm-gold-warm">Centang untuk membuat akun dengan password. Kamu bisa login untuk melihat statistik dan progress kamu.</p>
                         </div>
                       </label>
 
