@@ -798,16 +798,14 @@
   }
 }
 
-/* Desktop-only donor name pulse */
-@media (min-width: 640px) {
-  .donor-name-pulse {
-    animation: donor-name-neon-pulse 2.5s ease-in-out infinite;
-    contain: layout style;
-  }
-  .donor-name-pulse-gold {
-    animation: donor-name-gold-pulse 2s ease-in-out infinite;
-    contain: layout style;
-  }
+/* Donor name pulse — all screen sizes */
+.donor-name-pulse {
+  animation: donor-name-neon-pulse 2.5s ease-in-out infinite;
+  contain: layout style;
+}
+.donor-name-pulse-gold {
+  animation: donor-name-gold-pulse 2s ease-in-out infinite;
+  contain: layout style;
 }
 
 /* Rank badge subtle pulse for gold rank */
