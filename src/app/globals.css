@@ -7672,7 +7672,6 @@ html {
 }
 
 .marquee-track {
-  animation: marquee-scroll linear infinite;
   will-change: transform;
 }
 
@@ -11052,23 +11051,24 @@ main, [role="main"] {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
 
-/* ═══ Marquee ticker — animation is defined in component via inline style ═══ */
-.marquee-track:hover {
-  animation-play-state: paused;
-}
+/* ═══ Marquee ticker — animation is defined entirely in component via inline style ═══ */
 
 /* ═══ Performance: Reduced Motion ═══
    Respects user's OS-level "Reduce Motion" setting.
    Disables all continuous animations for lower CPU/battery usage.
-   Critical for Vercel free tier — less client CPU = better experience. */
+   NOTE: The marquee ticker is NOT disabled here since it's a core UI element
+   (like a sports scoreboard) — removing it would break the user experience.
+   All decorative animations are still disabled. */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+  /* Marquee ticker: keep running but slow it down for reduced-motion users */
   .marquee-track {
-    animation: none !important;
+    animation-duration: 120s !important;
+    animation-iteration-count: infinite !important;
   }
 }
 

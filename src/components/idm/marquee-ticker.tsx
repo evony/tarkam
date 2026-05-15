@@ -288,8 +288,6 @@ export function MarqueeTicker({ maleData, femaleData, leagueData }: UnifiedMarqu
       className="w-full overflow-hidden relative group"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      onTouchStart={handleMouseEnter}
-      onTouchEnd={handleMouseLeave}
     >
       {/* Fade edges */}
       <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-28 z-10 pointer-events-none"
@@ -305,7 +303,10 @@ export function MarqueeTicker({ maleData, femaleData, leagueData }: UnifiedMarqu
         className="flex items-center marquee-track"
         style={{
           width: 'max-content',
+          animationName: 'marquee-scroll',
           animationDuration: animationDuration ?? '30s',
+          animationTimingFunction: 'linear',
+          animationIterationCount: 'infinite',
           animationPlayState: isPaused ? 'paused' : 'running',
         }}
       >
