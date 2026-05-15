@@ -185,22 +185,9 @@ export function LandingFooter({ cmsSettings, className }: LandingFooterProps) {
 
         {/* ═══ Copyright Bar ═══ */}
         <div className="flex flex-col items-center sm:flex-row sm:items-center justify-between gap-4">
-          <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-3">
-            <p className="text-muted-foreground/50 text-[11px]">
-              {footerText}
-            </p>
-            <span className="hidden sm:inline text-muted-foreground/20 text-[11px]">|</span>
-            <span
-              className="text-[11px] font-medium tracking-wide"
-              style={{
-                background: 'linear-gradient(135deg, rgba(200,146,10,0.4), rgba(245,230,200,0.3))',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-              }}
-            >
-              IDM Fan Made Edition &bull; Season 2026
-            </span>
-          </div>
+          <p className="text-muted-foreground/50 text-[11px]">
+            {footerText}
+          </p>
 
           <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4">
             {/* Powered by — subtle branding */}
