@@ -23,7 +23,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import React, { useState, useRef, useMemo } from 'react';
+import React, { useState, useRef, useMemo, useEffect, useCallback } from 'react';
 import { useCommunityTheme, getCommunityTheme } from '@/hooks/use-community-theme';
 import { useDivisionTheme, getDivisionTheme } from '@/hooks/use-division-theme';
 import { useAppStore } from '@/lib/store';
@@ -34,7 +34,7 @@ import { ClubProfile } from '../club-profile';
 
 // Import modular components — original
 import { CommunityHero } from './community-hero';
-import { CommunityLeaderboard } from './community-leaderboard';
+import { CommunityLeaderboard, PeringkatHeader } from './community-leaderboard';
 import { SultanOfWeekSection } from './community-champions';
 
 // Import modular components — new features
@@ -935,12 +935,20 @@ function DivisionStandingsSection({
   selectedDivision,
   onPlayerClick,
   onClubClick,
+  leaderboardSort,
+  onLeaderboardSortChange,
+  divisionFilter,
+  onDivisionFilterChange,
 }: {
   maleData?: StatsData;
   femaleData?: StatsData;
   selectedDivision: DivisionFilter;
   onPlayerClick: (player: TopPlayer & { division?: string }, division: 'male' | 'female') => void;
   onClubClick: (club: StatsData['clubs'][0]) => void;
+  leaderboardSort?: 'players' | 'clubs';
+  onLeaderboardSortChange?: (sort: 'players' | 'clubs') => void;
+  divisionFilter?: 'all' | 'male' | 'female';
+  onDivisionFilterChange?: (filter: 'all' | 'male' | 'female') => void;
 }) {
   return (
     <CommunityLeaderboard
@@ -948,6 +956,10 @@ function DivisionStandingsSection({
       femaleData={femaleData}
       onPlayerClick={onPlayerClick}
       onClubClick={onClubClick}
+      leaderboardSort={leaderboardSort}
+      onLeaderboardSortChange={onLeaderboardSortChange}
+      divisionFilter={divisionFilter}
+      onDivisionFilterChange={onDivisionFilterChange}
     />
   );
 }
@@ -1508,6 +1520,12 @@ export function CommunityDashboard() {
   const [paymentDivision, setPaymentDivision] = useState<'male' | 'female'>('male');
   // Division filter — new state for division-specific content
   const [selectedDivision, setSelectedDivision] = useState<DivisionFilter>('all');
+  // Peringkat leaderboard filter state — lifted from CommunityLeaderboard for sticky header
+  const [leaderboardSort, setLeaderboardSort] = useState<'players' | 'clubs'>('players');
+  const [leaderboardDivisionFilter, setLeaderboardDivisionFilter] = useState<'all' | 'male' | 'female'>('all');
+  // Intersection observer: detect when peringkat section enters viewport
+  const peringkatSentinelRef = useRef<HTMLDivElement>(null);
+  const [peringkatVisible, setPeringkatVisible] = useState(false);
   // Season selector — null means viewing the active season
   const [selectedSeason, setSelectedSeason] = useState<SelectedSeason | null>(null);
 
@@ -1535,6 +1553,20 @@ export function CommunityDashboard() {
       setSelectedDivision(season.division);
     }
   };
+
+  // IntersectionObserver: hide champion sticky when peringkat section enters viewport
+  useEffect(() => {
+    const sentinel = peringkatSentinelRef.current;
+    if (!sentinel) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setPeringkatVisible(entry.isIntersecting);
+      },
+      { threshold: 0, rootMargin: '-80px 0px 0px 0px' } // 80px offset = sticky header height
+    );
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, []);
 
   // CMS settings for donation modal
   const { data: cms } = useQuery<Record<string, string>>({
@@ -1661,7 +1693,14 @@ export function CommunityDashboard() {
         <TourSayaSection selectedDivision={selectedDivision} />
       </Section>
 
-      {/* ═══ 3. Top Saweran ═══ */}
+      {/* ═══ 3. Hasil Pertandingan — Match results from Bracket ═══ */}
+      <Section sectionId="matches">
+        <AnimatedSection variant="fadeUp">
+          <MatchesSection maleData={maleData} femaleData={femaleData} selectedDivision="all" />
+        </AnimatedSection>
+      </Section>
+
+      {/* ═══ 4. Top Saweran ═══ */}
       <Section sectionId="saweran">
         <TopDonorsWidget onDonate={() => setDonationOpen(true)} statsData={selectedDivision === 'female' ? femaleData : maleData} statsData2={selectedDivision === 'female' ? maleData : femaleData} />
       </Section>
@@ -1688,15 +1727,17 @@ export function CommunityDashboard() {
       ) : (
       <>
 
-      {/* ═══ 4. ⭐ Champions & MVP + Peringkat — Sticky header spans both sections ═══ */}
+      {/* ═══ 4. ⭐ Champions & MVP + Peringkat — Dual sticky headers ═══ */}
       <div className="space-y-4 sm:space-y-6">
-        {/* Sticky Champion Header — stays fixed until peringkat section ends */}
-        <div className="sticky top-0 z-30 -mx-1.5 sm:-mx-4 lg:-mx-5 px-1.5 sm:px-4 lg:px-5 py-2.5 bg-background/95 backdrop-blur-md border-b border-idm-gold-warm/10">
-          <ChampionsMvpHeader
-            selectedDivision={selectedDivision}
-            onDivisionChange={handleDivisionChange}
-          />
-        </div>
+        {/* Sticky Champion Header — hidden when peringkat section enters viewport to avoid collision */}
+        {!peringkatVisible && (
+          <div className="sticky top-0 z-30 -mx-1.5 sm:-mx-4 lg:-mx-5 px-1.5 sm:px-4 lg:px-5 py-2.5 bg-background/95 backdrop-blur-md border-b border-idm-gold-warm/10 transition-all duration-200">
+            <ChampionsMvpHeader
+              selectedDivision={selectedDivision}
+              onDivisionChange={handleDivisionChange}
+            />
+          </div>
+        )}
 
         <Section sectionId="champions">
           <AnimatedSection>
@@ -1709,8 +1750,25 @@ export function CommunityDashboard() {
           </AnimatedSection>
         </Section>
 
+        {/* Sentinel for IntersectionObserver — placed before peringkat section */}
+        <div ref={peringkatSentinelRef} className="h-0" />
+
+        {/* Sticky Peringkat Header — takes over when peringkat section enters viewport */}
+        {peringkatVisible && (
+          <div className="sticky top-0 z-30 -mx-1.5 sm:-mx-4 lg:-mx-5 px-1.5 sm:px-4 lg:px-5 py-2.5 bg-background/95 backdrop-blur-md border-b border-idm-gold-warm/10 transition-all duration-200">
+            <PeringkatHeader
+              leaderboardSort={leaderboardSort}
+              onLeaderboardSortChange={setLeaderboardSort}
+              divisionFilter={leaderboardDivisionFilter}
+              onDivisionFilterChange={setLeaderboardDivisionFilter}
+              maleData={maleData}
+              femaleData={femaleData}
+            />
+          </div>
+        )}
+
         {/* ═══ 6. Peringkat/Standings — People check ranking changes after match ═══ */}
-        <Section title="Peringkat" icon={Trophy} iconColor="text-idm-gold-warm" sectionId="rankings">
+        <Section sectionId="rankings">
           <AnimatedSection variant="fadeUp">
             <DivisionStandingsSection
               maleData={maleData}
@@ -1718,6 +1776,10 @@ export function CommunityDashboard() {
               selectedDivision={selectedDivision}
               onPlayerClick={handlePlayerClick}
               onClubClick={(club) => setSelectedClub(club)}
+              leaderboardSort={leaderboardSort}
+              onLeaderboardSortChange={setLeaderboardSort}
+              divisionFilter={leaderboardDivisionFilter}
+              onDivisionFilterChange={setLeaderboardDivisionFilter}
             />
           </AnimatedSection>
         </Section>

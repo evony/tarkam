@@ -5,7 +5,7 @@ import { AvatarMedia } from '@/components/ui/avatar-media';
 import Image from 'next/image';
 import { useQuery } from '@tanstack/react-query';
 import {
-  Users, Award, Shield, Flame,
+  Users, Award, Shield, Flame, Trophy,
   ChevronDown, ChevronUp,
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
@@ -50,6 +50,10 @@ interface CommunityLeaderboardProps {
   femaleData?: StatsData;
   onPlayerClick: (player: TopPlayer & { division?: string }, division: 'male' | 'female') => void;
   onClubClick?: (club: StatsData['clubs'][0]) => void;
+  leaderboardSort?: 'players' | 'clubs';
+  onLeaderboardSortChange?: (sort: 'players' | 'clubs') => void;
+  divisionFilter?: DivisionFilter;
+  onDivisionFilterChange?: (filter: DivisionFilter) => void;
 }
 
 type DivisionFilter = 'all' | 'male' | 'female';
@@ -59,11 +63,21 @@ export function CommunityLeaderboard({
   femaleData,
   onPlayerClick,
   onClubClick,
+  leaderboardSort: externalSort,
+  onLeaderboardSortChange,
+  divisionFilter: externalDivisionFilter,
+  onDivisionFilterChange,
 }: CommunityLeaderboardProps) {
   const dt = useCommunityTheme();
   const division = useAppStore(s => s.division);
-  const [leaderboardSort, setLeaderboardSort] = useState<'players' | 'clubs'>('players');
-  const [divisionFilter, setDivisionFilter] = useState<DivisionFilter>('all');
+  const [internalSort, setInternalSort] = useState<'players' | 'clubs'>('players');
+  const [internalDivisionFilter, setInternalDivisionFilter] = useState<DivisionFilter>('all');
+
+  // Use external props if provided, otherwise internal state
+  const leaderboardSort = externalSort ?? internalSort;
+  const setLeaderboardSort = onLeaderboardSortChange ?? setInternalSort;
+  const divisionFilter = externalDivisionFilter ?? internalDivisionFilter;
+  const setDivisionFilter = onDivisionFilterChange ?? setInternalDivisionFilter;
   const [showAllPlayers, setShowAllPlayers] = useState(false);
   const [showAllClubs, setShowAllClubs] = useState(false);
 
@@ -121,60 +135,6 @@ export function CommunityLeaderboard({
 
   return (
     <div className="space-y-4">
-      {/* Filter bar: Player/Club toggle + Division filter — single scrollable row on mobile */}
-      <div className="overflow-x-auto scrollbar-none -mx-1 px-1">
-        <div className="flex items-center gap-2 min-w-max lg:min-w-0">
-          {/* Player/Club toggle — with count badges */}
-          <div className={`flex items-center gap-1 p-1 rounded-lg ${dt.bgSubtle} ${dt.border}`}>
-            <button
-              onClick={() => setLeaderboardSort('players')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all whitespace-nowrap ${leaderboardSort === 'players' ? `${dt.bg} ${dt.text} shadow-sm` : 'text-muted-foreground hover:text-foreground'}`}
-            >
-              <Users className="w-3 h-3" /> Pemain
-              <span className={`text-[10px] tabular-nums ${leaderboardSort === 'players' ? 'text-idm-gold-warm' : 'text-muted-foreground/50'}`}>
-                {mergedPlayers.length}
-              </span>
-            </button>
-            <button
-              onClick={() => setLeaderboardSort('clubs')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all whitespace-nowrap ${leaderboardSort === 'clubs' ? `${dt.bg} ${dt.text} shadow-sm` : 'text-muted-foreground hover:text-foreground'}`}
-            >
-              <Shield className="w-3 h-3" /> Klub
-              <span className={`text-[10px] tabular-nums ${leaderboardSort === 'clubs' ? 'text-idm-gold-warm' : 'text-muted-foreground/50'}`}>
-                {clubs.length || (maleData?.clubs?.length || 0) + (femaleData?.clubs?.length || 0)}
-              </span>
-            </button>
-          </div>
-
-          {/* Division filter pills — only shown for players */}
-          {leaderboardSort === 'players' && (
-            <div className={`flex items-center gap-1 p-1 rounded-lg bg-idm-gold-warm/5 border border-idm-gold-warm/10`}>
-              {([
-                { key: 'all', label: 'Semua' },
-                { key: 'male', label: '🕺 Male' },
-                { key: 'female', label: '💃 Female' },
-              ] as const).map(f => (
-                <button
-                  key={f.key}
-                  onClick={() => setDivisionFilter(f.key)}
-                  className={`compact-dot px-2.5 py-1 text-[10px] font-semibold rounded-md transition-all whitespace-nowrap ${
-                    divisionFilter === f.key
-                      ? f.key === 'male'
-                        ? 'bg-idm-male text-white shadow-sm'
-                        : f.key === 'female'
-                        ? 'bg-idm-female text-white shadow-sm'
-                        : `${dt.bg} ${dt.text} shadow-sm`
-                      : 'text-muted-foreground hover:text-foreground'
-                  }`}
-                >
-                  {f.label}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-
       {/* ═══ Player Leaderboard — Toornament clean table ═══ */}
       {leaderboardSort === 'players' && (
         <Card className={`${dt.casinoCard} overflow-hidden`}>
@@ -431,6 +391,101 @@ export function CommunityLeaderboard({
           )}
         </Card>
       )}
+    </div>
+  );
+}
+
+
+/* ═══════════════════════════════════════════════════════
+   PERINGKAT HEADER — Standalone filter bar for sticky use
+   Contains: Peringkat title + Player/Club toggle + Division filter
+   ═══════════════════════════════════════════════════════ */
+export function PeringkatHeader({
+  leaderboardSort,
+  onLeaderboardSortChange,
+  divisionFilter,
+  onDivisionFilterChange,
+  maleData,
+  femaleData,
+}: {
+  leaderboardSort: 'players' | 'clubs';
+  onLeaderboardSortChange: (sort: 'players' | 'clubs') => void;
+  divisionFilter: DivisionFilter;
+  onDivisionFilterChange: (filter: DivisionFilter) => void;
+  maleData?: StatsData;
+  femaleData?: StatsData;
+}) {
+  const ct = useCommunityTheme();
+
+  // Compute counts for badges
+  const playerCount = ((maleData?.topPlayers?.length || 0) + (femaleData?.topPlayers?.length || 0));
+  const clubCount = (maleData?.clubs?.length || 0) + (femaleData?.clubs?.length || 0);
+
+  return (
+    <div className="flex items-center justify-between gap-3">
+      <div className="flex items-center gap-2.5">
+        <div className={`w-5 h-5 rounded ${ct.iconBg} flex items-center justify-center shrink-0`}>
+          <Trophy className={`w-3 h-3 ${ct.neonText}`} />
+        </div>
+        <h3 className="text-xs font-semibold uppercase tracking-wider shrink-0" style={{
+          background: 'linear-gradient(135deg, #FAF0DC 0%, #EFF923 30%, #F9CB25 50%, #F9CB25 70%, #EFF923 100%)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+        }}>Peringkat</h3>
+      </div>
+
+      <div className="overflow-x-auto scrollbar-none -mx-1 px-1">
+        <div className="flex items-center gap-2 min-w-max lg:min-w-0">
+          {/* Player/Club toggle */}
+          <div className={`flex items-center gap-1 p-1 rounded-lg ${ct.bgSubtle} ${ct.border}`}>
+            <button
+              onClick={() => onLeaderboardSortChange('players')}
+              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] font-medium transition-all whitespace-nowrap ${leaderboardSort === 'players' ? `${ct.bg} ${ct.text} shadow-sm` : 'text-muted-foreground hover:text-foreground'}`}
+            >
+              <Users className="w-3 h-3" /> Pemain
+              <span className={`text-[9px] tabular-nums ${leaderboardSort === 'players' ? 'text-idm-gold-warm' : 'text-muted-foreground/50'}`}>
+                {playerCount}
+              </span>
+            </button>
+            <button
+              onClick={() => onLeaderboardSortChange('clubs')}
+              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] font-medium transition-all whitespace-nowrap ${leaderboardSort === 'clubs' ? `${ct.bg} ${ct.text} shadow-sm` : 'text-muted-foreground hover:text-foreground'}`}
+            >
+              <Shield className="w-3 h-3" /> Klub
+              <span className={`text-[9px] tabular-nums ${leaderboardSort === 'clubs' ? 'text-idm-gold-warm' : 'text-muted-foreground/50'}`}>
+                {clubCount}
+              </span>
+            </button>
+          </div>
+
+          {/* Division filter pills — only shown for players */}
+          {leaderboardSort === 'players' && (
+            <div className="flex items-center gap-1 p-1 rounded-lg bg-idm-gold-warm/5 border border-idm-gold-warm/10">
+              {([
+                { key: 'all' as DivisionFilter, label: 'Semua' },
+                { key: 'male' as DivisionFilter, label: 'Male' },
+                { key: 'female' as DivisionFilter, label: 'Female' },
+              ]).map(f => (
+                <button
+                  key={f.key}
+                  onClick={() => onDivisionFilterChange(f.key)}
+                  className={`px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded-md transition-all whitespace-nowrap ${
+                    divisionFilter === f.key
+                      ? f.key === 'male'
+                        ? 'bg-idm-male text-white shadow-sm'
+                        : f.key === 'female'
+                        ? 'bg-idm-female text-white shadow-sm'
+                        : 'bg-idm-gold-warm/15 text-idm-gold-warm shadow-sm shadow-idm-gold-warm/10 border border-idm-gold-warm/25'
+                      : 'text-muted-foreground/70 hover:text-foreground border border-transparent hover:bg-muted/40'
+                  }`}
+                >
+                  {f.label}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

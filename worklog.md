@@ -382,3 +382,25 @@ Stage Summary:
 - Hasil Pertandingan section completely removed from community dashboard
 - Champion heading + tabs (Semua/Male/Female) now sticky when scrolling, stops at Peringkat section boundary
 - All changes compile and lint cleanly
+---
+Task ID: 2
+Agent: main
+Task: Slow marquee to 60/40, sticky peringkat header, avoid sticky collision, add Hasil Pertandingan
+
+Work Log:
+- Reduced marquee ticker speed from 80/60 to 60/40 px/s (desktop/mobile)
+- Extracted PeringkatHeader component from CommunityLeaderboard filter bar
+- Added external state props to CommunityLeaderboard (leaderboardSort, divisionFilter) so parent can control
+- Added IntersectionObserver on sentinel before peringkat section to detect visibility
+- When peringkat enters viewport: champion sticky header disappears, peringkat sticky header appears
+- When peringkat leaves viewport: champion sticky header reappears
+- Added Hasil Pertandingan section back (MatchesSection) below Cari Turnamen section
+- PeringkatHeader includes: title "Peringkat" + Pemain/Klub toggle + Semua/Male/Female division filter
+
+Stage Summary:
+- Marquee speed: 60/40 px/s (readable)
+- Champion header sticky: top-0 z-30, hidden when peringkat visible
+- Peringkat header sticky: top-0 z-30, visible when peringkat visible
+- No sticky collision between champion and peringkat headers
+- Hasil Pertandingan section added below Cari Turnamen
+- All changes compile and lint cleanly
