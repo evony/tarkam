@@ -174,3 +174,23 @@ Verification:
 - CSS containment on static sections
 - Night Fury dark gold aesthetic preserved
 - Mobile-first responsive approach throughout
+
+---
+Task ID: 1
+Agent: Main
+Task: Fix SponsorsSection visibility on mobile + improve mobile layout
+
+Work Log:
+- Diagnosed root cause: `section-reveal` class starts with `opacity: 0` and relies on `useScrollReveal()` IntersectionObserver to add `section-reveal--visible` class. Since SponsorsSection is loaded via `dynamic()` with `ssr: false`, the component's DOM element only appears AFTER the observer has already scanned for elements, so it never gets observed and stays invisible (`opacity: 0`).
+- Added self-contained IntersectionObserver inside SponsorsSection component that fires when the element scrolls into view, adding `section-reveal--visible` class directly.
+- Redesigned mobile layout: replaced small 2-column grid with horizontal scroll carousel (w-36 h-28 cards with snap scrolling, no-scrollbar, name overlay at bottom with gradient).
+- Desktop: kept grid layout but improved card contrast (border-idm-gold-warm/20, bg-idm-gold-warm/[0.04]) and added hover name overlay.
+- Skeleton loading state also split into mobile (horizontal) and desktop (grid) variants.
+- Removed unused `useCommunityTheme` import.
+- Used existing `no-scrollbar` CSS class instead of creating new `scrollbar-hide`.
+- Lint passes clean, dev server running, API returns 6 sponsors.
+
+Stage Summary:
+- Bug fix: SponsorsSection now self-observes for scroll reveal instead of relying on parent observer
+- Mobile UX: Horizontal scroll carousel with larger cards, name overlays, snap scrolling
+- Desktop UX: Improved card visibility with hover name overlays
