@@ -325,18 +325,11 @@ export function TopDonorsWidget({ onDonate, statsData, statsData2 }: TopDonorsWi
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {/* ♂ Male Division */}
           <div className="space-y-1.5">
-            <div className="flex items-center justify-between mb-1">
-              <div className="flex items-center gap-1.5">
-                <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider border bg-idm-male/10 text-idm-male-light border-idm-male/30">
-                  ♂ Male
-                </span>
-                <span className="text-[9px] text-muted-foreground/50">{maleDonors.length} sawer</span>
-              </div>
-              {totalMale > 0 && (
-                <span className="text-[10px] font-semibold text-idm-male-light">
-                  {formatRupiahShort(totalMale)}
-                </span>
-              )}
+            <div className="flex items-center gap-1.5 mb-1">
+              <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider border bg-idm-male/10 text-idm-male-light border-idm-male/30">
+                ♂ Male
+              </span>
+              <span className="text-[9px] text-muted-foreground/50">{maleDonors.length} sawer</span>
             </div>
             <div className="max-h-64 overflow-y-auto overflow-x-hidden custom-scrollbar space-y-1 pr-1">
               {maleDonors.length > 0 ? maleDonors.map((donor, i) => (
@@ -364,22 +357,23 @@ export function TopDonorsWidget({ onDonate, statsData, statsData2 }: TopDonorsWi
                 </div>
               )}
             </div>
+            {totalMale > 0 && (
+              <div className="flex items-center justify-end gap-1 pt-1 border-t border-idm-male/10">
+                <span className="text-[9px] text-muted-foreground/50">Total</span>
+                <span className="text-[10px] font-bold text-idm-male-light">
+                  {formatRupiahShort(totalMale)}
+                </span>
+              </div>
+            )}
           </div>
 
           {/* ♀ Female Division */}
           <div className="space-y-1.5">
-            <div className="flex items-center justify-between mb-1">
-              <div className="flex items-center gap-1.5">
-                <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider border bg-idm-female/10 text-idm-female-light border-idm-female/30">
-                  ♀ Female
-                </span>
-                <span className="text-[9px] text-muted-foreground/50">{femaleDonors.length} sawer</span>
-              </div>
-              {totalFemale > 0 && (
-                <span className="text-[10px] font-semibold text-idm-female-light">
-                  {formatRupiahShort(totalFemale)}
-                </span>
-              )}
+            <div className="flex items-center gap-1.5 mb-1">
+              <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider border bg-idm-female/10 text-idm-female-light border-idm-female/30">
+                ♀ Female
+              </span>
+              <span className="text-[9px] text-muted-foreground/50">{femaleDonors.length} sawer</span>
             </div>
             <div className="max-h-64 overflow-y-auto overflow-x-hidden custom-scrollbar space-y-1 pr-1">
               {femaleDonors.length > 0 ? femaleDonors.map((donor, i) => (
@@ -407,6 +401,14 @@ export function TopDonorsWidget({ onDonate, statsData, statsData2 }: TopDonorsWi
                 </div>
               )}
             </div>
+            {totalFemale > 0 && (
+              <div className="flex items-center justify-end gap-1 pt-1 border-t border-idm-female/10">
+                <span className="text-[9px] text-muted-foreground/50">Total</span>
+                <span className="text-[10px] font-bold text-idm-female-light">
+                  {formatRupiahShort(totalFemale)}
+                </span>
+              </div>
+            )}
           </div>
         </div>
 
