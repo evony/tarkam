@@ -12,10 +12,12 @@ import type { StatsData } from '@/types/stats';
    ═══════════════════════════════════════════════════════════════ */
 
 /* ========== Speed Configuration ========== */
-// Pixels per second — consistent readable speed
-// Desktop: 40px/s, Mobile: 28px/s (slower for readability)
-const DESKTOP_SPEED = 40;
-const MOBILE_SPEED = 28;
+// Pixels per second — ESPN-style ticker speed
+// Desktop: 250px/s (~50s per cycle), Mobile: 180px/s (slower for readability)
+// IMPORTANT: Speed must be fast enough that movement is clearly visible.
+// Previous 40px/s was too slow for the ~13000px track width (325s cycle = invisible).
+const DESKTOP_SPEED = 250;
+const MOBILE_SPEED = 180;
 const MOBILE_BREAKPOINT = 768;
 
 /* ========== Feed Item Types ========== */
