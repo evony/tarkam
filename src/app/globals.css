@@ -7673,6 +7673,7 @@ html {
 
 .marquee-track {
   will-change: transform;
+  transition: none !important;
 }
 
 /* ─── Section Reveal Animation — CLS-optimized (no translateY) ───

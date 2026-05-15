@@ -8,16 +8,13 @@ import type { StatsData } from '@/types/stats';
 /* ═══════════════════════════════════════════════════════════════
    TARKAM IDM — ESPN-STYLE MARQUEE TICKER
    Stats + Live Feed in one seamless scrolling bar
-   CSS-driven animation for zero main-thread overhead
+   JS-driven animation with requestAnimationFrame
    ═══════════════════════════════════════════════════════════════ */
 
 /* ========== Speed Configuration ========== */
 // Pixels per second — ESPN-style ticker speed
-// Desktop: 250px/s (~50s per cycle), Mobile: 180px/s (slower for readability)
-// IMPORTANT: Speed must be fast enough that movement is clearly visible.
-// Previous 40px/s was too slow for the ~13000px track width (325s cycle = invisible).
-const DESKTOP_SPEED = 250;
-const MOBILE_SPEED = 180;
+const DESKTOP_SPEED = 200;
+const MOBILE_SPEED = 150;
 const MOBILE_BREAKPOINT = 768;
 
 /* ========== Feed Item Types ========== */
@@ -67,7 +64,6 @@ function FeedCard({ item }: { item: FeedItem }) {
   const accent = item.accent || TYPE_ACCENT[item.type] || '#EFF923';
   const isStat = item.type === 'stat';
 
-  /* Resolve display text — stat items show final value directly (no count-up animation) */
   const displayTitle = isStat && item.numericValue && item.numericValue > 0
     ? item.numericValue.toLocaleString('id-ID')
     : item.title;
@@ -75,21 +71,19 @@ function FeedCard({ item }: { item: FeedItem }) {
 
   return (
     <div
-      className="flex items-center gap-2 px-3.5 py-1.5 rounded-md shrink-0 border transition-all duration-300 cursor-default select-none hover:scale-[1.02]"
+      className="flex items-center gap-2 px-3.5 py-1.5 rounded-md shrink-0 border select-none"
       style={{
         background: `linear-gradient(135deg, ${hexToRgba(accent, 0x08)} 0%, ${hexToRgba(accent, 0x03)} 100%)`,
         borderColor: hexToRgba(accent, 0x20),
       }}
     >
-      {/* Icon with glow */}
       <span
-        className="text-sm shrink-0 drop-shadow-sm"
+        className="text-sm shrink-0"
         style={{ filter: `drop-shadow(0 0 4px ${hexToRgba(accent, 0x40)})` }}
       >
         {item.icon}
       </span>
 
-      {/* Title — same style for all items */}
       <p
         className={`font-bold whitespace-nowrap truncate max-w-[180px] sm:max-w-[220px] ${
           isStat ? 'text-xs' : 'text-[11px] sm:text-xs'
@@ -99,7 +93,6 @@ function FeedCard({ item }: { item: FeedItem }) {
         {displayTitle}
       </p>
 
-      {/* Subtitle — same style for all items */}
       {displaySubtitle && (
         <>
           <span className="text-muted-foreground/20 shrink-0 text-[8px]">◆</span>
@@ -109,7 +102,6 @@ function FeedCard({ item }: { item: FeedItem }) {
         </>
       )}
 
-      {/* Time badge — only for feed items */}
       {!isStat && (
         <span
           className="text-[9px] font-medium shrink-0 tabular-nums px-1.5 py-0.5 rounded"
@@ -119,7 +111,6 @@ function FeedCard({ item }: { item: FeedItem }) {
         </span>
       )}
 
-      {/* Division dot — only for feed items */}
       {!isStat && item.division && (
         <span
           className="w-2 h-2 rounded-full shrink-0 ring-1 ring-offset-1 ring-offset-background"
@@ -148,12 +139,14 @@ interface UnifiedMarqueeProps {
   leagueData?: any;
 }
 
-/* ========== Unified Marquee — Stats + Feed in one scrolling bar ========== */
+/* ========== Unified Marquee — JS-driven rAF animation ========== */
 export function MarqueeTicker({ maleData, femaleData, leagueData }: UnifiedMarqueeProps = {}) {
   const qc = useQueryClient();
   const trackRef = useRef<HTMLDivElement>(null);
-  const [animationDuration, setAnimationDuration] = useState<string | null>(null);
-  const [isPaused, setIsPaused] = useState(false);
+  const offsetRef = useRef(0);
+  const rafRef = useRef<number>(0);
+  const isPausedRef = useRef(false);
+  const lastTimeRef = useRef(0);
 
   const { data } = useQuery<{ items: FeedItem[] }>({
     queryKey: ['feed'],
@@ -162,8 +155,8 @@ export function MarqueeTicker({ maleData, femaleData, leagueData }: UnifiedMarqu
       if (!res.ok) throw new Error('Feed fetch failed');
       return res.json();
     },
-    staleTime: 120000, // 2min — INP optimization: increased from 60s
-    refetchInterval: 300000, // 5min — INP optimization: reduced from 2min
+    staleTime: 120000,
+    refetchInterval: 300000,
     refetchOnWindowFocus: true,
     refetchOnReconnect: true,
   });
@@ -183,9 +176,7 @@ export function MarqueeTicker({ maleData, femaleData, leagueData }: UnifiedMarqu
       channel.bind('feed-updated', () => {
         qc.invalidateQueries({ queryKey: ['feed'] });
       });
-    }).catch(() => {
-      // Pusher not available — graceful fallback
-    });
+    }).catch(() => {});
 
     return () => {
       if (channel) {
@@ -196,11 +187,10 @@ export function MarqueeTicker({ maleData, femaleData, leagueData }: UnifiedMarqu
     };
   }, [qc]);
 
-  // Build combined items: stats first, then feed items
+  // Build combined items
   const combinedItems = useMemo(() => {
     const stats: FeedItem[] = [];
 
-    // Calculate aggregate stats
     const totalPlayers = (maleData?.totalPlayers || 0) + (femaleData?.totalPlayers || 0);
     const totalPrizePool = (maleData?.activeTournamentPrizePool ?? maleData?.totalPrizePool ?? 0) + (femaleData?.activeTournamentPrizePool ?? femaleData?.totalPrizePool ?? 0);
     const totalMatches = leagueData?.stats?.totalMatches || (maleData?.recentMatches?.length || 0) + (femaleData?.recentMatches?.length || 0);
@@ -248,38 +238,51 @@ export function MarqueeTicker({ maleData, femaleData, leagueData }: UnifiedMarqu
     return elements;
   }, [combinedItems]);
 
-  // Calculate animation duration based on track width
-  const calculateDuration = useCallback(() => {
-    if (!trackRef.current) return;
-    // Use requestAnimationFrame to ensure layout is settled before measuring
-    requestAnimationFrame(() => {
-      if (!trackRef.current) return;
-      const trackWidth = trackRef.current.scrollWidth / 2; // Half because content is duplicated
-      if (trackWidth <= 0) return;
-
-      // Use slower speed on mobile for readability
-      const isMobile = window.innerWidth < MOBILE_BREAKPOINT;
-      const speed = isMobile ? MOBILE_SPEED : DESKTOP_SPEED;
-
-      // Duration = distance / speed
-      const duration = trackWidth / speed;
-      setAnimationDuration(`${duration}s`);
-    });
-  }, []);
-
-  // Calculate duration after content is rendered + when feed data arrives
+  // rAF-driven animation loop — completely bypasses CSS animation/transition conflicts
   useEffect(() => {
-    calculateDuration();
+    const track = trackRef.current;
+    if (!track) return;
 
-    // Recalculate on resize (viewport change affects mobile/desktop speed)
-    const handleResize = () => calculateDuration();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, [calculateDuration, trackContent, data]);
+    const animate = (timestamp: number) => {
+      if (lastTimeRef.current === 0) {
+        lastTimeRef.current = timestamp;
+      }
 
-  // Pause on hover
-  const handleMouseEnter = () => setIsPaused(true);
-  const handleMouseLeave = () => setIsPaused(false);
+      const delta = timestamp - lastTimeRef.current;
+      lastTimeRef.current = timestamp;
+
+      // Skip large time gaps (tab was hidden, etc.)
+      if (delta < 200 && !isPausedRef.current) {
+        const isMobile = window.innerWidth < MOBILE_BREAKPOINT;
+        const speed = isMobile ? MOBILE_SPEED : DESKTOP_SPEED;
+        const pixelsToMove = (speed * delta) / 1000;
+
+        offsetRef.current -= pixelsToMove;
+
+        // Get half track width for seamless loop reset
+        const halfWidth = track.scrollWidth / 2;
+        if (halfWidth > 0 && Math.abs(offsetRef.current) >= halfWidth) {
+          offsetRef.current += halfWidth;
+        }
+
+        track.style.transform = `translateX(${offsetRef.current}px)`;
+      }
+
+      rafRef.current = requestAnimationFrame(animate);
+    };
+
+    rafRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+      }
+    };
+  }, [trackContent]);
+
+  // Pause on hover (desktop only)
+  const handleMouseEnter = () => { isPausedRef.current = true; };
+  const handleMouseLeave = () => { isPausedRef.current = false; };
 
   if (combinedItems.length === 0) return null;
 
@@ -290,24 +293,20 @@ export function MarqueeTicker({ maleData, femaleData, leagueData }: UnifiedMarqu
       onMouseLeave={handleMouseLeave}
     >
       {/* Fade edges */}
-      <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-28 z-10 pointer-events-none"
+      <div className="absolute left-0 top-0 bottom-0 w-12 sm:w-20 z-10 pointer-events-none"
         style={{ background: 'linear-gradient(to right, hsl(var(--background)), transparent)' }}
       />
-      <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-28 z-10 pointer-events-none"
+      <div className="absolute right-0 top-0 bottom-0 w-12 sm:w-20 z-10 pointer-events-none"
         style={{ background: 'linear-gradient(to left, hsl(var(--background)), transparent)' }}
       />
 
-      {/* Scrolling track — 2x for seamless loop, CSS animation driven (zero main-thread cost) */}
+      {/* Scrolling track — 2x for seamless loop, JS-driven rAF */}
       <div
         ref={trackRef}
-        className="flex items-center marquee-track"
+        className="flex items-center"
         style={{
           width: 'max-content',
-          animationName: 'marquee-scroll',
-          animationDuration: animationDuration ?? '30s',
-          animationTimingFunction: 'linear',
-          animationIterationCount: 'infinite',
-          animationPlayState: isPaused ? 'paused' : 'running',
+          willChange: 'transform',
         }}
       >
         {trackContent}
