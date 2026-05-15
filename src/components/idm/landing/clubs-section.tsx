@@ -152,18 +152,35 @@ export function ClubsSection({ maleData, femaleData, isDataLoading, cmsSections,
                     {/* Subtle inner glow */}
                     <div className="absolute inset-0 rounded-full pointer-events-none" style={{ background: 'radial-gradient(ellipse at 50% 50%, rgba(212,168,83,0.06), transparent 70%)' }} />
                     <Crown className="w-3.5 h-3.5 text-[#d4a853] relative" />
-                    {seasonChampions.map((ch, i) => (
-                      <span key={`${ch.id}-${ch.division}-S${ch.seasonNumber}`} className="flex items-center gap-2 relative">
-                        {i > 0 && <span className="text-[10px] text-muted-foreground/40">•</span>}
-                        <span className="text-[10px] font-bold text-[#d4a853]/70 uppercase tracking-wider">
-                          Tarkam {ch.division === 'female' ? '♀' : '♂'} S{ch.seasonNumber} Champion
-                        </span>
-                        {ch.logo && (
-                          <ClubLogoImage clubName={ch.name} dbLogo={ch.logo} alt={ch.name} width={20} height={20} className="w-5 h-5 rounded object-cover" />
-                        )}
-                        <span className="text-xs font-black text-foreground">{ch.name}</span>
-                      </span>
-                    ))}
+                    {(() => {
+                      // Group champions by club id — merge male+female if same club won both
+                      type Champ = typeof seasonChampions[number];
+                      const grouped: Champ[][] = [];
+                      for (const ch of seasonChampions) {
+                        const existing = grouped.find(g => g[0].id === ch.id && g[0].seasonNumber === ch.seasonNumber);
+                        if (existing) existing.push(ch);
+                        else grouped.push([ch]);
+                      }
+                      return grouped.map((group, i) => {
+                        const ch = group[0];
+                        const divisions = group.map(g => g.division);
+                        const label = divisions.length === 2
+                          ? `♂♀ S${ch.seasonNumber} Champion`
+                          : `${divisions[0] === 'female' ? '♀' : '♂'} S${ch.seasonNumber} Champion`;
+                        return (
+                          <span key={`${ch.id}-${group.map(g => g.division).join('-')}-S${ch.seasonNumber}`} className="flex items-center gap-2 relative">
+                            {i > 0 && <span className="text-[10px] text-muted-foreground/40">•</span>}
+                            <span className="text-[10px] font-bold text-[#d4a853]/70 uppercase tracking-wider">
+                              Tarkam {label}
+                            </span>
+                            {ch.logo && (
+                              <ClubLogoImage clubName={ch.name} dbLogo={ch.logo} alt={ch.name} width={20} height={20} className="w-5 h-5 rounded object-cover" />
+                            )}
+                            <span className="text-xs font-black text-foreground">{ch.name}</span>
+                          </span>
+                        );
+                      });
+                    })()}
                     <span className="text-[10px] text-muted-foreground/40 relative">•</span>
                     <span className="text-[10px] text-muted-foreground/60 relative">{leagueData?.stats?.totalClubs || (maleData?.clubs?.length || 0) + (femaleData?.clubs?.length || 0)} club bertanding</span>
                   </div>

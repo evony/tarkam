@@ -307,3 +307,22 @@ Stage Summary:
 - Actual component: community-leaderboard.tsx — now fixed with sm: prefix
 - Also fixed .custom-scrollbar CSS that was blocking scroll chaining with overscroll-behavior: contain
 - DO NOT PUSH until user confirms
+
+---
+Task ID: 4
+Agent: main
+Task: Fix duplicate club name in landing page Club section champion callout
+
+Work Log:
+- Investigated clubs-section.tsx — found the season champion callout at lines 155-165
+- Root cause: SOUTHERN club won BOTH male and female S1 divisions, so it appears twice in seasonChampions array
+- Each entry renders "Tarkam ♂/♀ S1 Champion" + logo + name separately
+- Fix: Group champions by club ID + season number — if same club won both divisions, merge into single entry
+- Now shows "Tarkam ♂♀ S1 Champion SOUTHERN" instead of two separate entries
+- TypeScript check passed with zero errors
+
+Stage Summary:
+- Duplicate "SOUTHERN SOUTHERN" resolved by grouping champions by club+season
+- If club won both divisions: merged label "♂♀ S1 Champion"
+- If club won only one: shows "♂ S1 Champion" or "♀ S1 Champion"
+- DO NOT PUSH until user confirms
