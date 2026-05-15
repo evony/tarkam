@@ -879,8 +879,21 @@ function CompactTopFormCard({
    Hasil Pertandingan Section — Bracket-style match results
    Cloned from Arena Live > Bracket > Hasil tab
    Shows completed matches grouped by week per division
+   Uses BOTH LeagueMatch (recentMatches) AND Tournament matches (activeTournament.matches)
    With Semua/Male/Female tabs
    ═══════════════════════════════════════════ */
+
+/* Unified match row type for display */
+interface UnifiedMatchResult {
+  id: string;
+  name1: string;
+  name2: string;
+  score1: number | null;
+  score2: number | null;
+  week: number;
+  source: 'league' | 'tournament';
+}
+
 function BracketHasilSection({
   maleData,
   femaleData,
@@ -891,37 +904,101 @@ function BracketHasilSection({
   const ct = useCommunityTheme();
   const [hasilDivision, setHasilDivision] = useState<DivisionFilter>('all');
 
+  // Merge LeagueMatch + Tournament matches into unified format per division
+  const maleMatches = useMemo<UnifiedMatchResult[]>(() => {
+    const results: UnifiedMatchResult[] = [];
+    // 1. League matches (recentMatches — club-vs-club)
+    for (const m of (maleData?.recentMatches ?? [])) {
+      results.push({
+        id: m.id,
+        name1: m.club1.name,
+        name2: m.club2.name,
+        score1: m.score1,
+        score2: m.score2,
+        week: m.week,
+        source: 'league',
+      });
+    }
+    // 2. Tournament matches (activeTournament.matches — team-vs-team)
+    const tMatches = maleData?.activeTournament?.matches?.filter(m => m.status === 'completed') ?? [];
+    const tWeek = maleData?.activeTournament?.weekNumber ?? 1;
+    // Avoid duplicates: if league matches already cover this week, skip tournament matches for same week
+    const leagueWeeks = new Set(results.map(m => m.week));
+    for (const m of tMatches) {
+      const week = m.round ?? tWeek;
+      // Only add if no league matches for this week (avoid duplication)
+      if (!leagueWeeks.has(week) || results.length === 0) {
+        results.push({
+          id: m.id,
+          name1: m.team1?.name ?? 'TBD',
+          name2: m.team2?.name ?? 'TBD',
+          score1: m.score1,
+          score2: m.score2,
+          week,
+          source: 'tournament',
+        });
+      }
+    }
+    return results;
+  }, [maleData?.recentMatches, maleData?.activeTournament?.matches, maleData?.activeTournament?.weekNumber]);
+
+  const femaleMatches = useMemo<UnifiedMatchResult[]>(() => {
+    const results: UnifiedMatchResult[] = [];
+    // 1. League matches
+    for (const m of (femaleData?.recentMatches ?? [])) {
+      results.push({
+        id: m.id,
+        name1: m.club1.name,
+        name2: m.club2.name,
+        score1: m.score1,
+        score2: m.score2,
+        week: m.week,
+        source: 'league',
+      });
+    }
+    // 2. Tournament matches
+    const tMatches = femaleData?.activeTournament?.matches?.filter(m => m.status === 'completed') ?? [];
+    const tWeek = femaleData?.activeTournament?.weekNumber ?? 1;
+    const leagueWeeks = new Set(results.map(m => m.week));
+    for (const m of tMatches) {
+      const week = m.round ?? tWeek;
+      if (!leagueWeeks.has(week) || results.length === 0) {
+        results.push({
+          id: m.id,
+          name1: m.team1?.name ?? 'TBD',
+          name2: m.team2?.name ?? 'TBD',
+          score1: m.score1,
+          score2: m.score2,
+          week,
+          source: 'tournament',
+        });
+      }
+    }
+    return results;
+  }, [femaleData?.recentMatches, femaleData?.activeTournament?.matches, femaleData?.activeTournament?.weekNumber]);
+
   // Group matches by week per division
   const maleMatchesByWeek = useMemo(() => {
-    const map: Record<number, StatsData['recentMatches']> = {};
-    for (const m of (maleData?.recentMatches ?? [])) {
-      const w = m.week;
-      if (!map[w]) map[w] = [];
-      map[w].push(m);
+    const map: Record<number, UnifiedMatchResult[]> = {};
+    for (const m of maleMatches) {
+      if (!map[m.week]) map[m.week] = [];
+      map[m.week].push(m);
     }
     return map;
-  }, [maleData?.recentMatches]);
+  }, [maleMatches]);
 
   const femaleMatchesByWeek = useMemo(() => {
-    const map: Record<number, StatsData['recentMatches']> = {};
-    for (const m of (femaleData?.recentMatches ?? [])) {
-      const w = m.week;
-      if (!map[w]) map[w] = [];
-      map[w].push(m);
+    const map: Record<number, UnifiedMatchResult[]> = {};
+    for (const m of femaleMatches) {
+      if (!map[m.week]) map[m.week] = [];
+      map[m.week].push(m);
     }
     return map;
-  }, [femaleData?.recentMatches]);
+  }, [femaleMatches]);
 
-  const maleMatches = maleData?.recentMatches ?? [];
-  const femaleMatches = femaleData?.recentMatches ?? [];
-  const hasMaleMatches = Object.keys(maleMatchesByWeek).length > 0;
-  const hasFemaleMatches = Object.keys(femaleMatchesByWeek).length > 0;
+  const hasMaleMatches = maleMatches.length > 0;
+  const hasFemaleMatches = femaleMatches.length > 0;
   const hasAnyMatches = hasMaleMatches || hasFemaleMatches;
-
-  // Compute total match count based on selected tab
-  const totalMatchCount = hasilDivision === 'all'
-    ? maleMatches.length + femaleMatches.length
-    : hasilDivision === 'male' ? maleMatches.length : femaleMatches.length;
 
   return (
     <div className="space-y-4">
@@ -1048,7 +1125,7 @@ function DivisionHasilCard({
   totalMatches,
 }: {
   division: 'male' | 'female';
-  matchesByWeek: Record<number, StatsData['recentMatches']>;
+  matchesByWeek: Record<number, UnifiedMatchResult[]>;
   totalMatches: number;
 }) {
   const dt = getDivisionTheme(division);
@@ -1073,10 +1150,10 @@ function DivisionHasilCard({
                 {matches.slice(0, 5).map(m => (
                   <MatchRow
                     key={m.id}
-                    club1={m.club1.name}
-                    club2={m.club2.name}
-                    score1={m.score1}
-                    score2={m.score2}
+                    club1={m.name1}
+                    club2={m.name2}
+                    score1={m.score1 ?? 0}
+                    score2={m.score2 ?? 0}
                     status="completed"
                   />
                 ))}
