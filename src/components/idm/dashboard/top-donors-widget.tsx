@@ -411,7 +411,7 @@ export function TopDonorsWidget({ onDonate, statsData, statsData2 }: TopDonorsWi
         </div>
 
         {/* CTA button — compact & centered */}
-        <div className="mt-3 pt-2 border-t border-border/30 flex justify-center">
+        <div className="mt-3 flex justify-center">
           <Button
             size="sm"
             onClick={onDonate}
