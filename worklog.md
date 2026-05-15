@@ -218,3 +218,29 @@ Stage Summary:
 - CRITICAL: Hero overflow-hidden removed (no more content clipping on short viewports)
 - MEDIUM: Back-to-top button no longer overlaps bottom nav on tablet
 - LOW: Hero scroll indicator repositioned for mobile safety
+---
+Task ID: 1
+Agent: main
+Task: Redesign sponsor section as carousel on mobile + remove duplicate tap-to-top from footer
+
+Work Log:
+- Read and analyzed sponsors-section.tsx, landing-page.tsx, landing-footer.tsx, shared.tsx, back-to-top.tsx
+- Identified the root cause of sponsor section not visible on mobile: `section-reveal` wrapper with `opacity: 0` was not getting `section-reveal--visible` class due to timing issues with `dynamic(ssr: false)` loading
+- Rewrote sponsors-section.tsx with a proper auto-sliding carousel for mobile (SponsorCarousel component):
+  - Auto-advances every 3.5 seconds
+  - Pauses on touch/interaction, resumes after 6s
+  - Touch/swipe support for manual navigation
+  - Left/Right arrow navigation buttons
+  - Dot indicators with active state animation (pill shape for active)
+  - Full-width carousel cards with sponsor name overlay
+- Removed the `section-reveal` wrapper div from SponsorsSection in landing-page.tsx to fix visibility issue
+- Removed the "Back to Top" button from landing-footer.tsx since BackToTop component already exists as a floating button
+- Removed `ArrowUp` import from landing-footer.tsx (no longer needed)
+- Lint passed with no errors
+- Dev server running clean
+
+Stage Summary:
+- Mobile sponsor section is now a proper auto-sliding carousel instead of horizontal scroll
+- Sponsor section visibility issue fixed by removing section-reveal wrapper
+- Duplicate "Tap to Top" button removed from footer
+- All changes lint-free and dev server running normally

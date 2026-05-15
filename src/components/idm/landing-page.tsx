@@ -730,9 +730,7 @@ export function LandingPage() {
       <SectionDivider />
 
       {/* Sponsors — "Didukung Oleh" */}
-      <div className="section-reveal">
       <SponsorsSection />
-      </div>
 
       <SectionDivider />
 

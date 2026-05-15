@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { Instagram, Youtube, ArrowUp } from 'lucide-react';
+import { Instagram, Youtube } from 'lucide-react';
 
 /* ═══════════════════════════════════════════════════════════════
    Tarkam IDM — Premium Footer (Enhanced)
@@ -223,16 +223,6 @@ export function LandingFooter({ cmsSettings, className }: LandingFooterProps) {
             <span className="text-muted-foreground/40 text-[11px] flex items-center gap-1.5">
               Made with <span className="text-red-500/70 text-sm">❤️</span> by <span className="text-muted-foreground/60 font-medium">BorneoPride</span>
             </span>
-
-            {/* Back to Top — Premium enhanced with gold glow */}
-            <button
-              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              className="focus-ring-premium footer-back-to-top group min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl border border-[rgba(212,168,83,0.1)] text-muted-foreground/40 hover:text-[#d4a853] hover:border-[rgba(212,168,83,0.3)] hover:bg-[rgba(212,168,83,0.06)] hover:shadow-[0_0_20px_4px_rgba(212,168,83,0.15)] text-[11px] cursor-pointer transition-all duration-300"
-              aria-label="Back to top"
-            >
-              <ArrowUp className="w-3.5 h-3.5 footer-back-to-top-arrow" />
-              <span className="ml-0.5">Top</span>
-            </button>
           </div>
         </div>
       </div>
