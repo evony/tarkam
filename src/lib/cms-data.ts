@@ -5,6 +5,7 @@
 // server-side (in page.tsx) and client-side (in React Query).
 // Using the same logic ensures consistency.
 
+import { unstable_cache } from 'next/cache';
 import { db } from '@/lib/db';
 
 export interface CmsContent {
@@ -17,7 +18,7 @@ export interface CmsContent {
  * Used server-side in page.tsx for SSR, and can be used
  * client-side as well.
  */
-export async function fetchCmsContent(): Promise<CmsContent> {
+async function fetchCmsContentInner(): Promise<CmsContent> {
   try {
     const [settings, sections] = await Promise.all([
       db.cmsSetting.findMany({ orderBy: { key: 'asc' } }),
@@ -50,4 +51,16 @@ export async function fetchCmsContent(): Promise<CmsContent> {
     console.error('[CMS] Failed to fetch CMS content:', error);
     return { settings: {}, sections: {} };
   }
+}
+
+// ★ TTFB OPTIMIZATION: Cache CMS content for 10 minutes.
+// CMS data rarely changes — admin updates use revalidateTag for instant purge.
+const fetchCmsContentCached = unstable_cache(
+  fetchCmsContentInner,
+  ['cms-content'],
+  { revalidate: 600, tags: ['cms-content'] }
+);
+
+export async function fetchCmsContent(): Promise<CmsContent> {
+  return fetchCmsContentCached();
 }

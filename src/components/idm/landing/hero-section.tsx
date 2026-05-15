@@ -198,10 +198,10 @@ export function HeroSection({
                   <Image src={heroBgDesktop} alt="" fill priority sizes="100vw" className="object-cover opacity-80" aria-hidden="true" />
                 </div>
               )}
-              {/* Mobile — same desktop image, scaled to fill portrait screen height */}
-              {heroBgDesktop && (
+              {/* Mobile — use mobile-optimized image if available, else desktop image */}
+              {(heroBgMobile || heroBgDesktop) && (
                 <div className="absolute inset-0 sm:hidden">
-                  <Image src={heroBgDesktop} alt="" fill priority sizes="100vw" className="object-cover object-center opacity-80" aria-hidden="true" />
+                  <Image src={heroBgMobile || heroBgDesktop!} alt="" fill priority sizes="(max-width: 640px) 100vw, 50vw" className="object-cover object-center opacity-80" aria-hidden="true" />
                 </div>
               )}
             </>

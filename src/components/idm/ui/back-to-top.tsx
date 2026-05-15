@@ -1,13 +1,30 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { ArrowUp } from 'lucide-react';
 
+/* ── Back to Top Button — INP-optimized ──
+   Uses rAF-throttled scroll listener + ref guard to skip
+   no-op React re-renders (only re-renders when show state changes). */
 export function BackToTop() {
   const [show, setShow] = useState(false);
+  const showRef = useRef(false);
+  const tickingRef = useRef(false);
 
   useEffect(() => {
-    const onScroll = () => setShow(window.scrollY > 300);
+    const onScroll = () => {
+      if (tickingRef.current) return;
+      tickingRef.current = true;
+      requestAnimationFrame(() => {
+        const shouldShow = window.scrollY > 300;
+        // Only trigger re-render when value actually changes
+        if (showRef.current !== shouldShow) {
+          showRef.current = shouldShow;
+          setShow(shouldShow);
+        }
+        tickingRef.current = false;
+      });
+    };
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);

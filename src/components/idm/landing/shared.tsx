@@ -166,7 +166,6 @@ export function useScrollReveal() {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            // Add the appropriate visible class based on element type
             if (entry.target.classList.contains('section-reveal')) {
               entry.target.classList.add('section-reveal--visible');
             } else {
@@ -192,51 +191,37 @@ export function useScrollReveal() {
     // Observe all existing elements on mount
     observeAll();
 
-    // ★ MutationObserver: catches dynamically-added .section-reveal elements
-    // (e.g. from dynamic() components loaded with ssr: false)
-    // Without this, elements added after mount are never observed and stay opacity: 0.
-    // Also watches attribute changes (className) because React may reuse DOM elements
-    // and update their className to include section-reveal without adding new nodes.
-    const mutObs = new MutationObserver((mutations) => {
-      let hasNewReveal = false;
-      for (const mutation of mutations) {
-        // Case 1: New node added to DOM with section-reveal class
-        if (mutation.type === 'childList') {
-          for (const node of mutation.addedNodes) {
-            if (node instanceof HTMLElement) {
-              if (
-                node.classList?.contains('section-reveal') ||
-                node.classList?.contains('reveal') ||
-                node.querySelector?.('.section-reveal:not(.section-reveal--visible)') ||
-                node.querySelector?.('.reveal:not(.reveal--visible)')
-              ) {
-                hasNewReveal = true;
-                break;
-              }
-            }
-          }
-        }
-        // Case 2: Existing element's className changed to include section-reveal
-        // (React reuses DOM elements and updates props instead of replacing)
-        if (mutation.type === 'attributes' && mutation.target instanceof HTMLElement) {
-          const target = mutation.target as HTMLElement;
-          if (
-            (target.classList?.contains('section-reveal') && !target.classList?.contains('section-reveal--visible')) ||
-            (target.classList?.contains('reveal') && !target.classList?.contains('reveal--visible'))
-          ) {
-            hasNewReveal = true;
-          }
-        }
-        if (hasNewReveal) break;
-      }
-      if (hasNewReveal) observeAll();
-    });
+    // ★ INP OPTIMIZATION: Replace MutationObserver (which fires on every DOM change
+    // and blocks the main thread during interactions) with lightweight idle-time polling.
+    // Runs 4 scans over ~3 seconds to catch dynamically-loaded components, then stops.
+    // This eliminates the constant DOM mutation monitoring that was the #1 INP killer.
+    let scanCount = 0;
+    let idleHandle: ReturnType<typeof requestIdleCallback> | null = null;
 
-    mutObs.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
+    const scanOnIdle = () => {
+      if (scanCount >= 4) return;
+      scanCount++;
+      observeAll();
+      // Schedule next scan during idle time
+      if (typeof requestIdleCallback !== 'undefined') {
+        idleHandle = requestIdleCallback(scanOnIdle, { timeout: 1500 });
+      } else {
+        setTimeout(scanOnIdle, 1000);
+      }
+    };
+
+    // Start scanning after a brief delay (let initial render settle)
+    if (typeof requestIdleCallback !== 'undefined') {
+      idleHandle = requestIdleCallback(scanOnIdle, { timeout: 1000 });
+    } else {
+      setTimeout(scanOnIdle, 500);
+    }
 
     return () => {
       io.disconnect();
-      mutObs.disconnect();
+      if (idleHandle !== null && typeof cancelIdleCallback !== 'undefined') {
+        cancelIdleCallback(idleHandle);
+      }
     };
   }, []);
 }

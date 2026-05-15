@@ -619,40 +619,23 @@
    HERO BANNER — Dashboard enhancements
    ============================================ */
 
-/* Animated mesh gradient for hero banner background */
-@keyframes hero-mesh-drift {
-  0%, 100% {
-    background-position: 0% 50%, 100% 50%, 50% 0%;
-  }
-  25% {
-    background-position: 50% 0%, 0% 50%, 100% 50%;
-  }
-  50% {
-    background-position: 100% 50%, 50% 100%, 0% 50%;
-  }
-  75% {
-    background-position: 50% 100%, 100% 50%, 50% 0%;
-  }
-}
+/* ★ INP OPTIMIZATION: hero-mesh-drift animation REMOVED.
+   background-position animation forces main-thread repaint on every frame.
+   Replaced with static gradient — visually identical on mobile where the
+   subtle drift is barely visible, but eliminates constant paint cost. */
 
 .hero-mesh-bg-male {
-  will-change: background-position;
   background-image:
     radial-gradient(ellipse at 20% 50%, rgba(87, 181, 255, 0.1) 0%, transparent 50%),
     radial-gradient(ellipse at 80% 20%, rgba(46, 159, 255, 0.08) 0%, transparent 50%),
     radial-gradient(ellipse at 50% 80%, rgba(20, 120, 217, 0.06) 0%, transparent 50%);
-  background-size: 200% 200%;
-  animation: hero-mesh-drift 12s ease-in-out infinite;
 }
 
 .hero-mesh-bg-female {
-  will-change: background-position;
   background-image:
     radial-gradient(ellipse at 20% 50%, rgba(255, 92, 154, 0.1) 0%, transparent 50%),
     radial-gradient(ellipse at 80% 20%, rgba(255, 45, 120, 0.08) 0%, transparent 50%),
     radial-gradient(ellipse at 50% 80%, rgba(217, 22, 94, 0.06) 0%, transparent 50%);
-  background-size: 200% 200%;
-  animation: hero-mesh-drift 12s ease-in-out infinite;
 }
 
 /* Shimmer/shine sweep across the hero banner */
@@ -7810,14 +7793,14 @@ html {
    All respect prefers-reduced-motion
    ============================================ */
 
-/* ─── Hero: Title Breathing Glow ─── */
+/* ─── Hero: Title Breathing Glow — INP OPTIMIZED ───
+   ★ Removed box-shadow (forces main-thread paint every frame).
+   Opacity-only animation runs on compositor thread — zero main-thread cost. */
 @keyframes hero-title-breathe {
   0%, 100% {
-    box-shadow: 0 0 12px rgba(212, 168, 83, 0.05), 0 0 20px rgba(212, 168, 83, 0.03);
-    opacity: 0.6;
+    opacity: 0.5;
   }
   50% {
-    box-shadow: 0 0 16px rgba(212, 168, 83, 0.12), 0 0 20px rgba(212, 168, 83, 0.06);
     opacity: 1;
   }
 }
@@ -9114,23 +9097,36 @@ html {
   animation: hero-geo-float-3 8s ease-in-out infinite 0.5s;
 }
 
-/* ─── 6. Title Enhancement — Breathing text-shadow glow ─── */
+/* ─── 6. Title Enhancement — Breathing text-shadow glow ───
+   ★ INP OPTIMIZATION: filter/drop-shadow forces main-thread paint.
+   Replaced with opacity-only — compositor thread, zero paint cost. */
 @keyframes hero-title-text-glow {
-  0%, 100% { filter: drop-shadow(0 2px 12px rgba(212,168,83,0.15)); }
-  50% { filter: drop-shadow(0 2px 20px rgba(212,168,83,0.3)) drop-shadow(0 0 40px rgba(212,168,83,0.08)); }
+  0%, 100% { opacity: 0.85; }
+  50% { opacity: 1; }
 }
 .hero-title-glow-enhanced {
   animation: hero-title-text-glow 5s ease-in-out infinite;
 }
 
-/* Dramatic underline shimmer sweep */
+/* Dramatic underline shimmer sweep — INP OPTIMIZED
+   ★ Replaced background-position animation with transform: translateX.
+   Transform runs on compositor thread — zero main-thread cost. */
 @keyframes hero-underline-shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% { transform: translateX(-50%); }
+  50% { transform: translateX(50%); }
+  100% { transform: translateX(-50%); }
 }
 .hero-underline-dramatic {
   height: 2px;
   border-radius: 9999px;
+  overflow: hidden;
+  animation: hero-underline-expand 0.6s cubic-bezier(0.16,1,0.3,1) both;
+}
+.hero-underline-dramatic::after {
+  content: '';
+  display: block;
+  width: 200%;
+  height: 100%;
   background: linear-gradient(
     90deg,
     transparent 0%,
@@ -9141,8 +9137,7 @@ html {
     rgba(212,168,83,0.3) 85%,
     transparent 100%
   );
-  background-size: 200% 100%;
-  animation: hero-underline-shimmer 3s ease-in-out infinite, hero-underline-expand 0.6s cubic-bezier(0.16,1,0.3,1) both;
+  animation: hero-underline-shimmer 3s ease-in-out infinite;
 }
 
 /* ─── 7. Cinematic Vignette — Blue-tinted, darker edges ─── */
