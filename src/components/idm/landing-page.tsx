@@ -459,6 +459,66 @@ export function LandingPage() {
      The .section-reveal class is handled by the same CSS mechanism.
      Removing this eliminates a duplicate IntersectionObserver (was #3). */
 
+  /* Open player modal from shared link — ?player=<id>
+     Reads URL param once on mount, then opens the player profile modal.
+     Uses a ref to track processed ID and setTimeout(0) to avoid synchronous setState in effect. */
+  const sharedPlayerIdRef = useRef<string | null>(null);
+  useEffect(() => {
+    // Read player ID from URL once on mount
+    if (!sharedPlayerIdRef.current) {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('player');
+      if (id) sharedPlayerIdRef.current = id;
+    }
+    const playerId = sharedPlayerIdRef.current;
+    if (!playerId || !maleData || !femaleData) return;
+
+    // Try finding the player in already-loaded stats data first (instant, no extra fetch)
+    const malePlayer = maleData.topPlayers?.find(p => p.id === playerId);
+    const femalePlayer = femaleData.topPlayers?.find(p => p.id === playerId);
+
+    if (malePlayer) {
+      sharedPlayerIdRef.current = null;
+      window.history.replaceState({}, '', window.location.pathname);
+      // Use microtask to avoid synchronous setState in effect
+      queueMicrotask(() => setSelectedPlayer({ ...malePlayer, division: 'male' }));
+      return;
+    }
+    if (femalePlayer) {
+      sharedPlayerIdRef.current = null;
+      window.history.replaceState({}, '', window.location.pathname);
+      queueMicrotask(() => setSelectedPlayer({ ...femalePlayer, division: 'female' }));
+      return;
+    }
+
+    // Not in top players — fetch from API (only once)
+    sharedPlayerIdRef.current = null;
+    fetch(`/api/players/${encodeURIComponent(playerId)}`)
+      .then(res => res.ok ? res.json() : null)
+      .then(data => {
+        if (!data) return;
+        setSelectedPlayerRaw({
+          id: data.id,
+          name: data.name || data.gamertag,
+          gamertag: data.gamertag,
+          avatar: data.avatar,
+          tier: data.tier || 'B',
+          points: data.points || 0,
+          totalWins: data.totalWins || 0,
+          streak: data.streak || 0,
+          maxStreak: data.maxStreak || 0,
+          totalMvp: data.totalMvp || 0,
+          matches: data.matches || 0,
+          division: data.division || 'male',
+          city: data.city,
+          club: data.clubMembers?.[0]?.profile?.name || data.club || undefined,
+        });
+        setPreferredSkinType(null);
+        window.history.replaceState({}, '', window.location.pathname);
+      })
+      .catch(() => {});
+  }, [maleData, femaleData]);
+
   useSwipeNavigation();
   useScrollReveal();
 
