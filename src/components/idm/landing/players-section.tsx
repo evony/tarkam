@@ -84,13 +84,13 @@ export function PlayersSection({
   return (
     <section id="players" className="landing-section relative py-10 sm:py-24 px-4 overflow-hidden bg-deep" style={{ contain: 'layout style' }}>
       {/* Background — 2 layers only */}
-      <div className="absolute inset-0 opacity-[0.018]" style={{ backgroundImage: 'radial-gradient(circle, rgba(212,168,83,0.5) 1px, transparent 1px)', backgroundSize: '28px 28px' }} />
-      <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 50% 20%, rgba(212,168,83,0.07) 0%, transparent 50%), radial-gradient(ellipse at 12% 50%, rgba(46,159,255,0.05) 0%, transparent 40%), radial-gradient(ellipse at 88% 50%, rgba(255,45,120,0.05) 0%, transparent 40%)' }} />
+      <div className="absolute inset-0 opacity-[0.018]" style={{ backgroundImage: 'radial-gradient(circle, rgba(200,146,10,0.5) 1px, transparent 1px)', backgroundSize: '28px 28px' }} />
+      <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 50% 20%, rgba(200,146,10,0.07) 0%, transparent 50%), radial-gradient(ellipse at 12% 50%, rgba(46,159,255,0.05) 0%, transparent 40%), radial-gradient(ellipse at 88% 50%, rgba(255,45,120,0.05) 0%, transparent 40%)' }} />
       {/* Top edge glow */}
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[rgba(212,168,83,0.3)] to-transparent" aria-hidden="true" />
-      <div className="absolute inset-x-0 top-0 h-6 bg-gradient-to-b from-[rgba(212,168,83,0.025)] to-transparent pointer-events-none" aria-hidden="true" />
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[rgba(200,146,10,0.3)] to-transparent" aria-hidden="true" />
+      <div className="absolute inset-x-0 top-0 h-6 bg-gradient-to-b from-[rgba(200,146,10,0.025)] to-transparent pointer-events-none" aria-hidden="true" />
       {/* Bottom edge glow */}
-      <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[rgba(212,168,83,0.15)] to-transparent" aria-hidden="true" />
+      <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[rgba(200,146,10,0.15)] to-transparent" aria-hidden="true" />
 
       <div className="relative z-10 max-w-7xl mx-auto">
         <div className="stagger-item">
@@ -119,8 +119,8 @@ export function PlayersSection({
                         inline-flex items-center gap-1.5 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-bold
                         transition-all duration-200 cursor-pointer border
                         ${isSelected
-                          ? 'bg-[#d4a853]/15 border-[#d4a853]/40 text-[#d4a853] shadow-[0_0_12px_rgba(212,168,83,0.15)]'
-                          : 'bg-transparent border-[#d4a853]/10 text-muted-foreground/70 hover:border-[#d4a853]/25 hover:text-[#d4a853]/60'
+                          ? 'bg-[#C8920A]/15 border-[#C8920A]/40 text-[#C8920A] shadow-[0_0_12px_rgba(200,146,10,0.15)]'
+                          : 'bg-transparent border-[#C8920A]/10 text-muted-foreground/70 hover:border-[#C8920A]/25 hover:text-[#C8920A]/60'
                         }
                       `}
                       aria-label={`Select ${season.name}`}
@@ -134,7 +134,7 @@ export function PlayersSection({
                         </span>
                       )}
                       {isCompleted && (
-                        <CheckCircle2 className="w-3 h-3 text-[#d4a853]/60" />
+                        <CheckCircle2 className="w-3 h-3 text-[#C8920A]/60" />
                       )}
                     </button>
                   );
@@ -143,9 +143,9 @@ export function PlayersSection({
 
               {/* Historical Data Badge */}
               {isHistorical && (
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-[#d4a853]/20 bg-[#d4a853]/5">
-                  <History className="w-3 h-3 text-[#d4a853]/70" />
-                  <span className="text-[10px] font-bold text-[#d4a853]/70 uppercase tracking-wider">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-[#C8920A]/20 bg-[#C8920A]/5">
+                  <History className="w-3 h-3 text-[#C8920A]/70" />
+                  <span className="text-[10px] font-bold text-[#C8920A]/70 uppercase tracking-wider">
                     Data Historis — Season {seasonsForSelector.find(s => s.id === selectedSeasonId)?.number || '?'}
                   </span>
                 </div>
@@ -157,10 +157,10 @@ export function PlayersSection({
         {/* Season switch loading indicator — subtle shimmer bar */}
         {isSeasonSwitching && (
           <div className="mb-4 flex items-center justify-center gap-2">
-            <div className="h-1 w-24 rounded-full overflow-hidden bg-[#d4a853]/10">
-              <div className="h-full w-1/3 bg-[#d4a853]/40 rounded-full animate-pulse" style={{ animation: 'shimmer 1.5s infinite linear' }} />
+            <div className="h-1 w-24 rounded-full overflow-hidden bg-[#C8920A]/10">
+              <div className="h-full w-1/3 bg-[#C8920A]/40 rounded-full animate-pulse" style={{ animation: 'shimmer 1.5s infinite linear' }} />
             </div>
-            <span className="text-[10px] font-bold text-[#d4a853]/50 uppercase tracking-wider">Memuat data season...</span>
+            <span className="text-[10px] font-bold text-[#C8920A]/50 uppercase tracking-wider">Memuat data season...</span>
           </div>
         )}
 
@@ -233,16 +233,16 @@ export function PlayersSection({
                               skinColors
                                 ? ''
                                 : isChampion
-                                  ? 'border-[rgba(212,168,83,0.25)]'
+                                  ? 'border-[rgba(200,146,10,0.25)]'
                                   : isTop3
                                     ? 'border-[rgba(46,159,255,0.2)]'
-                                    : 'border-[rgba(212,168,83,0.08)]'
+                                    : 'border-[rgba(200,146,10,0.08)]'
                             }`}
                             style={{
                               background: skinColors
                                 ? `linear-gradient(180deg, ${skinColors.frame}08 0%, var(--bg-mid) 40%)`
                                 : isChampion
-                                  ? 'linear-gradient(180deg, rgba(212,168,83,0.08) 0%, var(--bg-mid) 40%)'
+                                  ? 'linear-gradient(180deg, rgba(200,146,10,0.08) 0%, var(--bg-mid) 40%)'
                                   : isTop3
                                     ? 'linear-gradient(180deg, rgba(46,159,255,0.06) 0%, var(--bg-mid) 40%)'
                                     : 'linear-gradient(180deg, rgba(46,159,255,0.03) 0%, var(--bg-mid) 40%)',
@@ -250,7 +250,7 @@ export function PlayersSection({
                               boxShadow: skinColors
                                 ? `0 0 10px ${skinColors.glow}`
                                 : isChampion
-                                  ? '0 0 10px rgba(212,168,83,0.12)'
+                                  ? '0 0 10px rgba(200,146,10,0.12)'
                                   : isTop3
                                     ? '0 0 8px rgba(46,159,255,0.08)'
                                     : '0 1px 4px rgba(0,0,0,0.12)',
@@ -273,7 +273,7 @@ export function PlayersSection({
                                 {/* Outer glow ring */}
                                 <div
                                   className={`absolute -inset-1.5 rounded-3xl transition-all duration-500 ${
-                                    isChampion && !skinColors ? 'shadow-[0_0_16px_rgba(212,168,83,0.3)]' : isTop3 && !skinColors ? 'shadow-[0_0_12px_rgba(46,159,255,0.2)]' : ''
+                                    isChampion && !skinColors ? 'shadow-[0_0_16px_rgba(200,146,10,0.3)]' : isTop3 && !skinColors ? 'shadow-[0_0_12px_rgba(46,159,255,0.2)]' : ''
                                   }`}
                                   style={skinColors
                                     ? {
@@ -281,7 +281,7 @@ export function PlayersSection({
                                         boxShadow: `0 0 14px ${skinColors.glow}`,
                                       }
                                     : isChampion
-                                      ? { background: 'linear-gradient(135deg, rgba(212,168,83,0.25), rgba(212,168,83,0.08))' }
+                                      ? { background: 'linear-gradient(135deg, rgba(200,146,10,0.25), rgba(200,146,10,0.08))' }
                                       : isTop3
                                         ? { background: 'linear-gradient(135deg, rgba(46,159,255,0.2), rgba(46,159,255,0.06))' }
                                         : { background: 'linear-gradient(135deg, rgba(46,159,255,0.12), rgba(46,159,255,0.03))' }
@@ -318,7 +318,7 @@ export function PlayersSection({
                                   skinColors
                                     ? ''
                                     : isChampion
-                                      ? 'text-[#d4a853] dark:text-[#d4a853] text-idm-gold-warm'
+                                      ? 'text-[#C8920A] dark:text-[#C8920A] text-idm-gold-warm'
                                       : isTop3
                                         ? 'text-[#57B5FF] dark:text-[#57B5FF] text-idm-male'
                                         : 'text-white dark:text-white text-foreground group-hover/player:text-[#57B5FF]'
@@ -352,11 +352,11 @@ export function PlayersSection({
                               {/* Stats row — compact on mobile */}
                               <div
                                 className="mt-2 flex items-center justify-center gap-2 px-2 py-1 sm:px-3 sm:py-1.5 rounded-lg mx-auto"
-                                style={{ background: 'rgba(212,168,83,0.04)' }}
+                                style={{ background: 'rgba(200,146,10,0.04)' }}
                               >
                                 <div className="flex items-center gap-1">
-                                  <Trophy className="w-3 h-3 text-[#d4a853]/50" />
-                                  <span className="text-[10px] text-[#d4a853]/70 font-bold">{player.points.toLocaleString('id-ID')} pts</span>
+                                  <Trophy className="w-3 h-3 text-[#C8920A]/50" />
+                                  <span className="text-[10px] text-[#C8920A]/70 font-bold">{player.points.toLocaleString('id-ID')} pts</span>
                                 </div>
                                 {!isHistorical && (
                                   <div className="flex items-center gap-1">
@@ -459,16 +459,16 @@ export function PlayersSection({
                               skinColors
                                 ? ''
                                 : isChampion
-                                  ? 'border-[rgba(212,168,83,0.25)]'
+                                  ? 'border-[rgba(200,146,10,0.25)]'
                                   : isTop3
                                     ? 'border-[rgba(255,45,120,0.2)]'
-                                    : 'border-[rgba(212,168,83,0.08)]'
+                                    : 'border-[rgba(200,146,10,0.08)]'
                             }`}
                             style={{
                               background: skinColors
                                 ? `linear-gradient(180deg, ${skinColors.frame}08 0%, var(--bg-mid) 40%)`
                                 : isChampion
-                                  ? 'linear-gradient(180deg, rgba(212,168,83,0.08) 0%, var(--bg-mid) 40%)'
+                                  ? 'linear-gradient(180deg, rgba(200,146,10,0.08) 0%, var(--bg-mid) 40%)'
                                   : isTop3
                                     ? 'linear-gradient(180deg, rgba(255,45,120,0.06) 0%, var(--bg-mid) 40%)'
                                     : 'linear-gradient(180deg, rgba(255,45,120,0.03) 0%, var(--bg-mid) 40%)',
@@ -476,7 +476,7 @@ export function PlayersSection({
                               boxShadow: skinColors
                                 ? `0 0 10px ${skinColors.glow}`
                                 : isChampion
-                                  ? '0 0 10px rgba(212,168,83,0.12)'
+                                  ? '0 0 10px rgba(200,146,10,0.12)'
                                   : isTop3
                                     ? '0 0 8px rgba(255,45,120,0.08)'
                                     : '0 1px 4px rgba(0,0,0,0.12)',
@@ -499,7 +499,7 @@ export function PlayersSection({
                                 {/* Outer glow ring */}
                                 <div
                                   className={`absolute -inset-1.5 rounded-3xl transition-all duration-500 ${
-                                    isChampion && !skinColors ? 'shadow-[0_0_16px_rgba(212,168,83,0.3)]' : isTop3 && !skinColors ? 'shadow-[0_0_12px_rgba(255,45,120,0.2)]' : ''
+                                    isChampion && !skinColors ? 'shadow-[0_0_16px_rgba(200,146,10,0.3)]' : isTop3 && !skinColors ? 'shadow-[0_0_12px_rgba(255,45,120,0.2)]' : ''
                                   }`}
                                   style={skinColors
                                     ? {
@@ -507,7 +507,7 @@ export function PlayersSection({
                                         boxShadow: `0 0 14px ${skinColors.glow}`,
                                       }
                                     : isChampion
-                                      ? { background: 'linear-gradient(135deg, rgba(212,168,83,0.25), rgba(212,168,83,0.08))' }
+                                      ? { background: 'linear-gradient(135deg, rgba(200,146,10,0.25), rgba(200,146,10,0.08))' }
                                       : isTop3
                                         ? { background: 'linear-gradient(135deg, rgba(255,45,120,0.2), rgba(255,45,120,0.06))' }
                                         : { background: 'linear-gradient(135deg, rgba(255,45,120,0.12), rgba(255,45,120,0.03))' }
@@ -544,7 +544,7 @@ export function PlayersSection({
                                   skinColors
                                     ? ''
                                     : isChampion
-                                      ? 'text-[#d4a853] dark:text-[#d4a853] text-idm-gold-warm'
+                                      ? 'text-[#C8920A] dark:text-[#C8920A] text-idm-gold-warm'
                                       : isTop3
                                         ? 'text-[#FF5C9A] dark:text-[#FF5C9A] text-idm-female'
                                         : 'text-white dark:text-white text-foreground group-hover/player:text-[#FF5C9A]'
@@ -578,11 +578,11 @@ export function PlayersSection({
                               {/* Stats row — compact on mobile */}
                               <div
                                 className="mt-2 flex items-center justify-center gap-2 px-2 py-1 sm:px-3 sm:py-1.5 rounded-lg mx-auto"
-                                style={{ background: 'rgba(212,168,83,0.04)' }}
+                                style={{ background: 'rgba(200,146,10,0.04)' }}
                               >
                                 <div className="flex items-center gap-1">
-                                  <Trophy className="w-3 h-3 text-[#d4a853]/50" />
-                                  <span className="text-[10px] text-[#d4a853]/70 font-bold">{player.points.toLocaleString('id-ID')} pts</span>
+                                  <Trophy className="w-3 h-3 text-[#C8920A]/50" />
+                                  <span className="text-[10px] text-[#C8920A]/70 font-bold">{player.points.toLocaleString('id-ID')} pts</span>
                                 </div>
                                 {!isHistorical && (
                                   <div className="flex items-center gap-1">

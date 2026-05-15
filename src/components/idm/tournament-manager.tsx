@@ -205,7 +205,7 @@ function AdminMatchCard({ m, labelOverride, selected, getTeamName, scoreInputs, 
       isLive ? 'bg-red-500/5 border-red-500/20 shadow-[0_0_8px_rgba(239,68,68,0.1)]' :
       isCompleted ? 'bg-muted/30 border-border/20' :
       isReady ? 'bg-green-500/5 border-green-500/20' :
-      isGrandFinal ? 'bg-idm-gold-warm/5 border-idm-gold-warm/25 shadow-[0_0_12px_rgba(212,168,83,0.1)]' :
+      isGrandFinal ? 'bg-idm-gold-warm/5 border-idm-gold-warm/25 shadow-[0_0_12px_rgba(200,146,10,0.1)]' :
       is3rd ? 'bg-orange-500/5 border-orange-500/15' :
       'bg-muted/20 border-border/10'
     }`}>
@@ -2104,7 +2104,7 @@ export function TournamentManager({ division, dt, stats, setConfirmDialog }: Tou
                         isGrandFinal ? 'bg-idm-gold-warm/5 border-idm-gold-warm/25' :
                         is3rd ? 'bg-orange-500/5 border-orange-500/15' :
                         'bg-muted/20 border-border/10'
-                      } ${isGrandFinal ? 'shadow-[0_0_12px_rgba(212,168,83,0.1)]' : ''}`}>
+                      } ${isGrandFinal ? 'shadow-[0_0_12px_rgba(200,146,10,0.1)]' : ''}`}>
 
                         <div className="flex items-center justify-between mb-1.5">
                           <div className="flex items-center gap-2">

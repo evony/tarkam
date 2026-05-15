@@ -26,29 +26,29 @@ export function AboutSection({ cmsSections, cmsSettings }: AboutSectionProps) {
 
   // Highlight key words
   const highlighted = firstParagraph
-    .replace(/Idol Meta/g, '<span class="text-[#d4a853] font-semibold">Idol Meta</span>')
-    .replace(/Tarkam IDM/g, '<span class="text-[#d4a853] font-semibold">Tarkam IDM</span>')
-    .replace(/Tarkam/g, '<span class="text-[#d4a853] font-semibold">Tarkam</span>');
+    .replace(/Idol Meta/g, '<span class="text-[#C8920A] font-semibold">Idol Meta</span>')
+    .replace(/Tarkam IDM/g, '<span class="text-[#C8920A] font-semibold">Tarkam IDM</span>')
+    .replace(/Tarkam/g, '<span class="text-[#C8920A] font-semibold">Tarkam</span>');
 
   return (
     <section id="about" role="region" aria-label="Cerita Kami" className="relative py-12 sm:py-16 px-4 overflow-hidden bg-deep">
       {/* Background — subtle warm glow */}
-      <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 50% 50%, rgba(212,168,83,0.04) 0%, transparent 50%)' }} />
+      <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 50% 50%, rgba(200,146,10,0.04) 0%, transparent 50%)' }} />
 
       <div className="relative z-10 max-w-3xl mx-auto text-center">
         <AnimatedSection>
           {/* Simple centered text block with gold accents */}
           <div className="flex items-center justify-center gap-3 mb-3">
-            <div className="h-px w-8 bg-gradient-to-r from-transparent to-[#d4a853]/40" />
-            <Flame className="w-3.5 h-3.5 text-[#d4a853]/60" />
-            <div className="h-px w-8 bg-gradient-to-l from-transparent to-[#d4a853]/40" />
+            <div className="h-px w-8 bg-gradient-to-r from-transparent to-[#C8920A]/40" />
+            <Flame className="w-3.5 h-3.5 text-[#C8920A]/60" />
+            <div className="h-px w-8 bg-gradient-to-l from-transparent to-[#C8920A]/40" />
           </div>
-          <h3 className="text-lg sm:text-xl font-black text-[#d4a853] mb-3">{sectionTitle}</h3>
+          <h3 className="text-lg sm:text-xl font-black text-[#C8920A] mb-3">{sectionTitle}</h3>
           <p className="text-sm text-muted-foreground leading-relaxed max-w-xl mx-auto" dangerouslySetInnerHTML={{ __html: highlighted }} />
           <div className="mt-4 flex items-center justify-center gap-2">
-            <div className="h-px w-12 bg-gradient-to-r from-transparent to-[#d4a853]/20" />
-            <span className="text-[10px] font-bold text-[#d4a853]/40 uppercase tracking-widest">{bottomTagline}</span>
-            <div className="h-px w-12 bg-gradient-to-l from-transparent to-[#d4a853]/20" />
+            <div className="h-px w-12 bg-gradient-to-r from-transparent to-[#C8920A]/20" />
+            <span className="text-[10px] font-bold text-[#C8920A]/40 uppercase tracking-widest">{bottomTagline}</span>
+            <div className="h-px w-12 bg-gradient-to-l from-transparent to-[#C8920A]/20" />
           </div>
         </AnimatedSection>
       </div>

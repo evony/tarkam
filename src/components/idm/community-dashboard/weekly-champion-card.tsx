@@ -131,7 +131,7 @@ function DivisionChampionCard({
             </p>
           </div>
           {selectedChampion && selectedChampion.prizePool > 0 && (
-            <div className="shrink-0 flex items-center gap-1 px-2 py-1 rounded-lg" style={{ background: 'linear-gradient(135deg, rgba(229,190,74,0.15), rgba(229,190,74,0.05))' }}>
+            <div className="shrink-0 flex items-center gap-1 px-2 py-1 rounded-lg" style={{ background: 'linear-gradient(135deg, rgba(240,165,0,0.15), rgba(240,165,0,0.05))' }}>
               <Wallet className="w-3 h-3 text-idm-gold-warm" />
               <span className="text-[10px] font-black text-idm-gold-warm">
                 {selectedChampion.prizePool >= 1_000_000

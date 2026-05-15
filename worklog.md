@@ -326,3 +326,41 @@ Stage Summary:
 - If club won both divisions: merged label "♂♀ S1 Champion"
 - If club won only one: shows "♂ S1 Champion" or "♀ S1 Champion"
 - DO NOT PUSH until user confirms
+---
+Task ID: 1
+Agent: Main Agent
+Task: Change gold color to PUBG Esports-inspired amber-gold palette
+
+Work Log:
+- Analyzed PUBG Esports website (pubgesports.com/en) using VLM and web-reader
+- Identified PUBG gold as a more vivid, saturated amber-gold (~#F0A500) vs our muted gold (#e5be4a)
+- Updated all CSS variables in globals.css (dark mode + light mode)
+- Batch replaced all hardcoded gold hex colors across 37+ component files
+- Batch replaced all rgba() gold references (primary + warm gold variants)
+- Updated gradient text classes, chart colors, community colors
+- Verified lint passes cleanly
+- Confirmed dev server is serving updated pages
+
+Color Mapping (Old → New):
+- Primary gold: #e5be4a → #F0A500 (vivid amber gold)
+- Warm gold: #d4a853 → #C8920A (deeper amber)
+- Chart gold 2: #d4a017 → #B88200
+- Dark gold: #b8860b → #9A700A
+- Light gold: #f5d77a → #FFD54F
+- Muted gold: #c4963a → #A8800A
+- Community dark: #a07c30 → #8A6818
+- Foreground: #f5e6c8 → #FAF0DC
+- Muted foreground: #a89878 → #9A8860
+- Primary gold rgba: rgba(229,190,74,X) → rgba(240,165,0,X)
+- Warm gold rgba: rgba(212,168,83,X) → rgba(200,146,10,X)
+
+Light mode:
+- Primary: #9A700A → #C48A00 (lighter amber for white bg)
+- Dark accents: #92400e → #7A360A
+
+Stage Summary:
+- Complete color palette overhaul to PUBG Esports-inspired amber-gold
+- More vivid, saturated gold that pops against dark backgrounds
+- Warmer amber tone vs previous muted yellow-gold
+- All 37+ component files updated with consistent color mapping
+- Lint passes, dev server running correctly

@@ -23,7 +23,7 @@ interface ConfettiProps {
 export function Confetti({
   trigger,
   onComplete,
-  colors = ['#d4a853', '#f0c674', '#e8d5a3', '#57B5FF', '#FF5C9A', '#22c55e'],
+  colors = ['#C8920A', '#f0c674', '#e8d5a3', '#57B5FF', '#FF5C9A', '#22c55e'],
   pieceCount = 50,
 }: ConfettiProps) {
   const [pieces, setPieces] = useState<ConfettiPiece[]>([]);

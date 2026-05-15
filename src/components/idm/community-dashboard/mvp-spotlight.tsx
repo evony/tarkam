@@ -227,14 +227,14 @@ function MvpDivisionCard({
 
           {/* Crown badge — top right */}
           <div className="absolute top-2 right-2 z-10">
-            <div className="w-6 h-6 lg:w-7 lg:h-7 rounded-full bg-idm-gold-warm flex items-center justify-center shadow-[0_0_12px_rgba(212,168,83,0.4)] mvp-platinum-pulse">
+            <div className="w-6 h-6 lg:w-7 lg:h-7 rounded-full bg-idm-gold-warm flex items-center justify-center shadow-[0_0_12px_rgba(200,146,10,0.4)] mvp-platinum-pulse">
               <Crown className="w-3 h-3 lg:w-3.5 lg:h-3.5 text-background" />
             </div>
           </div>
 
           {/* MVP badge — bottom */}
           <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-10">
-            <Badge className="bg-gradient-to-r from-idm-gold-warm to-amber-500 text-black text-[7px] font-black border-0 px-2 py-0.5 shadow-[0_0_8px_rgba(229,190,74,0.3)] whitespace-nowrap">
+            <Badge className="bg-gradient-to-r from-idm-gold-warm to-amber-500 text-black text-[7px] font-black border-0 px-2 py-0.5 shadow-[0_0_8px_rgba(240,165,0,0.3)] whitespace-nowrap">
               <Star className="w-2 h-2 mr-0.5" />
               MVP
             </Badge>

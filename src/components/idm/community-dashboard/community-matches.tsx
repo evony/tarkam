@@ -180,11 +180,11 @@ export function CommunityMatches({ maleData, femaleData, selectedDivision = 'all
             className="animate-fade-enter-sm h-full"
             style={{ animationDelay: `${i * 80}ms` }}
           >
-            <Card className={`${dt.casinoCard} border ${isMyDivision ? 'border-idm-gold-warm/15 shadow-[0_0_12px_rgba(212,168,83,0.10)]' : dt.borderSubtle} overflow-hidden group hover:shadow-md transition-all duration-300 h-full flex flex-col relative`}>
+            <Card className={`${dt.casinoCard} border ${isMyDivision ? 'border-idm-gold-warm/15 shadow-[0_0_12px_rgba(200,146,10,0.10)]' : dt.borderSubtle} overflow-hidden group hover:shadow-md transition-all duration-300 h-full flex flex-col relative`}>
               <div className={dt.casinoBar} />
               {/* "Match Kamu" indicator */}
               {isMyDivision && (
-                <div className="absolute top-2 right-2 z-10 flex items-center gap-1 px-2 py-0.5 rounded-full bg-idm-gold-warm/20 border border-idm-gold-warm/30 shadow-[0_0_8px_rgba(212,168,83,0.15)]">
+                <div className="absolute top-2 right-2 z-10 flex items-center gap-1 px-2 py-0.5 rounded-full bg-idm-gold-warm/20 border border-idm-gold-warm/30 shadow-[0_0_8px_rgba(200,146,10,0.15)]">
                   <Star className="w-2.5 h-2.5 text-idm-gold-warm" />
                   <span className="text-[7px] font-bold text-idm-gold-warm uppercase tracking-wider">Match Kamu</span>
                 </div>

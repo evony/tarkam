@@ -661,7 +661,7 @@ export function Dashboard() {
                   />
                   <StatusBadge status={t?.status || 'registration'} />
                 </div>
-                <span className="px-2.5 py-1 rounded-md bg-gradient-to-r from-idm-gold-warm/25 to-[#e8d5a3]/15 border border-idm-gold-warm/30 text-[10px] sm:text-xs font-bold text-idm-gold-warm drop-shadow-[0_0_8px_rgba(229,190,74,0.3)]">💰 {formatCurrencyShort(data.activeTournamentPrizePool ?? t?.prizePool ?? data.totalPrizePool)}</span>
+                <span className="px-2.5 py-1 rounded-md bg-gradient-to-r from-idm-gold-warm/25 to-[#e8d5a3]/15 border border-idm-gold-warm/30 text-[10px] sm:text-xs font-bold text-idm-gold-warm drop-shadow-[0_0_8px_rgba(240,165,0,0.3)]">💰 {formatCurrencyShort(data.activeTournamentPrizePool ?? t?.prizePool ?? data.totalPrizePool)}</span>
               </div>
             </div>
 
@@ -698,12 +698,12 @@ export function Dashboard() {
             </div>
             <div className="flex flex-col items-center gap-1.5">
               <p className="text-[10px] lg:text-xs text-white/40 uppercase tracking-[0.2em] font-semibold">Prize Pool</p>
-              <p className="px-3 py-2 lg:px-5 lg:py-2.5 rounded-2xl bg-black/60 text-base lg:text-2xl font-black text-idm-gold-warm drop-shadow-[0_0_16px_rgba(229,190,74,0.45)] whitespace-nowrap">{formatCurrency(data.activeTournamentPrizePool ?? t?.prizePool ?? data.totalPrizePool)}</p>
+              <p className="px-3 py-2 lg:px-5 lg:py-2.5 rounded-2xl bg-black/60 text-base lg:text-2xl font-black text-idm-gold-warm drop-shadow-[0_0_16px_rgba(240,165,0,0.45)] whitespace-nowrap">{formatCurrency(data.activeTournamentPrizePool ?? t?.prizePool ?? data.totalPrizePool)}</p>
               <p className="text-[8px] text-idm-gold-warm/50 font-medium">💰 dari saweran komunitas</p>
             </div>
             <button
               onClick={() => setDonationOpen(true)}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 lg:px-5 lg:py-3 rounded-2xl text-xs lg:text-sm font-bold bg-gradient-to-r from-idm-gold-warm to-[#e8d5a3] text-black hover:scale-105 hover:shadow-[0_0_20px_rgba(229,190,74,0.3)] active:scale-95 transition-all cursor-pointer min-h-[40px] lg:min-h-[44px]"
+              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 lg:px-5 lg:py-3 rounded-2xl text-xs lg:text-sm font-bold bg-gradient-to-r from-idm-gold-warm to-[#e8d5a3] text-black hover:scale-105 hover:shadow-[0_0_20px_rgba(240,165,0,0.3)] active:scale-95 transition-all cursor-pointer min-h-[40px] lg:min-h-[44px]"
             >
               <Gift className="w-4 h-4 lg:w-5 lg:h-5" />
               Sawer

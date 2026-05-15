@@ -322,8 +322,8 @@ export function TopPlayersSection({ data, division, setSelectedPlayer }: TopPlay
                         completedWeeks={completedWeeks}
                         selectedWeek={selectedChampionWeek}
                         onWeekChange={setSelectedChampionWeek}
-                        accent="#d4a853"
-                        accentLight="#e5be4a"
+                        accent="#C8920A"
+                        accentLight="#F0A500"
                         size="xs"
                       />
                     </div>
@@ -408,8 +408,8 @@ export function TopPlayersSection({ data, division, setSelectedPlayer }: TopPlay
                         completedWeeks={mvpWeeks}
                         selectedWeek={selectedMvpWeek}
                         onWeekChange={setSelectedMvpWeek}
-                        accent="#d4a853"
-                        accentLight="#e5be4a"
+                        accent="#C8920A"
+                        accentLight="#F0A500"
                         size="xs"
                       />
                     </div>

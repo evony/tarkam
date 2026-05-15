@@ -41,10 +41,10 @@ const ClubLogo = React.memo(function ClubLogo({ name, size = 120, isChampion }: 
 }) {
   const hash = hashString(name);
   // Unified clubs use gold/league color scheme
-  const primaryColor = '#d4a853';
-  const secondaryColor = '#f5d78e';
-  const lightColor = '#f5d78e';
-  const darkColor = '#a07c30';
+  const primaryColor = '#C8920A';
+  const secondaryColor = '#FFD54F';
+  const lightColor = '#FFD54F';
+  const darkColor = '#8A6818';
 
   // Generate pattern variants based on hash
   const segments = 5 + (hash % 4);
@@ -189,7 +189,7 @@ const ClubLogo = React.memo(function ClubLogo({ name, size = 120, isChampion }: 
 
 // ─── Banner Geometric Pattern — Gold/League style ───
 function BannerPattern() {
-  const color = '#d4a853';
+  const color = '#C8920A';
   return (
     <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="xMidYMid slice" viewBox="0 0 400 220">
       <defs>
@@ -352,7 +352,7 @@ export function ClubProfile({ club, onClose, rank, onPlayerClick }: ClubProfileP
 
             {/* Gold league accent — unified club, no division split */}
             <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-              <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 50% 30%, rgba(212,168,83,0.06) 0%, transparent 60%)' }} />
+              <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 50% 30%, rgba(200,146,10,0.06) 0%, transparent 60%)' }} />
             </div>
 
             {/* Bottom fade to background */}
@@ -402,7 +402,7 @@ export function ClubProfile({ club, onClose, rank, onPlayerClick }: ClubProfileP
                     <ClubLogoImage clubName={club.name} dbLogo={club.logo} alt={club.name} width={100} height={100} className="w-full h-full object-cover" style={isChampion ? { filter: 'drop-shadow(0 0 12px rgba(234, 179, 8, 0.2))' } : undefined} />
                     {/* Season champion badge */}
                     {isChampion && (
-                      <div className="absolute -top-1 -right-1 z-20 min-w-[28px] h-[28px] rounded-full bg-[#d4a853] flex items-center justify-center shadow-lg shadow-[#d4a853]/30 border-2 border-mid">
+                      <div className="absolute -top-1 -right-1 z-20 min-w-[28px] h-[28px] rounded-full bg-[#C8920A] flex items-center justify-center shadow-lg shadow-[#C8920A]/30 border-2 border-mid">
                         <span className="text-[10px] font-black text-mid leading-none">S1</span>
                       </div>
                     )}
@@ -423,7 +423,7 @@ export function ClubProfile({ club, onClose, rank, onPlayerClick }: ClubProfileP
           <div className="px-4 pt-16 pb-6">
             {/* Name & Division */}
             <div className="text-center mb-4">
-              <h2 className="text-xl font-black" style={{ background: 'linear-gradient(135deg, var(--idm-gold-warm), #f5d78e, var(--idm-gold-warm))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{club.name}</h2>
+              <h2 className="text-xl font-black" style={{ background: 'linear-gradient(135deg, var(--idm-gold-warm), #FFD54F, var(--idm-gold-warm))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{club.name}</h2>
               <div className="flex items-center justify-center gap-2 mt-2">
                 {/* Club badge — unified, no division split */}
                 <Badge className="bg-idm-gold-warm/10 text-idm-gold-warm text-[10px] border-0">

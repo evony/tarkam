@@ -50,7 +50,7 @@ interface VideoHighlight {
 
 /* ─── Color Tokens ─── */
 const COLORS = {
-  gold: '#d4a853',
+  gold: '#C8920A',
   cyan: '#2E9FFF',
   purple: '#FF2D78',
   darkBg: 'var(--bg-deep)',
@@ -103,21 +103,21 @@ function getDivisionConfig(division: 'male' | 'female' | 'both') {
   }
   return {
     color: COLORS.gold,
-    glow: 'rgba(212,168,83,0.15)',
-    bg: 'rgba(212,168,83,0.10)',
-    border: 'rgba(212,168,83,0.20)',
-    hoverBorder: 'rgba(212,168,83,0.35)',
-    gradient: 'from-[#d4a853]/20 via-mid to-mid',
+    glow: 'rgba(200,146,10,0.15)',
+    bg: 'rgba(200,146,10,0.10)',
+    border: 'rgba(200,146,10,0.20)',
+    hoverBorder: 'rgba(200,146,10,0.35)',
+    gradient: 'from-[#C8920A]/20 via-mid to-mid',
     label: 'BOTH',
     meshBg: `
-      radial-gradient(ellipse at 15% 30%, rgba(212,168,83,0.18) 0%, transparent 55%),
-      radial-gradient(ellipse at 85% 15%, rgba(229,190,74,0.12) 0%, transparent 50%),
+      radial-gradient(ellipse at 15% 30%, rgba(200,146,10,0.18) 0%, transparent 55%),
+      radial-gradient(ellipse at 85% 15%, rgba(240,165,0,0.12) 0%, transparent 50%),
       radial-gradient(ellipse at 50% 95%, rgba(184,134,11,0.10) 0%, transparent 45%),
       radial-gradient(ellipse at 70% 60%, rgba(245,215,122,0.06) 0%, transparent 40%),
-      conic-gradient(from 180deg at 50% 50%, rgba(212,168,83,0.04) 0deg, transparent 60deg, rgba(229,190,74,0.03) 120deg, transparent 180deg, rgba(184,134,11,0.04) 240deg, transparent 300deg, rgba(212,168,83,0.04) 360deg)
+      conic-gradient(from 180deg at 50% 50%, rgba(200,146,10,0.04) 0deg, transparent 60deg, rgba(240,165,0,0.03) 120deg, transparent 180deg, rgba(184,134,11,0.04) 240deg, transparent 300deg, rgba(200,146,10,0.04) 360deg)
     `,
-    glowLine: `rgba(212,168,83,0.45)`,
-    shadow: `0 0 8px rgba(212,168,83,0.25), 0 0 3px rgba(212,168,83,0.4)`,
+    glowLine: `rgba(200,146,10,0.45)`,
+    shadow: `0 0 8px rgba(200,146,10,0.25), 0 0 3px rgba(200,146,10,0.4)`,
   };
 }
 
@@ -810,9 +810,9 @@ function FeaturedBanner({
                     <div
                       className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full flex flex-col items-center justify-center gap-1 transition-all duration-300"
                       style={{
-                        background: 'rgba(212,168,83,0.08)',
+                        background: 'rgba(200,146,10,0.08)',
                         backdropFilter: 'blur(12px)',
-                        border: '2px solid rgba(212,168,83,0.25)',
+                        border: '2px solid rgba(200,146,10,0.25)',
                         boxShadow: `0 0 40px ${hexToRgba(COLORS.gold, 0.08)}, inset 0 0 20px ${hexToRgba(COLORS.gold, 0.03)}`,
                       }}
                     >
@@ -823,7 +823,7 @@ function FeaturedBanner({
                     <div
                       className="absolute inset-0 -m-3 rounded-full pointer-events-none"
                       style={{
-                        border: '1.5px dashed rgba(212,168,83,0.15)',
+                        border: '1.5px dashed rgba(200,146,10,0.15)',
                         animation: 'spin-slow 30s linear infinite',
                       }}
                     />
@@ -864,7 +864,7 @@ function FeaturedBanner({
             {/* Coming Soon badge (top-right) — only for no-video */}
             {!hasVideo && (
               <div className="absolute top-4 right-4 z-20">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider border bg-[rgba(212,168,83,0.12)] border-[rgba(212,168,83,0.2)] text-[#d4a853]">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider border bg-[rgba(200,146,10,0.12)] border-[rgba(200,146,10,0.2)] text-[#C8920A]">
                   <Clock className="w-3 h-3" />
                   Coming Soon
                 </span>
@@ -942,7 +942,7 @@ function VideoListItem({
           background: isActive
             ? `linear-gradient(135deg, ${hexToRgba(divConfig.color, 0.08)} 0%, var(--bg-mid) 60%, ${hexToRgba(divConfig.color, 0.04)} 100%)`
             : COLORS.cardBg,
-          borderColor: isActive ? `${divConfig.color}40` : 'rgba(212,168,83,0.08)',
+          borderColor: isActive ? `${divConfig.color}40` : 'rgba(200,146,10,0.08)',
           boxShadow: isActive
             ? `${divConfig.shadow}, 0 4px 16px rgba(0,0,0,0.25)`
             : '0 1px 3px rgba(0,0,0,0.12)',
@@ -955,7 +955,7 @@ function VideoListItem({
         }}
         onMouseLeave={(e) => {
           if (!isActive) {
-            e.currentTarget.style.borderColor = 'rgba(212,168,83,0.08)';
+            e.currentTarget.style.borderColor = 'rgba(200,146,10,0.08)';
             e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.12)';
           }
         }}
@@ -1027,7 +1027,7 @@ function VideoListItem({
                     </span>
                   )}
                   {video.seasonNumber && !video.weekNumber && (
-                    <span className="text-[9px] font-bold uppercase tracking-wider text-[#d4a853]">
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-[#C8920A]">
                       S{video.seasonNumber}
                     </span>
                   )}
@@ -1037,7 +1037,7 @@ function VideoListItem({
                 </>
               )}
               {!hasVideo && (
-                <span className="text-[9px] font-bold uppercase tracking-wider text-[#d4a853]/60">
+                <span className="text-[9px] font-bold uppercase tracking-wider text-[#C8920A]/60">
                   · Soon
                 </span>
               )}
@@ -1082,25 +1082,25 @@ function EmptyState() {
       <div
         className="w-20 h-20 rounded-2xl border flex items-center justify-center mb-5 relative overflow-hidden"
         style={{
-          background: 'linear-gradient(135deg, rgba(212,168,83,0.10) 0%, rgba(212,168,83,0.03) 100%)',
-          borderColor: 'rgba(212,168,83,0.15)',
-          boxShadow: '0 0 12px rgba(212,168,83,0.05), inset 0 1px 0 rgba(212,168,83,0.08)',
+          background: 'linear-gradient(135deg, rgba(200,146,10,0.10) 0%, rgba(200,146,10,0.03) 100%)',
+          borderColor: 'rgba(200,146,10,0.15)',
+          boxShadow: '0 0 12px rgba(200,146,10,0.05), inset 0 1px 0 rgba(200,146,10,0.08)',
         }}
       >
         {/* Top glow line */}
         <div
           className="absolute inset-x-0 top-0 h-px pointer-events-none"
           style={{
-            background: 'linear-gradient(90deg, transparent, rgba(212,168,83,0.4), transparent)',
-            boxShadow: '0 0 6px rgba(212,168,83,0.15)',
+            background: 'linear-gradient(90deg, transparent, rgba(200,146,10,0.4), transparent)',
+            boxShadow: '0 0 6px rgba(200,146,10,0.15)',
           }}
         />
-        <Trophy className="w-10 h-10 text-[#d4a853]" />
+        <Trophy className="w-10 h-10 text-[#C8920A]" />
       </div>
       <h3
         className="text-xl font-black mb-2"
         style={{
-          background: 'linear-gradient(135deg, #f5e6c8 0%, #d4a853 50%, #f5d77a 100%)',
+          background: 'linear-gradient(135deg, #FAF0DC 0%, #C8920A 50%, #FFD54F 100%)',
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
         }}
@@ -1274,8 +1274,8 @@ export function ExperiencesSection({
       className="landing-section relative py-16 sm:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden bg-deep"
     >
       {/* Top edge glow */}
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[rgba(212,168,83,0.3)] to-transparent" aria-hidden="true" />
-      <div className="absolute inset-x-0 top-0 h-8 bg-gradient-to-b from-[rgba(212,168,83,0.03)] to-transparent pointer-events-none" aria-hidden="true" />
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[rgba(200,146,10,0.3)] to-transparent" aria-hidden="true" />
+      <div className="absolute inset-x-0 top-0 h-8 bg-gradient-to-b from-[rgba(200,146,10,0.03)] to-transparent pointer-events-none" aria-hidden="true" />
 
       {/* Background — optimized 3-layer */}
       {/* Central gold glow + division hints (combined) */}
@@ -1283,7 +1283,7 @@ export function ExperiencesSection({
         className="absolute inset-0 pointer-events-none"
         style={{
           background: `
-            radial-gradient(ellipse at 50% 35%, rgba(212,168,83,0.06) 0%, transparent 50%),
+            radial-gradient(ellipse at 50% 35%, rgba(200,146,10,0.06) 0%, transparent 50%),
             radial-gradient(ellipse at 10% 50%, rgba(46,159,255,0.04) 0%, transparent 40%),
             radial-gradient(ellipse at 90% 60%, rgba(255,45,120,0.04) 0%, transparent 40%)
           `,
@@ -1293,7 +1293,7 @@ export function ExperiencesSection({
       <div
         className="absolute inset-0 pointer-events-none opacity-[0.015]"
         style={{
-          backgroundImage: 'radial-gradient(circle, rgba(212,168,83,0.5) 1px, transparent 1px)',
+          backgroundImage: 'radial-gradient(circle, rgba(200,146,10,0.5) 1px, transparent 1px)',
           backgroundSize: '32px 32px',
         }}
       />
@@ -1372,7 +1372,7 @@ export function ExperiencesSection({
                         className="rounded-2xl border p-4 overflow-hidden relative"
                         style={{
                           background: `linear-gradient(135deg, ${hexToRgba(COLORS.gold, 0.05)} 0%, var(--bg-mid) 50%, ${hexToRgba(COLORS.gold, 0.02)} 100%)`,
-                          borderColor: 'rgba(212,168,83,0.12)',
+                          borderColor: 'rgba(200,146,10,0.12)',
                           boxShadow: '0 2px 8px rgba(0,0,0,0.18)',
                         }}
                       >
@@ -1380,7 +1380,7 @@ export function ExperiencesSection({
                         <div
                           className="absolute inset-x-0 top-0 h-px pointer-events-none"
                           style={{
-                            background: 'linear-gradient(90deg, transparent 10%, rgba(212,168,83,0.3) 35%, rgba(229,190,74,0.4) 50%, rgba(212,168,83,0.3) 65%, transparent 90%)',
+                            background: 'linear-gradient(90deg, transparent 10%, rgba(200,146,10,0.3) 35%, rgba(240,165,0,0.4) 50%, rgba(200,146,10,0.3) 65%, transparent 90%)',
                           }}
                         />
 
@@ -1390,7 +1390,7 @@ export function ExperiencesSection({
                             Progres Season{' '}
                             <span
                               style={{
-                                background: 'linear-gradient(135deg, #f5e6c8 0%, #d4a853 50%, #f5d77a 100%)',
+                                background: 'linear-gradient(135deg, #FAF0DC 0%, #C8920A 50%, #FFD54F 100%)',
                                 WebkitBackgroundClip: 'text',
                                 WebkitTextFillColor: 'transparent',
                               }}
@@ -1409,8 +1409,8 @@ export function ExperiencesSection({
                             className="h-2.5 rounded-full transition-all duration-1000 ease-out"
                             style={{
                               width: `${percentage}%`,
-                              background: 'linear-gradient(90deg, #b8860b 0%, #d4a853 40%, #e5be4a 50%, #d4a853 60%, #f5d77a 100%)',
-                              boxShadow: '0 0 6px rgba(212,168,83,0.25)',
+                              background: 'linear-gradient(90deg, #9A700A 0%, #C8920A 40%, #F0A500 50%, #C8920A 60%, #FFD54F 100%)',
+                              boxShadow: '0 0 6px rgba(200,146,10,0.25)',
                             }}
                           />
                         </div>
@@ -1480,15 +1480,15 @@ export function ExperiencesSection({
 
         {/* Bottom Decorative Line */}
         <div className="mt-14 sm:mt-20 flex items-center gap-3">
-          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[rgba(212,168,83,0.18)] to-transparent" />
-          <div className="flex items-center gap-1.5 text-[rgba(212,168,83,0.25)]">
+          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[rgba(200,146,10,0.18)] to-transparent" />
+          <div className="flex items-center gap-1.5 text-[rgba(200,146,10,0.25)]">
             <Play className="w-3 h-3" />
             <span className="text-[10px] font-bold uppercase tracking-widest">
               Video Highlights
             </span>
             <Play className="w-3 h-3" />
           </div>
-          <div className="h-px flex-1 bg-gradient-to-l from-transparent via-[rgba(212,168,83,0.18)] to-transparent" />
+          <div className="h-px flex-1 bg-gradient-to-l from-transparent via-[rgba(200,146,10,0.18)] to-transparent" />
         </div>
       </div>
     </section>

@@ -144,7 +144,7 @@ function CardEditor({
     videoUrl: card.videoUrl || '',
     linkUrl: card.linkUrl || '',
     tag: card.tag || '',
-    tagColor: card.tagColor || '#d4a853',
+    tagColor: card.tagColor || '#C8920A',
     isActive: card.isActive,
     order: card.order,
   }));
@@ -163,7 +163,7 @@ function CardEditor({
       videoUrl: card.videoUrl || '',
       linkUrl: card.linkUrl || '',
       tag: card.tag || '',
-      tagColor: card.tagColor || '#d4a853',
+      tagColor: card.tagColor || '#C8920A',
       isActive: card.isActive,
       order: card.order,
     });
@@ -260,7 +260,7 @@ function CardEditor({
               <div className="flex items-center gap-2">
                 <p className="text-xs font-semibold truncate">{card.title || 'Untitled Card'}</p>
                 {card.tag && (
-                  <Badge className="text-[8px] px-1.5 py-0 border-0" style={{ backgroundColor: hexToRgba(card.tagColor || '#d4a853', 0x20), color: card.tagColor || '#d4a853' }}>
+                  <Badge className="text-[8px] px-1.5 py-0 border-0" style={{ backgroundColor: hexToRgba(card.tagColor || '#C8920A', 0x20), color: card.tagColor || '#C8920A' }}>
                     {card.tag}
                   </Badge>
                 )}
@@ -1432,7 +1432,7 @@ export function CmsPanel() {
                                   </SelectItem>
                                   <SelectItem value="both">
                                     <span className="flex items-center gap-1.5">
-                                      <span className="w-2 h-2 rounded-full bg-[#d4a853]" />
+                                      <span className="w-2 h-2 rounded-full bg-[#C8920A]" />
                                       Semua
                                     </span>
                                   </SelectItem>

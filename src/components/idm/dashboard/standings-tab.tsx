@@ -305,7 +305,7 @@ export function StandingsTab({ data, otherDivisionData, currentDivision, setSele
                                   )}
                                   {/* Season champion badge */}
                                   {data.allSeasons?.some(s => s.status === 'completed' && s.championClub?.id === club.id) && (
-                                    <div className="absolute -top-1 -right-1 z-10 min-w-[14px] h-[14px] rounded-full bg-[#d4a853] flex items-center justify-center border border-white/20">
+                                    <div className="absolute -top-1 -right-1 z-10 min-w-[14px] h-[14px] rounded-full bg-[#C8920A] flex items-center justify-center border border-white/20">
                                       <span className="text-[6px] font-black text-mid leading-none">S{data.allSeasons.find(s => s.status === 'completed' && s.championClub?.id === club.id)?.number}</span>
                                     </div>
                                   )}

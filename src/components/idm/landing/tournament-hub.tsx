@@ -158,7 +158,7 @@ function TournamentCard({
           <div
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg ${division.badgeBg} border ${division.badgeBorder}`}
           >
-            <Swords className="w-3 h-3 text-[#d4a853]" />
+            <Swords className="w-3 h-3 text-[#C8920A]" />
             <span className={`text-[10px] font-bold uppercase tracking-wider ${division.badgeText}`}>
               {cardBadge}
             </span>
@@ -168,7 +168,7 @@ function TournamentCard({
         {/* Tournament count — top right */}
         <div className="absolute top-4 right-4 z-10">
           <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-black/50 border border-border/40">
-            <Gamepad2 className="w-3 h-3 text-[#d4a853]" />
+            <Gamepad2 className="w-3 h-3 text-[#C8920A]" />
             <span className="text-[10px] font-bold text-foreground/80">
               {weeklyCount} Week{weeklyCount !== 1 ? 's' : ''}
             </span>
@@ -187,7 +187,7 @@ function TournamentCard({
             {/* Mid glow */}
             <span className="absolute -inset-1.5 rounded-full play-btn-pulse-glow" style={{ background: `radial-gradient(circle, rgba(${division.colorRgb},0.2) 0%, transparent 70%)` }} />
             {/* Button body */}
-            <span className="relative flex items-center justify-center w-11 h-11 rounded-full backdrop-blur-sm border transition-all duration-300 group-hover/play:scale-110 group-hover/play:border-[rgba(212,168,83,0.5)]"
+            <span className="relative flex items-center justify-center w-11 h-11 rounded-full backdrop-blur-sm border transition-all duration-300 group-hover/play:scale-110 group-hover/play:border-[rgba(200,146,10,0.5)]"
               style={{
                 background: `linear-gradient(135deg, rgba(${division.colorRgb},0.25) 0%, rgba(0,0,0,0.7) 100%)`,
                 borderColor: `rgba(${division.colorRgb},0.35)`,
@@ -281,8 +281,8 @@ function TournamentCard({
 
         {/* Prize pool highlight — iOS frosted glass */}
         {prizePool > 0 && (
-          <div className="ios-card flex items-center gap-2 mb-4 px-3 py-2" style={{ background: 'rgba(212,168,83,0.06)', borderColor: 'rgba(212,168,83,0.1)' }}>
-            <Crown className="w-3.5 h-3.5 text-[#d4a853]" />
+          <div className="ios-card flex items-center gap-2 mb-4 px-3 py-2" style={{ background: 'rgba(200,146,10,0.06)', borderColor: 'rgba(200,146,10,0.1)' }}>
+            <Crown className="w-3.5 h-3.5 text-[#C8920A]" />
             <span className="text-[11px] text-muted-foreground dark:text-[#a09880]">Prize Pool</span>
             <span className="text-sm font-bold text-gradient-champion ml-auto">
               {formatCurrency(prizePool)}
@@ -357,15 +357,15 @@ export function TournamentHub({
       className="landing-section relative py-10 sm:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden bg-deep"
     >
       {/* ── Top edge glow — section boundary ── */}
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[rgba(212,168,83,0.3)] to-transparent" aria-hidden="true" />
-      <div className="absolute inset-x-0 top-0 h-8 bg-gradient-to-b from-[rgba(212,168,83,0.03)] to-transparent pointer-events-none" aria-hidden="true" />
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[rgba(200,146,10,0.3)] to-transparent" aria-hidden="true" />
+      <div className="absolute inset-x-0 top-0 h-8 bg-gradient-to-b from-[rgba(200,146,10,0.03)] to-transparent pointer-events-none" aria-hidden="true" />
 
       {/* ── Background ── */}
       {/* Gold dot pattern overlay — parallax section bg */}
       <div
         className="absolute inset-0 opacity-[0.025] parallax-section-bg"
         style={{
-          backgroundImage: 'radial-gradient(circle, #d4a853 1px, transparent 1px)',
+          backgroundImage: 'radial-gradient(circle, #C8920A 1px, transparent 1px)',
           backgroundSize: '28px 28px',
         }}
       />
@@ -374,7 +374,7 @@ export function TournamentHub({
         className="absolute inset-0 parallax-section-bg"
         style={{
           background:
-            'radial-gradient(ellipse at 50% 20%, rgba(212,168,83,0.04) 0%, transparent 60%)',
+            'radial-gradient(ellipse at 50% 20%, rgba(200,146,10,0.04) 0%, transparent 60%)',
         }}
       />
       {/* Bilateral division atmosphere */}

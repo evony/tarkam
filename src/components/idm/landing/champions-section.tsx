@@ -115,13 +115,13 @@ export function ChampionsSection({
                 className="relative rounded-[20px] overflow-hidden"
                 style={{
                   backgroundColor: 'var(--card)',
-                  border: '2px solid rgba(212,168,83,0.4)',
+                  border: '2px solid rgba(200,146,10,0.4)',
                 }}
               >
                 {/* 4px Gold Accent Bar */}
                 <div
                   className="h-1"
-                  style={{ backgroundColor: '#d4a853' }}
+                  style={{ backgroundColor: '#C8920A' }}
                 />
 
                 <div className="relative z-10 p-6 sm:p-8">
@@ -131,13 +131,13 @@ export function ChampionsSection({
                       onClick={() => onVideoPlay(championVideoUrl, 'Champion Showcase')}
                       className="absolute top-5 right-5 z-20 flex items-center gap-2 px-4 py-2 rounded-xl cursor-pointer transition-colors"
                       style={{
-                        backgroundColor: 'rgba(212,168,83,0.15)',
-                        border: '1px solid rgba(212,168,83,0.3)',
+                        backgroundColor: 'rgba(200,146,10,0.15)',
+                        border: '1px solid rgba(200,146,10,0.3)',
                       }}
                       aria-label="Play champion video"
                     >
-                      <Play className="w-4 h-4" style={{ color: '#d4a853', fill: '#d4a853' }} />
-                      <span className="text-xs font-bold" style={{ color: '#d4a853' }}>Champion Video</span>
+                      <Play className="w-4 h-4" style={{ color: '#C8920A', fill: '#C8920A' }} />
+                      <span className="text-xs font-bold" style={{ color: '#C8920A' }}>Champion Video</span>
                     </button>
                   )}
 
@@ -145,18 +145,18 @@ export function ChampionsSection({
                   <div className="flex items-center gap-3 mb-6">
                     <div
                       className="w-12 h-12 rounded-xl flex items-center justify-center"
-                      style={{ backgroundColor: 'rgba(212,168,83,0.12)' }}
+                      style={{ backgroundColor: 'rgba(200,146,10,0.12)' }}
                     >
-                      <Trophy className="w-6 h-6" style={{ color: '#d4a853' }} />
+                      <Trophy className="w-6 h-6" style={{ color: '#C8920A' }} />
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
                         <span
                           className="text-[9px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-lg"
                           style={{
-                            backgroundColor: 'rgba(212,168,83,0.12)',
-                            color: '#d4a853',
-                            border: '1px solid rgba(212,168,83,0.2)',
+                            backgroundColor: 'rgba(200,146,10,0.12)',
+                            color: '#C8920A',
+                            border: '1px solid rgba(200,146,10,0.2)',
                           }}
                         >
                           Liga IDM
@@ -164,9 +164,9 @@ export function ChampionsSection({
                         <span
                           className="text-[9px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-lg"
                           style={{
-                            backgroundColor: 'rgba(212,168,83,0.08)',
-                            color: '#d4a853',
-                            border: '1px solid rgba(212,168,83,0.15)',
+                            backgroundColor: 'rgba(200,146,10,0.08)',
+                            color: '#C8920A',
+                            border: '1px solid rgba(200,146,10,0.15)',
                           }}
                         >
                           Season {leagueData.ligaChampion.seasonNumber} Champion
@@ -189,8 +189,8 @@ export function ChampionsSection({
                         <div
                           className="w-20 h-20 rounded-2xl overflow-hidden"
                           style={{
-                            border: '2px solid rgba(212,168,83,0.3)',
-                            backgroundColor: 'rgba(212,168,83,0.05)',
+                            border: '2px solid rgba(200,146,10,0.3)',
+                            backgroundColor: 'rgba(200,146,10,0.05)',
                           }}
                         >
                           <ClubLogoImage
@@ -205,7 +205,7 @@ export function ChampionsSection({
                         {/* Crown badge */}
                         <div
                           className="absolute -top-2 -right-2 w-7 h-7 rounded-full flex items-center justify-center"
-                          style={{ backgroundColor: '#d4a853' }}
+                          style={{ backgroundColor: '#C8920A' }}
                         >
                           <Crown className="w-3.5 h-3.5" style={{ color: '#1c1c1e' }} />
                         </div>
@@ -219,7 +219,7 @@ export function ChampionsSection({
                         </h4>
                         <p
                           className="text-sm font-semibold mt-1"
-                          style={{ color: '#d4a853' }}
+                          style={{ color: '#C8920A' }}
                         >
                           Liga IDM Season {leagueData.ligaChampion.seasonNumber} Champion
                         </p>
@@ -253,9 +253,9 @@ export function ChampionsSection({
                           <span
                             className="text-[10px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1"
                             style={{
-                              backgroundColor: 'rgba(212,168,83,0.1)',
-                              color: '#d4a853',
-                              border: '1px solid rgba(212,168,83,0.2)',
+                              backgroundColor: 'rgba(200,146,10,0.1)',
+                              color: '#C8920A',
+                              border: '1px solid rgba(200,146,10,0.2)',
                             }}
                           >
                             <Users className="w-3 h-3" />
@@ -285,7 +285,7 @@ export function ChampionsSection({
                               }`}
                               style={{
                                 border: `2px solid ${member.division === 'male' ? 'rgba(6,182,212,0.35)' : 'rgba(168,85,247,0.35)'}`,
-                                ...(member.role === 'captain' ? { ringColor: 'rgba(212,168,83,0.5)' } : {}),
+                                ...(member.role === 'captain' ? { ringColor: 'rgba(200,146,10,0.5)' } : {}),
                               }}
                             >
                               <AvatarMedia
@@ -301,7 +301,7 @@ export function ChampionsSection({
                             {member.role === 'captain' && (
                               <div
                                 className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full flex items-center justify-center z-10"
-                                style={{ backgroundColor: '#d4a853' }}
+                                style={{ backgroundColor: '#C8920A' }}
                               >
                                 <Crown className="w-2.5 h-2.5" style={{ color: '#1c1c1e' }} />
                               </div>
@@ -342,7 +342,7 @@ export function ChampionsSection({
                   {/* Bottom Label */}
                   <div className="mt-6 flex items-center gap-3">
                     <div className="h-px flex-1" style={{ backgroundColor: 'var(--border)' }} />
-                    <div className="flex items-center gap-1.5" style={{ color: 'rgba(212,168,83,0.4)' }}>
+                    <div className="flex items-center gap-1.5" style={{ color: 'rgba(200,146,10,0.4)' }}>
                       <Trophy className="w-3 h-3" />
                       <span className="text-[9px] font-bold uppercase tracking-widest">Liga IDM Champion</span>
                       <Trophy className="w-3 h-3" />
@@ -401,7 +401,7 @@ export function ChampionsSection({
                         </div>
                         <h2
                           className="text-xl sm:text-2xl font-black uppercase tracking-wider esports-text-glow"
-                          style={{ color: '#e5be4a' }}
+                          style={{ color: '#F0A500' }}
                         >
                           JUARA TARKAM
                         </h2>
@@ -428,7 +428,7 @@ export function ChampionsSection({
                       <div className="relative z-10 px-4 sm:px-5 lg:px-6 pb-2">
                         <div
                           className="flex items-center gap-3 p-4 sm:p-5 rounded-2xl border border-border/40"
-                          style={{ background: 'rgba(229, 190, 74, 0.04)' }}
+                          style={{ background: 'rgba(240, 165, 0, 0.04)' }}
                         >
                           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-yellow-500 to-amber-600 flex items-center justify-center shadow-lg shrink-0">
                             <Crown className="w-5 h-5 text-primary-foreground" />
@@ -440,7 +440,7 @@ export function ChampionsSection({
                           {selected && selected.prizePool > 0 && (
                             <div
                               className="shrink-0 flex items-center gap-1 px-2 py-1 rounded-lg"
-                              style={{ background: 'linear-gradient(135deg, rgba(229,190,74,0.15), rgba(229,190,74,0.05))' }}
+                              style={{ background: 'linear-gradient(135deg, rgba(240,165,0,0.15), rgba(240,165,0,0.05))' }}
                             >
                               <Wallet className="w-3 h-3 text-idm-gold-warm" />
                               <span className="text-[10px] font-black text-idm-gold-warm">

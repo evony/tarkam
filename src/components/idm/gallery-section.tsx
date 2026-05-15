@@ -211,7 +211,7 @@ const CollectionCard = React.memo(function CollectionCard({
         bg-white dark:bg-white/[0.03] 
         border border-stone-200 dark:border-white/[0.06] 
         shadow-sm
-        hover:shadow-xl dark:hover:shadow-[0_0_30px_rgba(212,168,83,0.1)]
+        hover:shadow-xl dark:hover:shadow-[0_0_30px_rgba(200,146,10,0.1)]
         ${accentClasses.border}
       `}>
         {/* Image Container */}
@@ -291,8 +291,8 @@ const GalleryCard = React.memo(function GalleryCard({
         bg-white dark:bg-white/[0.02] 
         border border-stone-200 dark:border-white/[0.04] 
         shadow-sm
-        hover:shadow-xl dark:hover:shadow-[0_0_30px_rgba(212,168,83,0.08)]
-        hover:border-amber-300 dark:hover:border-[#d4a853]/20
+        hover:shadow-xl dark:hover:shadow-[0_0_30px_rgba(200,146,10,0.08)]
+        hover:border-amber-300 dark:hover:border-[#C8920A]/20
       ">
         {/* Image Container */}
         <div className="relative aspect-[4/3] overflow-hidden">
@@ -362,8 +362,8 @@ const FeaturedCard = React.memo(function FeaturedCard({
         bg-white dark:bg-white/[0.03] 
         border border-stone-200 dark:border-white/[0.06] 
         shadow-sm
-        hover:shadow-xl dark:hover:shadow-[0_0_50px_rgba(212,168,83,0.15)]
-        hover:border-amber-300 dark:hover:border-[#d4a853]/20
+        hover:shadow-xl dark:hover:shadow-[0_0_50px_rgba(200,146,10,0.15)]
+        hover:border-amber-300 dark:hover:border-[#C8920A]/20
       ">
         {/* Featured Image */}
         <div className="relative aspect-[16/10] sm:aspect-[16/9] overflow-hidden">
@@ -381,7 +381,7 @@ const FeaturedCard = React.memo(function FeaturedCard({
           <div className="absolute inset-0 bg-gradient-to-r from-stone-900/30 via-transparent to-transparent" />
           
           {/* Gold accent line */}
-          <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-transparent via-amber-500 dark:via-[#d4a853] to-transparent" />
+          <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-transparent via-amber-500 dark:via-[#C8920A] to-transparent" />
           
           {/* Tag + Featured Badge */}
           <div className="absolute top-4 left-4 z-10 flex items-center gap-2">
@@ -564,12 +564,12 @@ export function GallerySection() {
             className="text-center mb-16"
           >
             <div className="flex items-center justify-center gap-3 mb-4">
-              <div className="h-px w-12 sm:w-20 bg-gradient-to-r from-transparent to-amber-400 dark:to-[#d4a853]" />
-              <div className="flex items-center gap-2 px-4 py-1.5 rounded-full border border-amber-200 dark:border-[#d4a853]/20 bg-amber-50 dark:bg-[#d4a853]/10">
-                <Camera className="w-4 h-4 text-amber-500 dark:text-[#d4a853]" />
-                <span className="text-[11px] font-semibold text-amber-600 dark:text-[#d4a853] uppercase tracking-[0.2em]">Galeri</span>
+              <div className="h-px w-12 sm:w-20 bg-gradient-to-r from-transparent to-amber-400 dark:to-[#C8920A]" />
+              <div className="flex items-center gap-2 px-4 py-1.5 rounded-full border border-amber-200 dark:border-[#C8920A]/20 bg-amber-50 dark:bg-[#C8920A]/10">
+                <Camera className="w-4 h-4 text-amber-500 dark:text-[#C8920A]" />
+                <span className="text-[11px] font-semibold text-amber-600 dark:text-[#C8920A] uppercase tracking-[0.2em]">Galeri</span>
               </div>
-              <div className="h-px w-12 sm:w-20 bg-gradient-to-l from-transparent to-amber-400 dark:to-[#d4a853]" />
+              <div className="h-px w-12 sm:w-20 bg-gradient-to-l from-transparent to-amber-400 dark:to-[#C8920A]" />
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-semibold text-stone-800 dark:text-white">
               Momen Komunitas
@@ -626,13 +626,13 @@ export function GallerySection() {
               <motion.div variants={fadeUp} className="flex items-center gap-4 mb-8">
                 <button
                   onClick={() => setActiveCollection(null)}
-                  className="flex items-center gap-2 text-sm text-stone-500 dark:text-stone-400 hover:text-amber-500 dark:hover:text-[#d4a853] transition-colors group"
+                  className="flex items-center gap-2 text-sm text-stone-500 dark:text-stone-400 hover:text-amber-500 dark:hover:text-[#C8920A] transition-colors group"
                 >
                   <ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
                   Back to Collections
                 </button>
                 <div className="h-4 w-px bg-stone-200 dark:bg-stone-700" />
-                <span className="text-sm font-mono text-amber-500 dark:text-[#d4a853]">
+                <span className="text-sm font-mono text-amber-500 dark:text-[#C8920A]">
                   {COLLECTIONS.find(c => c.id === activeCollection)?.title}
                 </span>
               </motion.div>
@@ -690,7 +690,7 @@ export function GallerySection() {
                   <React.Fragment key={i}>
                     {i > 0 && <div className="w-px h-8 bg-stone-200 dark:bg-stone-700 mx-4 sm:mx-6" />}
                     <div className="flex items-center gap-2">
-                      <stat.icon className="w-4 h-4 text-amber-500 dark:text-[#d4a853]" />
+                      <stat.icon className="w-4 h-4 text-amber-500 dark:text-[#C8920A]" />
                       <span className="text-lg font-mono font-semibold text-stone-800 dark:text-white">{stat.value}</span>
                       <span className="text-[10px] text-stone-500 dark:text-stone-400 uppercase tracking-wider hidden sm:inline">{stat.label}</span>
                     </div>
