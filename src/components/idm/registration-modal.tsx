@@ -803,7 +803,7 @@ export function RegistrationModal({ open, onClose, defaultDivision }: Registrati
                         className="glass"
                         maxLength={30}
                       />
-                      <p className="text-[10px] text-muted-foreground mt-1">Diisi jika player dijokikan oleh player lain</p>
+
                     </div>
 
                     {/* No WhatsApp */}
