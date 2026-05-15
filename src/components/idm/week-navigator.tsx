@@ -119,7 +119,7 @@ export function WeekNavigator({
                     ? 'text-white shadow-sm'
                     : 'text-muted-foreground hover:text-foreground bg-transparent'
                 }`}
-                style={isActive ? { backgroundColor: hexToRgba(accent, 0x40), color: accentLight } : undefined}
+                style={{ minWidth: 'unset', minHeight: 'unset', ...(isActive ? { backgroundColor: hexToRgba(accent, 0x40), color: accentLight } : {}) }}
               >
                 <span className="mr-0.5">{phase.emoji}</span>
                 {phase.label}
@@ -144,7 +144,7 @@ export function WeekNavigator({
               key={w.weekNumber}
               onClick={() => onWeekChange(w.weekNumber)}
               className={`compact-dot relative flex items-center justify-center transition-all duration-200 rounded-full font-bold shrink-0 ${
-                isXs ? 'w-5 h-5 text-[7px]' : isSm ? 'w-6 h-6 text-[8px]' : 'w-7 h-7 text-[9px]'
+                isXs ? 'w-4 h-4 text-[6px]' : isSm ? 'w-5 h-5 text-[7px]' : 'w-7 h-7 text-[9px]'
               } ${
                 isSelected
                   ? 'text-white shadow-md'
@@ -154,15 +154,17 @@ export function WeekNavigator({
                       ? 'text-white/70'
                       : 'text-white/30'
               }`}
-              style={
-                isSelected
+              style={{
+                minWidth: 'unset',
+                minHeight: 'unset',
+                ...(isSelected
                   ? { backgroundColor: accent, boxShadow: `0 0 8px ${hexToRgba(accent, 0x60)}` }
                   : isLive
                     ? { backgroundColor: '#ef4444', boxShadow: '0 0 6px rgba(239,68,68,0.5)' }
                     : isCompleted
                       ? { backgroundColor: hexToRgba(accent, 0x30) }
-                      : { backgroundColor: 'rgba(255,255,255,0.06)' }
-              }
+                      : { backgroundColor: 'rgba(255,255,255,0.06)' })
+              }}
             >
               {w.weekNumber}
               {/* Live pulse */}

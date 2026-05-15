@@ -244,3 +244,25 @@ Stage Summary:
 - Sponsor section visibility issue fixed by removing section-reveal wrapper
 - Duplicate "Tap to Top" button removed from footer
 - All changes lint-free and dev server running normally
+
+---
+Task ID: 1
+Agent: main
+Task: Fix large dots in dashboard Juara/MVP sections and scroll not working in Peringkat
+
+Work Log:
+- Investigated WeekNavigator component - found dots lack inline style overrides for min-width/min-height
+- Added `style={{ minWidth: 'unset', minHeight: 'unset' }}` to all WeekNavigator buttons (phase tabs + week dots)
+- Reduced xs size from w-5 h-5 (20px) to w-4 h-4 (16px), font from text-[7px] to text-[6px]
+- Fixed scroll issue in standings-tab.tsx: removed `contain: layout style` from scroll containers
+- Added `touchAction: 'pan-y'` and `WebkitOverflowScrolling: 'touch'` to vertical scroll containers
+- Added `touchAction: 'pan-x pan-y'` to horizontal scroll inner wrapper
+- Added `touchAction: 'manipulation'` to TableRow elements with onClick to not block scrolling
+- Added `overscroll-contain` class to scroll containers
+- TypeScript check passed with zero errors
+
+Stage Summary:
+- WeekNavigator dots now use inline style overrides (same approach as landing sponsor carousel dots)
+- Scroll containers in standings-tab no longer use contain: layout style which blocked touch scrolling
+- All touch-action properties set correctly for nested scroll containers
+- DO NOT PUSH until user confirms

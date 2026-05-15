@@ -122,9 +122,9 @@ export function StandingsTab({ data, otherDivisionData, currentDivision, setSele
                 <span className="inline-flex items-center gap-1 text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: DIVISION_BADGE.female.bg, color: DIVISION_BADGE.female.text }}>♀ {femaleCount}</span>
               </div>
             </div>
-            {/* Horizontal scroll wrapper for mobile */}
-            <div className="max-h-[400px] sm:max-h-[500px] overflow-y-auto custom-scrollbar" style={{ contain: 'layout style' }}>
-              <div className="overflow-x-auto">
+            {/* Scrollable table area — touch-action ensures vertical scroll works on mobile */}
+            <div className="max-h-[400px] sm:max-h-[500px] overflow-y-auto custom-scrollbar overscroll-contain" style={{ touchAction: 'pan-y', WebkitOverflowScrolling: 'touch' }}>
+              <div className="overflow-x-auto" style={{ touchAction: 'pan-x pan-y' }}>
                 <Table>
                   <TableHeader>
                     <TableRow className={`hover:bg-transparent border-b ${dt.border} bg-muted/30`}>
@@ -153,7 +153,7 @@ export function StandingsTab({ data, otherDivisionData, currentDivision, setSele
                           className={`standings-row-enter standings-row-glass ${idx % 2 === 0 ? 'standings-row-glass-even' : 'standings-row-glass-odd'} ${playerDiv === 'male' ? 'standings-row-glow-male' : 'standings-row-glow-female'} cursor-pointer transition-all duration-200 border-b ${dt.borderSubtle} ${
                             idx < 3 ? `${dt.bgSubtle}` : ''
                           } ${isMe ? 'bg-idm-gold/5' : ''}`}
-                          style={{ animationDelay: `${idx * 50}ms` }}
+                          style={{ animationDelay: `${idx * 50}ms`, touchAction: 'manipulation' }}
                           onClick={() => setSelectedPlayer({ ...p, division: playerDiv })}
                         >
                           <TableCell className="text-center">
@@ -259,8 +259,8 @@ export function StandingsTab({ data, otherDivisionData, currentDivision, setSele
             </div>
             {data.clubs?.length > 0 ? (
               <>
-                <div className="max-h-[400px] sm:max-h-[500px] overflow-y-auto custom-scrollbar" style={{ contain: 'layout style' }}>
-                  <div className="overflow-x-auto">
+                <div className="max-h-[400px] sm:max-h-[500px] overflow-y-auto custom-scrollbar overscroll-contain" style={{ touchAction: 'pan-y', WebkitOverflowScrolling: 'touch' }}>
+                  <div className="overflow-x-auto" style={{ touchAction: 'pan-x pan-y' }}>
                     <Table>
                       <TableHeader>
                         <TableRow className={`hover:bg-transparent border-b ${dt.border} bg-muted/30`}>
@@ -279,7 +279,7 @@ export function StandingsTab({ data, otherDivisionData, currentDivision, setSele
                             className={`standings-row-enter standings-row-glass ${idx % 2 === 0 ? 'standings-row-glass-even' : 'standings-row-glass-odd'} ${division === 'male' ? 'standings-row-glow-male' : 'standings-row-glow-female'} cursor-pointer transition-all duration-200 border-b ${dt.borderSubtle} ${
                               idx < 4 ? `${dt.bgSubtle}` : ''
                             }`}
-                            style={{ animationDelay: `${idx * 50}ms` }}
+                            style={{ animationDelay: `${idx * 50}ms`, touchAction: 'manipulation' }}
                             onClick={() => setSelectedClub(club)}
                           >
                             <TableCell className="text-center">
