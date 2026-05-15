@@ -114,30 +114,42 @@ export function SocialShareButton({ playerGamertag, playerId, className = '' }: 
     }
   }, [playerUrl]);
 
+  const openShareLink = useCallback((url: string) => {
+    // On mobile, open in same window so OS can intercept deep links (wa.me, t.me, etc.)
+    // On desktop, open in new tab
+    const isMobile = /Mobi|Android|iPhone/i.test(navigator.userAgent);
+    if (isMobile) {
+      window.location.href = url;
+    } else {
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
+    setShowPicker(false);
+  }, []);
+
   const socialLinks = [
     {
       name: 'WhatsApp',
       icon: <WhatsAppIcon className="w-5 h-5" />,
       color: 'bg-[#25D366] hover:bg-[#20BD5A]',
-      href: `https://wa.me/?text=${encodeURIComponent(shareText + ' ' + playerUrl)}`,
+      url: `https://wa.me/?text=${encodeURIComponent(shareText + ' ' + playerUrl)}`,
     },
     {
       name: 'Facebook',
       icon: <FacebookIcon className="w-5 h-5" />,
       color: 'bg-[#1877F2] hover:bg-[#1565D8]',
-      href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(playerUrl)}&quote=${encodeURIComponent(shareText)}`,
+      url: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(playerUrl)}&quote=${encodeURIComponent(shareText)}`,
     },
     {
       name: 'Telegram',
       icon: <TelegramIcon className="w-5 h-5" />,
       color: 'bg-[#26A5E4] hover:bg-[#1E8FC7]',
-      href: `https://t.me/share/url?url=${encodeURIComponent(playerUrl)}&text=${encodeURIComponent(shareText)}`,
+      url: `https://t.me/share/url?url=${encodeURIComponent(playerUrl)}&text=${encodeURIComponent(shareText)}`,
     },
     {
       name: 'X / Twitter',
       icon: <TwitterIcon className="w-5 h-5" />,
       color: 'bg-foreground hover:bg-foreground/80',
-      href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(playerUrl)}`,
+      url: `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(playerUrl)}`,
     },
   ];
 
@@ -207,16 +219,14 @@ export function SocialShareButton({ playerGamertag, playerId, className = '' }: 
               {/* Social buttons grid */}
               <div className="px-4 pb-3 grid grid-cols-2 gap-2">
                 {socialLinks.map(s => (
-                  <a
+                  <button
                     key={s.name}
-                    href={s.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`flex items-center gap-2 px-3 py-2.5 rounded-xl text-white text-xs font-semibold transition-all duration-200 active:scale-95 ${s.color}`}
+                    onClick={() => openShareLink(s.url)}
+                    className={`flex items-center gap-2 px-3 py-2.5 rounded-xl text-white text-xs font-semibold transition-all duration-200 active:scale-95 cursor-pointer ${s.color}`}
                   >
                     {s.icon}
                     <span>{s.name}</span>
-                  </a>
+                  </button>
                 ))}
               </div>
 
