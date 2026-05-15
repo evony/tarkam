@@ -222,9 +222,9 @@ function SponsorCarousel({ sponsors }: { sponsors: Sponsor[] }) {
         )}
       </div>
 
-      {/* Dot indicators */}
+      {/* Dot indicators — compact, subtle */}
       {total > 1 && (
-        <div className="flex items-center justify-center gap-2 mt-4">
+        <div className="flex items-center justify-center gap-1.5 mt-3">
           {sponsors.map((_, i) => (
             <button
               key={i}
@@ -232,8 +232,8 @@ function SponsorCarousel({ sponsors }: { sponsors: Sponsor[] }) {
               aria-label={`Go to sponsor ${i + 1}`}
               className={`transition-all duration-300 rounded-full cursor-pointer ${
                 i === activeIndex
-                  ? 'w-6 h-2 bg-idm-gold-warm shadow-[0_0_8px_rgba(212,168,83,0.5)]'
-                  : 'w-2 h-2 bg-idm-gold-warm/25 hover:bg-idm-gold-warm/50'
+                  ? 'w-4 h-1 bg-idm-gold-warm shadow-[0_0_4px_rgba(212,168,83,0.4)]'
+                  : 'w-1 h-1 bg-idm-gold-warm/25 hover:bg-idm-gold-warm/50'
               }`}
             />
           ))}
