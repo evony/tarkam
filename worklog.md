@@ -429,3 +429,22 @@ Stage Summary:
 - Sticky collision already prevented ✓
 - New BracketHasilSection replaces old MatchesSection ✓
 - Lint clean, dev server running ✓
+
+---
+Task ID: 1
+Agent: main
+Task: Make total saweran amount bold with gold theme, inline with week label
+
+Work Log:
+- Read current TopDonorsWidget component layout
+- User requested: (1) Make total Rp.150.000 more bold with gold theme, (2) Place it next to "Top Saweran Week 2" label, (3) Keep per-division totals where they are (below division badges)
+- Updated CardHeader: removed separate right-aligned div for total amount
+- Moved total amount inline with CardTitle, right after the Week badge
+- Applied bold gold gradient text style: font-black, tabular-nums, gold gradient (FAF0DC → EFF923 → F9CB25 → D69E2E) matching Champion section styling
+- Used flex-wrap on CardTitle to handle overflow on small screens
+- Lint passes clean
+
+Stage Summary:
+- Total amount (e.g. Rp.150.000) now inline with "Top Saweran Week 2" in the header
+- Styled with bold gold gradient matching PUBG Esports gold palette
+- Per-division totals remain below division badges (unchanged)

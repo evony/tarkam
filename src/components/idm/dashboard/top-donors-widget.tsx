@@ -304,20 +304,20 @@ export function TopDonorsWidget({ onDonate, statsData, statsData2 }: TopDonorsWi
       <div className="h-0.5 bg-gradient-to-r from-transparent via-idm-gold-warm to-transparent opacity-60" />
 
       <CardHeader className="pb-2 shrink-0">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-sm flex items-center gap-2">
-            <Heart className="w-4 h-4 text-idm-gold-warm" />
-            Top Saweran
-            {weekLabel && <Badge className="text-[8px] px-1.5 py-0 h-4 bg-idm-gold-warm/15 text-idm-gold-warm border-0 font-semibold">{weekLabel}</Badge>}
-          </CardTitle>
+        <CardTitle className="text-sm flex items-center gap-2 flex-wrap">
+          <Heart className="w-4 h-4 text-idm-gold-warm" />
+          <span>Top Saweran</span>
+          {weekLabel && <Badge className="text-[8px] px-1.5 py-0 h-4 bg-idm-gold-warm/15 text-idm-gold-warm border-0 font-semibold">{weekLabel}</Badge>}
           {totalAmount > 0 && (
-            <div className="text-right">
-              <p className={`text-xs font-bold ${dt.neonGradient}`}>
-                {formatRupiah(totalAmount)}
-              </p>
-            </div>
+            <span className="text-sm font-black tabular-nums tracking-tight ml-1" style={{
+              background: 'linear-gradient(135deg, #FAF0DC 0%, #EFF923 30%, #F9CB25 60%, #D69E2E 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+            }}>
+              {formatRupiah(totalAmount)}
+            </span>
           )}
-        </div>
+        </CardTitle>
       </CardHeader>
 
       <CardContent className="pt-0">
