@@ -9989,6 +9989,20 @@ html {
   scrollbar-gutter: stable;
 }
 
+/* ── Prevent horizontal scroll WITHOUT blocking vertical scroll ──
+   overflow-x: hidden on <html> is a known bug — it blocks vertical
+   scrolling on many desktop browsers. Use overflow-x: clip instead,
+   which clips horizontal overflow without creating a new block
+   formatting context that kills vertical scrolling.
+   Fallback: body gets clip too for browsers that don't support it on html.
+*/
+html {
+  overflow-x: clip;
+}
+body {
+  overflow-x: clip;
+}
+
 /* ─── Custom Scrollbar — Night Gold Theme ─── */
 /* Thin, elegant scrollbar matching the dark gold aesthetic */
 ::-webkit-scrollbar {
