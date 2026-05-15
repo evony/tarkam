@@ -94,7 +94,7 @@ export async function POST(request: Request) {
       // ======== SEASONS ========
       const maleSeason = await db.season.create({
         data: {
-          name: 'IDM League Season 1 - Male',
+          name: 'IDM League Season 1 - Cowo',
           number: 1,
           division: 'male',
           status: 'active',
@@ -104,7 +104,7 @@ export async function POST(request: Request) {
 
       const femaleSeason = await db.season.create({
         data: {
-          name: 'IDM League Season 1 - Female',
+          name: 'IDM League Season 1 - Cewe',
           number: 1,
           division: 'female',
           status: 'completed',
@@ -114,7 +114,7 @@ export async function POST(request: Request) {
 
       const s2Female = await db.season.create({
         data: {
-          name: 'Season 2 - Female',
+          name: 'Season 2 - Cewe',
           number: 2,
           division: 'female',
           status: 'active',

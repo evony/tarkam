@@ -792,7 +792,7 @@ function SultanCard({
   const sultanDivision = sultan.tournamentDivision as 'male' | 'female';
   const divisionAccent = sultanDivision === 'male' ? COLORS.maleAccent : COLORS.femaleAccent;
   const divisionAccentLight = sultanDivision === 'male' ? COLORS.maleAccentLight : COLORS.femaleAccentLight;
-  const divisionLabel = sultanDivision === 'male' ? 'MALE' : 'FEMALE';
+  const divisionLabel = sultanDivision === 'male' ? 'COWO' : 'CEWE';
   const divisionIcon = sultanDivision === 'male' ? Music : Shield;
   const divisionRgb = sultanDivision === 'male' ? '46,159,255' : '255,45,120';
   const hasPlayer = !!sultan.player;

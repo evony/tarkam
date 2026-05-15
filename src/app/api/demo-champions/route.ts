@@ -23,7 +23,7 @@ export async function POST(request: Request) {
     if (!maleSeason) {
       maleSeason = await db.season.create({
         data: {
-          name: 'IDM League Season 1 - Male',
+          name: 'IDM League Season 1 - Cowo',
           number: 1,
           division: 'male',
           status: 'active',
@@ -35,7 +35,7 @@ export async function POST(request: Request) {
     if (!femaleSeason) {
       femaleSeason = await db.season.create({
         data: {
-          name: 'IDM League Season 1 - Female',
+          name: 'IDM League Season 1 - Cewe',
           number: 1,
           division: 'female',
           status: 'active',

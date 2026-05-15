@@ -131,7 +131,7 @@ export async function POST(request: Request) {
       for (let w = 1; w <= 3; w++) {
         const tournament = await db.tournament.create({
           data: {
-            name: `Week ${w} Tournament - ${activeSeason.division === 'male' ? 'Male' : 'Female'}`,
+            name: `Week ${w} Tournament - ${activeSeason.division === 'male' ? 'Cowo' : 'Cewe'}`,
             weekNumber: w,
             division: activeSeason.division,
             seasonId: activeSeason.id,

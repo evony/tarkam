@@ -230,8 +230,8 @@ export function tierBg(tier: string): string {
 
 export function divisionLabel(division: string): string {
   switch (division) {
-    case 'MALE': return '♂ Male'
-    case 'FEMALE': return '♀ Female'
+    case 'MALE': return '♂ Cowo'
+    case 'FEMALE': return '♀ Cewe'
     default: return '🌐 Semua'
   }
 }

@@ -1420,7 +1420,7 @@ export function CmsPanel() {
                                   <SelectItem value="male">
                                     <span className="flex items-center gap-1.5">
                                       <span className="w-2 h-2 rounded-full bg-cyan-400" />
-                                      Male
+                                      Cowo
                                     </span>
                                   </SelectItem>
                                   <SelectItem value="female">
@@ -1616,12 +1616,12 @@ export function CmsPanel() {
                         <div className="col-span-2 flex gap-2">
                           {settingsForm.bg_male && (
                             <div className="relative w-20 h-12 rounded-lg overflow-hidden border border-border/30 bg-muted/20">
-                              <Image src={getOptimizedCloudinaryUrl(settingsForm.bg_male, 200)} alt="Male BG" fill className="w-full h-full object-cover" sizes="96px" />
+                              <Image src={getOptimizedCloudinaryUrl(settingsForm.bg_male, 200)} alt="Cowo BG" fill className="w-full h-full object-cover" sizes="96px" />
                             </div>
                           )}
                           {settingsForm.bg_female && (
                             <div className="relative w-20 h-12 rounded-lg overflow-hidden border border-border/30 bg-muted/20">
-                              <Image src={getOptimizedCloudinaryUrl(settingsForm.bg_female, 200)} alt="Female BG" fill className="w-full h-full object-cover" sizes="96px" />
+                              <Image src={getOptimizedCloudinaryUrl(settingsForm.bg_female, 200)} alt="Cewe BG" fill className="w-full h-full object-cover" sizes="96px" />
                             </div>
                           )}
                           {settingsForm.hero_banner_dashboard && (

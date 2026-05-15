@@ -467,7 +467,7 @@ const ChampionBadge = React.memo(function ChampionBadge({
         <div className="flex items-center gap-1.5 mb-0.5">
           <DivisionIcon className="w-3 h-3 shrink-0" style={{ color: accentColor }} />
           <span className="text-[9px] font-bold uppercase tracking-wider" style={{ color: accentColor }}>
-            {division} {genderSymbol}
+            {division === 'male' ? 'COWO' : 'CEWE'} {genderSymbol}
           </span>
         </div>
         <p className="text-sm font-bold truncate text-foreground group-hover:text-idm-gold-warm transition-colors">
@@ -511,7 +511,7 @@ const GhostChampionBadge = React.memo(function GhostChampionBadge({ division }: 
         <div className="flex items-center gap-1.5 mb-0.5">
           <DivisionIcon className="w-3 h-3 shrink-0" style={{ color: accentColor }} />
           <span className="text-[9px] font-bold uppercase tracking-wider" style={{ color: accentColor }}>
-            {division} {genderSymbol}
+            {division === 'male' ? 'COWO' : 'CEWE'} {genderSymbol}
           </span>
         </div>
         <div className="h-4 w-20 rounded bg-muted/35 mb-1.5" />

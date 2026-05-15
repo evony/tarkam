@@ -208,7 +208,7 @@ function DivisionWeeklyChampions({
         <div className="flex items-center gap-1.5 mb-3">
           <DivisionIcon className="w-3 h-3 shrink-0" style={{ color: accent }} />
           <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: accent }}>
-            {division} {genderSymbol}
+            {division === 'male' ? 'COWO' : 'CEWE'} {genderSymbol}
           </span>
           {champions.length > 0 && (
             <Badge className={`ml-auto ${dt.casinoBadge} text-[9px]`}>

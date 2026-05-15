@@ -56,7 +56,7 @@ export async function POST() {
 
         const tournament = await db.tournament.create({
           data: {
-            name: `IDM League Week ${weekNum} - ${division === 'male' ? 'Male' : 'Female'}`,
+            name: `IDM League Week ${weekNum} - ${division === 'male' ? 'Cowo' : 'Cewe'}`,
             weekNumber: weekNum,
             division,
             status: 'completed',
@@ -192,7 +192,7 @@ export async function POST() {
       if (upcomingWeek !== -1) {
         const tournament = await db.tournament.create({
           data: {
-            name: `IDM League Week ${upcomingWeek} - ${division === 'male' ? 'Male' : 'Female'}`,
+            name: `IDM League Week ${upcomingWeek} - ${division === 'male' ? 'Cowo' : 'Cewe'}`,
             weekNumber: upcomingWeek,
             division,
             status: 'setup',

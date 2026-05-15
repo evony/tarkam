@@ -500,7 +500,7 @@ export function TopFormSection({
         <div className="flex items-center gap-1.5 mb-3">
           <DivisionIcon className="w-3 h-3 shrink-0" style={{ color: accentColor }} />
           <span className="text-[9px] font-bold uppercase tracking-wider" style={{ color: accentColor }}>
-            {division} {genderSymbol}
+            {division === 'male' ? 'COWO' : 'CEWE'} {genderSymbol}
           </span>
         </div>
         {content}

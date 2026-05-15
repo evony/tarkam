@@ -69,7 +69,7 @@ function getDivisionConfig(division: 'male' | 'female' | 'both') {
       border: 'rgba(46,159,255,0.20)',
       hoverBorder: 'rgba(46,159,255,0.35)',
       gradient: 'from-[#2E9FFF]/20 via-mid to-mid',
-      label: 'MALE',
+      label: 'COWO',
       meshBg: `
         radial-gradient(ellipse at 15% 30%, rgba(46,159,255,0.18) 0%, transparent 55%),
         radial-gradient(ellipse at 85% 15%, rgba(87,181,255,0.12) 0%, transparent 50%),
@@ -89,7 +89,7 @@ function getDivisionConfig(division: 'male' | 'female' | 'both') {
       border: 'rgba(255,45,120,0.20)',
       hoverBorder: 'rgba(255,45,120,0.35)',
       gradient: 'from-[#FF2D78]/20 via-mid to-mid',
-      label: 'FEMALE',
+      label: 'CEWE',
       meshBg: `
         radial-gradient(ellipse at 15% 30%, rgba(255,45,120,0.18) 0%, transparent 55%),
         radial-gradient(ellipse at 85% 15%, rgba(255,92,154,0.12) 0%, transparent 50%),

@@ -667,3 +667,42 @@ Stage Summary:
 - ?view=champion → Community + scroll to champions
 - ?view=club&name=X → Community + open club profile
 - ?player=X → Player profile modal (already existed)
+
+---
+Task ID: 1
+Agent: main
+Task: Fix all Male/Female to Cowo/Cewe across the codebase
+
+Work Log:
+- Read worklog.md before starting
+- Read all 14 target files to confirm exact text before editing
+- Category 1: Replaced `{division} {genderSymbol}` with `{division === 'male' ? 'COWO' : 'CEWE'} {genderSymbol}` in 6 files (9 occurrences total):
+  1. mvp-hall-of-fame.tsx — line 225
+  2. mvp-spotlight.tsx — lines 88 and 205
+  3. weekly-champions.tsx — line 211
+  4. community-dashboard/index.tsx — lines 470 and 514
+  5. community-champions.tsx — line 503
+  6. weekly-champion-card.tsx — lines 75 and 111
+- Category 2: Replaced other user-visible Male/Female text in 8 files:
+  7. types.ts — '♂ Male' → '♂ Cowo', '♀ Female' → '♀ Cewe'
+  8. experiences-section.tsx — label: 'MALE' → 'COWO', label: 'FEMALE' → 'CEWE'
+  9. highlights-section.tsx — 'MALE' : 'FEMALE' → 'COWO' : 'CEWE'
+  10. cms-panel.tsx — SelectItem visible text "Male" → "Cowo" (value="male" unchanged)
+  11. bantuan-view.tsx — (Male/Female) → (Cowo/Cewe)
+  12. feed/route.ts — 'Male' : 'Female' → 'Cowo' : 'Cewe'
+  13. seed-demo/route.ts — 'Male' : 'Female' → 'Cowo' : 'Cewe'
+  14. seed-matches/route.ts — 'Male' : 'Female' → 'Cowo' : 'Cewe' (2 occurrences)
+- Category 3: Fixed regex in community-hero.tsx:
+  15. /\s*[-–]\s*(Male|Female)\s*$/i → /\s*[-–]\s*(Cowo|Cewe)\s*$/i
+
+Verification:
+- bun run lint: passed (zero errors)
+- No code variable names, CSS class names, database values, API parameter values, or type definitions were changed
+- Only user-visible text was modified
+
+Stage Summary:
+- All 15 items across 14 files updated successfully
+- 9 Category 1 edits (division label rendering)
+- 8 Category 2 edits (various user-visible text)
+- 2 Category 3 edits (regex pattern for season name stripping)
+- Lint clean, no broken JSX

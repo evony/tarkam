@@ -301,6 +301,6 @@ function getDefaultPlayerAvatars(): Array<{ gamertag: string; avatar: string }> 
 
 function getDefaultSeasonChampions(): Array<{ seasonName: string; championClubName: string; championSquad?: string }> {
   return [
-    { seasonName: 'IDM League Season 1 - Male', championClubName: 'MAXIMOUS' },
+    { seasonName: 'IDM League Season 1 - Cowo', championClubName: 'MAXIMOUS' },
   ];
 }

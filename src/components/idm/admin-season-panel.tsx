@@ -366,7 +366,7 @@ export function AdminSeasonPanel({ division, dt, setConfirmDialog, mode = 'liga'
             <div>
               <Label className="text-[10px] text-muted-foreground">Nama Season</Label>
               <Input
-                placeholder={isTarkam ? 'contoh: Season 2 Tarkam Male' : 'contoh: Liga IDM Season 3'}
+                placeholder={isTarkam ? 'contoh: Season 2 Tarkam Cowo' : 'contoh: Liga IDM Season 3'}
                 value={newSeasonForm.name}
                 onChange={(e) => setNewSeasonForm(p => ({ ...p, name: e.target.value }))}
               />

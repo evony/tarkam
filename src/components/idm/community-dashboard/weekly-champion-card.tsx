@@ -72,7 +72,7 @@ function DivisionChampionCard({
           </div>
           <span className="text-[10px] font-bold uppercase tracking-wider text-idm-gold-warm">Juara Tarkam</span>
           <span className="text-[9px] font-bold uppercase tracking-wider" style={{ color: accent }}>
-            {division} {genderSymbol}
+            {division === 'male' ? 'COWO' : 'CEWE'} {genderSymbol}
           </span>
         </div>
 
@@ -108,7 +108,7 @@ function DivisionChampionCard({
           🏆 Juara Tarkam
         </h3>
         <span className="text-[9px] font-bold uppercase tracking-wider" style={{ color: accent }}>
-          {division} {genderSymbol}
+          {division === 'male' ? 'COWO' : 'CEWE'} {genderSymbol}
         </span>
         {champions.length > 0 && (
           <Badge className={`ml-auto ${dt.casinoBadge} text-[9px]`}>

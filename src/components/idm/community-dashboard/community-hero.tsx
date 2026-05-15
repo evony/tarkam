@@ -497,8 +497,8 @@ export const CommunityHero = React.memo(function CommunityHero({ maleData, femal
   const totalWeeks = seasonProgress?.totalWeeks || 10;
   const seasonPercentage = totalWeeks > 0 ? Math.round((completedWeeks / totalWeeks) * 100) : 0;
   const seasonName =
-    maleData?.season?.name?.replace(/\s*[-–]\s*(Male|Female)\s*$/i, '') ||
-    femaleData?.season?.name?.replace(/\s*[-–]\s*(Male|Female)\s*$/i, '');
+    maleData?.season?.name?.replace(/\s*[-–]\s*(Cowo|Cewe)\s*$/i, '') ||
+    femaleData?.season?.name?.replace(/\s*[-–]\s*(Cowo|Cewe)\s*$/i, '');
 
   // Per-division status
   const maleStatus: TournamentStatus = mapTournamentStatus(maleData?.activeTournament?.status as RawTournamentStatus | undefined);

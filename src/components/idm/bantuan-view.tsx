@@ -58,7 +58,7 @@ const faqData = [
     items: [
       {
         q: 'Bagaimana cara melihat jadwal pertandingan?',
-        a: 'Masuk ke menu divisi (Male/Female), lalu klik tab "Arena Live" di sub-navigasi bawah. Di sana Anda bisa melihat jadwal pertandingan per week beserta skor dan hasil match.'
+        a: 'Masuk ke menu divisi (Cowo/Cewe), lalu klik tab "Arena Live" di sub-navigasi bawah. Di sana Anda bisa melihat jadwal pertandingan per week beserta skor dan hasil match.'
       },
       {
         q: 'Berapa lama satu season berlangsung?',
