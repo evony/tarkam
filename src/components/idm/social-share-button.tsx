@@ -122,9 +122,10 @@ export function SharePopup({
     }
   }, [shareUrl]);
 
-  // Copy link + close picker after sharing
+  // Instagram: copy link to clipboard + let <a> tag open Instagram
+  // Instagram has no share URL API, so user must manually paste the link
   const handleInstagramClick = useCallback(() => {
-    // Instagram has no direct share URL — copy link first, then open Instagram
+    // Copy link first
     navigator.clipboard.writeText(shareUrl).catch(() => {
       const ta = document.createElement('textarea');
       ta.value = shareUrl;
@@ -135,8 +136,8 @@ export function SharePopup({
     });
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
-    // Close picker after a short delay so user sees "Link Tersalin!" feedback
-    setTimeout(() => setShowPicker(false), 600);
+    // Close picker after short delay — <a> tag will open Instagram automatically
+    setTimeout(() => setShowPicker(false), 400);
   }, [shareUrl]);
 
   const socialLinks = [
@@ -158,6 +159,7 @@ export function SharePopup({
       name: 'Instagram',
       icon: <InstagramIcon className="w-5 h-5" />,
       color: 'bg-gradient-to-br from-[#833AB4] via-[#FD1D1D] to-[#F77737] hover:opacity-90',
+      // On mobile, OS intercepts instagram.com and opens the app if installed
       href: 'https://www.instagram.com/',
       isInstagram: true,
     },
@@ -245,11 +247,14 @@ export function SharePopup({
                     href={s.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    onClick={s.isInstagram ? (e) => { e.preventDefault(); handleInstagramClick(); } : () => setShowPicker(false)}
-                    className={`flex items-center gap-2 px-3 py-2.5 rounded-xl text-white text-xs font-semibold transition-all duration-200 active:scale-95 cursor-pointer no-underline ${s.color}`}
+                    onClick={s.isInstagram ? () => handleInstagramClick() : () => setShowPicker(false)}
+                    className={`relative flex items-center gap-2 px-3 py-2.5 rounded-xl text-white text-xs font-semibold transition-all duration-200 active:scale-95 cursor-pointer no-underline ${s.color}`}
                   >
                     {s.icon}
-                    <span>{s.name}</span>
+                    <div className="flex flex-col leading-tight">
+                      <span>{s.name}</span>
+                      {s.isInstagram && <span className="text-[8px] opacity-70 font-normal">Link tersalin, paste manual</span>}
+                    </div>
                   </a>
                 ))}
               </div>
