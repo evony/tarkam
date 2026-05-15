@@ -129,22 +129,6 @@ export function SharePopup({
     }
   }, [shareUrl]);
 
-  // Copy link + open app — used by Instagram & Discord (no share URL API)
-  const handleCopyAndOpen = useCallback(() => {
-    navigator.clipboard.writeText(shareUrl).catch(() => {
-      const ta = document.createElement('textarea');
-      ta.value = shareUrl;
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand('copy');
-      document.body.removeChild(ta);
-    });
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-    // Close picker after short delay — <a> tag will open the app automatically
-    setTimeout(() => setShowPicker(false), 400);
-  }, [shareUrl]);
-
   const socialLinks = [
     {
       name: 'WhatsApp',
@@ -253,16 +237,24 @@ export function SharePopup({
                   href={s.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  onClick={(e) => {
-                    // Copy link first for Instagram/Discord (no share URL API)
+                  onClick={() => {
+                    // For Instagram/Discord: copy link to clipboard (fire-and-forget)
+                    // Let <a> tag handle navigation naturally — no preventDefault!
+                    // This ensures popup blockers never block the link
                     if (s.isCopyAndOpen) {
-                      e.preventDefault(); // prevent <a> navigation first
-                      handleCopyAndOpen();
-                      // Manually open the link after copy
-                      window.open(s.href, '_blank', 'noopener,noreferrer');
+                      navigator.clipboard.writeText(shareUrl).catch(() => {
+                        const ta = document.createElement('textarea');
+                        ta.value = shareUrl;
+                        document.body.appendChild(ta);
+                        ta.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(ta);
+                      });
+                      setCopied(true);
+                      setTimeout(() => setCopied(false), 2000);
                     }
-                    // Close picker after short delay
-                    setTimeout(() => setShowPicker(false), 300);
+                    // Close picker after short delay so navigation can start
+                    setTimeout(() => setShowPicker(false), 400);
                   }}
                   className={`relative flex items-center gap-2 px-3 py-2.5 rounded-xl text-white text-xs font-semibold transition-all duration-200 active:scale-95 cursor-pointer no-underline ${s.color}`}
                 >
