@@ -86,20 +86,20 @@ export function StandingsTab({ data, otherDivisionData, currentDivision, setSele
         <div className={`flex items-center gap-1 p-1 rounded-lg ${dt.bgSubtle} ${dt.border}`}>
           <button
             onClick={() => setLeaderboardSort('players')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all ${leaderboardSort === 'players' ? `${dt.bg} ${dt.text} shadow-sm` : 'text-muted-foreground hover:text-foreground'}`}
+            className={`compact-dot flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all ${leaderboardSort === 'players' ? `${dt.bg} ${dt.text} shadow-sm` : 'text-muted-foreground hover:text-foreground'}`}
           >
             <Users className="w-3 h-3" /> Pemain
           </button>
           <button
             onClick={() => setLeaderboardSort('clubs')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all ${leaderboardSort === 'clubs' ? `${dt.bg} ${dt.text} shadow-sm` : 'text-muted-foreground hover:text-foreground'}`}
+            className={`compact-dot flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all ${leaderboardSort === 'clubs' ? `${dt.bg} ${dt.text} shadow-sm` : 'text-muted-foreground hover:text-foreground'}`}
           >
             <Shield className="w-3 h-3" /> Klub
           </button>
         </div>
         <button
           onClick={() => setSearchOpen(true)}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all ${dt.bgSubtle} ${dt.border} border ${dt.text} hover:${dt.bg}`}
+          className={`compact-dot flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all ${dt.bgSubtle} ${dt.border} border ${dt.text} hover:${dt.bg}`}
         >
           <Search className="w-3 h-3" /> Cari
         </button>

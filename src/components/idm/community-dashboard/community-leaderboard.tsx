@@ -157,7 +157,7 @@ export function CommunityLeaderboard({
                 <button
                   key={f.key}
                   onClick={() => setDivisionFilter(f.key)}
-                  className={`px-2.5 py-1 text-[10px] font-semibold rounded-md transition-all whitespace-nowrap ${
+                  className={`compact-dot px-2.5 py-1 text-[10px] font-semibold rounded-md transition-all whitespace-nowrap ${
                     divisionFilter === f.key
                       ? f.key === 'male'
                         ? 'bg-idm-male text-white shadow-sm'

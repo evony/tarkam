@@ -5844,32 +5844,21 @@ html {
 
 /* ============================================
    TOUCH TARGETS — Mobile Friendly
+   ★ INP FIX: Use :not(.compact-dot) to exempt small indicator/dot buttons
+   from the 44px min-size rule. The .compact-dot class is opt-in for
+   buttons that should stay small (carousel dots, week dots, tab dots, etc.)
    ============================================ */
 @media (pointer: coarse) {
-  button, 
-  [role="button"],
+  button:not(.compact-dot), 
+  [role="button"]:not(.compact-dot),
   a,
   .tap-target {
     min-height: 44px;
     min-width: 44px;
   }
   
-  /* ★ Exception: carousel dots should stay tiny — 
-     the parent container provides the 44px touch area via padding.
-     Using !important to override inline and Tailwind min-size rules. */
-  button.carousel-dot {
-    min-height: unset !important;
-    min-width: unset !important;
-  }
-  
-  .landing-scroll button {
+  .landing-scroll button:not(.compact-dot) {
     min-height: 44px;
-  }
-
-  /* ★ Also exempt carousel dots from landing-scroll rule */
-  .landing-scroll button.carousel-dot {
-    min-height: unset !important;
-    min-width: unset !important;
   }
 }
 

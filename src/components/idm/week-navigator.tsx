@@ -111,7 +111,7 @@ export function WeekNavigator({
               <button
                 key={phase.key}
                 onClick={() => setManualPhase(phase.key)}
-                className={`rounded-md font-semibold transition-all whitespace-nowrap ${
+                className={`compact-dot rounded-md font-semibold transition-all whitespace-nowrap ${
                   isXs ? 'px-1.5 py-0.5 text-[8px] leading-tight' :
                   isSm ? 'px-2 py-0.5 text-[10px]' : 'px-2.5 py-1 text-[10px]'
                 } ${
@@ -143,7 +143,7 @@ export function WeekNavigator({
             <button
               key={w.weekNumber}
               onClick={() => onWeekChange(w.weekNumber)}
-              className={`relative flex items-center justify-center transition-all duration-200 rounded-full font-bold shrink-0 ${
+              className={`compact-dot relative flex items-center justify-center transition-all duration-200 rounded-full font-bold shrink-0 ${
                 isXs ? 'w-5 h-5 text-[7px]' : isSm ? 'w-6 h-6 text-[8px]' : 'w-7 h-7 text-[9px]'
               } ${
                 isSelected

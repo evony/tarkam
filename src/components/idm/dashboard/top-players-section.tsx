@@ -55,7 +55,7 @@ export function TopPlayersSection({ data, division, setSelectedPlayer }: TopPlay
             role="tab"
             aria-selected={topPlayerTab === 'top3'}
             onClick={() => setTopPlayerTab('top3')}
-            className={`relative px-3 py-2 text-xs font-medium border-b-2 transition-colors whitespace-nowrap ${
+            className={`compact-dot relative px-3 py-2 text-xs font-medium border-b-2 transition-colors whitespace-nowrap ${
               topPlayerTab === 'top3'
                 ? `border-current ${dt.text}`
                 : 'border-transparent text-muted-foreground hover:text-foreground'
@@ -68,7 +68,7 @@ export function TopPlayersSection({ data, division, setSelectedPlayer }: TopPlay
             role="tab"
             aria-selected={topPlayerTab === 'sultan'}
             onClick={() => setTopPlayerTab('sultan')}
-            className={`relative px-3 py-2 text-xs font-medium border-b-2 transition-colors whitespace-nowrap ${
+            className={`compact-dot relative px-3 py-2 text-xs font-medium border-b-2 transition-colors whitespace-nowrap ${
               topPlayerTab === 'sultan'
                 ? `border-current ${dt.text}`
                 : 'border-transparent text-muted-foreground hover:text-foreground'
@@ -81,7 +81,7 @@ export function TopPlayersSection({ data, division, setSelectedPlayer }: TopPlay
             role="tab"
             aria-selected={topPlayerTab === 'champion'}
             onClick={() => setTopPlayerTab('champion')}
-            className={`relative px-3 py-2 text-xs font-medium border-b-2 transition-colors whitespace-nowrap ${
+            className={`compact-dot relative px-3 py-2 text-xs font-medium border-b-2 transition-colors whitespace-nowrap ${
               topPlayerTab === 'champion'
                 ? `border-current ${dt.text}`
                 : 'border-transparent text-muted-foreground hover:text-foreground'
@@ -94,7 +94,7 @@ export function TopPlayersSection({ data, division, setSelectedPlayer }: TopPlay
             role="tab"
             aria-selected={topPlayerTab === 'mvp'}
             onClick={() => setTopPlayerTab('mvp')}
-            className={`relative px-3 py-2 text-xs font-medium border-b-2 transition-colors whitespace-nowrap ${
+            className={`compact-dot relative px-3 py-2 text-xs font-medium border-b-2 transition-colors whitespace-nowrap ${
               topPlayerTab === 'mvp'
                 ? `border-current ${dt.text}`
                 : 'border-transparent text-muted-foreground hover:text-foreground'
