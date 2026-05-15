@@ -1883,6 +1883,17 @@ export function CommunityDashboard() {
   // Peringkat leaderboard filter state — lifted from CommunityLeaderboard for sticky header
   const [leaderboardSort, setLeaderboardSort] = useState<'players' | 'clubs'>('players');
   const [leaderboardDivisionFilter, setLeaderboardDivisionFilter] = useState<'all' | 'male' | 'female'>('all');
+  // Track if rankings section is visible — hide sticky champion header when it is
+  const [isRankingsVisible, setIsRankingsVisible] = useState(false);
+  const rankingsRef = useCallback((node: HTMLElement | null) => {
+    if (!node) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsRankingsVisible(entry.isIntersecting),
+      { threshold: 0, rootMargin: '-80px 0px 0px 0px' } // trigger when section top passes sticky header
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
   // Peringkat is no longer sticky — no need for intersection observer
   // Season selector — null means viewing the active season
   const [selectedSeason, setSelectedSeason] = useState<SelectedSeason | null>(null);
@@ -2084,8 +2095,8 @@ export function CommunityDashboard() {
 
       {/* ═══ 4. ⭐ Champions & MVP + Peringkat ═══ */}
       <div className="space-y-4 sm:space-y-6">
-        {/* Sticky Champion Header */}
-        <div className="sticky top-0 z-30 -mx-1.5 sm:-mx-4 lg:-mx-5 px-1.5 sm:px-4 lg:px-5 py-2.5 bg-background/95 backdrop-blur-md border-b border-idm-gold-warm/10 transition-all duration-200">
+        {/* Sticky Champion Header — hidden when rankings section is in view */}
+        <div className={`sticky top-0 z-30 -mx-1.5 sm:-mx-4 lg:-mx-5 px-1.5 sm:px-4 lg:px-5 py-2.5 bg-background/95 backdrop-blur-md border-b border-idm-gold-warm/10 transition-all duration-300 ${isRankingsVisible ? 'opacity-0 pointer-events-none -translate-y-full' : 'opacity-100 translate-y-0'}`}>
           <ChampionsMvpHeader
             selectedDivision={selectedDivision}
             onDivisionChange={handleDivisionChange}
@@ -2105,6 +2116,7 @@ export function CommunityDashboard() {
 
         {/* ═══ 6. Peringkat/Standings — People check ranking changes after match ═══ */}
         <Section sectionId="rankings">
+          <div ref={rankingsRef}>
           <AnimatedSection variant="fadeUp">
             <div className="space-y-4">
               <PeringkatHeader
@@ -2128,6 +2140,7 @@ export function CommunityDashboard() {
               />
             </div>
           </AnimatedSection>
+          </div>
         </Section>
       </div>
 
