@@ -1209,6 +1209,7 @@ function DivisionHasilCard({
           const matches = matchesGrouped[key];
           const firstMatch = matches[0];
           const roundLabel = firstMatch ? getRoundLabel(firstMatch.bracket, firstMatch.round) : `Round ${key}`;
+          const isGrandFinal = firstMatch?.bracket === 'grand_final';
 
           return (
             <div key={key}>
@@ -1220,16 +1221,57 @@ function DivisionHasilCard({
                 <span className="text-[8px] text-muted-foreground">{matches.length} match</span>
               </div>
               <div className="space-y-1.5">
-                {matches.map(m => (
-                  <MatchRow
-                    key={m.id}
-                    club1={m.name1}
-                    club2={m.name2}
-                    score1={m.score1 ?? 0}
-                    score2={m.score2 ?? 0}
-                    status="completed"
-                  />
-                ))}
+                {matches.map(m => {
+                  // Grand Final — special champion rendering
+                  if (isGrandFinal && m.score1 != null && m.score2 != null) {
+                    const winner1 = m.score1 > m.score2;
+                    const winner2 = m.score2 > m.score1;
+                    return (
+                      <div key={m.id} className={`group flex items-stretch rounded-lg overflow-hidden border transition-all hover:shadow-sm ${dt.bgSubtle} border-idm-gold-warm/30`}>
+                        {/* Champion left bar */}
+                        <div className="w-10 shrink-0 flex items-center justify-center bg-idm-gold-warm/20 border-r border-idm-gold-warm/25">
+                          <span className="text-base">🏆</span>
+                        </div>
+                        {/* Match content */}
+                        <div className="flex-1 min-w-0">
+                          {/* Team 1 */}
+                          <div className={`flex items-center px-3 py-2 border-b ${dt.borderSubtle} ${winner1 ? 'bg-idm-gold-warm/10' : 'opacity-60'}`}>
+                            {winner1 && <span className="text-sm mr-1.5">👑</span>}
+                            <span className={`text-xs font-bold truncate flex-1 ${winner1 ? 'text-idm-gold-warm' : 'text-muted-foreground'}`}>
+                              {m.name1}
+                            </span>
+                            {winner1 && <span className="text-[8px] font-black text-idm-gold-warm/70 uppercase tracking-wider mr-2">Champion</span>}
+                            <span className={`text-sm font-bold tabular-nums w-6 text-right ${winner1 ? 'text-idm-gold-warm' : 'text-foreground'}`}>{m.score1}</span>
+                          </div>
+                          {/* Team 2 */}
+                          <div className={`flex items-center px-3 py-2 ${winner2 ? 'bg-idm-gold-warm/10' : 'opacity-60'}`}>
+                            {winner2 && <span className="text-sm mr-1.5">👑</span>}
+                            <span className={`text-xs font-bold truncate flex-1 ${winner2 ? 'text-idm-gold-warm' : 'text-muted-foreground'}`}>
+                              {m.name2}
+                            </span>
+                            {winner2 && <span className="text-[8px] font-black text-idm-gold-warm/70 uppercase tracking-wider mr-2">Champion</span>}
+                            <span className={`text-sm font-bold tabular-nums w-6 text-right ${winner2 ? 'text-idm-gold-warm' : 'text-foreground'}`}>{m.score2}</span>
+                          </div>
+                        </div>
+                        {/* Status */}
+                        <div className="w-16 shrink-0 flex flex-col items-center justify-center border-l border-idm-gold-warm/20">
+                          <Badge className="bg-idm-gold-warm/15 text-idm-gold-warm text-[8px] border border-idm-gold-warm/25 font-black">FT</Badge>
+                        </div>
+                      </div>
+                    );
+                  }
+                  // Regular match — standard MatchRow
+                  return (
+                    <MatchRow
+                      key={m.id}
+                      club1={m.name1}
+                      club2={m.name2}
+                      score1={m.score1 ?? 0}
+                      score2={m.score2 ?? 0}
+                      status="completed"
+                    />
+                  );
+                })}
               </div>
             </div>
           );
