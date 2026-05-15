@@ -485,7 +485,7 @@ export function LandingPage() {
   };
 
   return (
-    <div className="relative min-h-screen flex flex-col bg-background overflow-hidden landing-scroll pb-24 md:pb-0">
+    <div className="relative min-h-screen flex flex-col bg-background overflow-x-hidden landing-scroll pb-24 md:pb-0">
 
       {/* ========== FIXED NAVIGATION HEADER ========== */}
       <nav aria-label="Main navigation" className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
