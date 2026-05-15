@@ -432,7 +432,8 @@ export const PeringkatHeader = React.memo(function PeringkatHeader({
   const clubCount = (maleData?.clubs?.length || 0) + (femaleData?.clubs?.length || 0);
 
   return (
-    <div className="flex items-center justify-between gap-3">
+    <div className="space-y-2.5">
+      {/* Title row */}
       <div className="flex items-center gap-2.5">
         <div className={`w-5 h-5 rounded ${ct.iconBg} flex items-center justify-center shrink-0`}>
           <Trophy className={`w-3 h-3 ${ct.neonText}`} />
@@ -444,6 +445,7 @@ export const PeringkatHeader = React.memo(function PeringkatHeader({
         }}>Peringkat</h3>
       </div>
 
+      {/* Filter controls — scrollable on mobile, inline on desktop */}
       <div className="overflow-x-auto scrollbar-none -mx-1 px-1">
         <div className="flex items-center gap-2 min-w-max lg:min-w-0">
           {/* Player/Club toggle */}
