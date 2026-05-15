@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { Heart, Gift, Trophy, Medal, Clock } from 'lucide-react';
+import { Heart, Gift, Clock } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -82,26 +82,26 @@ function formatRelativeTime(dateStr: string | null): string {
   return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
 }
 
-/** Rank badge component — gold/silver/bronze for top 3 */
+/** Rank badge component — numbered with gold/silver/bronze colors */
 function RankBadge({ rank }: { rank: number }) {
   if (rank === 1) {
     return (
-      <div className="w-7 h-7 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center shadow-sm donor-rank-badge">
-        <Trophy className="w-4 h-4 text-yellow-900" />
+      <div className="w-6 h-6 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center shadow-sm">
+        <span className="text-[10px] font-black text-yellow-900">1</span>
       </div>
     );
   }
   if (rank === 2) {
     return (
-      <div className="w-6 h-6 rounded-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center shadow-sm donor-rank-badge">
-        <Medal className="w-3.5 h-3.5 text-gray-700" />
+      <div className="w-6 h-6 rounded-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center shadow-sm">
+        <span className="text-[10px] font-black text-gray-700">2</span>
       </div>
     );
   }
   if (rank === 3) {
     return (
-      <div className="w-6 h-6 rounded-full bg-gradient-to-br from-amber-600 to-amber-800 flex items-center justify-center shadow-sm donor-rank-badge">
-        <Medal className="w-3.5 h-3.5 text-amber-200" />
+      <div className="w-6 h-6 rounded-full bg-gradient-to-br from-amber-600 to-amber-800 flex items-center justify-center shadow-sm">
+        <span className="text-[10px] font-black text-amber-200">3</span>
       </div>
     );
   }
