@@ -170,7 +170,7 @@ function TournamentProgress({ status, divisionTheme }: { status: string; divisio
 /* ═══════════════════════════════════════════
    Round Label Helper
    ═══════════════════════════════════════════ */
-function getRoundLabel(round: number, totalRounds: number): string {
+function getRoundLabelFromTotal(round: number, totalRounds: number): string {
   const fromEnd = totalRounds - round;
   if (fromEnd === 0) return 'Grand Final';
   if (fromEnd === 1) return 'Semi Final';
@@ -1549,7 +1549,7 @@ function TourSayaSection({
                     </div>
                     <div>
                       <h3 className="text-sm font-bold text-red-500">LIVE SEKARANG!</h3>
-                      <p className="text-[10px] text-muted-foreground">{getRoundLabel(liveMatch.round, totalRounds)}</p>
+                      <p className="text-[10px] text-muted-foreground">{getRoundLabelFromTotal(liveMatch.round, totalRounds)}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3 p-4 sm:p-5 rounded-lg bg-red-500/10 border border-red-500/20">
@@ -1572,7 +1572,7 @@ function TourSayaSection({
                     </div>
                     <div>
                       <h3 className="text-sm font-bold">Lawan Selanjutnya</h3>
-                      <p className="text-[10px] text-muted-foreground">{getRoundLabel(nextMatch.round, totalRounds)}</p>
+                      <p className="text-[10px] text-muted-foreground">{getRoundLabelFromTotal(nextMatch.round, totalRounds)}</p>
                     </div>
                   </div>
                   <div className={`p-4 sm:p-5 rounded-2xl border ${ct.borderSubtle}`}>
@@ -1638,7 +1638,7 @@ function TourSayaSection({
                       'border-border/20'
                     }`}>
                       <div className="flex items-center justify-between mb-1">
-                        <span className="text-[10px] font-semibold text-muted-foreground">{getRoundLabel(m.round, totalRounds)}</span>
+                        <span className="text-[10px] font-semibold text-muted-foreground">{getRoundLabelFromTotal(m.round, totalRounds)}</span>
                         <div className="flex items-center gap-1.5">
                           {m.won && <Badge className="bg-green-500/15 text-green-400 border-0 text-[8px]">Menang</Badge>}
                           {m.lost && <Badge className="bg-red-500/15 text-red-400 border-0 text-[8px]">Kalah</Badge>}
