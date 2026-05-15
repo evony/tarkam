@@ -1880,9 +1880,7 @@ export function CommunityDashboard() {
   // Peringkat leaderboard filter state — lifted from CommunityLeaderboard for sticky header
   const [leaderboardSort, setLeaderboardSort] = useState<'players' | 'clubs'>('players');
   const [leaderboardDivisionFilter, setLeaderboardDivisionFilter] = useState<'all' | 'male' | 'female'>('all');
-  // Intersection observer: detect when peringkat section enters viewport
-  const peringkatSentinelRef = useRef<HTMLDivElement>(null);
-  const [peringkatVisible, setPeringkatVisible] = useState(false);
+  // Peringkat is no longer sticky — no need for intersection observer
   // Season selector — null means viewing the active season
   const [selectedSeason, setSelectedSeason] = useState<SelectedSeason | null>(null);
 
@@ -1911,19 +1909,7 @@ export function CommunityDashboard() {
     }
   };
 
-  // IntersectionObserver: hide champion sticky when peringkat section enters viewport
-  useEffect(() => {
-    const sentinel = peringkatSentinelRef.current;
-    if (!sentinel) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setPeringkatVisible(entry.isIntersecting);
-      },
-      { threshold: 0, rootMargin: '-80px 0px 0px 0px' } // 80px offset = sticky header height
-    );
-    observer.observe(sentinel);
-    return () => observer.disconnect();
-  }, []);
+
 
   // CMS settings for donation modal
   const { data: cms } = useQuery<Record<string, string>>({
@@ -2084,17 +2070,15 @@ export function CommunityDashboard() {
       ) : (
       <>
 
-      {/* ═══ 4. ⭐ Champions & MVP + Peringkat — Dual sticky headers ═══ */}
+      {/* ═══ 4. ⭐ Champions & MVP + Peringkat ═══ */}
       <div className="space-y-4 sm:space-y-6">
-        {/* Sticky Champion Header — hidden when peringkat section enters viewport to avoid collision */}
-        {!peringkatVisible && (
-          <div className="sticky top-0 z-30 -mx-1.5 sm:-mx-4 lg:-mx-5 px-1.5 sm:px-4 lg:px-5 py-2.5 bg-background/95 backdrop-blur-md border-b border-idm-gold-warm/10 transition-all duration-200">
-            <ChampionsMvpHeader
-              selectedDivision={selectedDivision}
-              onDivisionChange={handleDivisionChange}
-            />
-          </div>
-        )}
+        {/* Sticky Champion Header */}
+        <div className="sticky top-0 z-30 -mx-1.5 sm:-mx-4 lg:-mx-5 px-1.5 sm:px-4 lg:px-5 py-2.5 bg-background/95 backdrop-blur-md border-b border-idm-gold-warm/10 transition-all duration-200">
+          <ChampionsMvpHeader
+            selectedDivision={selectedDivision}
+            onDivisionChange={handleDivisionChange}
+          />
+        </div>
 
         <Section sectionId="champions">
           <AnimatedSection>
@@ -2106,23 +2090,6 @@ export function CommunityDashboard() {
             />
           </AnimatedSection>
         </Section>
-
-        {/* Sentinel for IntersectionObserver — placed before peringkat section */}
-        <div ref={peringkatSentinelRef} className="h-0" />
-
-        {/* Sticky Peringkat Header — takes over when peringkat section enters viewport */}
-        {peringkatVisible && (
-          <div className="sticky top-0 z-30 -mx-1.5 sm:-mx-4 lg:-mx-5 px-1.5 sm:px-4 lg:px-5 py-2.5 bg-background/95 backdrop-blur-md border-b border-idm-gold-warm/10 transition-all duration-200">
-            <PeringkatHeader
-              leaderboardSort={leaderboardSort}
-              onLeaderboardSortChange={setLeaderboardSort}
-              divisionFilter={leaderboardDivisionFilter}
-              onDivisionFilterChange={setLeaderboardDivisionFilter}
-              maleData={maleData}
-              femaleData={femaleData}
-            />
-          </div>
-        )}
 
         {/* ═══ 6. Peringkat/Standings — People check ranking changes after match ═══ */}
         <Section sectionId="rankings">
