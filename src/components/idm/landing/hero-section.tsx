@@ -121,7 +121,7 @@ export function HeroSection({
   // Show skeleton when data is placeholder (season switch) OR when still loading
   const showChampionSkeleton = isSeasonDataPlaceholder || (!maleData && !femaleData);
   // Gold skin visual constants for season champion avatars
-  const CHAMPION_GOLD = '#C8920A';
+  const CHAMPION_GOLD = '#EFF923';
   const maleHasSkin = maleChampion?.hasSeasonChampionSkin ?? false;
   const femaleHasSkin = femaleChampion?.hasSeasonChampionSkin ?? false;
 
@@ -213,7 +213,7 @@ export function HeroSection({
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
-              background: 'radial-gradient(ellipse at 50% 45%, rgba(200,146,10,0.02) 0%, transparent 65%)',
+              background: 'radial-gradient(ellipse at 50% 45%, rgba(239,249,35,0.02) 0%, transparent 65%)',
             }}
           />
         )}
@@ -256,8 +256,8 @@ export function HeroSection({
             className="absolute inset-0 pointer-events-none opacity-[0.015]"
             style={{
               backgroundImage: `
-                linear-gradient(rgba(200,146,10,0.3) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(200,146,10,0.3) 1px, transparent 1px)
+                linear-gradient(rgba(239,249,35,0.3) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(239,249,35,0.3) 1px, transparent 1px)
               `,
               backgroundSize: '60px 60px',
             }}
@@ -284,7 +284,7 @@ export function HeroSection({
                 left: `${p.x}%`,
                 width: `${p.size}px`,
                 height: `${p.size}px`,
-                background: `radial-gradient(circle, rgba(200,146,10,${p.opacity}) 0%, rgba(200,146,10,${(p.opacity * 0.3).toFixed(2)}) 60%, transparent 100%)`,
+                background: `radial-gradient(circle, rgba(239,249,35,${p.opacity}) 0%, rgba(239,249,35,${(p.opacity * 0.3).toFixed(2)}) 60%, transparent 100%)`,
                 '--duration': `${p.duration}s`,
                 '--delay': `${p.delay}s`,
                 '--p-opacity': p.opacity,
@@ -300,7 +300,7 @@ export function HeroSection({
           <div className="hero-enter-1 mb-5 sm:mb-7">
             <div className="flex items-center justify-center gap-3">
               <div className="h-px w-12 sm:w-24 bg-gradient-to-r from-transparent to-idm-gold-warm/50" />
-              <div className="ios-badge frost-glass flex items-center gap-2 px-4 py-1.5" style={{ borderColor: 'rgba(200,146,10,0.2)', background: 'rgba(200,146,10,0.06)' }}>
+              <div className="ios-badge frost-glass flex items-center gap-2 px-4 py-1.5" style={{ borderColor: 'rgba(239,249,35,0.2)', background: 'rgba(239,249,35,0.06)' }}>
                 <Star className="w-3 h-3 text-idm-gold-warm/80" />
                 <span className="text-[10px] sm:text-[11px] text-idm-gold-warm/80 font-bold tracking-[0.2em] uppercase">
                   {siteTitle}
@@ -322,7 +322,7 @@ export function HeroSection({
             <h1
               className="hero-title-entrance hero-title-glow-enhanced ios-heading relative text-4xl sm:text-6xl md:text-7xl uppercase leading-[1.05] min-h-[3.5rem]"
               style={{
-                background: 'linear-gradient(135deg, #FAF0DC 0%, #C8920A 30%, #F0A500 50%, #FFD54F 70%, #C8920A 100%)',
+                background: 'linear-gradient(135deg, #FAF0DC 0%, #EFF923 30%, #F9CB25 50%, #F9CB25 70%, #EFF923 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 textShadow: 'none',
@@ -407,14 +407,14 @@ export function HeroSection({
               {/* Season Club Champion Card — Horizontal: logo left, name right */}
               {maleChampion && femaleChampion && (
                 <div className="flex flex-col items-center gap-1">
-                  <div className="relative flex items-center gap-2 sm:gap-2.5 p-4 sm:p-5 rounded-2xl border" style={{ background: 'rgba(200,146,10,0.06)', borderColor: 'rgba(200,146,10,0.2)', boxShadow: '0 0 20px rgba(200,146,10,0.08)' }}>
+                  <div className="relative flex items-center gap-2 sm:gap-2.5 p-4 sm:p-5 rounded-2xl border" style={{ background: 'rgba(239,249,35,0.06)', borderColor: 'rgba(239,249,35,0.2)', boxShadow: '0 0 20px rgba(239,249,35,0.08)' }}>
                     {/* Club Logo */}
                     {championClub?.logo ? (
-                      <div className="relative w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-xl overflow-hidden shrink-0" style={{ boxShadow: '0 0 12px rgba(200,146,10,0.15)' }}>
+                      <div className="relative w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-xl overflow-hidden shrink-0" style={{ boxShadow: '0 0 12px rgba(239,249,35,0.15)' }}>
                         <Image src={championClub.logo} alt={championClub.name} fill sizes="48px" className="object-cover" loading="lazy" />
                       </div>
                     ) : (
-                      <div className="w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'rgba(200,146,10,0.1)' }}>
+                      <div className="w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'rgba(239,249,35,0.1)' }}>
                         <Trophy className="w-5 h-5 sm:w-6 sm:h-6 text-idm-gold-warm/60" />
                       </div>
                     )}
@@ -467,14 +467,14 @@ export function HeroSection({
               className="btn-press hero-cta-breath group relative cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-idm-gold-warm/50 focus-visible:ring-offset-2 focus-visible:ring-offset-deep w-full sm:w-auto"
             >
               {/* Pulse glow ring */}
-              <div className="absolute -inset-1.5 rounded-2xl animate-pulse" style={{ background: 'rgba(200,146,10,0.15)', boxShadow: '0 0 30px rgba(200,146,10,0.3)' }} />
+              <div className="absolute -inset-1.5 rounded-2xl animate-pulse" style={{ background: 'rgba(239,249,35,0.15)', boxShadow: '0 0 30px rgba(239,249,35,0.3)' }} />
               {/* Glow background */}
-              <div className="absolute -inset-1 rounded-2xl blur-lg opacity-0 group-hover:opacity-60 transition-opacity duration-500" style={{ background: 'rgba(200,146,10,0.25)' }} />
+              <div className="absolute -inset-1 rounded-2xl blur-lg opacity-0 group-hover:opacity-60 transition-opacity duration-500" style={{ background: 'rgba(239,249,35,0.25)' }} />
               <div className="relative flex items-center justify-center gap-2.5 px-7 py-3 min-h-[48px] rounded-2xl font-bold text-sm tracking-wide uppercase transition-all duration-300"
                 style={{
-                  background: 'linear-gradient(135deg, #C8920A 0%, #F0A500 50%, #FFD54F 100%)',
+                  background: 'linear-gradient(135deg, #EFF923 0%, #F9CB25 50%, #F9CB25 100%)',
                   color: 'var(--bg-deep)',
-                  boxShadow: '0 4px 20px rgba(200,146,10,0.35), inset 0 1px 0 rgba(255,255,255,0.3)',
+                  boxShadow: '0 4px 20px rgba(239,249,35,0.35), inset 0 1px 0 rgba(255,255,255,0.3)',
                 }}
               >
                 <Flame className="w-4 h-4" />
@@ -489,13 +489,13 @@ export function HeroSection({
               className="btn-press hero-cta-breath group relative cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-idm-gold-warm/50 focus-visible:ring-offset-2 focus-visible:ring-offset-deep w-full sm:w-auto"
             >
               {/* Glow on hover */}
-              <div className="absolute -inset-1 rounded-2xl blur-lg opacity-0 group-hover:opacity-40 transition-opacity duration-500" style={{ background: 'rgba(200,146,10,0.15)' }} />
+              <div className="absolute -inset-1 rounded-2xl blur-lg opacity-0 group-hover:opacity-40 transition-opacity duration-500" style={{ background: 'rgba(239,249,35,0.15)' }} />
               <div className="relative flex items-center justify-center gap-2.5 px-7 py-3 min-h-[48px] rounded-2xl font-bold text-sm tracking-wide uppercase border transition-all duration-300"
                 style={{
-                  background: 'rgba(200,146,10,0.08)',
-                  borderColor: 'rgba(200,146,10,0.3)',
-                  color: '#C8920A',
-                  boxShadow: '0 2px 10px rgba(0,0,0,0.3), inset 0 1px 0 rgba(200,146,10,0.1)',
+                  background: 'rgba(239,249,35,0.08)',
+                  borderColor: 'rgba(239,249,35,0.3)',
+                  color: '#EFF923',
+                  boxShadow: '0 2px 10px rgba(0,0,0,0.3), inset 0 1px 0 rgba(239,249,35,0.1)',
                 }}
               >
                 <Eye className="w-4 h-4" />

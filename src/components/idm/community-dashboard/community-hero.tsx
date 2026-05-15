@@ -402,7 +402,7 @@ function DivisionCard({
           {showSawerBtn && (
             <button
               onClick={(e) => { e.stopPropagation(); onSawer?.(); }}
-              className="group flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-[10px] sm:text-xs font-bold bg-idm-gold-warm/10 border border-idm-gold-warm/20 text-idm-gold-warm hover:bg-idm-gold-warm/20 hover:shadow-[0_0_12px_rgba(200,146,10,0.2)] hover:scale-[1.02] active:scale-95 transition-all duration-200 cursor-pointer"
+              className="group flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-[10px] sm:text-xs font-bold bg-idm-gold-warm/10 border border-idm-gold-warm/20 text-idm-gold-warm hover:bg-idm-gold-warm/20 hover:shadow-[0_0_12px_rgba(239,249,35,0.2)] hover:scale-[1.02] active:scale-95 transition-all duration-200 cursor-pointer"
             >
               <Gift className="w-3.5 h-3.5" />
               <span>Sawer</span>
@@ -601,7 +601,7 @@ export function CommunityHero({ maleData, femaleData, leagueData, onSawer, onReg
             style={{
               width: `${3 + (i % 3)}px`,
               height: `${3 + (i % 3)}px`,
-              background: `radial-gradient(circle, rgba(200,146,10,${0.15 + (i % 3) * 0.1}) 0%, transparent 70%)`,
+              background: `radial-gradient(circle, rgba(239,249,35,${0.15 + (i % 3) * 0.1}) 0%, transparent 70%)`,
               left: `${15 + i * 14}%`,
               top: `${20 + ((i * 17) % 60)}%`,
               animationDelay: `${i * 0.5}s`,
@@ -624,7 +624,7 @@ export function CommunityHero({ maleData, femaleData, leagueData, onSawer, onReg
             className="text-xs sm:text-sm font-black uppercase tracking-wider"
             style={{
               background:
-                'linear-gradient(135deg, #FAF0DC 0%, #C8920A 30%, #F0A500 50%, #FFD54F 70%, #C8920A 100%)',
+                'linear-gradient(135deg, #FAF0DC 0%, #EFF923 30%, #F9CB25 50%, #F9CB25 70%, #EFF923 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
             }}
@@ -732,7 +732,7 @@ export function CommunityHero({ maleData, femaleData, leagueData, onSawer, onReg
         )}
 
         {/* ── Row 3: Quick Stats + Progress (inline, compact) ── */}
-        <div className="flex items-center gap-4 sm:gap-6 p-4 sm:p-5 rounded-2xl bg-idm-gold-warm/5 border border-idm-gold-warm/10 transition-all duration-300 hover:border-idm-gold-warm/20 hover:shadow-[0_0_5px_rgba(200,146,10,0.15)]">
+        <div className="flex items-center gap-4 sm:gap-6 p-4 sm:p-5 rounded-2xl bg-idm-gold-warm/5 border border-idm-gold-warm/10 transition-all duration-300 hover:border-idm-gold-warm/20 hover:shadow-[0_0_5px_rgba(239,249,35,0.15)]">
           {/* Stats */}
           <div className="flex items-center gap-3 sm:gap-5 shrink-0">
             {quickStats.map(stat => (
@@ -770,9 +770,9 @@ export function CommunityHero({ maleData, femaleData, leagueData, onSawer, onReg
                 style={{
                   width: `${seasonPercentage}%`,
                   background: seasonPercentage > 0
-                    ? 'linear-gradient(90deg, #C8920A, #F0A500, #FFD54F)'
+                    ? 'linear-gradient(90deg, #EFF923, #F9CB25, #F9CB25)'
                     : undefined,
-                  boxShadow: seasonPercentage > 0 ? '0 0 6px rgba(200,146,10,0.3)' : undefined,
+                  boxShadow: seasonPercentage > 0 ? '0 0 6px rgba(239,249,35,0.3)' : undefined,
                   animation: seasonPercentage > 0 ? 'progress-bar-breathe 2s ease-in-out infinite' : undefined,
                 }}
               />

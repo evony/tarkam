@@ -130,7 +130,7 @@ export async function GET() {
         subtitle: t.division === 'male' ? 'Divisi Male' : 'Divisi Female',
         timestamp: t.completedAt?.toISOString() || t.updatedAt.toISOString(),
         division: t.division,
-        accent: '#C8920A',
+        accent: '#EFF923',
       });
     }
   }

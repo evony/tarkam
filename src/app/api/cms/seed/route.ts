@@ -136,15 +136,15 @@ export async function POST(request: Request) {
     // Seed default cards for about section (3 milestones)
     await seedCardsForSection('about', [
       { title: 'Komunitas', subtitle: 'Community', description: 'Pemain Idol Meta berkumpul, saling mengenal, dan membentuk ikatan', tag: 'milestone', tagColor: '#2E9FFF', order: 1 },
-      { title: 'Turnamen', subtitle: 'Tournament', description: 'Weekly tournament sebagai ajang berlatih dan bersaing secara individu', tag: 'milestone', tagColor: '#C8920A', order: 2 },
+      { title: 'Turnamen', subtitle: 'Tournament', description: 'Weekly tournament sebagai ajang berlatih dan bersaing secara individu', tag: 'milestone', tagColor: '#EFF923', order: 2 },
       { title: 'Tarkam IDM', subtitle: 'Tarkam', description: 'Season 1 sukses digelar — club bertanding, champion dinobatkan', tag: 'milestone', tagColor: '#FF2D78', order: 3 },
     ]);
 
     // Seed default cards for hero section (hero badges)
     await seedCardsForSection('hero', [
-      { title: 'Season 1', tag: 'badge', tagColor: '#C8920A', order: 1 },
-      { title: 'Dance Tournament', tag: 'badge', tagColor: '#C8920A', order: 2 },
-      { title: 'Pro League', tag: 'badge', tagColor: '#C8920A', order: 3 },
+      { title: 'Season 1', tag: 'badge', tagColor: '#EFF923', order: 1 },
+      { title: 'Dance Tournament', tag: 'badge', tagColor: '#EFF923', order: 2 },
+      { title: 'Pro League', tag: 'badge', tagColor: '#EFF923', order: 3 },
     ]);
 
     // Seed default cards for CTA section

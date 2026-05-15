@@ -258,7 +258,7 @@ export function AdminManagement() {
                 />
                 <Button
                   size="sm"
-                  className="h-9 bg-idm-gold-warm hover:bg-[#b8912e] text-black shrink-0"
+                  className="h-9 bg-idm-gold-warm hover:bg-[#D69E2E] text-black shrink-0"
                   disabled={
                     changeOwnPassword.isPending ||
                     !changePwForm.currentPassword ||
@@ -296,7 +296,7 @@ export function AdminManagement() {
             <Button
               size="sm"
               onClick={() => setAddDialogOpen(true)}
-              className="bg-idm-gold-warm hover:bg-[#b8912e] text-black"
+              className="bg-idm-gold-warm hover:bg-[#D69E2E] text-black"
             >
               <Plus className="w-3 h-3 mr-1" /> Tambah Admin
             </Button>
@@ -485,7 +485,7 @@ export function AdminManagement() {
             </Button>
             <Button
               size="sm"
-              className="bg-idm-gold-warm hover:bg-[#b8912e] text-black"
+              className="bg-idm-gold-warm hover:bg-[#D69E2E] text-black"
               disabled={createAdmin.isPending || !addForm.username || !addForm.password || addForm.username.length < 3 || addForm.password.length < 6}
               onClick={() => createAdmin.mutate(addForm)}
             >
@@ -558,7 +558,7 @@ export function AdminManagement() {
             </Button>
             <Button
               size="sm"
-              className="bg-idm-gold-warm hover:bg-[#b8912e] text-black"
+              className="bg-idm-gold-warm hover:bg-[#D69E2E] text-black"
               disabled={updateAdmin.isPending || !editForm?.username}
               onClick={() => {
                 if (editForm) {
@@ -641,7 +641,7 @@ export function AdminManagement() {
             </Button>
             <Button
               size="sm"
-              className="bg-idm-gold-warm hover:bg-[#b8912e] text-black"
+              className="bg-idm-gold-warm hover:bg-[#D69E2E] text-black"
               disabled={
                 resetPassword.isPending ||
                 !resetForm.newPassword ||

@@ -72,14 +72,14 @@ function WeekSlot({
 
           {/* Crown badge — top right, same as MVP Spotlight */}
           <div className="absolute top-1 right-1 z-10">
-            <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-idm-gold-warm flex items-center justify-center shadow-[0_0_8px_rgba(200,146,10,0.4)] mvp-platinum-pulse">
+            <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-idm-gold-warm flex items-center justify-center shadow-[0_0_8px_rgba(239,249,35,0.4)] mvp-platinum-pulse">
               <Crown className="w-2 h-2 sm:w-2.5 sm:h-2.5 text-background" />
             </div>
           </div>
 
           {/* MVP badge — bottom, same style as MVP Spotlight */}
           <div className="absolute bottom-1 left-1/2 -translate-x-1/2 z-10">
-            <Badge className="bg-gradient-to-r from-idm-gold-warm to-amber-500 text-black text-[6px] sm:text-[7px] font-black border-0 px-1.5 py-0 shadow-[0_0_6px_rgba(240,165,0,0.3)] whitespace-nowrap">
+            <Badge className="bg-gradient-to-r from-idm-gold-warm to-amber-500 text-black text-[6px] sm:text-[7px] font-black border-0 px-1.5 py-0 shadow-[0_0_6px_rgba(249,203,37,0.3)] whitespace-nowrap">
               <Star className="w-1.5 h-1.5 sm:w-2 sm:h-2 mr-0.5" />
               MVP
             </Badge>

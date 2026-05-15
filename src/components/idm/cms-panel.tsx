@@ -143,7 +143,7 @@ function CardEditor({
     videoUrl: card.videoUrl || '',
     linkUrl: card.linkUrl || '',
     tag: card.tag || '',
-    tagColor: card.tagColor || '#C8920A',
+    tagColor: card.tagColor || '#EFF923',
     isActive: card.isActive,
     order: card.order,
   }));
@@ -162,7 +162,7 @@ function CardEditor({
       videoUrl: card.videoUrl || '',
       linkUrl: card.linkUrl || '',
       tag: card.tag || '',
-      tagColor: card.tagColor || '#C8920A',
+      tagColor: card.tagColor || '#EFF923',
       isActive: card.isActive,
       order: card.order,
     });
@@ -238,7 +238,7 @@ function CardEditor({
             </div>
             <div className="flex justify-end gap-2 pt-1">
               <Button size="sm" variant="ghost" className="text-[10px] h-7" onClick={() => setEditing(false)}>Batal</Button>
-              <Button size="sm" className="text-[10px] h-7 bg-idm-gold-warm hover:bg-[#b8912e] text-black" disabled={isPending} onClick={handleSave}>
+              <Button size="sm" className="text-[10px] h-7 bg-idm-gold-warm hover:bg-[#D69E2E] text-black" disabled={isPending} onClick={handleSave}>
                 {isPending ? <Loader2 className="w-3 h-3 mr-1 animate-spin" /> : <Save className="w-3 h-3 mr-1" />} Simpan
               </Button>
             </div>
@@ -259,7 +259,7 @@ function CardEditor({
               <div className="flex items-center gap-2">
                 <p className="text-xs font-semibold truncate">{card.title || 'Untitled Card'}</p>
                 {card.tag && (
-                  <Badge className="text-[8px] px-1.5 py-0 border-0" style={{ backgroundColor: hexToRgba(card.tagColor || '#C8920A', 0x20), color: card.tagColor || '#C8920A' }}>
+                  <Badge className="text-[8px] px-1.5 py-0 border-0" style={{ backgroundColor: hexToRgba(card.tagColor || '#EFF923', 0x20), color: card.tagColor || '#EFF923' }}>
                     {card.tag}
                   </Badge>
                 )}
@@ -406,7 +406,7 @@ function SectionEditor({
                   </div>
                   <div className="flex items-end gap-1">
                     <Button size="sm" variant="ghost" className="text-[10px] h-8 flex-1" onClick={() => setEditingSection(false)}>Batal</Button>
-                    <Button size="sm" className="text-[10px] h-8 bg-idm-gold-warm hover:bg-[#b8912e] text-black" disabled={isPending} onClick={handleSaveSection}>
+                    <Button size="sm" className="text-[10px] h-8 bg-idm-gold-warm hover:bg-[#D69E2E] text-black" disabled={isPending} onClick={handleSaveSection}>
                       {isPending ? <Loader2 className="w-3 h-3 animate-spin" /> : <Save className="w-3 h-3" />} Simpan
                     </Button>
                   </div>
@@ -671,7 +671,7 @@ function MarketplaceManager() {
                 <Crown className="w-3 h-3 text-idm-gold-warm" /> Premium / Featured
               </label>
             </div>
-            <Button size="sm" className="mt-3 text-xs bg-idm-gold-warm hover:bg-[#b8912e] text-black" disabled={!form.sellerName || !form.title || !form.description || createItem.isPending} onClick={() => createItem.mutate()}>
+            <Button size="sm" className="mt-3 text-xs bg-idm-gold-warm hover:bg-[#D69E2E] text-black" disabled={!form.sellerName || !form.title || !form.description || createItem.isPending} onClick={() => createItem.mutate()}>
               {createItem.isPending ? <Loader2 className="w-3 h-3 mr-1 animate-spin" /> : <Plus className="w-3 h-3 mr-1" />} Tambah Iklan
             </Button>
           </CardContent>
@@ -974,7 +974,7 @@ export function CmsPanel() {
                     <div className="grid grid-cols-2 gap-2 pt-2">
                       <Button
                         size="sm"
-                        className="text-[10px] bg-idm-gold-warm hover:bg-[#b8912e] text-black"
+                        className="text-[10px] bg-idm-gold-warm hover:bg-[#D69E2E] text-black"
                         onClick={() => {
                           saveSettingsBatch.mutate([
                             { key: 'site_title', value: settingsForm.site_title || '', type: 'text' },
@@ -1057,7 +1057,7 @@ export function CmsPanel() {
 
                     <Button
                       size="sm"
-                      className="text-[10px] bg-idm-gold-warm hover:bg-[#b8912e] text-black"
+                      className="text-[10px] bg-idm-gold-warm hover:bg-[#D69E2E] text-black"
                       onClick={() => {
                         saveSettingsBatch.mutate([
                           { key: 'hero_title', value: settingsForm.hero_title || '', type: 'text' },
@@ -1240,7 +1240,7 @@ export function CmsPanel() {
 
                     <Button
                       size="sm"
-                      className="text-[10px] bg-idm-gold-warm hover:bg-[#b8912e] text-black"
+                      className="text-[10px] bg-idm-gold-warm hover:bg-[#D69E2E] text-black"
                       onClick={() => {
                         saveSettingsBatch.mutate([
                           { key: 'kompetisi_label', value: settingsForm.kompetisi_label || '', type: 'text' },
@@ -1331,7 +1331,7 @@ export function CmsPanel() {
 
                     <Button
                       size="sm"
-                      className="text-[10px] bg-idm-gold-warm hover:bg-[#b8912e] text-black"
+                      className="text-[10px] bg-idm-gold-warm hover:bg-[#D69E2E] text-black"
                       onClick={() => {
                         saveSettingsBatch.mutate([
                           { key: 'highlights_label', value: settingsForm.highlights_label || '', type: 'text' },
@@ -1431,7 +1431,7 @@ export function CmsPanel() {
                                   </SelectItem>
                                   <SelectItem value="both">
                                     <span className="flex items-center gap-1.5">
-                                      <span className="w-2 h-2 rounded-full bg-[#C8920A]" />
+                                      <span className="w-2 h-2 rounded-full bg-[#EFF923]" />
                                       Semua
                                     </span>
                                   </SelectItem>
@@ -1472,7 +1472,7 @@ export function CmsPanel() {
 
                     <Button
                       size="sm"
-                      className="text-[10px] bg-idm-gold-warm hover:bg-[#b8912e] text-black"
+                      className="text-[10px] bg-idm-gold-warm hover:bg-[#D69E2E] text-black"
                       onClick={() => {
                         saveSettingsBatch.mutate([
                           { key: 'video_highlights_label', value: settingsForm.video_highlights_label || '', type: 'text' },
@@ -1554,7 +1554,7 @@ export function CmsPanel() {
                     </div>
                     <Button
                       size="sm"
-                      className="text-[10px] bg-idm-gold-warm hover:bg-[#b8912e] text-black"
+                      className="text-[10px] bg-idm-gold-warm hover:bg-[#D69E2E] text-black"
                       onClick={() => {
                         saveSettingsBatch.mutate([
                           { key: 'social_discord_url', value: settingsForm.social_discord_url || '#', type: 'text' },
@@ -1634,7 +1634,7 @@ export function CmsPanel() {
                       <div className="flex justify-end items-end">
                         <Button
                           size="sm"
-                          className="text-[10px] bg-idm-gold-warm hover:bg-[#b8912e] text-black"
+                          className="text-[10px] bg-idm-gold-warm hover:bg-[#D69E2E] text-black"
                           onClick={() => {
                             saveSettingsBatch.mutate([
                               { key: 'bg_male', value: settingsForm.bg_male || '', type: 'image' },
@@ -1676,7 +1676,7 @@ export function CmsPanel() {
                     </div>
                     <Button
                       size="sm"
-                      className="text-[10px] bg-idm-gold-warm hover:bg-[#b8912e] text-black"
+                      className="text-[10px] bg-idm-gold-warm hover:bg-[#D69E2E] text-black"
                       onClick={() => {
                         saveSettingsBatch.mutate([
                           { key: 'footer_text', value: settingsForm.footer_text || '', type: 'text' },
@@ -1718,7 +1718,7 @@ export function CmsPanel() {
                   />
                   <Button
                     size="sm"
-                    className="text-xs bg-idm-gold-warm hover:bg-[#b8912e] text-black"
+                    className="text-xs bg-idm-gold-warm hover:bg-[#D69E2E] text-black"
                     disabled={!newSection.slug || !newSection.title || createSection.isPending}
                     onClick={() => {
                       createSection.mutate(newSection);
@@ -1764,7 +1764,7 @@ export function CmsPanel() {
               <div className="py-12 text-center">
                 <Layout className="w-12 h-12 text-muted-foreground/20 mx-auto mb-3" />
                 <p className="text-sm text-muted-foreground mb-3">Belum ada section</p>
-                <Button size="sm" className="bg-idm-gold-warm hover:bg-[#b8912e] text-black" onClick={() => seedCms.mutate()} disabled={seedCms.isPending}>
+                <Button size="sm" className="bg-idm-gold-warm hover:bg-[#D69E2E] text-black" onClick={() => seedCms.mutate()} disabled={seedCms.isPending}>
                   {seedCms.isPending ? <Loader2 className="w-3 h-3 mr-1 animate-spin" /> : <Sparkles className="w-3 h-3 mr-1" />} Seed Default Content
                 </Button>
               </div>

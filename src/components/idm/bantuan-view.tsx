@@ -191,9 +191,9 @@ export function BantuanView() {
       {/* ═══ Back Button (Mobile) + Hero Header ═══ */}
       <div className="relative overflow-hidden rounded-2xl border border-idm-gold-warm/20 bg-gradient-to-br from-deep via-mid to-background">
         {/* Gold radial haze */}
-        <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at 50% 40%, rgba(200,146,10,0.08) 0%, transparent 65%)' }} />
+        <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at 50% 40%, rgba(239,249,35,0.08) 0%, transparent 65%)' }} />
         {/* Grid overlay */}
-        <div className="absolute inset-0 pointer-events-none opacity-[0.02]" style={{ backgroundImage: 'linear-gradient(rgba(200,146,10,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(200,146,10,0.3) 1px, transparent 1px)', backgroundSize: '48px 48px' }} />
+        <div className="absolute inset-0 pointer-events-none opacity-[0.02]" style={{ backgroundImage: 'linear-gradient(rgba(239,249,35,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(239,249,35,0.3) 1px, transparent 1px)', backgroundSize: '48px 48px' }} />
 
         <div className="relative z-10 p-6 sm:p-10">
           {/* Back button for mobile FAB navigation */}
@@ -216,7 +216,7 @@ export function BantuanView() {
           </div>
 
           <h1 className="text-2xl sm:text-4xl font-black tracking-tight mb-2" style={{
-            background: 'linear-gradient(135deg, #FAF0DC 0%, #C8920A 30%, #F0A500 50%, #FFD54F 70%, #C8920A 100%)',
+            background: 'linear-gradient(135deg, #FAF0DC 0%, #EFF923 30%, #F9CB25 50%, #F9CB25 70%, #EFF923 100%)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
           }}>

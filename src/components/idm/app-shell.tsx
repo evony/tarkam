@@ -403,8 +403,8 @@ function DesktopSidebar({ onOpenAccountModal, onOpenAdminModal }: { onOpenAccoun
               )}
               {adminAuth.isAuthenticated && (
                 <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-full flex items-center justify-center shrink-0 bg-idm-gold/20 shadow-[0_0_6px_rgba(200,146,10,0.2)]">
-                    <Shield className="w-4 h-4 text-idm-gold drop-shadow-[0_0_4px_rgba(200,146,10,0.5)]" />
+                  <div className="w-6 h-6 rounded-full flex items-center justify-center shrink-0 bg-idm-gold/20 shadow-[0_0_6px_rgba(239,249,35,0.2)]">
+                    <Shield className="w-4 h-4 text-idm-gold drop-shadow-[0_0_4px_rgba(239,249,35,0.5)]" />
                   </div>
                   <span className="text-[11px] text-foreground font-medium truncate flex-1">{adminAuth.admin?.username}</span>
                   {adminAuth.admin && (
@@ -433,7 +433,7 @@ function DesktopSidebar({ onOpenAccountModal, onOpenAdminModal }: { onOpenAccoun
               >
                 <div className="w-6 h-6 rounded-full flex items-center justify-center bg-idm-gold-warm/20 relative">
                   <LogIn className="w-3.5 h-3.5 text-idm-gold-warm" />
-                  <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-idm-gold-warm shadow-[0_0_6px_rgba(200,146,10,0.8)]" />
+                  <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-idm-gold-warm shadow-[0_0_6px_rgba(239,249,35,0.8)]" />
                 </div>
                 <span className="text-[11px] text-idm-gold-warm font-bold">Login</span>
               </button>
@@ -451,9 +451,9 @@ function DesktopSidebar({ onOpenAccountModal, onOpenAdminModal }: { onOpenAccoun
       {collapsed && (
         <div className="px-2 pb-2 flex flex-col items-center gap-1">
           {adminAuth.isAuthenticated && (
-            <div className="w-8 h-8 rounded-lg bg-idm-gold/15 border border-idm-gold/30 flex items-center justify-center shadow-[0_0_8px_rgba(200,146,10,0.2)]"
+            <div className="w-8 h-8 rounded-lg bg-idm-gold/15 border border-idm-gold/30 flex items-center justify-center shadow-[0_0_8px_rgba(239,249,35,0.2)]"
               title={`${adminAuth.admin?.username} (${adminAuth.admin?.role === 'super_admin' ? 'Super Admin' : 'Admin'})`}>
-              <Shield className="w-4 h-4 text-idm-gold drop-shadow-[0_0_4px_rgba(200,146,10,0.5)]" />
+              <Shield className="w-4 h-4 text-idm-gold drop-shadow-[0_0_4px_rgba(239,249,35,0.5)]" />
             </div>
           )}
           {playerAuth.isAuthenticated && !adminAuth.isAuthenticated && (
@@ -465,11 +465,11 @@ function DesktopSidebar({ onOpenAccountModal, onOpenAdminModal }: { onOpenAccoun
           {!playerAuth.isAuthenticated && !adminAuth.isAuthenticated && (
             <button
               onClick={onOpenAccountModal}
-              className="w-8 h-8 rounded-lg bg-idm-gold-warm/12 border border-idm-gold-warm/25 flex items-center justify-center text-idm-gold-warm hover:text-idm-gold-warm hover:bg-idm-gold-warm/20 transition-colors relative shadow-[0_0_6px_rgba(200,146,10,0.15)]"
+              className="w-8 h-8 rounded-lg bg-idm-gold-warm/12 border border-idm-gold-warm/25 flex items-center justify-center text-idm-gold-warm hover:text-idm-gold-warm hover:bg-idm-gold-warm/20 transition-colors relative shadow-[0_0_6px_rgba(239,249,35,0.15)]"
               title="Login"
             >
               <LogIn className="w-3.5 h-3.5" />
-              <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-idm-gold-warm shadow-[0_0_6px_rgba(200,146,10,0.8)]" />
+              <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-idm-gold-warm shadow-[0_0_6px_rgba(239,249,35,0.8)]" />
             </button>
           )}
           {/* Theme toggle — collapsed sidebar */}
@@ -644,20 +644,20 @@ export function AppShell() {
             >
               <LogIn className="w-3.5 h-3.5" />
               <span>Login</span>
-              <span className="w-1.5 h-1.5 rounded-full bg-idm-gold-warm shadow-[0_0_6px_rgba(200,146,10,0.8)]" />
+              <span className="w-1.5 h-1.5 rounded-full bg-idm-gold-warm shadow-[0_0_6px_rgba(239,249,35,0.8)]" />
             </button>
           ) : (
             <Button
               variant="ghost"
               size="icon"
-              className={`h-9 w-9 relative ${playerAuth.isAuthenticated ? (currentView === 'community' ? 'text-idm-gold-warm' : division === 'male' ? 'text-idm-male' : 'text-idm-female') : adminAuth.isAuthenticated ? 'text-idm-gold-warm drop-shadow-[0_0_4px_rgba(200,146,10,0.3)]' : 'text-idm-gold-warm/80'}`}
+              className={`h-9 w-9 relative ${playerAuth.isAuthenticated ? (currentView === 'community' ? 'text-idm-gold-warm' : division === 'male' ? 'text-idm-male' : 'text-idm-female') : adminAuth.isAuthenticated ? 'text-idm-gold-warm drop-shadow-[0_0_4px_rgba(239,249,35,0.3)]' : 'text-idm-gold-warm/80'}`}
               onClick={() => { hapticTap(); setAccountModalDefaultTab('peserta'); setAccountModalOpen(true); }}
               title={playerAuth.isAuthenticated ? `Akun: ${playerAuth.account?.player.gamertag}` : adminAuth.isAuthenticated ? `Admin: ${adminAuth.admin?.username}` : 'Login'}
             >
               {playerAuth.isAuthenticated ? (
                 <UserCircle className="w-4.5 h-4.5" />
               ) : adminAuth.isAuthenticated ? (
-                <Shield className="w-4.5 h-4.5 text-idm-gold-warm drop-shadow-[0_0_4px_rgba(200,146,10,0.4)]" />
+                <Shield className="w-4.5 h-4.5 text-idm-gold-warm drop-shadow-[0_0_4px_rgba(239,249,35,0.4)]" />
               ) : (
                 <LogIn className="w-4.5 h-4.5" />
               )}
@@ -717,7 +717,7 @@ export function AppShell() {
             <Home className={`w-5 h-5 transition-transform duration-200 ${(currentView as AppView) === 'landing' ? 'scale-110' : ''}`} />
             <span className="text-[10px] font-semibold leading-tight">Home</span>
             {(currentView as AppView) === 'landing' && (
-              <div className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-idm-gold-warm shadow-[0_0_6px_rgba(200,146,10,0.5)]" />
+              <div className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-idm-gold-warm shadow-[0_0_6px_rgba(239,249,35,0.5)]" />
             )}
           </button>
 
@@ -730,7 +730,7 @@ export function AppShell() {
             <Users className={`w-5 h-5 transition-transform duration-200 ${currentView === 'community' ? 'scale-110' : ''}`} />
             <span className="text-[10px] font-semibold leading-tight">Komunitas</span>
             {currentView === 'community' && (
-              <div className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-idm-gold-warm shadow-[0_0_6px_rgba(200,146,10,0.5)]" />
+              <div className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-idm-gold-warm shadow-[0_0_6px_rgba(239,249,35,0.5)]" />
             )}
           </button>
 
@@ -740,8 +740,8 @@ export function AppShell() {
               onClick={() => { hapticTap(); setCurrentView('matchday'); }}
               className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg transition-all duration-200 active:scale-90 ${
                 currentView === 'matchday'
-                  ? 'bg-gradient-to-br from-idm-gold-warm to-[#e8b94a] shadow-[0_0_16px_rgba(200,146,10,0.5)] scale-105'
-                  : 'bg-gradient-to-br from-idm-gold-warm to-[#d4a03c] shadow-[0_0_10px_rgba(200,146,10,0.25)] hover:scale-105'
+                  ? 'bg-gradient-to-br from-idm-gold-warm to-[#e8b94a] shadow-[0_0_16px_rgba(239,249,35,0.5)] scale-105'
+                  : 'bg-gradient-to-br from-idm-gold-warm to-[#d4a03c] shadow-[0_0_10px_rgba(239,249,35,0.25)] hover:scale-105'
               }`}
               title="Arena Live"
             >
@@ -764,7 +764,7 @@ export function AppShell() {
             <ShoppingBag className={`w-5 h-5 transition-transform duration-200 ${currentView === 'marketplace' ? 'scale-110' : ''}`} />
             <span className="text-[10px] font-semibold leading-tight">Market</span>
             {currentView === 'marketplace' && (
-              <div className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-idm-gold-warm shadow-[0_0_6px_rgba(200,146,10,0.5)]" />
+              <div className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-idm-gold-warm shadow-[0_0_6px_rgba(239,249,35,0.5)]" />
             )}
           </button>
 
@@ -777,7 +777,7 @@ export function AppShell() {
             <BookOpen className={`w-5 h-5 transition-transform duration-200 ${currentView === 'league' ? 'scale-110' : ''}`} />
             <span className="text-[10px] font-semibold leading-tight">Aturan</span>
             {currentView === 'league' && (
-              <div className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-idm-gold-warm shadow-[0_0_6px_rgba(200,146,10,0.5)]" />
+              <div className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-idm-gold-warm shadow-[0_0_6px_rgba(239,249,35,0.5)]" />
             )}
           </button>
         </div>

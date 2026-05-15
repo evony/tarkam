@@ -208,7 +208,7 @@ function ChampionsMvpSection({
             <Crown className={`w-3 h-3 ${ct.neonText}`} />
           </div>
           <h3 className="text-xs font-semibold uppercase tracking-wider shrink-0" style={{
-            background: 'linear-gradient(135deg, #FAF0DC 0%, #C8920A 30%, #F0A500 50%, #FFD54F 70%, #C8920A 100%)',
+            background: 'linear-gradient(135deg, #FAF0DC 0%, #EFF923 30%, #F9CB25 50%, #F9CB25 70%, #EFF923 100%)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
           }}>Champion</h3>
@@ -887,7 +887,7 @@ function MatchesSection({
             <Radio className={`w-3 h-3 ${dt.neonText}`} />
           </div>
           <h3 className="text-xs font-semibold uppercase tracking-wider shrink-0" style={{
-            background: 'linear-gradient(135deg, #FAF0DC 0%, #C8920A 30%, #F0A500 50%, #FFD54F 70%, #C8920A 100%)',
+            background: 'linear-gradient(135deg, #FAF0DC 0%, #EFF923 30%, #F9CB25 50%, #F9CB25 70%, #EFF923 100%)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
           }}>Hasil Pertandingan</h3>
@@ -1613,7 +1613,7 @@ export function CommunityDashboard() {
         <div className="relative">
           {/* Subtle atmospheric gradient */}
           <div className="absolute inset-0 pointer-events-none" style={{
-            background: 'radial-gradient(ellipse at 30% 10%, rgba(200,146,10,0.03) 0%, transparent 50%), radial-gradient(ellipse at 70% 90%, rgba(200,146,10,0.02) 0%, transparent 50%)'
+            background: 'radial-gradient(ellipse at 30% 10%, rgba(239,249,35,0.03) 0%, transparent 50%), radial-gradient(ellipse at 70% 90%, rgba(239,249,35,0.02) 0%, transparent 50%)'
           }} />
           <div className="relative z-10 p-1.5 sm:p-4 lg:p-5 space-y-4 sm:space-y-6 lg:space-y-8">
 

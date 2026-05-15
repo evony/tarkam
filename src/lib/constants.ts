@@ -34,9 +34,9 @@ export const DIVISION_COLORS = {
 
 // ── Gold / Brand Colors ──
 export const GOLD = {
-  warm: '#C8920A',
-  light: '#F0A500',
-  dim: '#9A700A',
+  warm: '#EFF923',
+  light: '#F9CB25',
+  dim: '#B7791F',
 } as const;
 
 // ── Tier Order ──

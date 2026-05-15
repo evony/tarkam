@@ -168,7 +168,7 @@ export function CommunityAchievements({ maleData, femaleData, leagueData }: Comm
                 {ach.unlocked && (
                   <div
                     className="absolute inset-0 rounded-2xl pointer-events-none animate-pulse-scale"
-                    style={{ boxShadow: '0 0 8px rgba(200,146,10,0.15)' }}
+                    style={{ boxShadow: '0 0 8px rgba(239,249,35,0.15)' }}
                   />
                 )}
 

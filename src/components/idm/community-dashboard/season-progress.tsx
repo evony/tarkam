@@ -52,7 +52,7 @@ function ProgressRow({
       <div className="relative h-3 rounded-full bg-idm-gold-warm/10 overflow-hidden border border-idm-gold-warm/10">
         <div
           className={`absolute inset-y-0 left-0 rounded-full bg-gradient-to-r ${gradientFrom} ${gradientTo}`}
-          style={{ width: `${pct}%`, boxShadow: `0 0 12px ${gradientFrom.includes('cyan') ? '#57B5FF55' : gradientFrom.includes('purple') ? '#FF5C9A55' : '#C8920A55'}` }}
+          style={{ width: `${pct}%`, boxShadow: `0 0 12px ${gradientFrom.includes('cyan') ? '#57B5FF55' : gradientFrom.includes('purple') ? '#FF5C9A55' : '#EFF92355'}` }}
         />
         {/* Percentage text on bar */}
         <div className="absolute inset-0 flex items-center justify-center">
@@ -144,7 +144,7 @@ export function SeasonProgressTracker({ maleData, femaleData }: SeasonProgressPr
             <div className="relative h-4 rounded-full bg-muted/30 overflow-hidden border border-idm-gold-warm/15">
               <div
                 className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500"
-                style={{ width: `${combinedProgress.percentage}%`, boxShadow: '0 0 16px #C8920A55' }}
+                style={{ width: `${combinedProgress.percentage}%`, boxShadow: '0 0 16px #EFF92355' }}
               />
               <div className="absolute inset-0 flex items-center justify-center">
                 <span className="text-[9px] font-bold text-white drop-shadow-sm">

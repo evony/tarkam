@@ -39,7 +39,7 @@ function SocialLink({ href, label, children }: { href: string; label: string; ch
       target="_blank"
       rel="noopener noreferrer"
       aria-label={label}
-      className="footer-social-enhanced focus-ring-premium p-3 rounded-xl text-muted-foreground hover:text-[#C8920A] hover:bg-[rgba(200,146,10,0.08)] hover:shadow-[0_0_16px_2px_rgba(200,146,10,0.12)] transition-all duration-300"
+      className="footer-social-enhanced focus-ring-premium p-3 rounded-xl text-muted-foreground hover:text-[#EFF923] hover:bg-[rgba(239,249,35,0.08)] hover:shadow-[0_0_16px_2px_rgba(239,249,35,0.12)] transition-all duration-300"
     >
       {children}
     </a>
@@ -56,7 +56,7 @@ function QuickLink({ label, sectionId }: { label: string; sectionId: string }) {
   return (
     <button
       onClick={handleClick}
-      className="focus-ring-premium text-muted-foreground text-sm hover:text-[#C8920A] transition-colors duration-200 cursor-pointer py-0.5 text-left"
+      className="focus-ring-premium text-muted-foreground text-sm hover:text-[#EFF923] transition-colors duration-200 cursor-pointer py-0.5 text-left"
     >
       {label}
     </button>
@@ -82,7 +82,7 @@ export function LandingFooter({ cmsSettings, className }: LandingFooterProps) {
   const hasSocial = discordUrl || instagramUrl || youtubeUrl || whatsappUrl;
 
   return (
-    <footer className={`landing-footer relative bg-background border-t border-[rgba(200,146,10,0.08)] overflow-hidden pb-[env(safe-area-inset-bottom)] ${className || ''}`}>
+    <footer className={`landing-footer relative bg-background border-t border-[rgba(239,249,35,0.08)] overflow-hidden pb-[env(safe-area-inset-bottom)] ${className || ''}`}>
       {/* ── Aurora atmospheric glow above footer ── */}
       <div className="aurora-bg absolute top-0 left-0 right-0 h-32 pointer-events-none opacity-50" aria-hidden="true" />
       {/* ── Premium gold gradient line at top ── */}
@@ -90,7 +90,7 @@ export function LandingFooter({ cmsSettings, className }: LandingFooterProps) {
         <div
           className="h-full w-[200%]"
           style={{
-            background: 'linear-gradient(90deg, transparent, rgba(200,146,10,0.5), rgba(245,230,200,0.3), rgba(200,146,10,0.5), transparent, rgba(200,146,10,0.5), rgba(245,230,200,0.3), rgba(200,146,10,0.5), transparent)',
+            background: 'linear-gradient(90deg, transparent, rgba(239,249,35,0.5), rgba(245,230,200,0.3), rgba(239,249,35,0.5), transparent, rgba(239,249,35,0.5), rgba(245,230,200,0.3), rgba(239,249,35,0.5), transparent)',
             animation: 'footer-gradient-slide 8s linear infinite',
           }}
         />
@@ -99,7 +99,7 @@ export function LandingFooter({ cmsSettings, className }: LandingFooterProps) {
       {/* ── Subtle top glow ── */}
       <div
         className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-24 pointer-events-none"
-        style={{ background: 'radial-gradient(ellipse, rgba(200,146,10,0.03) 0%, transparent 70%)' }}
+        style={{ background: 'radial-gradient(ellipse, rgba(239,249,35,0.03) 0%, transparent 70%)' }}
       />
 
       {/* ── Atmospheric background glow ── */}
@@ -115,7 +115,7 @@ export function LandingFooter({ cmsSettings, className }: LandingFooterProps) {
           <div className="flex flex-col">
             {/* Logo + Title — with animated glow */}
             <div className="flex items-center gap-2.5 mb-2">
-              <div className="footer-logo-glow w-7 h-7 rounded-md overflow-hidden shrink-0 ring-1 ring-[rgba(200,146,10,0.2)]">
+              <div className="footer-logo-glow w-7 h-7 rounded-md overflow-hidden shrink-0 ring-1 ring-[rgba(239,249,35,0.2)]">
                 <Image
                   src={logoUrl}
                   alt="IDM Logo"
@@ -128,7 +128,7 @@ export function LandingFooter({ cmsSettings, className }: LandingFooterProps) {
               <span
                 className="text-base font-black tracking-tight"
                 style={{
-                  background: 'linear-gradient(135deg, #e8d5a3, #C8920A, #FAF0DC)',
+                  background: 'linear-gradient(135deg, #e8d5a3, #EFF923, #FAF0DC)',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
                 }}
@@ -196,7 +196,7 @@ export function LandingFooter({ cmsSettings, className }: LandingFooterProps) {
               <span
                 className="font-semibold tracking-wide normal-case text-[11px]"
                 style={{
-                  background: 'linear-gradient(135deg, rgba(200,146,10,0.5), rgba(245,230,200,0.4))',
+                  background: 'linear-gradient(135deg, rgba(239,249,35,0.5), rgba(245,230,200,0.4))',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
                 }}

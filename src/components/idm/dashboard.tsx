@@ -428,7 +428,7 @@ export function Dashboard() {
         {[
           { icon: Users, value: `${data.totalPlayers}`, label: 'Players', color: 'from-idm-male to-idm-male-light' },
           { icon: Shield, value: `${data.clubs?.length || 0}`, label: 'Clubs', color: 'from-idm-female to-idm-female-light' },
-          { icon: Wallet, value: formatCurrency(data.activeTournamentPrizePool ?? data.totalPrizePool).replace('Rp', '').trim(), label: 'Prize Pool', color: 'from-[#C8920A] to-[#9A700A]' },
+          { icon: Wallet, value: formatCurrency(data.activeTournamentPrizePool ?? data.totalPrizePool).replace('Rp', '').trim(), label: 'Prize Pool', color: 'from-[#EFF923] to-[#B7791F]' },
           { icon: Target, value: `${data.seasonProgress?.percentage || 0}%`, label: 'Progress', color: 'from-green-500 to-green-600' },
         ].map((stat, i) => (
           <motion.div key={i} whileHover={{ scale: 1.03, y: -2 }} className="group">

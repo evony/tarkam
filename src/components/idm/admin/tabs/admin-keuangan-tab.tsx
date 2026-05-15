@@ -232,7 +232,7 @@ export function AdminKeuanganTab({
               <Textarea value={paymentForm.donation_payment_notes || ''} onChange={(e) => updatePaymentForm({ donation_payment_notes: e.target.value })} className="text-sm" placeholder="Contoh: Konfirmasi ke admin via WhatsApp" rows={2} />
             </div>
           </div>
-          <Button size="sm" className="text-[10px] bg-idm-gold-warm hover:bg-[#b8912e] text-black"
+          <Button size="sm" className="text-[10px] bg-idm-gold-warm hover:bg-[#D69E2E] text-black"
             onClick={() => {
               savePaymentSettingsBatch.mutate([
                 { key: 'donation_qris_image', value: paymentForm.donation_qris_image || '', type: 'image' },

@@ -266,7 +266,7 @@ export function AdminDivisionContentTab() {
           </Button>
           <Button
             size="sm"
-            className="text-[10px] bg-idm-gold-warm hover:bg-[#b8912e] text-black"
+            className="text-[10px] bg-idm-gold-warm hover:bg-[#D69E2E] text-black"
             onClick={handleSave}
             disabled={saveMutation.isPending}
           >
@@ -326,7 +326,7 @@ export function AdminDivisionContentTab() {
         </p>
         <Button
           size="sm"
-          className="text-[10px] bg-idm-gold-warm hover:bg-[#b8912e] text-black"
+          className="text-[10px] bg-idm-gold-warm hover:bg-[#D69E2E] text-black"
           onClick={handleSave}
           disabled={saveMutation.isPending}
         >

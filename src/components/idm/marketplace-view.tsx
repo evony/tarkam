@@ -7,10 +7,10 @@ import { CommunityMarketplace } from './community-dashboard/community-marketplac
    GOLD-ANCHORED THEME — consistent with app identity
    ═══════════════════════════════════════════════════════ */
 const GOLD = {
-  primary: '#C8920A',
-  light: '#FFD54F',
+  primary: '#EFF923',
+  light: '#F9CB25',
   dark: '#8A6818',
-  glow: 'rgba(200,146,10,0.08)',
+  glow: 'rgba(239,249,35,0.08)',
 };
 
 /* ═══════════════════════════════════════════════════════
@@ -56,7 +56,7 @@ export function MarketplaceView({ onLoginRequired }: { onLoginRequired?: () => v
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
             <div>
               <h1 className="text-2xl sm:text-4xl font-black tracking-tight mb-2" style={{
-                background: 'linear-gradient(135deg, #FFD54F 0%, #C8920A 30%, #e8b94a 50%, #8A6818 70%, #C8920A 100%)',
+                background: 'linear-gradient(135deg, #F9CB25 0%, #EFF923 30%, #e8b94a 50%, #8A6818 70%, #EFF923 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
               }}>

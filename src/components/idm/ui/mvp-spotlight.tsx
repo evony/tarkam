@@ -94,7 +94,7 @@ export function MVPSpotlight({
           <div
             className="absolute -top-3 left-1/2 -translate-x-1/2"
           >
-            <Crown className="w-8 h-8 text-idm-gold-warm drop-shadow-[0_0_10px_rgba(200,146,10,0.5)]" />
+            <Crown className="w-8 h-8 text-idm-gold-warm drop-shadow-[0_0_10px_rgba(239,249,35,0.5)]" />
           </div>
         </div>
 

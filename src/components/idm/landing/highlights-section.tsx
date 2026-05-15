@@ -112,8 +112,8 @@ interface HighlightItem {
 /* ─── Color System — Consistent with Landing Page ─── */
 const COLORS = {
   cardBg: 'var(--bg-mid)',
-  cardBorder: 'rgba(200,146,10,0.1)',
-  goldBorder: 'rgba(200,146,10,0.4)',
+  cardBorder: 'rgba(239,249,35,0.1)',
+  goldBorder: 'rgba(239,249,35,0.4)',
   primaryText: 'var(--card-foreground)',
   secondaryText: 'var(--muted-foreground)',
   maleAccent: 'rgb(46, 159, 255)',
@@ -212,8 +212,8 @@ function buildHighlights(
           : 'Tim juara Tarkam Weekly akan muncul di sini setelah turnamen mingguan selesai.',
     badge: 'TARKAM WEEKLY',
     thumbLabel: 'Juara Weekly',
-    accentColor: '#C8920A',
-    accentLight: '#C8920A',
+    accentColor: '#EFF923',
+    accentLight: '#EFF923',
     isDuo: true,
     male: hasMaleWeeklyTeam ? {
       gamertag: maleTeamData!.teamName,
@@ -407,8 +407,8 @@ function DivisionCard({
       }}
     >
       {/* Gold luxury top accent bar with glow */}
-      <div className="relative h-1.5" style={{ background: 'linear-gradient(90deg, #C8920A, #FFD54F, #C8920A, #FAF0DC, #C8920A)' }}>
-        <div className="absolute inset-x-0 -bottom-2 h-4" style={{ background: 'linear-gradient(to bottom, rgba(200,146,10,0.25), transparent)' }} />
+      <div className="relative h-1.5" style={{ background: 'linear-gradient(90deg, #EFF923, #F9CB25, #EFF923, #FAF0DC, #EFF923)' }}>
+        <div className="absolute inset-x-0 -bottom-2 h-4" style={{ background: 'linear-gradient(to bottom, rgba(239,249,35,0.25), transparent)' }} />
       </div>
 
       {/* Content */}
@@ -594,8 +594,8 @@ function MvpCard({
       }}
     >
       {/* Gold luxury top accent bar with glow */}
-      <div className="relative h-1.5" style={{ background: isEmpty ? 'linear-gradient(90deg, #C8920A, #FFD54F, #C8920A)' : 'linear-gradient(90deg, #C8920A, #FFD54F, #C8920A, #FAF0DC, #C8920A)' }}>
-        <div className="absolute inset-x-0 -bottom-2 h-4" style={{ background: 'linear-gradient(to bottom, rgba(200,146,10,0.25), transparent)' }} />
+      <div className="relative h-1.5" style={{ background: isEmpty ? 'linear-gradient(90deg, #EFF923, #F9CB25, #EFF923)' : 'linear-gradient(90deg, #EFF923, #F9CB25, #EFF923, #FAF0DC, #EFF923)' }}>
+        <div className="absolute inset-x-0 -bottom-2 h-4" style={{ background: 'linear-gradient(to bottom, rgba(239,249,35,0.25), transparent)' }} />
       </div>
 
       {/* Content */}
@@ -755,7 +755,7 @@ function MvpCard({
                 {player.totalMvp && player.totalMvp > 0 && (
                   <span
                     className="text-[8px] font-bold px-1.5 py-0.5 rounded flex items-center gap-0.5"
-                    style={{ backgroundColor: 'rgba(200,146,10,0.12)', color: COLORS.gold }}
+                    style={{ backgroundColor: 'rgba(239,249,35,0.12)', color: COLORS.gold }}
                   >
                     {player.totalMvp}x MVP
                   </span>
@@ -999,7 +999,7 @@ function SultanCard({
                   {sultan.player!.tier && (
                     <span
                       className="text-[8px] font-bold px-2 py-0.5 rounded"
-                      style={{ backgroundColor: 'rgba(200,146,10,0.12)', color: COLORS.gold, border: '1px solid rgba(200,146,10,0.2)' }}
+                      style={{ backgroundColor: 'rgba(239,249,35,0.12)', color: COLORS.gold, border: '1px solid rgba(239,249,35,0.2)' }}
                     >
                       Tier {sultan.player!.tier}
                     </span>
@@ -1101,7 +1101,7 @@ export function HighlightsSection({
       {/* Atmospheric glows — consistent with other sections */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
         {/* Center gold radial */}
-        <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 50% 50%, rgba(200,146,10,0.04), transparent 50%)' }} />
+        <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 50% 50%, rgba(239,249,35,0.04), transparent 50%)' }} />
         {/* Left cyan atmosphere */}
         <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 20% 50%, rgba(46,159,255,0.03), transparent 50%)' }} />
         {/* Right purple atmosphere */}
@@ -1109,7 +1109,7 @@ export function HighlightsSection({
       </div>
 
       {/* Top edge line */}
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[rgba(200,146,10,0.15)] to-transparent" aria-hidden="true" />
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[rgba(239,249,35,0.15)] to-transparent" aria-hidden="true" />
 
       {/* ═══ Content ═══ */}
       <div className="relative z-10 max-w-7xl mx-auto">
@@ -1185,7 +1185,7 @@ export function HighlightsSection({
       </div>
 
       {/* Simple bottom edge line */}
-      <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[rgba(200,146,10,0.1)] to-transparent" aria-hidden="true" />
+      <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[rgba(239,249,35,0.1)] to-transparent" aria-hidden="true" />
     </section>
   );
 }

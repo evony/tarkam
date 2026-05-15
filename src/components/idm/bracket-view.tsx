@@ -661,7 +661,7 @@ function GroupStageView({ matches, roundsData }: { matches: Match[]; roundsData:
               key={m.id}
               className={`hover-scale-sm rounded-lg overflow-hidden border transition-all relative ${
                 isLive ? `border-red-500/30 ${dt.neonPulse}` :
-                isGrandFinal ? 'border-idm-gold-warm/40 shadow-[0_0_12px_rgba(200,146,10,0.15)]' :
+                isGrandFinal ? 'border-idm-gold-warm/40 shadow-[0_0_12px_rgba(239,249,35,0.15)]' :
                 is3rd ? 'border-orange-500/20' :
                 'border-idm-gold-warm/20'
               }`}
@@ -1087,7 +1087,7 @@ function SwissView({ matches, roundsData }: { matches: Match[]; roundsData: { ro
               key={m.id}
               className={`hover-scale-sm rounded-lg overflow-hidden border transition-all relative ${
                 isLive ? `border-red-500/30 ${dt.neonPulse}` :
-                isGrandFinal ? 'border-idm-gold-warm/40 shadow-[0_0_12px_rgba(200,146,10,0.15)]' :
+                isGrandFinal ? 'border-idm-gold-warm/40 shadow-[0_0_12px_rgba(239,249,35,0.15)]' :
                 is3rd ? 'border-orange-500/20' :
                 'border-idm-gold-warm/20'
               }`}
@@ -1399,7 +1399,7 @@ function UpperSemiView({ matches }: { matches: Match[] }) {
 
       {/* ── GRAND FINAL Section ── */}
       {hasGF && (
-        <div className="rounded-2xl overflow-hidden border border-idm-gold-warm/40 shadow-[0_0_12px_rgba(200,146,10,0.15)]">
+        <div className="rounded-2xl overflow-hidden border border-idm-gold-warm/40 shadow-[0_0_12px_rgba(239,249,35,0.15)]">
           {/* Section Header — Gold accent */}
           <div className="flex items-center gap-2.5 px-4 py-2.5 border-b border-idm-gold-warm/20 bg-idm-gold-warm/5">
             <div className="w-5 h-5 rounded bg-idm-gold-warm/15 flex items-center justify-center shrink-0">

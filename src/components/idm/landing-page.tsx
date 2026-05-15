@@ -159,7 +159,7 @@ function LandingAuthButton({
           }`}
           title="Login Admin"
         >
-          <Shield className="w-3.5 h-3.5 text-idm-gold-warm drop-shadow-[0_0_4px_rgba(200,146,10,0.4)]" />
+          <Shield className="w-3.5 h-3.5 text-idm-gold-warm drop-shadow-[0_0_4px_rgba(239,249,35,0.4)]" />
         </button>
       </div>
     );
@@ -189,8 +189,8 @@ function LandingAuthButton({
             />
           </div>
         ) : isAdmin ? (
-          <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-idm-gold-warm/20 flex items-center justify-center ring-1 ring-idm-gold-warm/40 shadow-[0_0_6px_rgba(200,146,10,0.15)]">
-            <Shield className="w-3.5 h-3.5 text-idm-gold-warm drop-shadow-[0_0_3px_rgba(200,146,10,0.4)]" />
+          <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-idm-gold-warm/20 flex items-center justify-center ring-1 ring-idm-gold-warm/40 shadow-[0_0_6px_rgba(239,249,35,0.15)]">
+            <Shield className="w-3.5 h-3.5 text-idm-gold-warm drop-shadow-[0_0_3px_rgba(239,249,35,0.4)]" />
           </div>
         ) : (
           <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-muted/30 flex items-center justify-center ring-1 ring-idm-gold-warm/30">
@@ -586,13 +586,13 @@ export function LandingPage() {
                     <span className="absolute inset-0 rounded-xl bg-idm-gold-warm/[0.04] border border-idm-gold-warm/10" />
                   )}
                   {item.special && !isActive && (
-                    <span className="absolute inset-0 rounded-xl animate-pulse bg-idm-gold-warm/[0.03] shadow-[0_0_8px_rgba(200,146,10,0.08)]" />
+                    <span className="absolute inset-0 rounded-xl animate-pulse bg-idm-gold-warm/[0.03] shadow-[0_0_8px_rgba(239,249,35,0.08)]" />
                   )}
-                  <item.icon className={`relative z-10 w-5 h-5 ${item.special ? 'drop-shadow-[0_0_4px_rgba(200,146,10,0.3)]' : ''}`} />
+                  <item.icon className={`relative z-10 w-5 h-5 ${item.special ? 'drop-shadow-[0_0_4px_rgba(239,249,35,0.3)]' : ''}`} />
                   <span className={`relative z-10 text-[10px] font-medium mt-0.5 ${item.special ? 'font-bold' : ''}`}>{item.label}</span>
                   {/* Gold dot indicator — replaces the line for a premium iOS feel */}
                   {isActive && (
-                    <div className="absolute -bottom-0.5 w-1.5 h-1.5 rounded-full bg-idm-gold-warm shadow-[0_0_6px_rgba(200,146,10,0.6)]" />
+                    <div className="absolute -bottom-0.5 w-1.5 h-1.5 rounded-full bg-idm-gold-warm shadow-[0_0_6px_rgba(239,249,35,0.6)]" />
                   )}
                 </button>
               );

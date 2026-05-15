@@ -37,9 +37,9 @@ export function SplashScreen({ onFinish }: { onFinish: () => void }) {
             className="absolute inset-0 pointer-events-none"
             animate={{
               background: [
-                'radial-gradient(ellipse at 30% 50%, rgba(240,165,0,0.08) 0%, transparent 60%)',
-                'radial-gradient(ellipse at 70% 50%, rgba(200,146,10,0.08) 0%, transparent 60%)',
-                'radial-gradient(ellipse at 30% 50%, rgba(240,165,0,0.08) 0%, transparent 60%)',
+                'radial-gradient(ellipse at 30% 50%, rgba(249,203,37,0.08) 0%, transparent 60%)',
+                'radial-gradient(ellipse at 70% 50%, rgba(239,249,35,0.08) 0%, transparent 60%)',
+                'radial-gradient(ellipse at 30% 50%, rgba(249,203,37,0.08) 0%, transparent 60%)',
               ],
             }}
             transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}

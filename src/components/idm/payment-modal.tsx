@@ -19,7 +19,7 @@ const paymentMethods = [
     mode: 'qr' as PaymentMode,
     settingKey: 'donation_qris_image',
     numberKey: '',
-    color: '#C8920A',
+    color: '#EFF923',
     bgColor: 'bg-idm-gold-warm/10',
     textColor: 'text-idm-gold-warm',
     borderColor: 'border-idm-gold-warm/30',

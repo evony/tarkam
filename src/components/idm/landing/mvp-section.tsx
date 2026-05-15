@@ -143,12 +143,12 @@ export function MvpSection({
                         <div
                           className="flex items-center gap-1.5 px-4 py-2 rounded-xl"
                           style={{
-                            backgroundColor: 'rgba(200,146,10,0.15)',
-                            border: '1px solid rgba(200,146,10,0.3)',
+                            backgroundColor: 'rgba(239,249,35,0.15)',
+                            border: '1px solid rgba(239,249,35,0.3)',
                           }}
                         >
-                          <Crown className="w-5 h-5" style={{ color: '#C8920A' }} />
-                          <span className="text-sm font-black uppercase tracking-wider" style={{ color: '#C8920A' }}>MVP</span>
+                          <Crown className="w-5 h-5" style={{ color: '#EFF923' }} />
+                          <span className="text-sm font-black uppercase tracking-wider" style={{ color: '#EFF923' }}>MVP</span>
                         </div>
                       </div>
 
@@ -176,8 +176,8 @@ export function MvpSection({
                             <span
                               className="text-[11px] font-bold px-2.5 py-1 rounded-lg"
                               style={{
-                                backgroundColor: 'rgba(200,146,10,0.15)',
-                                color: '#C8920A',
+                                backgroundColor: 'rgba(239,249,35,0.15)',
+                                color: '#EFF923',
                               }}
                             >
                               {mvp.totalMvp}x MVP
@@ -306,12 +306,12 @@ export function MvpSection({
                         <div
                           className="flex items-center gap-1.5 px-4 py-2 rounded-xl"
                           style={{
-                            backgroundColor: 'rgba(200,146,10,0.15)',
-                            border: '1px solid rgba(200,146,10,0.3)',
+                            backgroundColor: 'rgba(239,249,35,0.15)',
+                            border: '1px solid rgba(239,249,35,0.3)',
                           }}
                         >
-                          <Crown className="w-5 h-5" style={{ color: '#C8920A' }} />
-                          <span className="text-sm font-black uppercase tracking-wider" style={{ color: '#C8920A' }}>MVP</span>
+                          <Crown className="w-5 h-5" style={{ color: '#EFF923' }} />
+                          <span className="text-sm font-black uppercase tracking-wider" style={{ color: '#EFF923' }}>MVP</span>
                         </div>
                       </div>
 
@@ -339,8 +339,8 @@ export function MvpSection({
                             <span
                               className="text-[11px] font-bold px-2.5 py-1 rounded-lg"
                               style={{
-                                backgroundColor: 'rgba(200,146,10,0.15)',
-                                color: '#C8920A',
+                                backgroundColor: 'rgba(239,249,35,0.15)',
+                                color: '#EFF923',
                               }}
                             >
                               {mvp.totalMvp}x MVP

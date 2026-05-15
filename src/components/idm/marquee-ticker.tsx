@@ -50,19 +50,19 @@ function formatTimeAgo(timestamp: string): string {
 
 /* ========== Accent colors per type ========== */
 const TYPE_ACCENT: Record<FeedItem['type'], string> = {
-  champion: '#C8920A',
+  champion: '#EFF923',
   mvp: '#eab308',
   donation: '#22c55e',
   score: '#2E9FFF',
   transfer: '#FF2D78',
   registration: '#57B5FF',
   tournament_signup: '#f59e0b',
-  stat: '#C8920A',
+  stat: '#EFF923',
 };
 
 /* ========== Single Feed Card — Unified compact horizontal style ========== */
 function FeedCard({ item }: { item: FeedItem }) {
-  const accent = item.accent || TYPE_ACCENT[item.type] || '#C8920A';
+  const accent = item.accent || TYPE_ACCENT[item.type] || '#EFF923';
   const isStat = item.type === 'stat';
 
   /* Resolve display text — stat items show final value directly (no count-up animation) */
@@ -210,7 +210,7 @@ export function MarqueeTicker({ maleData, femaleData, leagueData }: UnifiedMarqu
 
     stats.push(
       { id: 'stat-players', type: 'stat', icon: '👥', title: `${totalPlayers}`, subtitle: 'Total Pemain', timestamp: new Date().toISOString(), accent: '#57B5FF', numericValue: totalPlayers },
-      { id: 'stat-clubs', type: 'stat', icon: '🏛️', title: `${totalClubs}`, subtitle: 'Total Klub', timestamp: new Date().toISOString(), accent: '#C8920A', numericValue: totalClubs },
+      { id: 'stat-clubs', type: 'stat', icon: '🏛️', title: `${totalClubs}`, subtitle: 'Total Klub', timestamp: new Date().toISOString(), accent: '#EFF923', numericValue: totalClubs },
     );
 
     if (totalPrizePool > 0) {
