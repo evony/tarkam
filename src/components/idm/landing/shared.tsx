@@ -195,20 +195,36 @@ export function useScrollReveal() {
     // ★ MutationObserver: catches dynamically-added .section-reveal elements
     // (e.g. from dynamic() components loaded with ssr: false)
     // Without this, elements added after mount are never observed and stay opacity: 0.
+    // Also watches attribute changes (className) because React may reuse DOM elements
+    // and update their className to include section-reveal without adding new nodes.
     const mutObs = new MutationObserver((mutations) => {
       let hasNewReveal = false;
       for (const mutation of mutations) {
-        for (const node of mutation.addedNodes) {
-          if (node instanceof HTMLElement) {
-            if (
-              node.classList?.contains('section-reveal') ||
-              node.classList?.contains('reveal') ||
-              node.querySelector?.('.section-reveal:not(.section-reveal--visible)') ||
-              node.querySelector?.('.reveal:not(.reveal--visible)')
-            ) {
-              hasNewReveal = true;
-              break;
+        // Case 1: New node added to DOM with section-reveal class
+        if (mutation.type === 'childList') {
+          for (const node of mutation.addedNodes) {
+            if (node instanceof HTMLElement) {
+              if (
+                node.classList?.contains('section-reveal') ||
+                node.classList?.contains('reveal') ||
+                node.querySelector?.('.section-reveal:not(.section-reveal--visible)') ||
+                node.querySelector?.('.reveal:not(.reveal--visible)')
+              ) {
+                hasNewReveal = true;
+                break;
+              }
             }
+          }
+        }
+        // Case 2: Existing element's className changed to include section-reveal
+        // (React reuses DOM elements and updates props instead of replacing)
+        if (mutation.type === 'attributes' && mutation.target instanceof HTMLElement) {
+          const target = mutation.target as HTMLElement;
+          if (
+            (target.classList?.contains('section-reveal') && !target.classList?.contains('section-reveal--visible')) ||
+            (target.classList?.contains('reveal') && !target.classList?.contains('reveal--visible'))
+          ) {
+            hasNewReveal = true;
           }
         }
         if (hasNewReveal) break;
@@ -216,7 +232,7 @@ export function useScrollReveal() {
       if (hasNewReveal) observeAll();
     });
 
-    mutObs.observe(document.body, { childList: true, subtree: true });
+    mutObs.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
 
     return () => {
       io.disconnect();

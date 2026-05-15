@@ -73,7 +73,7 @@ export function SponsorsSection() {
   return (
     <section
       aria-label="Didukung Oleh"
-      className="section-reveal relative py-10 sm:py-16 overflow-hidden bg-deep"
+      className="relative py-10 sm:py-16 overflow-hidden bg-deep"
     >
       {/* ── Top edge glow ── */}
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[rgba(212,168,83,0.25)] to-transparent" aria-hidden="true" />

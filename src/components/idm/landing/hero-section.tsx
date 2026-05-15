@@ -130,7 +130,7 @@ export function HeroSection({
       {/* ═══════════════ HERO SECTION ═══════════════ */}
       <section
         id="hero"
-        className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
+        className="relative min-h-screen flex flex-col items-center justify-center"
         aria-label="Tarkam IDM Hero"
       >
         {/* ── Animated gold line border at top ── */}
@@ -585,7 +585,7 @@ export function HeroSection({
         </div>
 
         {/* 4. Premium Scroll Indicator — Mouse icon + pulsing line */}
-        <div className="absolute bottom-20 sm:bottom-10 left-1/2 -translate-x-1/2 z-10" style={{ animation: 'reveal-fade-up 0.5s 2s cubic-bezier(0.16,1,0.3,1) both' }} aria-hidden="true">
+        <div className="absolute bottom-28 sm:bottom-10 left-1/2 -translate-x-1/2 z-10" style={{ animation: 'reveal-fade-up 0.5s 2s cubic-bezier(0.16,1,0.3,1) both' }} aria-hidden="true">
           <div className="flex flex-col items-center gap-3">
             <span className="text-[10px] text-idm-gold-warm/40 uppercase tracking-[0.2em] font-semibold">Explore</span>
             <div className="hero-scroll-mouse">

@@ -194,3 +194,27 @@ Stage Summary:
 - Bug fix: SponsorsSection now self-observes for scroll reveal instead of relying on parent observer
 - Mobile UX: Horizontal scroll carousel with larger cards, name overlays, snap scrolling
 - Desktop UX: Improved card visibility with hover name overlays
+
+---
+Task ID: 2
+Agent: Main
+Task: Fix sponsor section not visible on mobile landing page + audit all layouts
+
+Work Log:
+- Deep investigation of sponsor section visibility bug on mobile
+- Root cause: SponsorsSection was the ONLY section without a `<div className="section-reveal">` wrapper in landing-page.tsx. It self-applied `section-reveal` on its inner `<section>` element, but React reuses the DOM element when switching from skeleton to content — only updating className (an attribute change, not childList). The MutationObserver in useScrollReveal() only watched childList changes, so it never detected the className change, and the IntersectionObserver never observed the element, leaving it at opacity: 0 forever.
+- Fix 1: Added `<div className="section-reveal">` wrapper around `<SponsorsSection />` in landing-page.tsx (consistent with all other sections)
+- Fix 2: Removed `section-reveal` from inner `<section>` in sponsors-section.tsx (avoid double opacity:0)
+- Fix 3: Enhanced MutationObserver in shared.tsx to also watch `attributes: true` with `attributeFilter: ['class']`, and added Case 2 logic for detecting className changes to include section-reveal/reveal
+- Fix 4: Footer broken QuickLinks — `sectionId="champions"` and `sectionId="mvp"` don't exist on landing page. Changed to `sectionId="season-champion"` and `sectionId="highlights"`
+- Fix 5: Hero section `overflow-hidden` clips vertical content on short mobile viewports. Removed overflow-hidden entirely (global overflow-x: clip handles horizontal overflow)
+- Fix 6: Back-to-top button overlaps bottom nav on tablet (sm:bottom-8 → md:bottom-8)
+- Fix 7: Hero scroll indicator too close to bottom nav on mobile (bottom-20 → bottom-28)
+- Lint passes clean, dev server running, API returns 200
+
+Stage Summary:
+- CRITICAL: Sponsor section visibility fixed (section-reveal wrapper + MutationObserver attributes)
+- CRITICAL: Footer QuickLinks fixed (correct section IDs)
+- CRITICAL: Hero overflow-hidden removed (no more content clipping on short viewports)
+- MEDIUM: Back-to-top button no longer overlaps bottom nav on tablet
+- LOW: Hero scroll indicator repositioned for mobile safety

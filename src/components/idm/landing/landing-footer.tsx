@@ -172,8 +172,8 @@ export function LandingFooter({ cmsSettings, className }: LandingFooterProps) {
           {/* ─── Right: Quick Links ─── */}
           <nav aria-label="Footer navigation" className="flex flex-wrap items-center gap-x-5 gap-y-2 sm:gap-y-1">
             <QuickLink label="Kompetisi" sectionId="kompetisi" />
-            <QuickLink label="Champion" sectionId="champions" />
-            <QuickLink label="MVP" sectionId="mvp" />
+            <QuickLink label="Champion" sectionId="season-champion" />
+            <QuickLink label="Juara" sectionId="highlights" />
             <QuickLink label="Club" sectionId="clubs" />
           </nav>
         </div>
