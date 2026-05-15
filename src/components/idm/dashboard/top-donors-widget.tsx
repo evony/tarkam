@@ -358,9 +358,8 @@ export function TopDonorsWidget({ onDonate, statsData, statsData2 }: TopDonorsWi
               )}
             </div>
             {totalMale > 0 && (
-              <div className="flex items-center justify-end gap-1 pt-1 border-t border-idm-male/10">
-                <span className="text-[9px] text-muted-foreground/50">Total</span>
-                <span className="text-[10px] font-bold text-idm-male-light">
+              <div className="flex items-center justify-end pt-1 border-t border-idm-male/10">
+                <span className="text-xs font-bold text-idm-male-light/90">
                   {formatRupiahShort(totalMale)}
                 </span>
               </div>
@@ -402,9 +401,8 @@ export function TopDonorsWidget({ onDonate, statsData, statsData2 }: TopDonorsWi
               )}
             </div>
             {totalFemale > 0 && (
-              <div className="flex items-center justify-end gap-1 pt-1 border-t border-idm-female/10">
-                <span className="text-[9px] text-muted-foreground/50">Total</span>
-                <span className="text-[10px] font-bold text-idm-female-light">
+              <div className="flex items-center justify-end pt-1 border-t border-idm-female/10">
+                <span className="text-xs font-bold text-idm-female-light/90">
                   {formatRupiahShort(totalFemale)}
                 </span>
               </div>
