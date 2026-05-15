@@ -9,7 +9,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useDivisionTheme } from '@/hooks/use-division-theme';
 import { formatCurrency } from '@/lib/utils';
 import { getSawerTier } from '@/lib/skin-utils';
-import React, { useState, useMemo } from 'react';
+import React from 'react';
 
 /* ─── Types ─── */
 interface TopDonor {
@@ -200,7 +200,6 @@ function EmptyDonorsState({ onDonate }: { onDonate: () => void }) {
 
 export function TopDonorsWidget({ onDonate, statsData, statsData2 }: TopDonorsWidgetProps) {
   const dt = useDivisionTheme();
-  const [saweranDivision, setSaweranDivision] = useState<'all' | 'male' | 'female'>('all');
 
   // Use weeklyTopDonors from stats if provided, otherwise fall back to all-time API
   const { data, isLoading } = useQuery<TopDonorsData>({
@@ -282,39 +281,20 @@ export function TopDonorsWidget({ onDonate, statsData, statsData2 }: TopDonorsWi
     }));
   }
 
-  // Filter and sort donors based on selected division tab
-  const donors = saweranDivision === 'all'
-    ? [...allDonors].sort((a, b) => b.totalAmount - a.totalAmount)
-    : saweranDivision === 'male'
-      ? allDonors.filter(d => d.maleAmount > 0).sort((a, b) => b.maleAmount - a.maleAmount)
-      : allDonors.filter(d => d.femaleAmount > 0).sort((a, b) => b.femaleAmount - a.femaleAmount);
+  // Split donors per division
+  const maleDonors = allDonors.filter(d => d.maleAmount > 0).sort((a, b) => b.maleAmount - a.maleAmount);
+  const femaleDonors = allDonors.filter(d => d.femaleAmount > 0).sort((a, b) => b.femaleAmount - a.femaleAmount);
 
-  // Early return for loading/empty — AFTER hooks and computations
+  // Early return for loading — AFTER computations
   if (isLoading && !hasAnyWeekly) return <LoadingSkeleton />;
-
-  // Compute display amount based on selected tab
-  const getDisplayAmount = (d: DivisionDonor): number => {
-    if (saweranDivision === 'male') return d.maleAmount;
-    if (saweranDivision === 'female') return d.femaleAmount;
-    return d.totalAmount;
-  };
 
   const weekNum = statsData?.activeTournament?.weekNumber || statsData2?.activeTournament?.weekNumber;
   const weekLabel = hasWeekly && weekNum ? `Week ${weekNum}` : '';
 
   // Calculate totals per division
-  const totalMale = allDonors.reduce((s, d) => s + d.maleAmount, 0);
-  const totalFemale = allDonors.reduce((s, d) => s + d.femaleAmount, 0);
+  const totalMale = maleDonors.reduce((s, d) => s + d.maleAmount, 0);
+  const totalFemale = femaleDonors.reduce((s, d) => s + d.femaleAmount, 0);
   const totalAmount = totalMale + totalFemale;
-  const totalDonors = hasWeekly ? allDonors.length : (apiSummary?.totalDonors ?? 0);
-
-  // Division-specific totals for header
-  const displayedTotal = saweranDivision === 'male' ? totalMale : saweranDivision === 'female' ? totalFemale : totalAmount;
-  const displayedDonorCount = saweranDivision === 'male'
-    ? allDonors.filter(d => d.maleAmount > 0).length
-    : saweranDivision === 'female'
-      ? allDonors.filter(d => d.femaleAmount > 0).length
-      : totalDonors;
 
   if (allDonors.length === 0) return <EmptyDonorsState onDonate={onDonate} />;
 
@@ -330,160 +310,104 @@ export function TopDonorsWidget({ onDonate, statsData, statsData2 }: TopDonorsWi
             Top Saweran
             {weekLabel && <Badge className="text-[8px] px-1.5 py-0 h-4 bg-idm-gold-warm/15 text-idm-gold-warm border-0 font-semibold">{weekLabel}</Badge>}
           </CardTitle>
-          {displayedTotal > 0 && (
+          {totalAmount > 0 && (
             <div className="text-right">
               <p className={`text-xs font-bold ${dt.neonGradient}`}>
-                {formatRupiah(displayedTotal)}
+                {formatRupiah(totalAmount)}
               </p>
-              <p className="text-[9px] text-muted-foreground/60">
-                dari {displayedDonorCount} penyawer
-              </p>
-            </div>
-          )}
-        </div>
-
-        {/* Division tabs + per-division breakdown */}
-        <div className="flex items-center justify-between gap-2 mt-1">
-          {/* Division pills */}
-          <div className="flex items-center gap-1 p-0.5 rounded-lg bg-idm-gold-warm/5 border border-idm-gold-warm/10">
-            {([
-              { key: 'all' as const, label: 'Semua' },
-              { key: 'male' as const, label: '♂ Male' },
-              { key: 'female' as const, label: '♀ Female' },
-            ]).map(div => (
-              <button
-                key={div.key}
-                onClick={() => setSaweranDivision(div.key)}
-                className={`px-2 py-1 rounded-md text-[9px] font-bold uppercase tracking-wider transition-all whitespace-nowrap ${
-                  saweranDivision === div.key
-                    ? 'bg-idm-gold-warm/15 text-idm-gold-warm shadow-sm shadow-idm-gold-warm/10 border border-idm-gold-warm/25'
-                    : 'text-muted-foreground/70 hover:text-foreground border border-transparent hover:bg-muted/40'
-                }`}
-              >
-                {div.label}
-              </button>
-            ))}
-          </div>
-          {/* Per-division amounts (when Semua tab) */}
-          {saweranDivision === 'all' && totalAmount > 0 && (totalMale > 0 || totalFemale > 0) && (
-            <div className="hidden sm:flex items-center gap-2 shrink-0">
-              {totalMale > 0 && (
-                <span className="text-[9px] text-idm-male-light/80">
-                  ♂ {formatRupiahShort(totalMale)}
-                </span>
-              )}
-              {totalFemale > 0 && (
-                <span className="text-[9px] text-idm-female-light/80">
-                  ♀ {formatRupiahShort(totalFemale)}
-                </span>
-              )}
             </div>
           )}
         </div>
       </CardHeader>
 
       <CardContent className="pt-0">
-        {/* Donor list */}
-        <div className="max-h-80 lg:max-h-64 overflow-y-auto overflow-x-hidden custom-scrollbar space-y-1 pr-1 flex-1">
-          {donors.length > 0 ? donors.map((donor, i) => {
-            const displayAmt = getDisplayAmount(donor);
-            return (
-            <div
-              key={donor.donorName}
-              className="donor-row-enter p-2.5 rounded-lg hover:bg-idm-gold-warm/5 transition-colors group"
-              style={{ animationDelay: `${i * 60}ms` }}
-            >
-              {/* Row 1: Rank + Name + Tier Badge + Total */}
-              <div className="flex items-center gap-2">
-                {/* Rank */}
-                <RankBadge rank={i + 1} />
-
-                {/* Name + badges */}
-                <div className="flex-1 min-w-0 flex items-center gap-1.5">
-                  {/* #1 Crown emoji badge */}
-                  {i === 0 && (
-                    <span className="text-sm shrink-0" title="Top Saweran">👑</span>
-                  )}
-                  <span className={`text-sm font-semibold truncate ${
-                    i === 0
-                      ? 'text-idm-gold-warm donor-name-pulse-gold'
-                      : 'donor-name-pulse'
-                  }`}>
-                    {donor.donorName || 'Anonymous'}
-                  </span>
-                  {/* Division badges — show relevant ones based on tab */}
-                  {(saweranDivision === 'all' ? donor.divisions : [saweranDivision]).filter(div => div === 'male' ? donor.maleAmount > 0 : donor.femaleAmount > 0).map(div => (
-                    <DivisionBadge key={div} division={div} />
-                  ))}
-                  {/* Sawer tier badge */}
-                  {(() => {
-                    const sawerTier = donor.latestType === 'weekly' ? getSawerTier(displayAmt) : null;
-                    if (!sawerTier) return null;
-                    const tierColors: Record<string, { bg: string; border: string; text: string }> = {
-                      sawer_diamond: { bg: 'rgba(87,181,255,0.15)', border: 'rgba(87,181,255,0.4)', text: 'text-idm-male-light' },
-                      sawer_gold: { bg: 'rgba(250,204,21,0.15)', border: 'rgba(250,204,21,0.4)', text: 'text-yellow-300' },
-                      sawer_silver: { bg: 'rgba(156,163,175,0.15)', border: 'rgba(156,163,175,0.4)', text: 'text-muted-foreground' },
-                      sawer_bronze: { bg: 'rgba(180,83,9,0.15)', border: 'rgba(180,83,9,0.4)', text: 'text-amber-400' },
-                    };
-                    const tc = tierColors[sawerTier] || tierColors.sawer_bronze;
-                    const tierLabel = sawerTier.replace('sawer_', '').charAt(0).toUpperCase() + sawerTier.replace('sawer_', '').slice(1);
-                    const tierEmoji = sawerTier === 'sawer_diamond' ? '💎' : sawerTier === 'sawer_gold' ? '🥇' : sawerTier === 'sawer_gold' ? '🥈' : '🥉';
-                    return (
-                      <span
-                        className={`inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-bold shrink-0 border ${tc.text}`}
-                        style={{ backgroundColor: tc.bg, borderColor: tc.border }}
-                        title={`Sawer ${tierLabel}`}
-                      >
-                        {tierEmoji} {tierLabel}
-                      </span>
-                    );
-                  })()}
-                </div>
-
-                {/* Total amount */}
-                <div className="text-right shrink-0">
-                  <span className="text-xs font-bold text-idm-gold-warm donor-amount">
-                    {formatRupiah(displayAmt)}
-                  </span>
-                </div>
+        {/* Two-column layout: Male left, Female right */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {/* ♂ Male Division */}
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between mb-1">
+              <div className="flex items-center gap-1.5">
+                <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider border bg-idm-male/10 text-idm-male-light border-idm-male/30">
+                  ♂ Male
+                </span>
+                <span className="text-[9px] text-muted-foreground/50">{maleDonors.length} sawer</span>
               </div>
-
-              {/* Row 2: Per-division breakdown (only on Semua tab or when donor has both divisions) */}
-              {saweranDivision === 'all' && (donor.maleAmount > 0 || donor.femaleAmount > 0) && donor.divisions.length > 0 && (
-                <div className="flex items-center gap-2 mt-1 ml-8">
-                  {donor.maleAmount > 0 && (
-                    <span className="text-[10px] text-idm-male-light/70">
-                      ♂ {formatRupiahShort(donor.maleAmount)}
+              {totalMale > 0 && (
+                <span className="text-[10px] font-semibold text-idm-male-light">
+                  {formatRupiahShort(totalMale)}
+                </span>
+              )}
+            </div>
+            <div className="max-h-64 overflow-y-auto overflow-x-hidden custom-scrollbar space-y-1 pr-1">
+              {maleDonors.length > 0 ? maleDonors.map((donor, i) => (
+                <div
+                  key={`male-${donor.donorName}`}
+                  className="donor-row-enter p-2 rounded-lg hover:bg-idm-male/5 transition-colors group"
+                  style={{ animationDelay: `${i * 60}ms` }}
+                >
+                  <div className="flex items-center gap-1.5">
+                    <RankBadge rank={i + 1} />
+                    <span className={`text-xs font-semibold truncate flex-1 ${
+                      i === 0 ? 'text-idm-gold-warm' : 'text-muted-foreground'
+                    }`}>
+                      {i === 0 && <span className="mr-0.5">👑</span>}
+                      {donor.donorName || 'Anonymous'}
                     </span>
-                  )}
-                  {donor.femaleAmount > 0 && (
-                    <span className="text-[10px] text-idm-female-light/70">
-                      ♀ {formatRupiahShort(donor.femaleAmount)}
+                    <span className="text-[10px] font-bold text-idm-gold-warm shrink-0">
+                      {formatRupiahShort(donor.maleAmount)}
                     </span>
-                  )}
-                  {donor.latestDate && (
-                    <>
-                      <span className="text-[9px] text-muted-foreground/30">·</span>
-                      <span className="flex items-center gap-0.5 text-[9px] text-muted-foreground/50">
-                        <Clock className="w-2.5 h-2.5" />
-                        {formatRelativeTime(donor.latestDate)}
-                      </span>
-                    </>
-                  )}
-                  <span className="text-[10px] text-muted-foreground/40">
-                    {donor.donationCount}x sawer
-                  </span>
+                  </div>
+                </div>
+              )) : (
+                <div className="py-4 text-center opacity-40">
+                  <p className="text-[10px] text-muted-foreground">Belum ada saweran</p>
                 </div>
               )}
             </div>
-            );
-          }) : (
-            <div className="py-6 text-center">
-              <p className="text-xs text-muted-foreground/50">
-                Belum ada penyawer divisi {saweranDivision === 'male' ? 'Male' : 'Female'}
-              </p>
+          </div>
+
+          {/* ♀ Female Division */}
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between mb-1">
+              <div className="flex items-center gap-1.5">
+                <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider border bg-idm-female/10 text-idm-female-light border-idm-female/30">
+                  ♀ Female
+                </span>
+                <span className="text-[9px] text-muted-foreground/50">{femaleDonors.length} sawer</span>
+              </div>
+              {totalFemale > 0 && (
+                <span className="text-[10px] font-semibold text-idm-female-light">
+                  {formatRupiahShort(totalFemale)}
+                </span>
+              )}
             </div>
-          )}
+            <div className="max-h-64 overflow-y-auto overflow-x-hidden custom-scrollbar space-y-1 pr-1">
+              {femaleDonors.length > 0 ? femaleDonors.map((donor, i) => (
+                <div
+                  key={`female-${donor.donorName}`}
+                  className="donor-row-enter p-2 rounded-lg hover:bg-idm-female/5 transition-colors group"
+                  style={{ animationDelay: `${i * 60}ms` }}
+                >
+                  <div className="flex items-center gap-1.5">
+                    <RankBadge rank={i + 1} />
+                    <span className={`text-xs font-semibold truncate flex-1 ${
+                      i === 0 ? 'text-idm-gold-warm' : 'text-muted-foreground'
+                    }`}>
+                      {i === 0 && <span className="mr-0.5">👑</span>}
+                      {donor.donorName || 'Anonymous'}
+                    </span>
+                    <span className="text-[10px] font-bold text-idm-gold-warm shrink-0">
+                      {formatRupiahShort(donor.femaleAmount)}
+                    </span>
+                  </div>
+                </div>
+              )) : (
+                <div className="py-4 text-center opacity-40">
+                  <p className="text-[10px] text-muted-foreground">Belum ada saweran</p>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
 
         {/* CTA button — compact & centered */}
