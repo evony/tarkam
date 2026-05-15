@@ -184,58 +184,73 @@ type DivisionFilter = 'all' | 'male' | 'female';
    All visible, zero clicks. Division filter kept as pill selector.
    ═══════════════════════════════════════════ */
 
-function ChampionsMvpSection({
-  maleData,
-  femaleData,
+/* ═══════════════════════════════════════════
+   Champion Header — Sticky heading with division filter tabs
+   Extracted so it can be made sticky across sections
+   ═══════════════════════════════════════════ */
+function ChampionsMvpHeader({
   selectedDivision,
-  onPlayerClick,
   onDivisionChange,
 }: {
-  maleData?: StatsData;
-  femaleData?: StatsData;
   selectedDivision: DivisionFilter;
-  onPlayerClick: (player: TopPlayer & { division?: string }, division: 'male' | 'female') => void;
   onDivisionChange: (d: DivisionFilter) => void;
 }) {
   const ct = useCommunityTheme();
 
   return (
-    <div className="space-y-4 sm:space-y-5">
-      {/* Section Header + Division Filter */}
-      <div className="flex items-center justify-between gap-3">
-        <div className="flex items-center gap-2.5">
-          <div className={`w-5 h-5 rounded ${ct.iconBg} flex items-center justify-center shrink-0`}>
-            <Crown className={`w-3 h-3 ${ct.neonText}`} />
-          </div>
-          <h3 className="text-xs font-semibold uppercase tracking-wider shrink-0" style={{
-            background: 'linear-gradient(135deg, #FAF0DC 0%, #EFF923 30%, #F9CB25 50%, #F9CB25 70%, #EFF923 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-          }}>Champion</h3>
+    <div className="flex items-center justify-between gap-3">
+      <div className="flex items-center gap-2.5">
+        <div className={`w-5 h-5 rounded ${ct.iconBg} flex items-center justify-center shrink-0`}>
+          <Crown className={`w-3 h-3 ${ct.neonText}`} />
         </div>
-
-        {/* Division pills — compact, right-aligned */}
-        <div className="flex items-center gap-1 p-1 rounded-lg bg-idm-gold-warm/5 border border-idm-gold-warm/10">
-          {([
-            { key: 'all' as DivisionFilter, label: 'Semua' },
-            { key: 'male' as DivisionFilter, label: 'Male' },
-            { key: 'female' as DivisionFilter, label: 'Female' },
-          ]).map(div => (
-            <button
-              key={div.key}
-              onClick={() => onDivisionChange(div.key)}
-              className={`px-3 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider transition-all whitespace-nowrap ${
-                selectedDivision === div.key
-                  ? 'bg-idm-gold-warm/15 text-idm-gold-warm shadow-sm shadow-idm-gold-warm/10 border border-idm-gold-warm/25'
-                  : 'text-muted-foreground/70 hover:text-foreground border border-transparent hover:bg-muted/40'
-              }`}
-            >
-              {div.label}
-            </button>
-          ))}
-        </div>
+        <h3 className="text-xs font-semibold uppercase tracking-wider shrink-0" style={{
+          background: 'linear-gradient(135deg, #FAF0DC 0%, #EFF923 30%, #F9CB25 50%, #F9CB25 70%, #EFF923 100%)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+        }}>Champion</h3>
       </div>
 
+      {/* Division pills — compact, right-aligned */}
+      <div className="flex items-center gap-1 p-1 rounded-lg bg-idm-gold-warm/5 border border-idm-gold-warm/10">
+        {([
+          { key: 'all' as DivisionFilter, label: 'Semua' },
+          { key: 'male' as DivisionFilter, label: 'Male' },
+          { key: 'female' as DivisionFilter, label: 'Female' },
+        ]).map(div => (
+          <button
+            key={div.key}
+            onClick={() => onDivisionChange(div.key)}
+            className={`px-3 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider transition-all whitespace-nowrap ${
+              selectedDivision === div.key
+                ? 'bg-idm-gold-warm/15 text-idm-gold-warm shadow-sm shadow-idm-gold-warm/10 border border-idm-gold-warm/25'
+                : 'text-muted-foreground/70 hover:text-foreground border border-transparent hover:bg-muted/40'
+            }`}
+          >
+            {div.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+
+/* ═══════════════════════════════════════════
+   Champion Content — Cards below the sticky header
+   ═══════════════════════════════════════════ */
+function ChampionsMvpContent({
+  maleData,
+  femaleData,
+  selectedDivision,
+  onPlayerClick,
+}: {
+  maleData?: StatsData;
+  femaleData?: StatsData;
+  selectedDivision: DivisionFilter;
+  onPlayerClick: (player: TopPlayer & { division?: string }, division: 'male' | 'female') => void;
+}) {
+  return (
+    <div className="space-y-4 sm:space-y-5">
       {/* ═══ 0. Reigning Champion Plaque — Compact trophy badge ═══ */}
       <ReigningChampionPlaque
         maleData={maleData}
@@ -1606,7 +1621,7 @@ export function CommunityDashboard() {
       {/* ═══ UNIFIED CONTENT SURFACE ═══
           Mobile: Full-bleed, no border-radius, no border — edge-to-edge like iOS apps
           Desktop: Premium elevated surface with rounded corners and border */}
-      <div className="lg:community-surface lg:rounded-3xl lg:border lg:border-border/30 overflow-hidden relative">
+      <div className="lg:community-surface lg:rounded-3xl lg:border lg:border-border/30 relative" style={{ overflow: 'clip' }}>
         {/* Subtle navy depth glow at top — dark canvas, no gold wash (desktop only) */}
         <div className="hidden lg:block absolute top-0 left-1/2 -translate-x-1/2 w-2/3 h-48 bg-slate-800/[0.08] rounded-full blur-3xl pointer-events-none" />
 
@@ -1646,13 +1661,6 @@ export function CommunityDashboard() {
         <TourSayaSection selectedDivision={selectedDivision} />
       </Section>
 
-      {/* ═══ 3. ⭐ Hasil Pertandingan — Always both divisions, no filter ═══ */}
-      <Section sectionId="matches">
-        <AnimatedSection variant="fadeUp">
-          <MatchesSection maleData={maleData} femaleData={femaleData} selectedDivision="all" />
-        </AnimatedSection>
-      </Section>
-
       {/* ═══ 3. Top Saweran ═══ */}
       <Section sectionId="saweran">
         <TopDonorsWidget onDonate={() => setDonationOpen(true)} statsData={selectedDivision === 'female' ? femaleData : maleData} statsData2={selectedDivision === 'female' ? maleData : femaleData} />
@@ -1680,31 +1688,40 @@ export function CommunityDashboard() {
       ) : (
       <>
 
-      {/* ═══ 4. ⭐ Champions & MVP — "Siapa yang menang?" most viral ═══ */}
-      <Section sectionId="champions">
-        <AnimatedSection>
-          <ChampionsMvpSection
-            maleData={maleData}
-            femaleData={femaleData}
+      {/* ═══ 4. ⭐ Champions & MVP + Peringkat — Sticky header spans both sections ═══ */}
+      <div className="space-y-4 sm:space-y-6">
+        {/* Sticky Champion Header — stays fixed until peringkat section ends */}
+        <div className="sticky top-0 z-30 -mx-1.5 sm:-mx-4 lg:-mx-5 px-1.5 sm:px-4 lg:px-5 py-2.5 bg-background/95 backdrop-blur-md border-b border-idm-gold-warm/10">
+          <ChampionsMvpHeader
             selectedDivision={selectedDivision}
-            onPlayerClick={handlePlayerClick}
             onDivisionChange={handleDivisionChange}
           />
-        </AnimatedSection>
-      </Section>
+        </div>
 
-      {/* ═══ 6. Peringkat/Standings — People check ranking changes after match ═══ */}
-      <Section title="Peringkat" icon={Trophy} iconColor="text-idm-gold-warm" sectionId="rankings">
-        <AnimatedSection variant="fadeUp">
-          <DivisionStandingsSection
-            maleData={maleData}
-            femaleData={femaleData}
-            selectedDivision={selectedDivision}
-            onPlayerClick={handlePlayerClick}
-            onClubClick={(club) => setSelectedClub(club)}
-          />
-        </AnimatedSection>
-      </Section>
+        <Section sectionId="champions">
+          <AnimatedSection>
+            <ChampionsMvpContent
+              maleData={maleData}
+              femaleData={femaleData}
+              selectedDivision={selectedDivision}
+              onPlayerClick={handlePlayerClick}
+            />
+          </AnimatedSection>
+        </Section>
+
+        {/* ═══ 6. Peringkat/Standings — People check ranking changes after match ═══ */}
+        <Section title="Peringkat" icon={Trophy} iconColor="text-idm-gold-warm" sectionId="rankings">
+          <AnimatedSection variant="fadeUp">
+            <DivisionStandingsSection
+              maleData={maleData}
+              femaleData={femaleData}
+              selectedDivision={selectedDivision}
+              onPlayerClick={handlePlayerClick}
+              onClubClick={(club) => setSelectedClub(club)}
+            />
+          </AnimatedSection>
+        </Section>
+      </div>
 
       {/* ═══ 7. Quick Stats Bar — Division-specific (when division selected) ═══ */}
       {selectedDivision !== 'all' && (

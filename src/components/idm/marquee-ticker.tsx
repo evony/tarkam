@@ -12,9 +12,9 @@ import type { StatsData } from '@/types/stats';
    ═══════════════════════════════════════════════════════════════ */
 
 /* ========== Speed Configuration ========== */
-// Pixels per second — ESPN-style ticker speed
-const DESKTOP_SPEED = 200;
-const MOBILE_SPEED = 150;
+// Pixels per second — readable ESPN-style ticker speed
+const DESKTOP_SPEED = 80;
+const MOBILE_SPEED = 60;
 const MOBILE_BREAKPOINT = 768;
 
 /* ========== Feed Item Types ========== */

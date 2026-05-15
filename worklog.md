@@ -364,3 +364,21 @@ Stage Summary:
 - Warmer amber tone vs previous muted yellow-gold
 - All 37+ component files updated with consistent color mapping
 - Lint passes, dev server running correctly
+---
+Task ID: 1
+Agent: main
+Task: Slow down marquee ticker, remove Hasil Pertandingan, make Champion header sticky
+
+Work Log:
+- Reduced marquee ticker speed from DESKTOP_SPEED=200/MOBILE_SPEED=150 to DESKTOP_SPEED=80/MOBILE_SPEED=60 for readability
+- Removed Hasil Pertandingan (MatchesSection) section from community dashboard
+- Split ChampionsMvpSection into ChampionsMvpHeader (heading + tabs) and ChampionsMvpContent (cards)
+- Made ChampionsMvpHeader sticky (position: sticky, top: 0, z-30) with backdrop blur
+- Sticky header spans from Champion section through Peringkat section in a shared wrapper
+- Changed surface wrapper overflow from overflow-hidden to style={{ overflow: 'clip' }} to enable sticky positioning (overflow: clip doesn't create a scroll container)
+
+Stage Summary:
+- Marquee speed reduced 60% for readable scrolling
+- Hasil Pertandingan section completely removed from community dashboard
+- Champion heading + tabs (Semua/Male/Female) now sticky when scrolling, stops at Peringkat section boundary
+- All changes compile and lint cleanly
