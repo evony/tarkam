@@ -11570,7 +11570,8 @@ nav {
 /* Improve scroll performance for overflow containers */
 .custom-scrollbar {
   -webkit-overflow-scrolling: touch;
-  overscroll-behavior: contain;
+  overscroll-behavior-x: contain;
+  overscroll-behavior-y: auto; /* allow vertical scroll chaining to parent on mobile */
 }
 
 /* ─── 6. Font Rendering Optimization ─── */

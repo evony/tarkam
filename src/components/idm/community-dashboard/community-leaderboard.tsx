@@ -187,20 +187,20 @@ export function CommunityLeaderboard({
             <h3 className="text-xs font-semibold uppercase tracking-wider">Peringkat Player</h3>
             <Badge className={`${dt.casinoBadge} ml-auto text-[9px]`}>TOP {displayedPlayers?.length || 10}</Badge>
           </div>
-          {/* Table */}
-          <div className="max-h-[500px] overflow-y-auto custom-scrollbar">
+          {/* Table — Mobile: no inner scroll (page scrolls). Desktop: max-height with inner scroll */}
+          <div className="sm:max-h-[500px] sm:overflow-y-auto custom-scrollbar">
             <div className="overflow-x-auto">
               <Table>
-                <TableHeader>
+                <TableHeader className="sticky top-0 z-10">
                   <TableRow className={`hover:bg-transparent border-b ${dt.border} bg-muted/30`}>
-                    <TableHead className="w-10 text-center text-[10px] font-semibold">#</TableHead>
-                    <TableHead className="text-[10px] font-semibold min-w-[120px]">Player</TableHead>
-                    <TableHead className="w-16 text-center text-[10px] font-semibold">Divisi</TableHead>
-                    <TableHead className="w-14 text-right text-[10px] font-semibold">Pts</TableHead>
-                    <TableHead className="w-10 text-center text-[10px] font-semibold">W</TableHead>
-                    <TableHead className="w-10 text-center text-[10px] font-semibold hidden sm:table-cell">L</TableHead>
-                    <TableHead className="w-14 text-center text-[10px] font-semibold hidden md:table-cell">Streak</TableHead>
-                    <TableHead className="w-10 text-center text-[10px] font-semibold hidden sm:table-cell">MVP</TableHead>
+                    <TableHead className="w-10 text-center text-[10px] font-semibold bg-muted/80 backdrop-blur-sm">#</TableHead>
+                    <TableHead className="text-[10px] font-semibold min-w-[120px] bg-muted/80 backdrop-blur-sm">Player</TableHead>
+                    <TableHead className="w-16 text-center text-[10px] font-semibold bg-muted/80 backdrop-blur-sm">Divisi</TableHead>
+                    <TableHead className="w-14 text-right text-[10px] font-semibold bg-muted/80 backdrop-blur-sm">Pts</TableHead>
+                    <TableHead className="w-10 text-center text-[10px] font-semibold bg-muted/80 backdrop-blur-sm">W</TableHead>
+                    <TableHead className="w-10 text-center text-[10px] font-semibold hidden sm:table-cell bg-muted/80 backdrop-blur-sm">L</TableHead>
+                    <TableHead className="w-14 text-center text-[10px] font-semibold hidden md:table-cell bg-muted/80 backdrop-blur-sm">Streak</TableHead>
+                    <TableHead className="w-10 text-center text-[10px] font-semibold hidden sm:table-cell bg-muted/80 backdrop-blur-sm">MVP</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -323,21 +323,22 @@ export function CommunityLeaderboard({
             </div>
           ) : clubs.length > 0 ? (
             <>
-              <div className="max-h-[500px] overflow-y-auto custom-scrollbar">
+              {/* Mobile: no inner scroll (page scrolls). Desktop: max-height with inner scroll */}
+              <div className="sm:max-h-[500px] sm:overflow-y-auto custom-scrollbar">
                 <div className="overflow-x-auto">
                   <Table>
-                    <TableHeader>
+                    <TableHeader className="sticky top-0 z-10">
                       <TableRow className={`hover:bg-transparent border-b ${dt.border} bg-muted/30`}>
-                        <TableHead className="w-10 text-center text-[10px] font-semibold">#</TableHead>
-                        <TableHead className="text-[10px] font-semibold min-w-[130px]">Club</TableHead>
-                        <TableHead className="w-14 text-center text-[10px] font-semibold">Anggota</TableHead>
-                        <TableHead className="w-14 text-center text-[10px] font-semibold">
+                        <TableHead className="w-10 text-center text-[10px] font-semibold bg-muted/80 backdrop-blur-sm">#</TableHead>
+                        <TableHead className="text-[10px] font-semibold min-w-[130px] bg-muted/80 backdrop-blur-sm">Club</TableHead>
+                        <TableHead className="w-14 text-center text-[10px] font-semibold bg-muted/80 backdrop-blur-sm">Anggota</TableHead>
+                        <TableHead className="w-14 text-center text-[10px] font-semibold bg-muted/80 backdrop-blur-sm">
                           <span className="text-idm-male">Pts M</span>
                         </TableHead>
-                        <TableHead className="w-14 text-center text-[10px] font-semibold hidden sm:table-cell">
+                        <TableHead className="w-14 text-center text-[10px] font-semibold hidden sm:table-cell bg-muted/80 backdrop-blur-sm">
                           <span className="text-idm-female">Pts F</span>
                         </TableHead>
-                        <TableHead className="w-14 text-right text-[10px] font-semibold">Pts</TableHead>
+                        <TableHead className="w-14 text-right text-[10px] font-semibold bg-muted/80 backdrop-blur-sm">Pts</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>

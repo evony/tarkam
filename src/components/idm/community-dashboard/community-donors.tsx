@@ -204,8 +204,8 @@ export function CommunityDonors({ maleData, femaleData, onSawer }: CommunityDono
           </div>
         </div>
 
-        {/* Donor rows */}
-        <div className="space-y-2 max-h-96 overflow-y-auto custom-scrollbar">
+        {/* Donor rows — Mobile: no inner scroll. Desktop: max-height with scroll */}
+        <div className="space-y-2 sm:max-h-96 sm:overflow-y-auto custom-scrollbar">
           {donors.map((donor, i) => {
             const progress = Math.max(5, (donor.totalAmount / maxAmount) * 100);
             const medal = RANK_MEDALS[i] || null;

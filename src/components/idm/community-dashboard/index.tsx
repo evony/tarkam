@@ -1288,7 +1288,7 @@ function TourSayaSection({
                   <h3 className="text-xs font-semibold uppercase tracking-wider">Riwayat Match</h3>
                   <Badge className={`${ct.casinoBadge} ml-auto text-[9px]`}>{myStatus.completedMatchCount} Main</Badge>
                 </div>
-                <div className="p-3 space-y-1.5 max-h-80 overflow-y-auto custom-scrollbar">
+                <div className="p-3 space-y-1.5 sm:max-h-80 sm:overflow-y-auto custom-scrollbar">
                   {(showAllMatches ? myMatches : myMatches.slice(0, 5)).map((m: any) => (
                     <div key={m.id} className={`p-3 sm:p-4 rounded-lg border ${
                       m.won ? `border-green-500/20 ${ct.bgSubtle}` :

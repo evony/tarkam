@@ -286,3 +286,24 @@ Stage Summary:
 - Desktop: Same as before with max-height and inner scroll
 - Table headers are sticky with backdrop blur for visibility during scroll
 - DO NOT PUSH until user confirms
+
+---
+Task ID: 3
+Agent: main
+Task: Fix mobile scroll trap — user stuck in Peringkat list, can't scroll page
+
+Work Log:
+- DISCOVERED: The previously fixed `standings-tab.tsx` is NOT rendered! The actual dashboard uses `CommunityDashboard` → `CommunityLeaderboard`
+- Found the REAL component: `community-leaderboard.tsx` lines 191 and 326 had `max-h-[500px] overflow-y-auto` WITHOUT `sm:` prefix
+- Fixed community-leaderboard.tsx: Changed to `sm:max-h-[500px] sm:overflow-y-auto` — no inner scroll on mobile
+- Fixed community-donors.tsx: Same pattern — `max-h-96` → `sm:max-h-96`
+- Fixed community-dashboard/index.tsx line 1291: Same pattern — `max-h-80` → `sm:max-h-80`
+- Added sticky table headers with bg-muted/80 backdrop-blur-sm to community-leaderboard.tsx
+- Fixed globals.css `.custom-scrollbar`: Changed `overscroll-behavior: contain` to `overscroll-behavior-x: contain; overscroll-behavior-y: auto` — allows vertical scroll chaining to parent
+- TypeScript check passed with zero errors
+
+Stage Summary:
+- ROOT CAUSE: Wrong component was fixed before (standings-tab.tsx is dead code in current routing)
+- Actual component: community-leaderboard.tsx — now fixed with sm: prefix
+- Also fixed .custom-scrollbar CSS that was blocking scroll chaining with overscroll-behavior: contain
+- DO NOT PUSH until user confirms
