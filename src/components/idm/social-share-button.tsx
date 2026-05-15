@@ -163,7 +163,7 @@ export function SharePopup({
     {
       name: 'Instagram',
       icon: <InstagramIcon className="w-5 h-5" />,
-      color: 'bg-gradient-to-br from-[#833AB4] via-[#FD1D1D] to-[#F77737] hover:opacity-90',
+      color: 'bg-[#E4405F] hover:bg-[#D63384]',
       href: 'https://www.instagram.com/',
       isCopyAndOpen: true,
     },
@@ -302,21 +302,24 @@ export function SharePopup({
               </button>
             </div>
 
-            {/* More apps via native share — only on mobile where navigator.share exists */}
-            {typeof navigator !== 'undefined' && 'share' in navigator && (
-              <div className="px-4 pb-4">
-                <button
-                  onClick={async () => {
-                    await handleNativeShare();
-                    setTimeout(() => setShowPicker(false), 300);
-                  }}
-                  className="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 active:scale-95 cursor-pointer bg-idm-gold-warm/10 text-idm-gold-warm hover:bg-idm-gold-warm/20 border border-idm-gold-warm/15"
-                >
-                  <Share2 className="w-4 h-4" />
-                  <span>Lainnya...</span>
-                </button>
-              </div>
-            )}
+            {/* More apps — native share on mobile, copy link on desktop */}
+            <div className="px-4 pb-4">
+              <button
+                onClick={async () => {
+                  // Try native share first (works on mobile)
+                  const shared = await handleNativeShare();
+                  if (!shared) {
+                    // Fallback: copy link to clipboard
+                    await copyLink();
+                  }
+                  setTimeout(() => setShowPicker(false), 300);
+                }}
+                className="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 active:scale-95 cursor-pointer bg-idm-gold-warm/10 text-idm-gold-warm hover:bg-idm-gold-warm/20 border border-idm-gold-warm/15"
+              >
+                <Share2 className="w-4 h-4" />
+                <span>{typeof navigator !== 'undefined' && 'share' in navigator ? 'Lainnya...' : 'Salin & Bagikan'}</span>
+              </button>
+            </div>
           </div>
         </div>,
         document.body
