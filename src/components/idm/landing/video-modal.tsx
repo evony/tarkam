@@ -27,14 +27,14 @@ function getEmbedUrl(url: string): string | null {
     return `https://www.youtube.com/embed/${ytMatch[1]}?autoplay=1&rel=0`;
   }
 
-  // Already an embed URL
-  if (url.includes('/embed/')) return url;
+  // Already a YouTube embed URL — validate it's actually YouTube
+  if (url.includes('youtube.com/embed/')) return url;
 
   // Direct video URL (mp4, webm, etc.)
   if (/\.(mp4|webm|ogg)$/i.test(url)) return url;
 
-  // Fallback: return as-is (might be an embeddable URL)
-  return url;
+  // Reject unknown URLs — only allow YouTube and direct video URLs
+  return null;
 }
 
 export function VideoModal({ isOpen, onClose, videoUrl, title }: VideoModalProps) {
@@ -74,6 +74,7 @@ export function VideoModal({ isOpen, onClose, videoUrl, title }: VideoModalProps
             <iframe
               src={embedUrl}
               title={title}
+              sandbox="allow-scripts allow-same-origin allow-presentation allow-popups"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
               className="absolute inset-0 w-full h-full"

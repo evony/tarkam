@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { Heart, Flame } from 'lucide-react';
 import { AnimatedSection, SectionHeader } from './shared';
 
@@ -24,11 +25,31 @@ export function AboutSection({ cmsSections, cmsSettings }: AboutSectionProps) {
   // Parse origin story — take just the first paragraph for brevity
   const firstParagraph = originStory.split('\n\n')[0];
 
-  // Highlight key words
-  const highlighted = firstParagraph
-    .replace(/Idol Meta/g, '<span class="text-[#EFF923] font-semibold">Idol Meta</span>')
-    .replace(/Tarkam IDM/g, '<span class="text-[#EFF923] font-semibold">Tarkam IDM</span>')
-    .replace(/Tarkam/g, '<span class="text-[#EFF923] font-semibold">Tarkam</span>');
+  // Highlight key words safely (no dangerouslySetInnerHTML)
+  function highlightText(text: string): React.ReactNode[] {
+    const keywords = ['Idol Meta', 'Tarkam IDM', 'Tarkam'];
+    let parts: React.ReactNode[] = [text];
+
+    for (const keyword of keywords) {
+      const newParts: React.ReactNode[] = [];
+      for (const part of parts) {
+        if (typeof part !== 'string') {
+          newParts.push(part);
+          continue;
+        }
+        const segments = part.split(keyword);
+        segments.forEach((segment, i) => {
+          if (segment) newParts.push(segment);
+          if (i < segments.length - 1) {
+            newParts.push(<span key={`${keyword}-${i}`} className="text-[#EFF923] font-semibold">{keyword}</span>);
+          }
+        });
+      }
+      parts = newParts;
+    }
+
+    return parts;
+  }
 
   return (
     <section id="about" role="region" aria-label="Cerita Kami" className="relative py-12 sm:py-16 px-4 overflow-hidden bg-deep">
@@ -44,7 +65,7 @@ export function AboutSection({ cmsSections, cmsSettings }: AboutSectionProps) {
             <div className="h-px w-8 bg-gradient-to-l from-transparent to-[#EFF923]/40" />
           </div>
           <h3 className="text-lg sm:text-xl font-black text-[#EFF923] mb-3">{sectionTitle}</h3>
-          <p className="text-sm text-muted-foreground leading-relaxed max-w-xl mx-auto" dangerouslySetInnerHTML={{ __html: highlighted }} />
+          <p className="text-sm text-muted-foreground leading-relaxed max-w-xl mx-auto">{highlightText(firstParagraph)}</p>
           <div className="mt-4 flex items-center justify-center gap-2">
             <div className="h-px w-12 bg-gradient-to-r from-transparent to-[#EFF923]/20" />
             <span className="text-[10px] font-bold text-[#EFF923]/40 uppercase tracking-widest">{bottomTagline}</span>

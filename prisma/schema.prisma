@@ -1,13 +1,13 @@
-// Production schema (PostgreSQL)
-// Used by Vercel/production deployment.
-// Build script: cp prisma/schema.postgres.prisma prisma/schema.prisma && prisma generate
+// Local development schema (SQLite)
+// This file is used for local development only.
+// Production uses schema.prisma with PostgreSQL.
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -124,7 +124,7 @@ model Tournament {
   weekNumber         Int
   division           String   // "male" | "female"
   status             String   @default("setup") // "setup" | "registration" | "approval" | "team_generation" | "bracket_generation" | "main_event" | "finalization" | "completed"
-  format             String   @default("single_elimination") // "single_elimination" | "group_stage" | "swiss" | "upper_semi"
+  format             String   @default("single_elimination") // "single_elimination" | "group_stage" | "swiss"
   defaultMatchFormat String   @default("BO1") // "BO1" | "BO3" | "BO5"
   seasonId           String
   prizePool          Int      @default(0) // total prize pool in IDR
@@ -282,17 +282,18 @@ model TournamentPrize {
 // ============================================
 
 model Account {
-  id              String    @id @default(cuid())
-  playerId        String    @unique
-  username        String    @unique
-  passwordHash    String
-  email           String?   @unique
-  phone           String?
-  donorBadgeCount Int       @default(0)
-  sawerBadgeTier  String    @default("none")
-  lastLoginAt     DateTime?
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  id                    String    @id @default(cuid())
+  playerId              String    @unique
+  username              String    @unique
+  passwordHash          String
+  email                 String?   @unique
+  phone                 String?
+  donorBadgeCount       Int       @default(0)
+  sawerBadgeTier        String    @default("none")
+  lastLoginAt           DateTime?
+  sessionInvalidatedAt  DateTime? // When set, all player sessions created before this timestamp are invalid
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
 
   player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
   skins  PlayerSkin[]

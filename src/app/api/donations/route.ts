@@ -55,7 +55,13 @@ export async function POST(request: Request) {
     // Public modal submissions (hero banner "Sawer" button) are ALWAYS pending,
     // even if the submitter happens to be an admin.
     // Flow: User sawer → status=pending → user transfers → admin verifies → admin approves.
-    const isAdminManualAdd = body.source === 'admin';
+    let isAdminManualAdd = false;
+    if (body.source === 'admin') {
+      const authCheck = await requireAdmin(request);
+      if (!(authCheck instanceof NextResponse)) {
+        isAdminManualAdd = true;
+      }
+    }
 
     const donation = await db.donation.create({
       data: {

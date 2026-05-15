@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { hashPassword, verifyPassword } from '@/lib/auth';
+import { hashPassword, verifyPassword, invalidatePlayerSession } from '@/lib/auth';
 import { requirePlayer } from '@/lib/api-auth';
 import { checkRateLimit, getClientIp, RATE_LIMITS, rateLimitHeaders } from '@/lib/rate-limit';
 import { createPlayerAuditLog } from '@/lib/audit';
@@ -83,6 +83,10 @@ export async function POST(request: NextRequest) {
       where: { id: account.id },
       data: { passwordHash: newPasswordHash },
     });
+
+    // ★ Invalidate all existing sessions for this account
+    // This ensures any other sessions (on other devices/browsers) are also terminated
+    await invalidatePlayerSession(account.id);
 
     // ★ Audit log: player password change
     void createPlayerAuditLog({

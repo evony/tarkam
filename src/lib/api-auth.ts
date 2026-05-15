@@ -80,6 +80,7 @@ export async function requireSuperAdmin(request: Request): Promise<{ id: string;
 /**
  * Verify player session from request cookies.
  * Returns the account data if authenticated, or null if not.
+ * Checks session invalidation (password change, security event, etc).
  */
 export async function verifyPlayer(request: Request) {
   // Try NextRequest.cookies first, then fallback to header parsing
@@ -124,6 +125,12 @@ export async function verifyPlayer(request: Request) {
   });
 
   if (!account) return null;
+
+  // Check session invalidation — reject if token was created before invalidation timestamp
+  const invalidatedAt = (account as any).sessionInvalidatedAt || null;
+  if (isSessionInvalidated(session.timestamp, invalidatedAt)) {
+    return null;
+  }
 
   return { id: account.id, username: account.username, playerId: account.playerId, player: account.player };
 }

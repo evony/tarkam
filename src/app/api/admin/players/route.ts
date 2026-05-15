@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { requireAdmin } from '@/lib/api-auth';
 
 // Admin player management — supports pagination via limit & offset
 export async function GET(request: NextRequest) {
+  const authResult = await requireAdmin(request);
+  if (authResult instanceof NextResponse) return authResult;
+
   const headers = new Headers();
   headers.set('Cache-Control', 'no-store, no-cache, must-revalidate');
 

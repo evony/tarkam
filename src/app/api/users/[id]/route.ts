@@ -1,11 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { requireAdmin } from '@/lib/api-auth';
 
 // Get user by ID - maps to Player in our schema
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const authResult = await requireAdmin(request);
+  if (authResult instanceof NextResponse) return authResult;
+
   const headers = new Headers();
   headers.set('Cache-Control', 'no-store, no-cache, must-revalidate');
 

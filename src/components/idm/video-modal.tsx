@@ -143,6 +143,7 @@ export function VideoModal({ isOpen, onClose, videoUrl, title }: VideoModalProps
                     <iframe
                       src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&rel=0&modestbranding=1${ytInfo?.startTime ? `&start=${ytInfo.startTime}` : ''}`}
                       title={title ?? 'YouTube video'}
+                      sandbox="allow-scripts allow-same-origin allow-presentation allow-popups"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                       allowFullScreen
                       className="absolute inset-0 h-full w-full"

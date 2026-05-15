@@ -282,17 +282,18 @@ model TournamentPrize {
 // ============================================
 
 model Account {
-  id              String    @id @default(cuid())
-  playerId        String    @unique
-  username        String    @unique
-  passwordHash    String
-  email           String?   @unique
-  phone           String?
-  donorBadgeCount Int       @default(0)
-  sawerBadgeTier  String    @default("none")
-  lastLoginAt     DateTime?
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  id                    String    @id @default(cuid())
+  playerId              String    @unique
+  username              String    @unique
+  passwordHash          String
+  email                 String?   @unique
+  phone                 String?
+  donorBadgeCount       Int       @default(0)
+  sawerBadgeTier        String    @default("none")
+  lastLoginAt           DateTime?
+  sessionInvalidatedAt  DateTime? // When set, all player sessions created before this timestamp are invalid
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
 
   player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
   skins  PlayerSkin[]

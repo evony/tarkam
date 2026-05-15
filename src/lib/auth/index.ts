@@ -14,10 +14,11 @@ function getSessionSecret(): string {
     g[_globalSecretKey] = process.env.SESSION_SECRET;
     return g[_globalSecretKey];
   }
-  // Fallback: generate a secret derived from NODE_ENV or a fixed string
-  // This prevents crashes but sessions will invalidate on server restart
-  console.warn('⚠️ SESSION_SECRET not set — using fallback. Set SESSION_SECRET env var for stable sessions.');
-  const fallback = crypto.createHash('sha256').update('idm-league-session-fallback-' + (process.env.VERCEL_URL || 'dev')).digest('hex');
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error('SESSION_SECRET environment variable is required in production. Set it before starting the server.');
+  }
+  console.warn('⚠️ SESSION_SECRET not set — using dev fallback. NEVER deploy to production without SESSION_SECRET.');
+  const fallback = crypto.createHash('sha256').update('idm-league-session-fallback-dev').digest('hex');
   g[_globalSecretKey] = fallback;
   return g[_globalSecretKey];
 }
@@ -166,6 +167,23 @@ export async function invalidateAdminSession(adminId: string): Promise<void> {
 }
 
 /**
+ * Invalidate all existing sessions for a player account.
+ * Call this when: password change, account security event.
+ * Any session token created BEFORE this timestamp will be rejected.
+ */
+export async function invalidatePlayerSession(accountId: string): Promise<void> {
+  try {
+    await db.account.update({
+      where: { id: accountId },
+      data: { sessionInvalidatedAt: new Date() },
+    });
+  } catch (error) {
+    console.error('Failed to invalidate player session:', error);
+    // Non-critical: if this fails, old sessions may persist until they expire naturally
+  }
+}
+
+/**
  * Check if a session token was created before the invalidation timestamp.
  * Returns true if the session should be rejected.
  */
@@ -302,6 +320,11 @@ export async function getSession(request?: NextRequest): Promise<SessionUser | n
           include: { player: true },
         });
         if (account) {
+          // Check session invalidation (sessionInvalidatedAt may not exist if DB not migrated yet)
+          const invalidatedAt = (account as any).sessionInvalidatedAt || null;
+          if (isSessionInvalidated(playerSession.timestamp, invalidatedAt)) {
+            return null;
+          }
           return {
             id: account.id, // Account ID (consistent with verifyPlayer)
             playerId: account.playerId, // Also expose playerId for convenience

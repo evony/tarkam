@@ -91,10 +91,8 @@ export async function POST(request: NextRequest) {
     return response;
   } catch (error: any) {
     console.error('Login error:', error);
-    // Return actual error message for debugging (remove in production later)
-    const errorMessage = error?.message || 'Terjadi kesalahan server';
     return NextResponse.json(
-      { error: 'Terjadi kesalahan server', debug: errorMessage },
+      { error: 'Terjadi kesalahan server' },
       { status: 500, headers: { 'Cache-Control': 'no-store' } }
     );
   }

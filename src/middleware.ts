@@ -1,17 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 // ═══════════════════════════════════════════════════════════
-// IDM LEAGUE — MIDDLEWARE (Vercel Free Tier Optimized)
+// IDM LEAGUE — MIDDLEWARE (Security Headers + Rate Limiting)
 // ═══════════════════════════════════════════════════════════
-// Previous version: empty pass-through on ALL /api/* requests.
-// That wasted ~5-15ms per API call on Vercel serverless.
-//
-// Now: Rate limiting on mutation endpoints (POST/PUT/DELETE/PATCH)
-// to protect free tier from abuse. GET requests are not matched
-// to avoid unnecessary function invocations.
+// 1. Security headers on ALL responses (CSP, X-Content-Type-Options, etc.)
+// 2. Rate limiting on mutation API endpoints (POST/PUT/DELETE/PATCH)
+// 3. CSRF protection: Origin header validation on mutations
 // ═══════════════════════════════════════════════════════════
 
-// Simple in-memory rate limiter (per Vercel function instance)
+// ── In-memory rate limiter (per function instance) ──
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
 const RATE_LIMIT = 30; // 30 requests
 const RATE_WINDOW = 60_000; // per 60 seconds
@@ -39,67 +36,72 @@ function isRateLimited(ip: string): boolean {
 }
 
 export function middleware(request: NextRequest) {
-  // Only rate-limit mutation requests (POST/PUT/DELETE/PATCH)
-  const method = request.method.toUpperCase();
-  if (method === 'GET' || method === 'HEAD' || method === 'OPTIONS') {
-    return NextResponse.next();
-  }
+  // ── Step 1: Security headers for ALL responses ──
+  const response = NextResponse.next();
 
-  // ── CSRF Protection: Validate Origin header ──
-  // For mutation requests, ensure the Origin matches our own domain.
-  // This prevents cross-site form submissions (CSRF).
-  const origin = request.headers.get('origin');
-  const host = request.headers.get('host');
-  if (origin && host) {
-    try {
-      const originHost = new URL(origin).host;
-      if (originHost !== host) {
+  // Content Security Policy
+  const cspHeader = `
+    default-src 'self';
+    script-src 'self' 'unsafe-eval' 'unsafe-inline';
+    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+    img-src 'self' data: blob: https://res.cloudinary.com;
+    font-src 'self' https://fonts.gstatic.com;
+    connect-src 'self' https://res.cloudinary.com https://*.pusher.com wss://*.pusher.com https://*.neon.tech;
+    frame-src https://www.youtube.com https://youtube.com;
+    object-src 'none';
+    base-uri 'self';
+    form-action 'self';
+    frame-ancestors 'none';
+  `.replace(/\n/g, ' ').trim();
+
+  response.headers.set('Content-Security-Policy', cspHeader);
+  response.headers.set('X-Content-Type-Options', 'nosniff');
+  response.headers.set('X-Frame-Options', 'DENY');
+  response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+  response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+  response.headers.set('X-DNS-Prefetch-Control', 'on');
+
+  // ── Step 2: Rate limiting + CSRF only for mutation API endpoints ──
+  const method = request.method.toUpperCase();
+  const isApiMutation = method !== 'GET' && method !== 'HEAD' && method !== 'OPTIONS' && request.nextUrl.pathname.startsWith('/api/');
+
+  if (isApiMutation) {
+    // CSRF Protection: Validate Origin header
+    const origin = request.headers.get('origin');
+    const host = request.headers.get('host');
+    if (origin && host) {
+      try {
+        const originHost = new URL(origin).host;
+        if (originHost !== host) {
+          return NextResponse.json(
+            { error: 'Forbidden — invalid origin' },
+            { status: 403 }
+          );
+        }
+      } catch {
+        // Malformed origin — reject
         return NextResponse.json(
-          { error: 'Forbidden — invalid origin' },
+          { error: 'Forbidden — malformed origin' },
           { status: 403 }
         );
       }
-    } catch {
-      // Malformed origin — reject
+    }
+
+    const ip = getClientIp(request);
+    if (isRateLimited(ip)) {
       return NextResponse.json(
-        { error: 'Forbidden — malformed origin' },
-        { status: 403 }
+        { error: 'Too many requests. Please try again later.' },
+        { status: 429 }
       );
     }
   }
 
-  const ip = getClientIp(request);
-  if (isRateLimited(ip)) {
-    return NextResponse.json(
-      { error: 'Too many requests. Please try again later.' },
-      { status: 429 }
-    );
-  }
-
-  return NextResponse.next();
+  return response;
 }
 
 export const config = {
-  // Only match mutation API endpoints (not GET) to avoid
-  // unnecessary function invocations on read requests
+  // Apply to all routes (for security headers), but skip static assets
   matcher: [
-    '/api/tournaments/:path*',
-    '/api/players/:path*',
-    '/api/clubs/:path*',
-    '/api/seasons/:path*',
-    '/api/matches/:path*',
-    '/api/donations/:path*',
-    '/api/admin/:path*',
-    '/api/auth/:path*',
-    '/api/account/:path*',
-    '/api/cms/:path*',
-    '/api/marketplace/:path*',
-    '/api/sponsors/:path*',
-    '/api/skins/:path*',
-    '/api/whatsapp/:path*',
-    '/api/seed/:path*',
-    '/api/setup/:path*',
-    '/api/reset/:path*',
-    '/api/sync/:path*',
+    '/((?!_next/static|_next/image|favicon.ico).*)',
   ],
 };
