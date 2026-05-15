@@ -177,7 +177,7 @@ export function SharePopup({
     {
       name: 'X / Twitter',
       icon: <TwitterIcon className="w-5 h-5" />,
-      color: 'bg-foreground hover:bg-foreground/80',
+      color: 'bg-neutral-800 hover:bg-neutral-700',
       href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`,
       isCopyAndOpen: false,
     },
@@ -248,32 +248,30 @@ export function SharePopup({
             {/* Social buttons grid */}
             <div className="px-4 pb-3 grid grid-cols-2 gap-2">
               {socialLinks.map(s => (
-                <button
+                <a
                   key={s.name}
-                  onClick={() => {
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => {
                     // Copy link first for Instagram/Discord (no share URL API)
                     if (s.isCopyAndOpen) {
+                      e.preventDefault(); // prevent <a> navigation first
                       handleCopyAndOpen();
-                    }
-                    // Mobile: use window.location.href so OS can intercept deep links (wa.me → WhatsApp app, etc.)
-                    // Desktop: use window.open() to open in new tab
-                    const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-                    if (isMobile) {
-                      window.location.href = s.href;
-                    } else {
+                      // Manually open the link after copy
                       window.open(s.href, '_blank', 'noopener,noreferrer');
                     }
-                    // Delay closing so navigation has time to initiate
+                    // Close picker after short delay
                     setTimeout(() => setShowPicker(false), 300);
                   }}
-                  className={`relative flex items-center gap-2 px-3 py-2.5 rounded-xl text-white text-xs font-semibold transition-all duration-200 active:scale-95 cursor-pointer ${s.color}`}
+                  className={`relative flex items-center gap-2 px-3 py-2.5 rounded-xl text-white text-xs font-semibold transition-all duration-200 active:scale-95 cursor-pointer no-underline ${s.color}`}
                 >
                   {s.icon}
                   <div className="flex flex-col leading-tight">
                     <span>{s.name}</span>
                     {s.isCopyAndOpen && <span className="text-[8px] opacity-70 font-normal">Link tersalin, paste manual</span>}
                   </div>
-                </button>
+                </a>
               ))}
             </div>
 
