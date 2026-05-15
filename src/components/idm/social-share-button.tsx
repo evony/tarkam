@@ -251,12 +251,18 @@ export function SharePopup({
                 <button
                   key={s.name}
                   onClick={() => {
-                    // Open link synchronously from click handler — popup blockers allow this
+                    // Copy link first for Instagram/Discord (no share URL API)
                     if (s.isCopyAndOpen) {
                       handleCopyAndOpen();
                     }
-                    // Use window.open() directly — called synchronously from user click, browsers allow it
-                    window.open(s.href, '_blank', 'noopener,noreferrer');
+                    // Mobile: use window.location.href so OS can intercept deep links (wa.me → WhatsApp app, etc.)
+                    // Desktop: use window.open() to open in new tab
+                    const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+                    if (isMobile) {
+                      window.location.href = s.href;
+                    } else {
+                      window.open(s.href, '_blank', 'noopener,noreferrer');
+                    }
                     // Delay closing so navigation has time to initiate
                     setTimeout(() => setShowPicker(false), 300);
                   }}
