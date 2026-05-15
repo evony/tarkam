@@ -470,7 +470,7 @@ export function TeamSpinReveal({ spinRevealOrder, teamCount, onComplete, divisio
               </div>
               <div className="flex items-center gap-1.5">
                 <Badge className="text-[9px] border-0 bg-idm-gold-warm/10 text-idm-gold-warm">
-                  {division === 'male' ? '🕺 Pria' : '💃 Wanita'}
+                  {division === 'male' ? '🕺 Cowo' : '💃 Cewe'}
                 </Badge>
                 <Badge className="text-[9px] border-0 bg-muted/50">
                   {Math.min(doneCount + 1, totalSteps)}/{totalSteps}

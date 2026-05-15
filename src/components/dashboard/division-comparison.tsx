@@ -16,18 +16,18 @@ export function DivisionComparison({ stats }: DivisionComparisonProps) {
   const data = [
     {
       name: 'Pemain',
-      Pria: stats.players.male,
-      Wanita: stats.players.female,
+      Cowo: stats.players.male,
+      Cewe: stats.players.female,
     },
     {
       name: 'Klub',
-      Pria: Math.ceil(stats.players.male / 4),
-      Wanita: Math.ceil(stats.players.female / 3),
+      Cowo: Math.ceil(stats.players.male / 4),
+      Cewe: Math.ceil(stats.players.female / 3),
     },
     {
       name: 'S-Tier',
-      Pria: Math.ceil(stats.players.male * 0.2),
-      Wanita: Math.ceil(stats.players.female * 0.2),
+      Cowo: Math.ceil(stats.players.male * 0.2),
+      Cewe: Math.ceil(stats.players.female * 0.2),
     },
   ]
 
@@ -52,7 +52,7 @@ export function DivisionComparison({ stats }: DivisionComparisonProps) {
           <div className="flex items-center justify-center h-7 w-7 rounded-lg bg-primary/10 backdrop-blur-sm">
             <BarChart3 className="h-3.5 w-3.5 text-primary" />
           </div>
-          <h3 className="font-semibold text-sm text-foreground">Pria vs Wanita</h3>
+          <h3 className="font-semibold text-sm text-foreground">Cowo vs Cewe</h3>
         </div>
       </div>
 
@@ -84,12 +84,12 @@ export function DivisionComparison({ stats }: DivisionComparisonProps) {
                 }}
                 itemStyle={{ color: 'hsl(var(--foreground) / 0.7)' }}
               />
-              <Bar dataKey="Pria" radius={[4, 4, 0, 0]}>
+              <Bar dataKey="Cowo" radius={[4, 4, 0, 0]}>
                 {data.map((_, index) => (
                   <Cell key={`male-${index}`} fill="#3B82F6" fillOpacity={0.6} />
                 ))}
               </Bar>
-              <Bar dataKey="Wanita" radius={[4, 4, 0, 0]}>
+              <Bar dataKey="Cewe" radius={[4, 4, 0, 0]}>
                 {data.map((_, index) => (
                   <Cell key={`female-${index}`} fill="#EC4899" fillOpacity={0.6} />
                 ))}
@@ -101,11 +101,11 @@ export function DivisionComparison({ stats }: DivisionComparisonProps) {
         <div className="flex items-center justify-center gap-6 mt-3 text-xs">
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-sm bg-blue-500/60" />
-            <span className="text-muted-foreground/70">♂ Pria ({stats.players.male})</span>
+            <span className="text-muted-foreground/70">♂ Cowo ({stats.players.male})</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-sm bg-pink-500/60" />
-            <span className="text-muted-foreground/70">♀ Wanita ({stats.players.female})</span>
+            <span className="text-muted-foreground/70">♀ Cewe ({stats.players.female})</span>
           </div>
         </div>
       </div>

@@ -111,7 +111,7 @@ function DivisionEmptyCard({ division }: { division: 'male' | 'female' }) {
         </div>
         <p className="text-xs font-semibold text-foreground/50 mb-0.5">Belum Ada Turnamen</p>
         <p className="text-[9px] text-muted-foreground/40">
-          Divisi {division === 'male' ? 'Pria' : 'Wanita'} belum memiliki data
+          Divisi {division === 'male' ? 'Cowo' : 'Cewe'} belum memiliki data
         </p>
       </CardContent>
     </Card>

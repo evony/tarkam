@@ -194,7 +194,7 @@ function MobileNav() {
     },
     {
       key: 'MALE' as const,
-      label: 'Pria',
+      label: 'Cowo',
       icon: Swords,
       activeColor: 'text-cyan-300',
       activeBorder: 'border-cyan-400/30',
@@ -203,7 +203,7 @@ function MobileNav() {
     },
     {
       key: 'FEMALE' as const,
-      label: 'Wanita',
+      label: 'Cewe',
       icon: Flower2,
       activeColor: 'text-pink-200',
       activeBorder: 'border-pink-300/30',

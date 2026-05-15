@@ -23,7 +23,7 @@ export function DashboardTabs({ activeTab, onTabChange }: DashboardTabsProps) {
     },
     {
       key: 'MALE' as const,
-      label: 'Pria',
+      label: 'Cowo',
       icon: Swords,
       activeBg: 'bg-idm-male/18',
       activeBorder: 'border-idm-male/30',
@@ -33,7 +33,7 @@ export function DashboardTabs({ activeTab, onTabChange }: DashboardTabsProps) {
     },
     {
       key: 'FEMALE' as const,
-      label: 'Wanita',
+      label: 'Cewe',
       icon: Flower2,
       activeBg: 'bg-pink-300/18',
       activeBorder: 'border-pink-300/30',

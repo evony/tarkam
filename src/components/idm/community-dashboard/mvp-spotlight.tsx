@@ -141,7 +141,7 @@ function MvpDivisionCard({
           <div className={`w-5 h-5 lg:w-6 lg:h-6 rounded ${dt.iconBg} flex items-center justify-center shrink-0`}>
             <Star className={`w-3 h-3 lg:w-3.5 lg:h-3.5 ${dt.neonText}`} />
           </div>
-          <h3 className="text-xs lg:text-sm font-semibold uppercase tracking-wider">MVP {division === 'male' ? 'Pria' : 'Wanita'}</h3>
+          <h3 className="text-xs lg:text-sm font-semibold uppercase tracking-wider">MVP {division === 'male' ? 'Cowo' : 'Cewe'}</h3>
         </div>
         <div className="p-4 lg:p-6">
           <div className="flex gap-3 sm:gap-4 items-stretch opacity-50">
@@ -253,7 +253,7 @@ function MvpDivisionCard({
                 <span className="text-[9px] lg:text-[10px] text-muted-foreground/70 truncate">{clubName}</span>
               )}
               <Badge className={`${dt.badgeBg} text-[7px] lg:text-[8px] border py-0 px-1.5`}>
-                {emoji} {division === 'male' ? 'Pria' : 'Wanita'}
+                {emoji} {division === 'male' ? 'Cowo' : 'Cewe'}
               </Badge>
             </div>
           </div>
@@ -326,7 +326,7 @@ function MvpDivisionCard({
         <div className={`w-5 h-5 lg:w-6 lg:h-6 rounded ${dt.iconBg} flex items-center justify-center shrink-0`}>
           <Star className={`w-3 h-3 lg:w-3.5 lg:h-3.5 ${dt.neonText}`} />
         </div>
-        <h3 className="text-xs lg:text-sm font-semibold uppercase tracking-wider">MVP {division === 'male' ? 'Pria' : 'Wanita'}</h3>
+        <h3 className="text-xs lg:text-sm font-semibold uppercase tracking-wider">MVP {division === 'male' ? 'Cowo' : 'Cewe'}</h3>
         <Badge className={`hidden sm:inline-flex ${dt.casinoBadge} ml-auto text-[9px]`}>MVP SPOTLIGHT</Badge>
       </div>
 

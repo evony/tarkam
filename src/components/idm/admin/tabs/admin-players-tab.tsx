@@ -79,7 +79,7 @@ export function AdminPlayersTab({
                       <div className="flex items-center gap-2 mb-1">
                         <p className="text-sm font-semibold">{p.name}</p>
                         <Badge className={`text-[9px] border-0 ${p.division === 'male' ? 'bg-idm-male/10 text-idm-male' : 'bg-idm-female/10 text-idm-female'}`}>
-                          {p.division === 'male' ? '🕺 Pria' : '💃 Wanita'}
+                          {p.division === 'male' ? '🕺 Cowo' : '💃 Cewe'}
                         </Badge>
                       </div>
                       <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] text-muted-foreground">

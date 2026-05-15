@@ -392,7 +392,7 @@ export function Dashboard() {
               🐉 Season {data.season?.number || 1}
             </Badge>
             <Badge className={`${dt.casinoBadge} px-2 py-0.5`}>
-              {division === 'male' ? '🕺 Pria' : '💃 Wanita'}
+              {division === 'male' ? '🕺 Cowo' : '💃 Cewe'}
             </Badge>
           </div>
           <h2 className={`text-2xl lg:text-3xl font-black ${dt.neonGradient}`}>{t?.name || 'IDM League Babak'}</h2>

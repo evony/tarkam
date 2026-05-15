@@ -224,7 +224,7 @@ export const CommunityLeaderboard = React.memo(function CommunityLeaderboard({
                         </TableCell>
                         <TableCell className="text-center">
                           <Badge className={`${playerDt.badgeBg} text-[8px] border`}>
-                            {playerDivision === 'male' ? '🕺 Pria' : '💃 Wanita'}
+                            {playerDivision === 'male' ? '🕺 Cowo' : '💃 Cewe'}
                           </Badge>
                         </TableCell>
                         <TableCell className="text-right">
@@ -483,8 +483,8 @@ export const PeringkatHeader = React.memo(function PeringkatHeader({
           <div className="flex items-center gap-1 p-1 rounded-lg bg-idm-gold-warm/5 border border-idm-gold-warm/10">
             {([
               { key: 'all' as DivisionFilter, label: 'Semua' },
-              { key: 'male' as DivisionFilter, label: 'Pria' },
-              { key: 'female' as DivisionFilter, label: 'Wanita' },
+              { key: 'male' as DivisionFilter, label: 'Cowo' },
+              { key: 'female' as DivisionFilter, label: 'Cewe' },
             ]).map(f => (
               <button
                 key={f.key}

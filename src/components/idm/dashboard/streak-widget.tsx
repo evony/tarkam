@@ -128,7 +128,7 @@ function SingleDivisionStreakCard({
           <h3 className="text-xs font-semibold uppercase tracking-wider">🔥 Streak Aktif</h3>
           {showDivisionLabel && (
             <Badge className={`${dt.badgeBg} text-[8px] border ml-1`}>
-              {division === 'male' ? '🕺 Pria' : '💃 Wanita'}
+              {division === 'male' ? '🕺 Cowo' : '💃 Cewe'}
             </Badge>
           )}
         </div>
@@ -162,7 +162,7 @@ function SingleDivisionStreakCard({
         <h3 className="text-xs font-semibold uppercase tracking-wider">🔥 Streak Aktif</h3>
         {showDivisionLabel && (
           <Badge className={`${dt.badgeBg} text-[8px] border ml-1`}>
-            {division === 'male' ? '🕺 Pria' : '💃 Wanita'}
+            {division === 'male' ? '🕺 Cowo' : '💃 Cewe'}
           </Badge>
         )}
         {topStreak.streak >= 5 && (

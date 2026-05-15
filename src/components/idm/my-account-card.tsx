@@ -58,7 +58,7 @@ export function MyAccountCard({ onOpenProfile }: MyAccountCardProps) {
   const switchToMyDivision = () => {
     if (player.division !== division) {
       setDivision(player.division as 'male' | 'female');
-      toast.success(player.division === 'male' ? '🕺 Pria' : '💃 Wanita');
+      toast.success(player.division === 'male' ? '🕺 Cowo' : '💃 Cewe');
     }
   };
 
@@ -109,7 +109,7 @@ export function MyAccountCard({ onOpenProfile }: MyAccountCardProps) {
               </div>
             )}
             <p className="text-[10px] text-muted-foreground mt-0.5">
-              {player.city ? player.city + ' · ' : ''}{playerDivision === 'male' ? '🕺 Pria' : '💃 Wanita'}
+              {player.city ? player.city + ' · ' : ''}{playerDivision === 'male' ? '🕺 Cowo' : '💃 Cewe'}
             </p>
 
             {/* Quick Stats Row */}

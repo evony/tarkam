@@ -295,7 +295,7 @@ function DivisionCard({
         <div className="flex items-center gap-1.5">
           <Music className={`w-3.5 h-3.5 ${textAccent}`} />
           <span className={`text-[10px] sm:text-xs font-black uppercase tracking-wider ${textAccent}`}>
-            {emoji} {isMale ? 'Pria' : 'Wanita'}
+            {emoji} {isMale ? 'Cowo' : 'Cewe'}
           </span>
         </div>
         <span className={`text-[8px] sm:text-[9px] font-bold px-1.5 py-0.5 rounded-full ${statusPill}`}>

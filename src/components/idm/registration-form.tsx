@@ -663,7 +663,7 @@ export function RegistrationForm() {
               </div>
               <h3 className="text-base font-bold text-amber-400 mb-2">Pendaftaran Belum Dibuka</h3>
               <p className="text-xs text-muted-foreground mb-1">
-                Turnamen <span className={`font-semibold ${division === 'male' ? 'text-idm-male' : 'text-idm-female'}`}>{division === 'male' ? '🕺 Pria' : '💃 Wanita'}</span> belum membuka pendaftaran.
+                Turnamen <span className={`font-semibold ${division === 'male' ? 'text-idm-male' : 'text-idm-female'}`}>{division === 'male' ? '🕺 Cowo' : '💃 Cewe'}</span> belum membuka pendaftaran.
               </p>
               <p className="text-[10px] text-muted-foreground/70 mb-4">
                 Hubungi admin atau nantikan pengumuman pembukaan pendaftaran.
@@ -676,7 +676,7 @@ export function RegistrationForm() {
                 }}
                 className="text-xs"
               >
-                Coba Divisi {division === 'male' ? '💃 Wanita' : '🕺 Pria'}
+                Coba Divisi {division === 'male' ? '💃 Cewe' : '🕺 Cowo'}
               </Button>
             </CardContent>
           </Card>
@@ -702,7 +702,7 @@ export function RegistrationForm() {
                         : 'text-muted-foreground hover:text-foreground'
                     }`}
                   >
-                    🕺 Pria
+                    🕺 Cowo
                   </button>
                   <button
                     type="button"
@@ -713,12 +713,12 @@ export function RegistrationForm() {
                         : 'text-muted-foreground hover:text-foreground'
                     }`}
                   >
-                    💃 Wanita
+                    💃 Cewe
                   </button>
                 </div>
                 <p className="text-[10px] text-idm-gold-warm mt-1 flex items-center gap-1">
                   <Info className="w-3 h-3 shrink-0" />
-                  Pastikan sesuai gender: Perempuan pilih 💃 Wanita, Laki-laki pilih 🕺 Pria
+                  Pastikan sesuai gender: Perempuan pilih 💃 Cewe, Laki-laki pilih 🕺 Cowo
                 </p>
               </div>
 
@@ -833,7 +833,7 @@ export function RegistrationForm() {
                 ) : (
                   <UserPlus className="w-4 h-4 mr-2" />
                 )}
-                {isSubmitting ? 'Mendaftar...' : `Daftar ${divisionEmoji} ${division === 'male' ? 'Pria' : 'Wanita'}`}
+                {isSubmitting ? 'Mendaftar...' : `Daftar ${divisionEmoji} ${division === 'male' ? 'Cowo' : 'Cewe'}`}
               </Button>
 
               <p className="text-[10px] text-center text-muted-foreground">

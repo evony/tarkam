@@ -561,8 +561,8 @@ export function PlayerAccountModal({ open, onOpenChange }: PlayerAccountModalPro
                       <SelectValue placeholder="Pilih divisi" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="male">🕺 Pria</SelectItem>
-                      <SelectItem value="female">💃 Wanita</SelectItem>
+                      <SelectItem value="male">🕺 Cowo</SelectItem>
+                      <SelectItem value="female">💃 Cewe</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>

@@ -508,7 +508,7 @@ export function AdminPendingTab({ division }: AdminPendingTabProps) {
                   : 'text-muted-foreground hover:text-foreground/70'
               }`}
             >
-              🕺 Pria
+              🕺 Cowo
             </button>
             <button
               type="button"
@@ -519,7 +519,7 @@ export function AdminPendingTab({ division }: AdminPendingTabProps) {
                   : 'text-muted-foreground hover:text-foreground/70'
               }`}
             >
-              💃 Wanita
+              💃 Cewe
             </button>
           </div>
 
@@ -804,7 +804,7 @@ function UnifiedPendingCard({
                     : 'bg-purple-500/10 text-purple-400'
                 }`}
               >
-                {item.division === 'male' ? '🕺 Pria' : '💃 Wanita'}
+                {item.division === 'male' ? '🕺 Cowo' : '💃 Cewe'}
               </Badge>
 
               {/* Account status badge */}

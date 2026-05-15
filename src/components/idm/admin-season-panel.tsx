@@ -389,8 +389,8 @@ export function AdminSeasonPanel({ division, dt, setConfirmDialog, mode = 'liga'
                     onChange={(e) => setNewSeasonForm(p => ({ ...p, division: e.target.value }))}
                     className="w-full h-full px-3 rounded-md border border-border/30 bg-muted/10 text-xs"
                   >
-                    <option value="male">🕺 Pria</option>
-                    <option value="female">💃 Wanita</option>
+                    <option value="male">🕺 Cowo</option>
+                    <option value="female">💃 Cewe</option>
                   </select>
                 </div>
               ) : (

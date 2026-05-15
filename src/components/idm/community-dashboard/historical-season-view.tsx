@@ -113,7 +113,7 @@ function HistoricalBanner({ season }: { season: SelectedSeason }) {
           </p>
         </div>
         <Badge className={`${season.division === 'male' ? 'bg-idm-male/15 text-idm-male border-idm-male/25' : 'bg-idm-female/15 text-idm-female border-idm-female/25'} text-[9px] border shrink-0`}>
-          {season.division === 'male' ? '🕺 Pria' : '💃 Wanita'}
+          {season.division === 'male' ? '🕺 Cowo' : '💃 Cewe'}
         </Badge>
       </div>
     </div>
@@ -491,7 +491,7 @@ export const HistoricalSeasonView = React.memo(function HistoricalSeasonView({ s
             </div>
             <div>
               <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Divisi</p>
-              <p className="text-sm font-bold">{data.division === 'male' ? '🕺 Pria' : '💃 Wanita'}</p>
+              <p className="text-sm font-bold">{data.division === 'male' ? '🕺 Cowo' : '💃 Cewe'}</p>
             </div>
             <div>
               <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Periode</p>

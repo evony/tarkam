@@ -63,7 +63,7 @@ export function NoSeasonState({ division }: NoSeasonStateProps) {
 
           {/* Description */}
           <p className="stagger-item stagger-d3 text-sm text-muted-foreground max-w-md mb-8 leading-relaxed">
-            Belum ada season aktif untuk tarkam {division === 'male' ? 'Pria' : 'Wanita'} saat ini.
+            Belum ada season aktif untuk tarkam {division === 'male' ? 'Cowo' : 'Cewe'} saat ini.
             Season baru akan dimulai oleh admin, dan kamu bisa mendaftar sebagai peserta begitu pendaftaran dibuka.
           </p>
 

@@ -542,7 +542,7 @@ export function AdminPanel() {
                   : 'text-muted-foreground hover:text-foreground/70'
               }`}
             >
-              🕺 Pria
+              🕺 Cowo
             </button>
             <button
               type="button"
@@ -553,7 +553,7 @@ export function AdminPanel() {
                   : 'text-muted-foreground hover:text-foreground/70'
               }`}
             >
-              💃 Wanita
+              💃 Cewe
             </button>
           </div>
         </div>
@@ -880,7 +880,7 @@ export function AdminPanel() {
                         : 'text-muted-foreground hover:text-foreground'
                     }`}
                   >
-                    🕺 Pria
+                    🕺 Cowo
                   </button>
                   <button
                     type="button"
@@ -891,7 +891,7 @@ export function AdminPanel() {
                         : 'text-muted-foreground hover:text-foreground'
                     }`}
                   >
-                    💃 Wanita
+                    💃 Cewe
                   </button>
                 </div>
               </div>

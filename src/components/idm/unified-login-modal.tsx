@@ -554,7 +554,7 @@ export function UnifiedLoginModal({ open, onOpenChange, defaultTab = 'peserta', 
                         )}
                         <p className="text-[10px] text-muted-foreground">{playerAuth.account!.player.name}</p>
                         <p className="text-[10px] text-muted-foreground">
-                          {playerAuth.account!.player.division === 'male' ? '🕺 Pria' : '💃 Wanita'} · {playerAuth.account!.player.points} pts
+                          {playerAuth.account!.player.division === 'male' ? '🕺 Cowo' : '💃 Cewe'} · {playerAuth.account!.player.points} pts
                         </p>
                       </div>
                       <Badge className={`${dt.casinoBadge} text-[9px]`}>✓</Badge>
@@ -801,7 +801,7 @@ export function UnifiedLoginModal({ open, onOpenChange, defaultTab = 'peserta', 
                     {/* Division indicator */}
                     <div className="flex justify-center mt-1.5">
                       <Badge className={`${regDivision === 'male' ? 'bg-idm-male/10 text-idm-male border-idm-male/20' : 'bg-idm-female/10 text-idm-female border-idm-female/20'} text-[9px] border gap-1`}>
-                        {regDivision === 'male' ? '🕺 Pria' : '💃 Wanita'}
+                        {regDivision === 'male' ? '🕺 Cowo' : '💃 Cewe'}
                       </Badge>
                     </div>
                   </div>
@@ -864,8 +864,8 @@ export function UnifiedLoginModal({ open, onOpenChange, defaultTab = 'peserta', 
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="male">🕺 Pria</SelectItem>
-                          <SelectItem value="female">💃 Wanita</SelectItem>
+                          <SelectItem value="male">🕺 Cowo</SelectItem>
+                          <SelectItem value="female">💃 Cewe</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>

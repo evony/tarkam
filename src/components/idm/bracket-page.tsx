@@ -83,7 +83,7 @@ function DivisionBracketCard({
               <Trophy className={`w-3 h-3 ${dt.neonText}`} />
             </div>
             <h3 className="text-xs font-semibold uppercase tracking-wider">Bracket</h3>
-            <Badge className={`${dt.casinoBadge} ml-auto text-[9px]`}>{division === 'male' ? '🕺 Pria' : '💃 Wanita'}</Badge>
+            <Badge className={`${dt.casinoBadge} ml-auto text-[9px]`}>{division === 'male' ? '🕺 Cowo' : '💃 Cewe'}</Badge>
           </div>
           <div className="p-4">
             {t?.matches && t.matches.length > 0 ? (
@@ -301,8 +301,8 @@ export function BracketPage() {
               buttonLabel="Bagikan bracket"
               size="sm"
             />
-            <Badge className="bg-idm-male/15 text-idm-male border-idm-male/25 text-[9px] border">🕺 Pria</Badge>
-            <Badge className="bg-idm-female/15 text-idm-female border-idm-female/25 text-[9px] border">💃 Wanita</Badge>
+            <Badge className="bg-idm-male/15 text-idm-male border-idm-male/25 text-[9px] border">🕺 Cowo</Badge>
+            <Badge className="bg-idm-female/15 text-idm-female border-idm-female/25 text-[9px] border">💃 Cewe</Badge>
           </div>
         </div>
 

@@ -222,7 +222,7 @@ export function CommunityStreaks({ selectedDivision = 'all' }: CommunityStreaksP
                 <span className="text-[10px] text-muted-foreground/60 truncate">{clubToString(topStreak.club)}</span>
               )}
               <Badge className={`${topDt.badgeBg} text-[7px] border px-1 py-0 h-3.5`}>
-                {topStreak.division === 'male' ? '🕺 Pria' : '💃 Wanita'}
+                {topStreak.division === 'male' ? '🕺 Cowo' : '💃 Cewe'}
               </Badge>
             </div>
             <div className="flex items-center gap-1 mt-0.5">

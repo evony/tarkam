@@ -26,8 +26,8 @@ type Division = 'male' | 'female';
 
 // Division badge colors for the mixed table
 const DIVISION_BADGE: Record<Division, { bg: string; text: string; icon: string; label: string }> = {
-  male: { bg: 'rgba(46,159,255,0.12)', text: '#57B5FF', icon: '♂', label: 'Pria' },
-  female: { bg: 'rgba(255,45,120,0.12)', text: '#FF5C9A', icon: '♀', label: 'Wanita' },
+  male: { bg: 'rgba(46,159,255,0.12)', text: '#57B5FF', icon: '♂', label: 'Cowo' },
+  female: { bg: 'rgba(255,45,120,0.12)', text: '#FF5C9A', icon: '♀', label: 'Cewe' },
 };
 
 interface StandingsTabProps {

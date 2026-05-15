@@ -57,7 +57,7 @@ export function CommunityChampions({ maleData, femaleData, selectedDivision = 'a
         <div className={`grid gap-5 ${selectedDivision === 'all' ? 'grid-cols-1 lg:grid-cols-2' : 'grid-cols-1'}`}>
           {(selectedDivision === 'all' || selectedDivision === 'male') && (
             <ChampionsSection
-              title="Pria Champions"
+              title="Cowo Champions"
               emoji="🕺"
               division="male"
               topPlayers={maleData?.topPlayers || []}
@@ -66,7 +66,7 @@ export function CommunityChampions({ maleData, femaleData, selectedDivision = 'a
           )}
           {(selectedDivision === 'all' || selectedDivision === 'female') && (
             <ChampionsSection
-              title="Wanita Champions"
+              title="Cewe Champions"
               emoji="💃"
               division="female"
               topPlayers={femaleData?.topPlayers || []}
@@ -158,7 +158,7 @@ function ChampionsSection({
         ) : (
           <div className={`p-8 rounded-2xl ${dt.bgSubtle} ${dt.border} text-center`}>
             <Crown className={`w-10 h-10 mx-auto mb-3 opacity-20 ${dt.text}`} />
-            <p className="text-sm font-semibold text-muted-foreground/80 mb-1">Belum Ada Champion {division === 'male' ? 'Pria' : 'Wanita'}</p>
+            <p className="text-sm font-semibold text-muted-foreground/80 mb-1">Belum Ada Champion {division === 'male' ? 'Cowo' : 'Cewe'}</p>
             <p className="text-xs text-muted-foreground/50">Champion akan muncul setelah season dimulai dan pertandingan selesai</p>
           </div>
         )}
@@ -189,7 +189,7 @@ export const SultanOfWeekSection = React.memo(function SultanOfWeekSection({
   const isCrossDivision = latestSultan?.isCrossDivision && latestSultan?.player;
   const donorDivision = latestSultan?.player?.division;
   const crossDivisionEmoji = donorDivision === 'female' ? '💃' : '🕺';
-  const crossDivisionLabel = donorDivision === 'female' ? 'Wanita' : 'Pria';
+  const crossDivisionLabel = donorDivision === 'female' ? 'Cewe' : 'Cowo';
 
   const content = latestSultan ? (
     <div className="space-y-3">
@@ -344,7 +344,7 @@ export const SultanOfWeekSection = React.memo(function SultanOfWeekSection({
           <Heart className="w-3 h-3 lg:w-3.5 lg:h-3.5" style={{ color: '#800020' }} />
         </div>
         <h3 className="text-xs lg:text-sm font-semibold uppercase tracking-wider">
-          {division === 'male' ? 'Pria' : 'Wanita'} Sultan of the Week
+          {division === 'male' ? 'Cowo' : 'Cewe'} Sultan of the Week
         </h3>
         {latestSultan && (
           <Badge className="hidden sm:inline-flex border-0 ml-auto text-[9px]" style={{ background: 'rgba(128,0,32,0.15)', color: '#800020' }}>❤️ MINGGU INI</Badge>
@@ -520,7 +520,7 @@ export function TopFormSection({
           <TrendingUp className="w-3 h-3 lg:w-3.5 lg:h-3.5 text-amber-400" />
         </div>
         <h3 className="text-xs lg:text-sm font-semibold uppercase tracking-wider">
-          {division === 'male' ? 'Pria' : 'Wanita'} Top Form
+          {division === 'male' ? 'Cowo' : 'Cewe'} Top Form
         </h3>
         {performer && (
           <Badge className="hidden sm:inline-flex bg-amber-500/15 text-amber-500 border-0 ml-auto text-[9px]">🔥 MINGGU INI</Badge>

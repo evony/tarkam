@@ -220,8 +220,8 @@ const ChampionsMvpHeader = React.memo(function ChampionsMvpHeader({
       <div className="flex items-center gap-1 p-1 rounded-lg bg-idm-gold-warm/5 border border-idm-gold-warm/10">
         {([
           { key: 'all' as DivisionFilter, label: 'Semua' },
-          { key: 'male' as DivisionFilter, label: 'Pria' },
-          { key: 'female' as DivisionFilter, label: 'Wanita' },
+          { key: 'male' as DivisionFilter, label: 'Cowo' },
+          { key: 'female' as DivisionFilter, label: 'Cewe' },
         ]).map(div => (
           <button
             key={div.key}
@@ -1097,8 +1097,8 @@ const BracketHasilSection = React.memo(function BracketHasilSection({
         <div className="flex items-center gap-1 p-1 rounded-lg bg-idm-gold-warm/5 border border-idm-gold-warm/10">
           {([
             { key: 'all' as DivisionFilter, label: 'Semua' },
-            { key: 'male' as DivisionFilter, label: 'Pria' },
-            { key: 'female' as DivisionFilter, label: 'Wanita' },
+            { key: 'male' as DivisionFilter, label: 'Cowo' },
+            { key: 'female' as DivisionFilter, label: 'Cewe' },
           ]).map(div => (
             <button
               key={div.key}
