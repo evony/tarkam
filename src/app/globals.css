@@ -5855,14 +5855,21 @@ html {
   }
   
   /* ★ Exception: carousel dots should stay tiny — 
-     the parent container provides the 44px touch area instead */
+     the parent container provides the 44px touch area via padding.
+     Using !important to override inline and Tailwind min-size rules. */
   button.carousel-dot {
-    min-height: unset;
-    min-width: unset;
+    min-height: unset !important;
+    min-width: unset !important;
   }
   
   .landing-scroll button {
     min-height: 44px;
+  }
+
+  /* ★ Also exempt carousel dots from landing-scroll rule */
+  .landing-scroll button.carousel-dot {
+    min-height: unset !important;
+    min-width: unset !important;
   }
 }
 

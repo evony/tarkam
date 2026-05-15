@@ -224,16 +224,19 @@ function SponsorCarousel({ sponsors }: { sponsors: Sponsor[] }) {
 
       {/* Dot indicators — compact, subtle */}
       {total > 1 && (
-        <div className="flex items-center justify-center gap-1.5 mt-3">
+        <div className="flex items-center justify-center gap-2 mt-3 py-2" role="tablist">
           {sponsors.map((_, i) => (
             <button
               key={i}
-              onClick={() => { goTo(i); setIsPaused(true); if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current); pauseTimerRef.current = setTimeout(() => setIsPaused(false), 6000); }}
+              role="tab"
+              aria-selected={i === activeIndex}
               aria-label={`Go to sponsor ${i + 1}`}
+              onClick={() => { goTo(i); setIsPaused(true); if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current); pauseTimerRef.current = setTimeout(() => setIsPaused(false), 6000); }}
+              style={{ minWidth: 'unset', minHeight: 'unset', width: i === activeIndex ? 16 : 4, height: 4 }}
               className={`carousel-dot transition-all duration-300 rounded-full cursor-pointer ${
                 i === activeIndex
-                  ? 'w-4 h-1 bg-idm-gold-warm shadow-[0_0_4px_rgba(212,168,83,0.4)]'
-                  : 'w-1 h-1 bg-idm-gold-warm/25 hover:bg-idm-gold-warm/50'
+                  ? 'bg-idm-gold-warm shadow-[0_0_4px_rgba(212,168,83,0.4)]'
+                  : 'bg-idm-gold-warm/25 hover:bg-idm-gold-warm/50'
               }`}
             />
           ))}
