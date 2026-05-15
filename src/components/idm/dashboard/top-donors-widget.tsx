@@ -340,20 +340,20 @@ export function TopDonorsWidget({ onDonate, statsData, statsData2 }: TopDonorsWi
                 >
                   <div className="flex items-center gap-1.5">
                     <RankBadge rank={i + 1} />
-                    <span className={`text-xs font-semibold truncate flex-1 ${
+                    <span className={`text-[13px] font-semibold truncate flex-1 ${
                       i === 0 ? 'text-idm-gold-warm' : 'text-muted-foreground'
                     }`}>
                       {i === 0 && <span className="mr-0.5">👑</span>}
                       {donor.donorName || 'Anonymous'}
                     </span>
-                    <span className="text-[10px] font-bold text-idm-gold-warm shrink-0">
+                    <span className="text-[11px] font-bold text-idm-gold-warm shrink-0">
                       {formatRupiahShort(donor.maleAmount)}
                     </span>
                   </div>
                 </div>
               )) : (
                 <div className="py-4 text-center opacity-40">
-                  <p className="text-[10px] text-muted-foreground">Belum ada saweran</p>
+                  <p className="text-[11px] text-muted-foreground">Belum ada saweran</p>
                 </div>
               )}
             </div>
@@ -383,20 +383,20 @@ export function TopDonorsWidget({ onDonate, statsData, statsData2 }: TopDonorsWi
                 >
                   <div className="flex items-center gap-1.5">
                     <RankBadge rank={i + 1} />
-                    <span className={`text-xs font-semibold truncate flex-1 ${
+                    <span className={`text-[13px] font-semibold truncate flex-1 ${
                       i === 0 ? 'text-idm-gold-warm' : 'text-muted-foreground'
                     }`}>
                       {i === 0 && <span className="mr-0.5">👑</span>}
                       {donor.donorName || 'Anonymous'}
                     </span>
-                    <span className="text-[10px] font-bold text-idm-gold-warm shrink-0">
+                    <span className="text-[11px] font-bold text-idm-gold-warm shrink-0">
                       {formatRupiahShort(donor.femaleAmount)}
                     </span>
                   </div>
                 </div>
               )) : (
                 <div className="py-4 text-center opacity-40">
-                  <p className="text-[10px] text-muted-foreground">Belum ada saweran</p>
+                  <p className="text-[11px] text-muted-foreground">Belum ada saweran</p>
                 </div>
               )}
             </div>
