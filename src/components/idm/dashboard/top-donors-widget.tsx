@@ -325,7 +325,7 @@ export function TopDonorsWidget({ onDonate, statsData, statsData2 }: TopDonorsWi
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {/* ♂ Male Division */}
           <div className="space-y-1.5">
-            <div className="flex items-center gap-1.5 mb-1">
+            <div className="flex items-center justify-center gap-1.5 mb-1">
               <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider border bg-idm-male/10 text-idm-male-light border-idm-male/30">
                 ♂ Male
               </span>
@@ -368,7 +368,7 @@ export function TopDonorsWidget({ onDonate, statsData, statsData2 }: TopDonorsWi
 
           {/* ♀ Female Division */}
           <div className="space-y-1.5">
-            <div className="flex items-center gap-1.5 mb-1">
+            <div className="flex items-center justify-center gap-1.5 mb-1">
               <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider border bg-idm-female/10 text-idm-female-light border-idm-female/30">
                 ♀ Female
               </span>
