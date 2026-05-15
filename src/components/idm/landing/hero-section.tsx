@@ -460,17 +460,17 @@ export function HeroSection({
           ) : null}
 
           {/* ═══════════════ CTA BUTTONS ═══════════════ */}
-          <div className={`flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mx-auto w-full sm:w-auto mb-6 sm:mb-10 ${hasChampions ? '' : 'hero-enter-5'}`}>
+          <div className={`flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mx-auto mb-6 sm:mb-10 ${hasChampions ? '' : 'hero-enter-5'}`}>
             {/* Masuk Arena — Primary CTA → Community Dashboard */}
             <button
               onClick={onEnterCommunity}
-              className="btn-press hero-cta-breath group relative cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-idm-gold-warm/50 focus-visible:ring-offset-2 focus-visible:ring-offset-deep w-full sm:w-auto"
+              className="btn-press hero-cta-breath group relative cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-idm-gold-warm/50 focus-visible:ring-offset-2 focus-visible:ring-offset-deep"
             >
               {/* Pulse glow ring */}
               <div className="absolute -inset-1.5 rounded-2xl animate-pulse" style={{ background: 'rgba(239,249,35,0.15)', boxShadow: '0 0 30px rgba(239,249,35,0.3)' }} />
               {/* Glow background */}
               <div className="absolute -inset-1 rounded-2xl blur-lg opacity-0 group-hover:opacity-60 transition-opacity duration-500" style={{ background: 'rgba(239,249,35,0.25)' }} />
-              <div className="relative flex items-center justify-center gap-2.5 px-7 py-3 min-h-[48px] rounded-2xl font-bold text-sm tracking-wide uppercase transition-all duration-300"
+              <div className="relative flex items-center justify-center gap-2.5 px-6 sm:px-7 py-2.5 sm:py-3 min-h-[44px] sm:min-h-[48px] rounded-xl sm:rounded-2xl font-bold text-[13px] sm:text-sm tracking-wide uppercase transition-all duration-300"
                 style={{
                   background: 'linear-gradient(135deg, #EFF923 0%, #F9CB25 50%, #F9CB25 100%)',
                   color: 'var(--bg-deep)',
@@ -486,11 +486,11 @@ export function HeroSection({
             {/* Lihat Bracket — Secondary CTA → Bracket Picker */}
             <button
               onClick={() => setShowBracketPicker(true)}
-              className="btn-press hero-cta-breath group relative cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-idm-gold-warm/50 focus-visible:ring-offset-2 focus-visible:ring-offset-deep w-full sm:w-auto"
+              className="btn-press hero-cta-breath group relative cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-idm-gold-warm/50 focus-visible:ring-offset-2 focus-visible:ring-offset-deep"
             >
               {/* Glow on hover */}
               <div className="absolute -inset-1 rounded-2xl blur-lg opacity-0 group-hover:opacity-40 transition-opacity duration-500" style={{ background: 'rgba(239,249,35,0.15)' }} />
-              <div className="relative flex items-center justify-center gap-2.5 px-7 py-3 min-h-[48px] rounded-2xl font-bold text-sm tracking-wide uppercase border transition-all duration-300"
+              <div className="relative flex items-center justify-center gap-2.5 px-6 sm:px-7 py-2.5 sm:py-3 min-h-[44px] sm:min-h-[48px] rounded-xl sm:rounded-2xl font-bold text-[13px] sm:text-sm tracking-wide uppercase border transition-all duration-300"
                 style={{
                   background: 'rgba(239,249,35,0.08)',
                   borderColor: 'rgba(239,249,35,0.3)',
