@@ -1,13 +1,13 @@
-// Local development schema (SQLite)
-// This file is used for local development only.
-// Production uses schema.prisma with PostgreSQL.
+// Production schema (PostgreSQL)
+// Used by Vercel/production deployment.
+// Build script: cp prisma/schema.postgres.prisma prisma/schema.prisma && prisma generate
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -124,7 +124,7 @@ model Tournament {
   weekNumber         Int
   division           String   // "male" | "female"
   status             String   @default("setup") // "setup" | "registration" | "approval" | "team_generation" | "bracket_generation" | "main_event" | "finalization" | "completed"
-  format             String   @default("single_elimination") // "single_elimination" | "group_stage" | "swiss"
+  format             String   @default("single_elimination") // "single_elimination" | "group_stage" | "swiss" | "upper_semi"
   defaultMatchFormat String   @default("BO1") // "BO1" | "BO3" | "BO5"
   seasonId           String
   prizePool          Int      @default(0) // total prize pool in IDR
