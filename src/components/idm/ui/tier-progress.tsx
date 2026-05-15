@@ -162,7 +162,7 @@ export function TierProgress({
                 className="text-[10px] font-medium uppercase tracking-widest"
                 style={{ color: accentColor }}
               >
-                {division === 'male' ? 'Male Division' : 'Female Division'}
+                {division === 'male' ? 'Divisi Cowo' : 'Divisi Cewe'}
               </span>
             </div>
           </div>

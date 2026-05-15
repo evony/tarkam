@@ -1125,7 +1125,7 @@ export function CmsPanel() {
                     {/* Male Card */}
                     <div className="space-y-2">
                       <h4 className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
-                        <Shield className="w-3 h-3" /> Male Card
+                        <Shield className="w-3 h-3" /> Cowo Card
                       </h4>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
@@ -1134,7 +1134,7 @@ export function CmsPanel() {
                             value={settingsForm.kompetisi_male_title || ''}
                             onChange={(e) => updateSettingsForm({ kompetisi_male_title: e.target.value })}
                             className="text-sm"
-                            placeholder="Male Tarkam"
+                            placeholder="Cowo Tarkam"
                           />
                         </div>
                         <div>
@@ -1163,9 +1163,9 @@ export function CmsPanel() {
                             value={settingsForm.kompetisi_male_video_url || ''}
                             onChange={(e) => updateSettingsForm({ kompetisi_male_video_url: e.target.value })}
                             className="text-sm"
-                            placeholder="URL YouTube/MP4 — tombol play di card Male"
+                            placeholder="URL YouTube/MP4 — tombol play di card Cowo"
                           />
-                          <p className="text-[9px] text-muted-foreground/60 mt-0.5">Video highlight turnamen Male Division</p>
+                          <p className="text-[9px] text-muted-foreground/60 mt-0.5">Video highlight turnamen Cowo</p>
                         </div>
                       </div>
                       <div>
@@ -1184,7 +1184,7 @@ export function CmsPanel() {
                     {/* Female Card */}
                     <div className="space-y-2">
                       <h4 className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
-                        <Shield className="w-3 h-3" /> Female Card
+                        <Shield className="w-3 h-3" /> Cewe Card
                       </h4>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
@@ -1193,7 +1193,7 @@ export function CmsPanel() {
                             value={settingsForm.kompetisi_female_title || ''}
                             onChange={(e) => updateSettingsForm({ kompetisi_female_title: e.target.value })}
                             className="text-sm"
-                            placeholder="Female Tarkam"
+                            placeholder="Cewe Tarkam"
                           />
                         </div>
                         <div>
@@ -1222,9 +1222,9 @@ export function CmsPanel() {
                             value={settingsForm.kompetisi_female_video_url || ''}
                             onChange={(e) => updateSettingsForm({ kompetisi_female_video_url: e.target.value })}
                             className="text-sm"
-                            placeholder="URL YouTube/MP4 — tombol play di card Female"
+                            placeholder="URL YouTube/MP4 — tombol play di card Cewe"
                           />
-                          <p className="text-[9px] text-muted-foreground/60 mt-0.5">Video highlight turnamen Female Division</p>
+                          <p className="text-[9px] text-muted-foreground/60 mt-0.5">Video highlight turnamen Cewe</p>
                         </div>
                       </div>
                       <div>
@@ -1426,7 +1426,7 @@ export function CmsPanel() {
                                   <SelectItem value="female">
                                     <span className="flex items-center gap-1.5">
                                       <span className="w-2 h-2 rounded-full bg-purple-400" />
-                                      Female
+                                      Cewe
                                     </span>
                                   </SelectItem>
                                   <SelectItem value="both">
@@ -1584,21 +1584,21 @@ export function CmsPanel() {
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                       <div className="space-y-2">
                         <CloudinaryImageField
-                          label="Background Male ⚔️"
+                          label="Background Cowo ⚔️"
                           value={settingsForm.bg_male}
                           onChange={(url) => updateSettingsForm({ bg_male: url })}
                           folder="cms/backgrounds"
                         />
-                        <p className="text-[9px] text-muted-foreground/60">Digunakan di dashboard & profil pemain divisi Male</p>
+                        <p className="text-[9px] text-muted-foreground/60">Digunakan di dashboard & profil pemain divisi Cowo</p>
                       </div>
                       <div className="space-y-2">
                         <CloudinaryImageField
-                          label="Background Female 💜"
+                          label="Background Cewe 💜"
                           value={settingsForm.bg_female}
                           onChange={(url) => updateSettingsForm({ bg_female: url })}
                           folder="cms/backgrounds"
                         />
-                        <p className="text-[9px] text-muted-foreground/60">Digunakan di dashboard & profil pemain divisi Female</p>
+                        <p className="text-[9px] text-muted-foreground/60">Digunakan di dashboard & profil pemain divisi Cewe</p>
                       </div>
                       <div className="space-y-2">
                         <CloudinaryImageField

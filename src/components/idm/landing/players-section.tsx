@@ -199,7 +199,7 @@ export function PlayersSection({
                   }}
                 >
                   <span className="absolute inset-x-0 top-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(46,159,255,0.3), transparent)' }} />
-                  ♂ Male Division
+                  ♂ Cowo
                 </span>
               </div>
 
@@ -425,7 +425,7 @@ export function PlayersSection({
                   }}
                 >
                   <span className="absolute inset-x-0 top-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(255,45,120,0.3), transparent)' }} />
-                  ♀ Female Division
+                  ♀ Cewe
                 </span>
               </div>
 

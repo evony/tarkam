@@ -259,7 +259,7 @@ export function DreamSection({ maleData, femaleData, leagueData, nextSeason, com
                 className="w-full sm:w-auto btn-male px-6 py-4 sm:px-8 sm:py-6 text-xs sm:text-sm font-bold rounded-2xl transition-all"
                 onClick={() => onEnterApp('male')}
               >
-                Male Tarkam <ArrowRight className="w-4 h-4 ml-1.5" />
+                Cowo Tarkam <ArrowRight className="w-4 h-4 ml-1.5" />
               </Button>
             </div>
             <div className="hover-scale-md">
@@ -269,7 +269,7 @@ export function DreamSection({ maleData, femaleData, leagueData, nextSeason, com
                 className="w-full sm:w-auto btn-female px-6 py-4 sm:px-8 sm:py-6 text-xs sm:text-sm font-bold rounded-2xl transition-all"
                 onClick={() => onEnterApp('female')}
               >
-                Female Tarkam <ArrowRight className="w-4 h-4 ml-1.5" />
+                Cewe Tarkam <ArrowRight className="w-4 h-4 ml-1.5" />
               </Button>
             </div>
           </div>

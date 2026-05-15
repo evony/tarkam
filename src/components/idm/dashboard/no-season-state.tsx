@@ -53,7 +53,7 @@ export function NoSeasonState({ division }: NoSeasonStateProps) {
 
           {/* Division badge */}
           <Badge className={`${dt.casinoBadge} px-3 py-1 mb-4 stagger-item stagger-d1`}>
-            {division === 'male' ? '🕺 Tarkam Male' : '💃 Tarkam Female'}
+            {division === 'male' ? '🕺 Tarkam Cowo' : '💃 Tarkam Cewe'}
           </Badge>
 
           {/* Main heading */}

@@ -105,7 +105,7 @@ export function SeasonProgressTracker({ maleData, femaleData }: SeasonProgressPr
         {/* Male division progress */}
         {hasMale && (
           <ProgressRow
-            label="Male Division"
+            label="Divisi Cowo"
             emoji="🕺"
             progress={maleProgress!}
             gradientFrom="from-cyan-400"
@@ -117,7 +117,7 @@ export function SeasonProgressTracker({ maleData, femaleData }: SeasonProgressPr
         {/* Female division progress */}
         {hasFemale && (
           <ProgressRow
-            label="Female Division"
+            label="Divisi Cewe"
             emoji="💃"
             progress={femaleProgress!}
             gradientFrom="from-purple-400"

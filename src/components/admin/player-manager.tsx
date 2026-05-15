@@ -102,8 +102,8 @@ export function PlayerManager() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="MALE">♂ Male</SelectItem>
-                <SelectItem value="FEMALE">♀ Female</SelectItem>
+                <SelectItem value="MALE">♂ Cowo</SelectItem>
+                <SelectItem value="FEMALE">♀ Cewe</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -153,8 +153,8 @@ export function PlayerManager() {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="MALE">♂ Male</SelectItem>
-              <SelectItem value="FEMALE">♀ Female</SelectItem>
+              <SelectItem value="MALE">♂ Cowo</SelectItem>
+              <SelectItem value="FEMALE">♀ Cewe</SelectItem>
             </SelectContent>
           </Select>
         </div>

@@ -557,7 +557,7 @@ export function HeroSection({
                         <Zap className="w-5 h-5 text-idm-male" />
                       </div>
                       <div className="text-center">
-                        <span className="text-sm font-bold text-idm-male">Male</span>
+                        <span className="text-sm font-bold text-idm-male">Cowo</span>
                         <p className="text-[10px] text-muted-foreground/60 mt-0.5">{malePlayers} Players</p>
                       </div>
                     </button>
@@ -571,7 +571,7 @@ export function HeroSection({
                         <Star className="w-5 h-5 text-idm-female" />
                       </div>
                       <div className="text-center">
-                        <span className="text-sm font-bold text-idm-female">Female</span>
+                        <span className="text-sm font-bold text-idm-female">Cewe</span>
                         <p className="text-[10px] text-muted-foreground/60 mt-0.5">{femalePlayers} Players</p>
                       </div>
                     </button>

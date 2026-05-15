@@ -10,7 +10,7 @@ const DEFAULT_STEPS = [
     number: 1,
     icon: UserPlus,
     title: 'Daftar',
-    description: 'Daftar sebagai peserta dan pilih divisi Male atau Female',
+    description: 'Daftar sebagai peserta dan pilih divisi Cowo atau Cewe',
   },
   {
     number: 2,

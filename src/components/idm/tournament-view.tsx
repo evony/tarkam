@@ -142,7 +142,7 @@ export function TournamentView() {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-1.5 mb-0.5">
                           <span className={`text-[10px] ${dt.neonText} font-semibold uppercase tracking-wider`}>Week {t.weekNumber}</span>
-                          <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-bold ${t.division === 'male' ? 'bg-cyan-500/15 text-cyan-400' : 'bg-purple-500/15 text-purple-400'}`}>{t.division === 'male' ? '♂ Male' : '♀ Female'}</span>
+                          <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-bold ${t.division === 'male' ? 'bg-cyan-500/15 text-cyan-400' : 'bg-purple-500/15 text-purple-400'}`}>{t.division === 'male' ? '♂ Cowo' : '♀ Cewe'}</span>
                         </div>
                         <p className="text-sm font-bold truncate">{t.name}</p>
                       </div>

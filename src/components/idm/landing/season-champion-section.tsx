@@ -234,7 +234,7 @@ function BintangMingguIniDuo({
                 <Shield className="w-3.5 h-3.5" style={{ color: femaleAccentLight }} />
               </div>
             </div>
-            <span className="text-xs font-black uppercase tracking-wider text-muted-foreground">Male & Female</span>
+            <span className="text-xs font-black uppercase tracking-wider text-muted-foreground">Cowo & Cewe</span>
           </div>
           <span className="text-[10px] font-bold px-2 py-0.5 rounded-md border" style={{ color: maleAccent, backgroundColor: hexToRgba(maleAccent, 0.08), borderColor: hexToRgba(maleAccent, 0.15) }}>
             <Swords className="w-2.5 h-2.5 inline mr-1" />Berlangsung
@@ -286,7 +286,7 @@ function BintangMingguIniDuo({
             <div className="absolute inset-0 flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${hexToRgba(maleAccent, 0.1)}, var(--bg-mid))` }}>
               <div className="flex flex-col items-center gap-2 opacity-25">
                 <Music className="w-10 h-10" style={{ color: maleAccent }} />
-                <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: maleAccentLight }}>Male</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: maleAccentLight }}>Cowo</span>
               </div>
             </div>
           )}
@@ -360,7 +360,7 @@ function BintangMingguIniDuo({
             <div className="absolute inset-0 flex items-center justify-center" style={{ background: `linear-gradient(225deg, ${hexToRgba(femaleAccent, 0.1)}, var(--bg-mid))` }}>
               <div className="flex flex-col items-center gap-2 opacity-25">
                 <Shield className="w-10 h-10" style={{ color: femaleAccent }} />
-                <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: femaleAccentLight }}>Female</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: femaleAccentLight }}>Cewe</span>
               </div>
             </div>
           )}
@@ -1209,7 +1209,7 @@ function ClubChampionCard({
                 )}
                 {femaleMembers.length > 0 && (
                   <span className="bg-idm-female/8 text-idm-female/70 text-[10px] border border-idm-female/12 px-2.5 py-1 rounded-md font-bold flex items-center gap-1">
-                    <Users className="w-3 h-3" />{femaleMembers.length} Female
+                    <Users className="w-3 h-3" />{femaleMembers.length} Cewe
                   </span>
                 )}
                 <span className="bg-muted/5 text-muted-foreground text-[10px] border border-border/15 px-2.5 py-1 rounded-md font-bold flex items-center gap-1">

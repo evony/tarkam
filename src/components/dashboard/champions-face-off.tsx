@@ -55,7 +55,7 @@ export function ChampionsFaceOff({ maleRankings, femaleRankings }: ChampionsFace
           <ChampionTeamCard
             champ={maleChamp}
             divisionImage={cdnImage('/images/male-division.png')}
-            divisionLabel="♂ Male Division"
+            divisionLabel="♂ Cowo"
             divisionColor="text-cyan-400"
             theme={{
               borderGradient: 'from-cyan-400/40 via-cyan-400/10 to-cyan-400/40',
@@ -74,7 +74,7 @@ export function ChampionsFaceOff({ maleRankings, femaleRankings }: ChampionsFace
           <ChampionTeamCard
             champ={femaleChamp}
             divisionImage={cdnImage('/images/female-division.png')}
-            divisionLabel="♀ Female Division"
+            divisionLabel="♀ Cewe"
             divisionColor="text-pink-300"
             theme={{
               borderGradient: 'from-pink-300/40 via-pink-300/10 to-pink-300/40',

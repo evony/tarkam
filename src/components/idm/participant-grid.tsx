@@ -293,7 +293,7 @@ export function ParticipantGrid({ players, onPlayerClick }: ParticipantGridProps
           </div>
           <div>
             <h3 className="text-xs font-bold uppercase tracking-wider">Daftar Peserta</h3>
-            <p className="text-[9px] text-muted-foreground">{division === 'male' ? '🕺 Divisi Male' : '💃 Divisi Female'}</p>
+            <p className="text-[9px] text-muted-foreground">{division === 'male' ? '🕺 Divisi Cowo' : '💃 Divisi Cewe'}</p>
           </div>
           <Badge className={`${dt.casinoBadge} ml-auto text-[9px]`}>{filteredPlayers.length} Players</Badge>
         </div>

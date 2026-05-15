@@ -77,14 +77,14 @@ const DIVISION_CONFIG = {
     color: '#2E9FFF',
     colorRgb: '46,159,255',
     gradient: 'from-[#2E9FFF] via-[#1478D9] to-[#0a0c16]',
-    label: 'Male Tarkam',
+    label: 'Cowo Tarkam',
     icon: '🕺',
   },
   female: {
     color: '#FF2D78',
     colorRgb: '255,45,120',
     gradient: 'from-[#FF2D78] via-[#D9165E] to-[#0a0c16]',
-    label: 'Female Tarkam',
+    label: 'Cewe Tarkam',
     icon: '💃',
   },
 };

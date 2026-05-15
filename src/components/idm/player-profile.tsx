@@ -529,7 +529,7 @@ export function PlayerProfile({ player, onClose, rank, skinMap, preferredSkinTyp
             {/* Division badge — below rank or top-left */}
             <div className="absolute top-3 left-3 z-10" style={{ marginTop: isTop3 ? '28px' : 0 }}>
               <Badge className={`${dt.casinoBadge} text-[9px]`}>
-                {playerDivision === 'male' ? '🕺 Divisi Male' : '💃 Divisi Female'}
+                {playerDivision === 'male' ? '🕺 Divisi Cowo' : '💃 Divisi Cewe'}
               </Badge>
             </div>
 

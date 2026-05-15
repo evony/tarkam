@@ -83,8 +83,8 @@ const faqData = [
         a: 'Buka menu "Komunitas" di navigasi utama, atau klik Quick Link "Leaderboard" di halaman ini. Leaderboard menampilkan peringkat pemain berdasarkan performa pertandingan di setiap divisi.'
       },
       {
-        q: 'Apa perbedaan divisi Male dan Female?',
-        a: 'Divisi Male dan Female adalah kategori pertandingan terpisah. Setiap divisi memiliki leaderboard, jadwal pertandingan, dan juara season masing-masing. Pilih divisi sesuai kategori Anda di navigasi utama.'
+        q: 'Apa perbedaan divisi Cowo dan Cewe?',
+        a: 'Divisi Cowo dan Cewe adalah kategori pertandingan terpisah. Setiap divisi memiliki leaderboard, jadwal pertandingan, dan juara season masing-masing. Pilih divisi sesuai kategori Anda di navigasi utama.'
       },
       {
         q: 'Siapa Juara Season?',
@@ -339,7 +339,7 @@ export function BantuanView() {
               </div>
               <div>
                 <p className="text-sm font-semibold text-foreground">Pilih Divisi</p>
-                <p className="text-xs text-muted-foreground mt-0.5">Pilih divisi Male atau Female sesuai kategori Anda untuk melihat leaderboard & pertandingan.</p>
+                <p className="text-xs text-muted-foreground mt-0.5">Pilih divisi Cowo atau Cewe sesuai kategori Anda untuk melihat leaderboard & pertandingan.</p>
               </div>
             </div>
             {/* Step 3 */}

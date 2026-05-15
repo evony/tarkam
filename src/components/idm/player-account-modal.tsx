@@ -493,7 +493,7 @@ export function PlayerAccountModal({ open, onOpenChange }: PlayerAccountModalPro
               {/* Division Badge */}
               <div className="flex justify-center mb-4">
                 <Badge className={`${regDivision === 'male' ? 'bg-idm-male/15 text-idm-male border-idm-male/25' : 'bg-idm-female/15 text-idm-female border-idm-female/25'} text-[10px] border gap-1`}>
-                  {regDivision === 'male' ? '🕺 Divisi Male' : '💃 Divisi Female'}
+                  {regDivision === 'male' ? '🕺 Divisi Cowo' : '💃 Divisi Cewe'}
                 </Badge>
               </div>
 

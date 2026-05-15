@@ -348,7 +348,7 @@ function buildVideoHighlights(
     if (season.status === 'COMPLETED' || season.number === femaleData?.season?.number) {
       videos.push({
         id: `season-highlights-female-s${season.number}`,
-        title: `Season ${season.number} Highlights — Female`,
+        title: `Season ${season.number} Highlights — Cewe`,
         seasonNumber: season.number,
         division: 'female',
         type: 'highlights',
@@ -388,7 +388,7 @@ function buildVideoHighlights(
     if (!videos.find(v => v.division === 'female' && v.type === 'highlights')) {
       placeholders.push({
         id: `season-highlights-female-s${femaleSn}`,
-        title: `Season ${femaleSn} Highlights — Female`,
+        title: `Season ${femaleSn} Highlights — Cewe`,
         seasonNumber: femaleSn,
         division: 'female',
         type: 'highlights',
@@ -1444,10 +1444,10 @@ export function ExperiencesSection({
                       e.currentTarget.style.borderColor = 'rgba(46,159,255,0.25)';
                       e.currentTarget.style.boxShadow = 'none';
                     }}
-                    aria-label="Masuk Male Tarkam"
+                    aria-label="Masuk Cowo Tarkam"
                   >
                     <Zap className="w-4 h-4" />
-                    <span>Male</span>
+                    <span>Cowo</span>
                   </button>
                   <button
                     onClick={() => onEnterApp('female')}
@@ -1467,10 +1467,10 @@ export function ExperiencesSection({
                       e.currentTarget.style.borderColor = 'rgba(255,45,120,0.25)';
                       e.currentTarget.style.boxShadow = 'none';
                     }}
-                    aria-label="Masuk Female Tarkam"
+                    aria-label="Masuk Cewe Tarkam"
                   >
                     <Star className="w-4 h-4" />
-                    <span>Female</span>
+                    <span>Cewe</span>
                   </button>
                 </div>
               </div>

@@ -161,7 +161,7 @@ export function TournamentManager() {
           <div className="col-span-2">
             <Label className="text-xs">Nama Tournament</Label>
             <Input
-              placeholder="Week 6 - Male Division"
+              placeholder="Week 6 - Cowo"
               value={name}
               onChange={(e) => setName(e.target.value)}
               className="h-8 text-xs bg-background/50 border-border/30 mt-1"
@@ -186,8 +186,8 @@ export function TournamentManager() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="MALE">♂ Male</SelectItem>
-                <SelectItem value="FEMALE">♀ Female</SelectItem>
+                <SelectItem value="MALE">♂ Cowo</SelectItem>
+                <SelectItem value="FEMALE">♀ Cewe</SelectItem>
               </SelectContent>
             </Select>
           </div>

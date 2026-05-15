@@ -211,7 +211,7 @@ function LandingAuthButton({
           <div className="px-3 py-2.5 border-b border-idm-gold-warm/10 bg-idm-gold-warm/[0.03]">
             <p className="text-xs font-bold text-foreground truncate">{displayName}</p>
             <p className="text-[10px] text-muted-foreground mt-0.5">
-              {isAdmin ? `Admin · ${adminAuth.admin?.role}` : isPlayer ? `Peserta · ${playerAuth.account?.player?.division === 'male' ? '♂ Male' : '♀ Female'}` : ''}
+              {isAdmin ? `Admin · ${adminAuth.admin?.role}` : isPlayer ? `Peserta · ${playerAuth.account?.player?.division === 'male' ? '♂ Cowo' : '♀ Cewe'}` : ''}
             </p>
           </div>
           {/* Actions */}

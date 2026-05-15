@@ -512,7 +512,7 @@ export function DonationModal({ open, onOpenChange, defaultType = 'season', defa
                     <Zap className="w-6 h-6 text-idm-male" />
                   </div>
                   <div className="text-center">
-                    <span className="text-sm font-black text-idm-male block">Male</span>
+                    <span className="text-sm font-black text-idm-male block">Cowo</span>
                     <span className="text-lg">🕺</span>
                   </div>
                   <span className="text-[10px] text-idm-male/60 font-medium uppercase tracking-wider">Prize Pool</span>
@@ -529,7 +529,7 @@ export function DonationModal({ open, onOpenChange, defaultType = 'season', defa
                     <Star className="w-6 h-6 text-idm-female" />
                   </div>
                   <div className="text-center">
-                    <span className="text-sm font-black text-idm-female block">Female</span>
+                    <span className="text-sm font-black text-idm-female block">Cewe</span>
                     <span className="text-lg">💃</span>
                   </div>
                   <span className="text-[10px] text-idm-female/60 font-medium uppercase tracking-wider">Prize Pool</span>

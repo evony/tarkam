@@ -137,7 +137,7 @@ export function MvpSection({
                           }}
                         >
                           <Music className="w-4 h-4" style={{ color: '#22d3ee' }} />
-                          <span className="text-[11px] font-bold uppercase tracking-wider" style={{ color: '#22d3ee' }}>Male</span>
+                          <span className="text-[11px] font-bold uppercase tracking-wider" style={{ color: '#22d3ee' }}>Cowo</span>
                         </div>
                         {/* MVP Badge */}
                         <div
@@ -300,7 +300,7 @@ export function MvpSection({
                           }}
                         >
                           <Shield className="w-4 h-4" style={{ color: '#c084fc' }} />
-                          <span className="text-[11px] font-bold uppercase tracking-wider" style={{ color: '#c084fc' }}>Female</span>
+                          <span className="text-[11px] font-bold uppercase tracking-wider" style={{ color: '#c084fc' }}>Cewe</span>
                         </div>
                         {/* MVP Badge */}
                         <div

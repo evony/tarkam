@@ -329,7 +329,7 @@ function WaRegCard({
   const [selectedTier, setSelectedTier] = useState(reg.assignedTier || 'B');
   const statusCfg = STATUS_CONFIG[reg.status] || STATUS_CONFIG.pending;
   const isPending = reg.status === 'pending';
-  const divLabel = reg.division === 'M' ? '♂ Male' : reg.division === 'F' ? '♀ Female' : reg.division;
+  const divLabel = reg.division === 'M' ? '♂ Cowo' : reg.division === 'F' ? '♀ Cewe' : reg.division;
 
   return (
     <div className={`rounded-lg border ${

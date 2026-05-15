@@ -165,7 +165,7 @@ export function Leaderboard({ rankings, division, title }: LeaderboardProps) {
                   </h3>
                   <div className="flex items-center gap-2 mt-0.5">
                     <span className="text-[11px] text-muted-foreground/60">
-                      {division === 'MALE' ? '♂ Male' : division === 'FEMALE' ? '♀ Female' : '🌐 Semua'}
+                      {division === 'MALE' ? '♂ Cowo' : division === 'FEMALE' ? '♀ Cewe' : '🌐 Semua'}
                     </span>
                     <Badge variant="outline" className={`text-[9px] h-4 px-1.5 ${divBadgeClasses}`}>
                       {division}

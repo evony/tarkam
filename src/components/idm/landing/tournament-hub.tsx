@@ -24,7 +24,7 @@ interface TournamentHubProps {
 const DIVISION = {
   male: {
     key: 'male' as const,
-    title: 'Male Tarkam',
+    title: 'Cowo Tarkam',
     icon: Music,
     color: '#2E9FFF',
     colorLight: '#57B5FF',
@@ -42,7 +42,7 @@ const DIVISION = {
   },
   female: {
     key: 'female' as const,
-    title: 'Female Tarkam',
+    title: 'Cewe Tarkam',
     icon: Shield,
     color: '#FF2D78',
     colorLight: '#FF5C9A',

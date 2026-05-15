@@ -176,12 +176,12 @@ export function CommunityDonors({ maleData, femaleData, onSawer }: CommunityDono
             <div className="flex sm:hidden items-center gap-3 mt-1">
               {totalMale > 0 && (
                 <span className="text-[10px] text-idm-male-light/80">
-                  ♂ Male {formatRupiahShort(totalMale)}
+                  ♂ Cowo {formatRupiahShort(totalMale)}
                 </span>
               )}
               {totalFemale > 0 && (
                 <span className="text-[10px] text-idm-female-light/80">
-                  ♀ Female {formatRupiahShort(totalFemale)}
+                  ♀ Cewe {formatRupiahShort(totalFemale)}
                 </span>
               )}
             </div>

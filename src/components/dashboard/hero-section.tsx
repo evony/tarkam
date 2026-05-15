@@ -35,7 +35,7 @@ export function HeroSection({ stats, tournament, division, onSawer, onRegister, 
   const bgX = useTransform(springX, [-0.5, 0.5], [-8, 8])
   const bgY = useTransform(springY, [-0.5, 0.5], [-8, 8])
 
-  const divisionLabel = division === 'MALE' ? 'Male Division' : division === 'FEMALE' ? 'Female Division' : 'Tarkam Random Arena'
+  const divisionLabel = division === 'MALE' ? 'Divisi Cowo' : division === 'FEMALE' ? 'Divisi Cewe' : 'Tarkam Random Arena'
   const divisionIcon = division === 'MALE' ? '♂' : division === 'FEMALE' ? '♀' : '🏆'
 
   const textColor = getDivisionTextColor(division)

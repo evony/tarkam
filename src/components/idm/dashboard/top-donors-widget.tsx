@@ -332,7 +332,7 @@ export const TopDonorsWidget = React.memo(function TopDonorsWidget({ onDonate, s
           <div className="space-y-1.5">
             <div className="flex items-center justify-center gap-1.5 mb-1">
               <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider border bg-idm-male/10 text-idm-male-light border-idm-male/30">
-                ♂ Male
+                ♂ Cowo
               </span>
               <span className="text-[9px] text-muted-foreground/50">{maleDonors.length} sawer</span>
             </div>
@@ -375,7 +375,7 @@ export const TopDonorsWidget = React.memo(function TopDonorsWidget({ onDonate, s
           <div className="space-y-1.5">
             <div className="flex items-center justify-center gap-1.5 mb-1">
               <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider border bg-idm-female/10 text-idm-female-light border-idm-female/30">
-                ♀ Female
+                ♀ Cewe
               </span>
               <span className="text-[9px] text-muted-foreground/50">{femaleDonors.length} sawer</span>
             </div>
