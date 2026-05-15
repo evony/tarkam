@@ -25,7 +25,6 @@ const SeasonChampionSection = dynamic(() => import('./landing/season-champion-se
 const ExperiencesSection = dynamic(() => import('./landing/experiences-section').then(m => ({ default: m.ExperiencesSection })), { ssr: false, loading: () => <div className="h-64" /> });
 const ClubsSection = dynamic(() => import('./landing/clubs-section').then(m => ({ default: m.ClubsSection })), { ssr: false, loading: () => <div className="h-64" /> });
 const SponsorsSection = dynamic(() => import('./landing/sponsors-section').then(m => ({ default: m.SponsorsSection })), { ssr: false, loading: () => null });
-const CTASection = dynamic(() => import('./landing/cta-section').then(m => ({ default: m.CTASection })), { ssr: false, loading: () => <div className="h-64" /> });
 const LandingFooter = dynamic(() => import('./landing/landing-footer').then(m => ({ default: m.LandingFooter })), { ssr: false, loading: () => null });
 
 // ★ Modals: lazy loaded — removes ~225KB (including framer-motion) from initial bundle
@@ -731,18 +730,6 @@ export function LandingPage() {
 
       {/* Sponsors — "Didukung Oleh" */}
       <SponsorsSection />
-
-      <SectionDivider />
-
-      {/* CTA — Call to Action */}
-      <div className="section-reveal">
-      <CTASection
-        onEnterCommunity={enterCommunity}
-        onRegister={() => { setRegistrationDefaultDivision('male'); setRegistrationModalOpen(true); }}
-        cmsSettings={cms}
-        isRegistrationOpen={maleRegOpen || femaleRegOpen}
-      />
-      </div>
 
       <LandingFooter
         cmsSettings={cms}

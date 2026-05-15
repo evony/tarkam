@@ -6,7 +6,7 @@ import { broadcastInvalidation } from '@/lib/cross-tab-sync';
 import {
   Image as ImageIcon, Type, Layout, Save, Plus, Trash2, ChevronDown,
   ChevronUp, Eye, EyeOff, Edit3, X, Loader2, Palette,
-  FileText, Settings2, Globe, Sparkles, PanelTop, PanelBottom, Heart, Link2, Trophy, Shield, Swords, Flame, Crown, Video, ShoppingBag
+  FileText, Settings2, Globe, Sparkles, PanelTop, PanelBottom, Heart, Link2, Trophy, Shield, Swords, Crown, Video, ShoppingBag
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -61,7 +61,6 @@ const sectionIconMap: Record<string, React.ComponentType<{ className?: string }>
   champions: Layout,
   mvp: Layout,
   clubs: Layout,
-  cta: Flame,
   footer: PanelBottom,
 };
 
@@ -1491,123 +1490,6 @@ export function CmsPanel() {
                       disabled={saveSettingsBatch.isPending}
                     >
                       {saveSettingsBatch.isPending ? <Loader2 className="w-3 h-3 mr-1 animate-spin" /> : <Save className="w-3 h-3 mr-1" />} Simpan Video Highlights
-                    </Button>
-                  </CardContent>
-                </Card>
-
-                {/* CTA — Call to Action */}
-                <Card className="border border-border/50">
-                  <CardContent className="p-4 space-y-4">
-                    <h3 className="text-base font-bold flex items-center gap-2">
-                      <Flame className="w-5 h-5 text-idm-gold-warm" /> CTA / Call to Action
-                      <Badge className="text-[8px] border-0 bg-rose-500/10 text-rose-400">Section 7</Badge>
-                    </h3>
-                    <p className="text-[10px] text-muted-foreground">Kelola teks judul, deskripsi, tombol, dan trust badges di section CTA sebelum footer.</p>
-
-                    {/* Main Text */}
-                    <div className="space-y-2">
-                      <h4 className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
-                        <PanelTop className="w-3 h-3" /> Teks Utama
-                      </h4>
-                      <div>
-                        <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Judul CTA</label>
-                        <Input
-                          value={settingsForm.cta_title || ''}
-                          onChange={(e) => updateSettingsForm({ cta_title: e.target.value })}
-                          className="text-sm"
-                          placeholder="Siap Menjadi Champion?"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Deskripsi CTA</label>
-                        <Textarea
-                          value={settingsForm.cta_description || ''}
-                          onChange={(e) => updateSettingsForm({ cta_description: e.target.value })}
-                          className="text-sm"
-                          placeholder="Bergabung sekarang dan tunjukkan skill-mu di arena Tarkam IDM. Ribuan pemain sudah menunggu!"
-                        />
-                      </div>
-                    </div>
-
-                    <Separator />
-
-                    {/* Buttons */}
-                    <div className="space-y-2">
-                      <h4 className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
-                        <Sparkles className="w-3 h-3" /> Tombol Aksi
-                      </h4>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div>
-                          <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Tombol Utama (Gold)</label>
-                          <Input
-                            value={settingsForm.cta_button_primary_text || ''}
-                            onChange={(e) => updateSettingsForm({ cta_button_primary_text: e.target.value })}
-                            className="text-sm"
-                            placeholder="Masuk Arena"
-                          />
-                        </div>
-                        <div>
-                          <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Tombol Sekunder (Outline)</label>
-                          <Input
-                            value={settingsForm.cta_button_secondary_text || ''}
-                            onChange={(e) => updateSettingsForm({ cta_button_secondary_text: e.target.value })}
-                            className="text-sm"
-                            placeholder="Daftar Sekarang"
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                    <Separator />
-
-                    {/* Trust Badges */}
-                    <div className="space-y-2">
-                      <h4 className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
-                        <Shield className="w-3 h-3" /> Trust Badges (3)
-                      </h4>
-                      <p className="text-[9px] text-muted-foreground/60">Setiap badge memiliki nilai dan label. Contoh: nilai "12+" dengan label "Club Terdaftar".</p>
-                      {[1, 2, 3].map((num) => (
-                        <div key={num} className="grid grid-cols-2 gap-2 p-3 sm:p-4 rounded-lg bg-muted/20 border border-border/30">
-                          <div>
-                            <label className="text-[9px] font-semibold text-muted-foreground/70 uppercase tracking-wider">Nilai Badge #{num}</label>
-                            <Input
-                              value={settingsForm[`cta_badge_${num}_value`] || ''}
-                              onChange={(e) => updateSettingsForm({ [`cta_badge_${num}_value`]: e.target.value })}
-                              className="h-8 text-[11px]"
-                              placeholder={['12+', '120+', '2'][num - 1]}
-                            />
-                          </div>
-                          <div>
-                            <label className="text-[9px] font-semibold text-muted-foreground/70 uppercase tracking-wider">Label Badge #{num}</label>
-                            <Input
-                              value={settingsForm[`cta_badge_${num}_label`] || ''}
-                              onChange={(e) => updateSettingsForm({ [`cta_badge_${num}_label`]: e.target.value })}
-                              className="h-8 text-[11px]"
-                              placeholder={['Club Terdaftar', 'Pemain Aktif', 'Season'][num - 1]}
-                            />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-
-                    <Button
-                      size="sm"
-                      className="text-[10px] bg-idm-gold-warm hover:bg-[#b8912e] text-black"
-                      onClick={() => {
-                        saveSettingsBatch.mutate([
-                          { key: 'cta_title', value: settingsForm.cta_title || '', type: 'text' },
-                          { key: 'cta_description', value: settingsForm.cta_description || '', type: 'text' },
-                          { key: 'cta_button_primary_text', value: settingsForm.cta_button_primary_text || '', type: 'text' },
-                          { key: 'cta_button_secondary_text', value: settingsForm.cta_button_secondary_text || '', type: 'text' },
-                          ...[1, 2, 3].flatMap((num) => [
-                            { key: `cta_badge_${num}_value`, value: settingsForm[`cta_badge_${num}_value`] || '', type: 'text' },
-                            { key: `cta_badge_${num}_label`, value: settingsForm[`cta_badge_${num}_label`] || '', type: 'text' },
-                          ]),
-                        ]);
-                      }}
-                      disabled={saveSettingsBatch.isPending}
-                    >
-                      {saveSettingsBatch.isPending ? <Loader2 className="w-3 h-3 mr-1 animate-spin" /> : <Save className="w-3 h-3 mr-1" />} Simpan CTA
                     </Button>
                   </CardContent>
                 </Card>
