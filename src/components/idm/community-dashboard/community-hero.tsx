@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import React, { useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   Trophy,
   Users,
@@ -24,47 +24,35 @@ import { parseWIBDate, formatWIBTime, formatWIBDateNumeric, getWIBDayOfWeek, for
 import type { StatsData } from '@/types/stats';
 
 /* ═══════════════════════════════════════════════════════
-   Animated Number — count-up with easeOutExpo
-   Uses useRef + direct DOM update (textContent) instead of
-   useState + setState to avoid 60fps React re-renders
+   Animated Number — count-up with ease-out cubic
    ═══════════════════════════════════════════════════════ */
-const AnimatedNumber = React.memo(function AnimatedNumber({ target, duration = 1500, prefix = '', suffix = '' }: { target: number; duration?: number; prefix?: string; suffix?: string }) {
-  const spanRef = useRef<HTMLSpanElement>(null);
-  const currentValueRef = useRef(0);
+function AnimatedNumber({ value, duration = 1200 }: { value: number; duration?: number }) {
+  const [display, setDisplay] = useState(0);
+  const ref = useRef(value);
+  const rafRef = useRef<number>(0);
 
   useEffect(() => {
-    const start = currentValueRef.current;
-    const diff = target - start;
-    if (diff === 0) return;
-
+    const start = ref.current;
+    const end = value;
     const startTime = performance.now();
-    let rafId: number;
+    const diff = end - start;
 
-    const animate = (now: number) => {
+    function tick(now: number) {
       const elapsed = now - startTime;
       const progress = Math.min(elapsed / duration, 1);
-      // easeOutExpo for smooth deceleration
-      const eased = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
-      const current = Math.round(start + diff * eased);
-      currentValueRef.current = current;
-
-      if (spanRef.current) {
-        spanRef.current.textContent = `${prefix}${current.toLocaleString('id-ID')}${suffix}`;
-      }
-
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setDisplay(Math.round(start + diff * eased));
       if (progress < 1) {
-        rafId = requestAnimationFrame(animate);
+        rafRef.current = requestAnimationFrame(tick);
       }
-    };
+    }
+    rafRef.current = requestAnimationFrame(tick);
+    ref.current = value;
+    return () => cancelAnimationFrame(rafRef.current);
+  }, [value, duration]);
 
-    rafId = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(rafId);
-  }, [target, duration, prefix, suffix]);
-
-  // Reading ref during render is intentional: avoids 60fps setState re-renders
-  // by using direct DOM textContent updates in the rAF loop instead.
-  return <span ref={spanRef}>{prefix}{currentValueRef.current.toLocaleString('id-ID')}{suffix}</span>; // eslint-disable-line react-hooks/refs
-});
+  return <>{display.toLocaleString('id-ID')}</>;
+}
 
 /* ═══════════════════════════════════════════════════════
    Date/Time Helpers — WIB (Asia/Jakarta) timezone formatting
@@ -205,7 +193,7 @@ function DetailItem({
    Division Card — tournament info card for Male/Female
    Shows: status, name, detail info, players, + CTA buttons
    ═══════════════════════════════════════════════════════ */
-const DivisionCard = React.memo(function DivisionCard({
+function DivisionCard({
   division,
   data,
   status,
@@ -459,7 +447,7 @@ const DivisionCard = React.memo(function DivisionCard({
       </div>
     </div>
   );
-});
+}
 
 /* ═══════════════════════════════════════════════════════
    COMMUNITY HERO — Redesigned tournament-centric banner
@@ -481,7 +469,7 @@ interface CommunityHeroProps {
   onPayment?: (division: 'male' | 'female') => void;
 }
 
-export const CommunityHero = React.memo(function CommunityHero({ maleData, femaleData, leagueData, onSawer, onRegister, onPayment }: CommunityHeroProps) {
+export function CommunityHero({ maleData, femaleData, leagueData, onSawer, onRegister, onPayment }: CommunityHeroProps) {
   const { setCurrentView, setDivision, playerAuth } = useAppStore();
   const { heroBannerDashboard } = useBackgroundImages();
 
@@ -752,7 +740,7 @@ export const CommunityHero = React.memo(function CommunityHero({ maleData, femal
                 <stat.icon className={`w-3.5 h-3.5 ${stat.color} opacity-70`} />
                 <div className="flex flex-col">
                   <span className={`text-xs sm:text-sm font-black tabular-nums ${stat.color} leading-tight`}>
-                    <AnimatedNumber target={stat.value} />
+                    <AnimatedNumber value={stat.value} />
                   </span>
                   <span className="text-[7px] sm:text-[8px] text-muted-foreground uppercase tracking-wider font-semibold leading-tight">
                     {stat.label}
@@ -794,4 +782,4 @@ export const CommunityHero = React.memo(function CommunityHero({ maleData, femal
       </div>
     </section>
   );
-});
+}

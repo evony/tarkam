@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   Trophy, Calendar, ChevronDown, Crown,
   CheckCircle2, Circle,
@@ -52,7 +52,7 @@ interface SeasonSelectorProps {
   selectedDivision: 'all' | 'male' | 'female';
 }
 
-export const SeasonSelector = React.memo(function SeasonSelector({
+export function SeasonSelector({
   selectedSeason,
   onSeasonChange,
   selectedDivision,
@@ -308,4 +308,4 @@ export const SeasonSelector = React.memo(function SeasonSelector({
       </Popover>
     </div>
   );
-});
+}

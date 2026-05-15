@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
   Trophy, Crown, Medal, Users, Calendar, Shield,
@@ -375,7 +374,7 @@ interface HistoricalSeasonViewProps {
   onBack: () => void;
 }
 
-export const HistoricalSeasonView = React.memo(function HistoricalSeasonView({ season, onBack }: HistoricalSeasonViewProps) {
+export function HistoricalSeasonView({ season, onBack }: HistoricalSeasonViewProps) {
   const isMale = season.division === 'male';
 
   // Fetch season detail — API returns flat object with players[] and clubs[]
@@ -423,7 +422,7 @@ export const HistoricalSeasonView = React.memo(function HistoricalSeasonView({ s
   const clubs: StandingClub[] = ((data as unknown as Record<string, unknown>).clubs || []) as StandingClub[];
 
   return (
-    <div className="space-y-4" style={{ contentVisibility: 'auto', containIntrinsicSize: '0 800px' }}>
+    <div className="space-y-4">
       {/* Historical Banner */}
       <HistoricalBanner season={season} />
 
@@ -510,4 +509,4 @@ export const HistoricalSeasonView = React.memo(function HistoricalSeasonView({ s
       </Card>
     </div>
   );
-});
+}

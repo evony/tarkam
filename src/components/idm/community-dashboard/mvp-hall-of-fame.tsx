@@ -32,7 +32,7 @@ interface MvpHallOfFameProps {
 const TOTAL_WEEKS = 10;
 
 /* ─── Single Week Slot — Empty or Filled ─── */
-const WeekSlot = React.memo(function WeekSlot({
+function WeekSlot({
   weekNumber,
   entry,
   division,
@@ -124,11 +124,10 @@ const WeekSlot = React.memo(function WeekSlot({
       </div>
     </div>
   );
-});
-
+}
 
 /* ─── Scrollable Timeline with Gradient Fade Hints ─── */
-const ScrollableTimeline = React.memo(function ScrollableTimeline({
+function ScrollableTimeline({
   division,
   entries,
 }: {
@@ -196,11 +195,10 @@ const ScrollableTimeline = React.memo(function ScrollableTimeline({
       </div>
     </div>
   );
-});
-
+}
 
 /* ─── Per-division timeline row (bare mode for unified card) ─── */
-const DivisionTimeline = React.memo(function DivisionTimeline({
+function DivisionTimeline({
   division,
   entries,
   bare = false,
@@ -239,12 +237,12 @@ const DivisionTimeline = React.memo(function DivisionTimeline({
 
   // Full mode: just the timeline
   return timeline;
-});
+}
 
 /* ═══════════════════════════════════════════
    Main Component — MVP Hall of Fame
    ═══════════════════════════════════════════ */
-export const MvpHallOfFame = React.memo(function MvpHallOfFame({ maleData, femaleData, selectedDivision = 'all' }: MvpHallOfFameProps) {
+export function MvpHallOfFame({ maleData, femaleData, selectedDivision = 'all' }: MvpHallOfFameProps) {
   const ct = getCommunityTheme();
   const showMale = selectedDivision === 'all' || selectedDivision === 'male';
   const showFemale = selectedDivision === 'all' || selectedDivision === 'female';
@@ -307,4 +305,4 @@ export const MvpHallOfFame = React.memo(function MvpHallOfFame({ maleData, femal
       </div>
     </Card>
   );
-});
+}

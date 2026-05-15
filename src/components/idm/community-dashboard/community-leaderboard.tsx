@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { AvatarMedia } from '@/components/ui/avatar-media';
 import Image from 'next/image';
 import { useQuery } from '@tanstack/react-query';
@@ -58,7 +58,7 @@ interface CommunityLeaderboardProps {
 
 type DivisionFilter = 'all' | 'male' | 'female';
 
-export const CommunityLeaderboard = React.memo(function CommunityLeaderboard({
+export function CommunityLeaderboard({
   maleData,
   femaleData,
   onPlayerClick,
@@ -393,14 +393,14 @@ export const CommunityLeaderboard = React.memo(function CommunityLeaderboard({
       )}
     </div>
   );
-});
+}
 
 
 /* ═══════════════════════════════════════════════════════
    PERINGKAT HEADER — Standalone filter bar for sticky use
    Contains: Peringkat title + Player/Club toggle + Division filter
    ═══════════════════════════════════════════════════════ */
-export const PeringkatHeader = React.memo(function PeringkatHeader({
+export function PeringkatHeader({
   leaderboardSort,
   onLeaderboardSortChange,
   divisionFilter,
@@ -488,4 +488,4 @@ export const PeringkatHeader = React.memo(function PeringkatHeader({
       </div>
     </div>
   );
-});
+}

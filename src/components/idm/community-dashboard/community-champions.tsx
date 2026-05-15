@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Crown, TrendingUp, Flame, BarChart3, Music, Shield, Gem, Heart, Banknote } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
@@ -20,7 +20,7 @@ interface CommunityChampionsProps {
   onPlayerClick: (player: TopPlayer & { division?: string }, division: 'male' | 'female') => void;
 }
 
-export const CommunityChampions = React.memo(function CommunityChampions({ maleData, femaleData, selectedDivision = 'all', onPlayerClick }: CommunityChampionsProps) {
+export function CommunityChampions({ maleData, femaleData, selectedDivision = 'all', onPlayerClick }: CommunityChampionsProps) {
   const [activeTab, setActiveTab] = useState<'top3' | 'sultan'>('top3');
 
   return (
@@ -97,10 +97,10 @@ export const CommunityChampions = React.memo(function CommunityChampions({ maleD
       )}
     </div>
   );
-});
+}
 
 /* ─── Per-division Champions Card ─── */
-const ChampionsSection = React.memo(function ChampionsSection({
+function ChampionsSection({
   title,
   emoji,
   division,
@@ -164,10 +164,10 @@ const ChampionsSection = React.memo(function ChampionsSection({
       </div>
     </Card>
   );
-});
+}
 
 /* ─── Sultan of the Week Section — Top Penyawer per division ─── */
-export const SultanOfWeekSection = React.memo(function SultanOfWeekSection({
+export function SultanOfWeekSection({
   division,
   sultanData,
   skinMap,
@@ -356,10 +356,10 @@ export const SultanOfWeekSection = React.memo(function SultanOfWeekSection({
       </div>
     </Card>
   );
-});
+}
 
 /* ─── Top Form Section — Weekly Best Performer per division (LEGACY — kept for backward compat) ─── */
-export const TopFormSection = React.memo(function TopFormSection({
+export function TopFormSection({
   division,
   performer,
   onPlayerClick,
@@ -532,7 +532,7 @@ export const TopFormSection = React.memo(function TopFormSection({
       </div>
     </Card>
   );
-});
+}
 
 /** Compact currency formatting for widget display */
 function formatCurrencyShort(amount: number): string {
