@@ -49,7 +49,7 @@ export function RegistrationModal({ open, onClose, defaultDivision }: Registrati
     city: '',
     clubProfileId: '',
   });
-  const [createAccount, setCreateAccount] = useState(true);
+  const [createAccount, setCreateAccount] = useState(false);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -331,7 +331,7 @@ export function RegistrationModal({ open, onClose, defaultDivision }: Registrati
     setFormData({ name: '', joki: '', phone: '', city: '', clubProfileId: '' });
     setPassword('');
     setConfirmPassword('');
-    setCreateAccount(true);
+    setCreateAccount(false);
     setSubmitResult(null);
     setWarningState(null);
     onClose();
@@ -879,7 +879,7 @@ export function RegistrationModal({ open, onClose, defaultDivision }: Registrati
                         />
                         <div className="flex-1">
                           <span className="text-xs font-semibold text-foreground group-hover:text-idm-gold-warm transition-colors">Buat akun login?</span>
-                          <p className="text-[10px] text-muted-foreground">Dengan membuat akun, kamu bisa login untuk melihat statistik dan progress kamu</p>
+                          <p className="text-[10px] text-idm-gold-warm">Dengan membuat akun, kamu bisa login untuk melihat statistik dan progress kamu</p>
                         </div>
                       </label>
 
