@@ -3,7 +3,6 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { Share2, Check, X } from 'lucide-react';
 import { createPortal } from 'react-dom';
-import { motion, AnimatePresence } from 'framer-motion';
 
 /* -------------------------------------------------------------------------- */
 /*  SharePopup — generic social share popup for any content type              */
@@ -210,112 +209,112 @@ export function SharePopup({
 
       {/* Social Media Picker Popup */}
       {showPicker && createPortal(
-        <AnimatePresence>
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 8 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 8 }}
-            transition={{ duration: 0.15 }}
-            className="fixed inset-0 z-[9999] flex items-end sm:items-center justify-center"
-            onClick={() => setShowPicker(false)}
+        <div
+          className="fixed inset-0 z-[9999] flex items-end sm:items-center justify-center"
+          onClick={() => setShowPicker(false)}
+        >
+          {/* Backdrop */}
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
+
+          {/* Picker Card */}
+          <div
+            className="relative z-10 w-full max-w-xs mx-4 mb-4 sm:mb-0 rounded-2xl border border-idm-gold-warm/15 bg-background/98 backdrop-blur-xl shadow-2xl shadow-black/40"
+            onClick={(e) => e.stopPropagation()}
           >
-            {/* Backdrop */}
-            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
+            {/* Header */}
+            <div className="flex items-center justify-between px-4 py-3 border-b border-idm-gold-warm/10 bg-idm-gold-warm/[0.03]">
+              <div className="flex items-center gap-2">
+                <Share2 className="w-4 h-4 text-idm-gold-warm" />
+                <span className="text-sm font-bold text-foreground">{title}</span>
+              </div>
+              <button
+                onClick={() => setShowPicker(false)}
+                className="w-7 h-7 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors cursor-pointer"
+                aria-label="Tutup"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
 
-            {/* Picker Card */}
-            <motion.div
-              className="relative z-10 w-full max-w-xs mx-4 mb-4 sm:mb-0 rounded-2xl border border-idm-gold-warm/15 bg-background/98 backdrop-blur-xl shadow-2xl shadow-black/40 overflow-hidden"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* Header */}
-              <div className="flex items-center justify-between px-4 py-3 border-b border-idm-gold-warm/10 bg-idm-gold-warm/[0.03]">
-                <div className="flex items-center gap-2">
-                  <Share2 className="w-4 h-4 text-idm-gold-warm" />
-                  <span className="text-sm font-bold text-foreground">{title}</span>
-                </div>
+            {/* Subtitle */}
+            {subtitle && (
+              <div className="px-4 pt-3 pb-2">
+                <p className="text-xs text-muted-foreground">
+                  {subtitle}
+                </p>
+              </div>
+            )}
+
+            {/* Social buttons grid */}
+            <div className="px-4 pb-3 grid grid-cols-2 gap-2">
+              {socialLinks.map(s => (
                 <button
-                  onClick={() => setShowPicker(false)}
-                  className="w-7 h-7 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors cursor-pointer"
-                  aria-label="Tutup"
+                  key={s.name}
+                  onClick={() => {
+                    // Open link synchronously from click handler — popup blockers allow this
+                    if (s.isCopyAndOpen) {
+                      handleCopyAndOpen();
+                    }
+                    // Use window.open() directly — called synchronously from user click, browsers allow it
+                    window.open(s.href, '_blank', 'noopener,noreferrer');
+                    // Delay closing so navigation has time to initiate
+                    setTimeout(() => setShowPicker(false), 300);
+                  }}
+                  className={`relative flex items-center gap-2 px-3 py-2.5 rounded-xl text-white text-xs font-semibold transition-all duration-200 active:scale-95 cursor-pointer ${s.color}`}
                 >
-                  <X className="w-4 h-4" />
+                  {s.icon}
+                  <div className="flex flex-col leading-tight">
+                    <span>{s.name}</span>
+                    {s.isCopyAndOpen && <span className="text-[8px] opacity-70 font-normal">Link tersalin, paste manual</span>}
+                  </div>
+                </button>
+              ))}
+            </div>
+
+            {/* Copy link */}
+            <div className="px-4 pb-3">
+              <button
+                onClick={copyLink}
+                className={`w-full flex items-center gap-2 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 active:scale-95 cursor-pointer ${
+                  copied
+                    ? 'bg-green-500/15 text-green-400 border border-green-500/20'
+                    : 'bg-muted/30 text-muted-foreground hover:bg-muted/50 border border-border/40'
+                }`}
+              >
+                {copied ? (
+                  <>
+                    <Check className="w-4 h-4" />
+                    <span>Link Tersalin!</span>
+                  </>
+                ) : (
+                  <>
+                    <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                    </svg>
+                    <span>Salin Link</span>
+                  </>
+                )}
+              </button>
+            </div>
+
+            {/* More apps via native share — only on mobile where navigator.share exists */}
+            {typeof navigator !== 'undefined' && 'share' in navigator && (
+              <div className="px-4 pb-4">
+                <button
+                  onClick={async () => {
+                    await handleNativeShare();
+                    setTimeout(() => setShowPicker(false), 300);
+                  }}
+                  className="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 active:scale-95 cursor-pointer bg-idm-gold-warm/10 text-idm-gold-warm hover:bg-idm-gold-warm/20 border border-idm-gold-warm/15"
+                >
+                  <Share2 className="w-4 h-4" />
+                  <span>Lainnya...</span>
                 </button>
               </div>
-
-              {/* Subtitle */}
-              {subtitle && (
-                <div className="px-4 pt-3 pb-2">
-                  <p className="text-xs text-muted-foreground">
-                    {subtitle}
-                  </p>
-                </div>
-              )}
-
-              {/* Social buttons grid — using <a> tags for reliable link opening (no popup blocker issues) */}
-              <div className="px-4 pb-3 grid grid-cols-2 gap-2">
-                {socialLinks.map(s => (
-                  <a
-                    key={s.name}
-                    href={s.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={s.isCopyAndOpen ? () => handleCopyAndOpen() : () => setShowPicker(false)}
-                    className={`relative flex items-center gap-2 px-3 py-2.5 rounded-xl text-white text-xs font-semibold transition-all duration-200 active:scale-95 cursor-pointer no-underline ${s.color}`}
-                  >
-                    {s.icon}
-                    <div className="flex flex-col leading-tight">
-                      <span>{s.name}</span>
-                      {s.isCopyAndOpen && <span className="text-[8px] opacity-70 font-normal">Link tersalin, paste manual</span>}
-                    </div>
-                  </a>
-                ))}
-              </div>
-
-              {/* Copy link */}
-              <div className="px-4 pb-3">
-                <button
-                  onClick={copyLink}
-                  className={`w-full flex items-center gap-2 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 active:scale-95 cursor-pointer ${
-                    copied
-                      ? 'bg-green-500/15 text-green-400 border border-green-500/20'
-                      : 'bg-muted/30 text-muted-foreground hover:bg-muted/50 border border-border/40'
-                  }`}
-                >
-                  {copied ? (
-                    <>
-                      <Check className="w-4 h-4" />
-                      <span>Link Tersalin!</span>
-                    </>
-                  ) : (
-                    <>
-                      <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-                        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-                      </svg>
-                      <span>Salin Link</span>
-                    </>
-                  )}
-                </button>
-              </div>
-
-              {/* More apps via native share — only on mobile where navigator.share exists */}
-              {typeof navigator !== 'undefined' && 'share' in navigator && (
-                <div className="px-4 pb-4">
-                  <button
-                    onClick={async () => {
-                      await handleNativeShare();
-                      setShowPicker(false);
-                    }}
-                    className="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 active:scale-95 cursor-pointer bg-idm-gold-warm/10 text-idm-gold-warm hover:bg-idm-gold-warm/20 border border-idm-gold-warm/15"
-                  >
-                    <Share2 className="w-4 h-4" />
-                    <span>Lainnya...</span>
-                  </button>
-                </div>
-              )}
-            </motion.div>
-          </motion.div>
-        </AnimatePresence>,
+            )}
+          </div>
+        </div>,
         document.body
       )}
     </div>
