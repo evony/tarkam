@@ -335,9 +335,7 @@ export function TopDonorsWidget({ onDonate, statsData, statsData2 }: TopDonorsWi
               {maleDonors.length > 0 ? maleDonors.map((donor, i) => (
                 <div
                   key={`male-${donor.donorName}`}
-                  className={`donor-row-enter p-2 rounded-lg transition-colors group ${
-                    i === 0 ? 'bg-idm-gold-warm/[0.06] animate-pulse' : 'hover:bg-idm-male/5'
-                  }`}
+                  className={`donor-row-enter p-2 rounded-lg hover:bg-idm-male/5 transition-colors group`}
                   style={{ animationDelay: `${i * 60}ms` }}
                 >
                   <div className="flex items-center gap-1.5">
@@ -346,9 +344,9 @@ export function TopDonorsWidget({ onDonate, statsData, statsData2 }: TopDonorsWi
                       i === 0 ? 'text-idm-gold-warm' : 'text-muted-foreground'
                     }`}>
                       {i === 0 && <span className="mr-0.5">👑</span>}
-                      {donor.donorName || 'Anonymous'}
+                      <span className={i === 0 ? 'animate-pulse' : ''}>{donor.donorName || 'Anonymous'}</span>
                     </span>
-                    <span className="text-[11px] font-bold text-idm-gold-warm shrink-0">
+                    <span className={`text-[11px] font-bold shrink-0 ${i === 0 ? 'animate-pulse text-idm-gold-warm' : 'text-idm-gold-warm'}`}>
                       {formatRupiahShort(donor.maleAmount)}
                     </span>
                   </div>
@@ -380,9 +378,7 @@ export function TopDonorsWidget({ onDonate, statsData, statsData2 }: TopDonorsWi
               {femaleDonors.length > 0 ? femaleDonors.map((donor, i) => (
                 <div
                   key={`female-${donor.donorName}`}
-                  className={`donor-row-enter p-2 rounded-lg transition-colors group ${
-                    i === 0 ? 'bg-idm-gold-warm/[0.06] animate-pulse' : 'hover:bg-idm-female/5'
-                  }`}
+                  className={`donor-row-enter p-2 rounded-lg hover:bg-idm-female/5 transition-colors group`}
                   style={{ animationDelay: `${i * 60}ms` }}
                 >
                   <div className="flex items-center gap-1.5">
@@ -391,9 +387,9 @@ export function TopDonorsWidget({ onDonate, statsData, statsData2 }: TopDonorsWi
                       i === 0 ? 'text-idm-gold-warm' : 'text-muted-foreground'
                     }`}>
                       {i === 0 && <span className="mr-0.5">👑</span>}
-                      {donor.donorName || 'Anonymous'}
+                      <span className={i === 0 ? 'animate-pulse' : ''}>{donor.donorName || 'Anonymous'}</span>
                     </span>
-                    <span className="text-[11px] font-bold text-idm-gold-warm shrink-0">
+                    <span className={`text-[11px] font-bold shrink-0 ${i === 0 ? 'animate-pulse text-idm-gold-warm' : 'text-idm-gold-warm'}`}>
                       {formatRupiahShort(donor.femaleAmount)}
                     </span>
                   </div>
