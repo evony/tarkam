@@ -122,20 +122,20 @@ export function StandingsTab({ data, otherDivisionData, currentDivision, setSele
                 <span className="inline-flex items-center gap-1 text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: DIVISION_BADGE.female.bg, color: DIVISION_BADGE.female.text }}>♀ {femaleCount}</span>
               </div>
             </div>
-            {/* Scrollable table area — touch-action ensures vertical scroll works on mobile */}
-            <div className="max-h-[400px] sm:max-h-[500px] overflow-y-auto custom-scrollbar overscroll-contain" style={{ touchAction: 'pan-y', WebkitOverflowScrolling: 'touch' }}>
-              <div className="overflow-x-auto" style={{ touchAction: 'pan-x pan-y' }}>
+            {/* Mobile: no inner scroll — page itself scrolls. Desktop: max-height with inner scroll */}
+            <div className="sm:max-h-[500px] sm:overflow-y-auto custom-scrollbar">
+              <div className="overflow-x-auto">
                 <Table>
-                  <TableHeader>
+                  <TableHeader className="sticky top-0 z-10">
                     <TableRow className={`hover:bg-transparent border-b ${dt.border} bg-muted/30`}>
-                      <TableHead className="w-10 text-center text-[10px] font-semibold">#</TableHead>
-                      <TableHead className="text-[10px] font-semibold min-w-[120px]">Player</TableHead>
-                      <TableHead className="w-14 text-center text-[10px] font-semibold">Div</TableHead>
-                      <TableHead className="w-14 text-right text-[10px] font-semibold">Pts</TableHead>
-                      <TableHead className="w-10 text-center text-[10px] font-semibold">W</TableHead>
-                      <TableHead className="w-10 text-center text-[10px] font-semibold hidden sm:table-cell">L</TableHead>
-                      <TableHead className="w-14 text-center text-[10px] font-semibold hidden md:table-cell">Streak</TableHead>
-                      <TableHead className="w-10 text-center text-[10px] font-semibold hidden sm:table-cell">MVP</TableHead>
+                      <TableHead className="w-10 text-center text-[10px] font-semibold bg-muted/80 backdrop-blur-sm">#</TableHead>
+                      <TableHead className="text-[10px] font-semibold min-w-[120px] bg-muted/80 backdrop-blur-sm">Player</TableHead>
+                      <TableHead className="w-14 text-center text-[10px] font-semibold bg-muted/80 backdrop-blur-sm">Div</TableHead>
+                      <TableHead className="w-14 text-right text-[10px] font-semibold bg-muted/80 backdrop-blur-sm">Pts</TableHead>
+                      <TableHead className="w-10 text-center text-[10px] font-semibold bg-muted/80 backdrop-blur-sm">W</TableHead>
+                      <TableHead className="w-10 text-center text-[10px] font-semibold hidden sm:table-cell bg-muted/80 backdrop-blur-sm">L</TableHead>
+                      <TableHead className="w-14 text-center text-[10px] font-semibold hidden md:table-cell bg-muted/80 backdrop-blur-sm">Streak</TableHead>
+                      <TableHead className="w-10 text-center text-[10px] font-semibold hidden sm:table-cell bg-muted/80 backdrop-blur-sm">MVP</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -259,17 +259,18 @@ export function StandingsTab({ data, otherDivisionData, currentDivision, setSele
             </div>
             {data.clubs?.length > 0 ? (
               <>
-                <div className="max-h-[400px] sm:max-h-[500px] overflow-y-auto custom-scrollbar overscroll-contain" style={{ touchAction: 'pan-y', WebkitOverflowScrolling: 'touch' }}>
-                  <div className="overflow-x-auto" style={{ touchAction: 'pan-x pan-y' }}>
+                {/* Mobile: no inner scroll — page itself scrolls. Desktop: max-height with inner scroll */}
+                <div className="sm:max-h-[500px] sm:overflow-y-auto custom-scrollbar">
+                  <div className="overflow-x-auto">
                     <Table>
-                      <TableHeader>
+                      <TableHeader className="sticky top-0 z-10">
                         <TableRow className={`hover:bg-transparent border-b ${dt.border} bg-muted/30`}>
-                          <TableHead className="w-10 text-center text-[10px] font-semibold">#</TableHead>
-                          <TableHead className="text-[10px] font-semibold min-w-[140px]">Club</TableHead>
-                          <TableHead className="w-10 text-center text-[10px] font-semibold">W</TableHead>
-                          <TableHead className="w-10 text-center text-[10px] font-semibold hidden sm:table-cell">L</TableHead>
-                          <TableHead className="w-12 text-center text-[10px] font-semibold hidden md:table-cell">Selisih</TableHead>
-                          <TableHead className="w-14 text-right text-[10px] font-semibold">Pts</TableHead>
+                          <TableHead className="w-10 text-center text-[10px] font-semibold bg-muted/80 backdrop-blur-sm">#</TableHead>
+                          <TableHead className="text-[10px] font-semibold min-w-[140px] bg-muted/80 backdrop-blur-sm">Club</TableHead>
+                          <TableHead className="w-10 text-center text-[10px] font-semibold bg-muted/80 backdrop-blur-sm">W</TableHead>
+                          <TableHead className="w-10 text-center text-[10px] font-semibold hidden sm:table-cell bg-muted/80 backdrop-blur-sm">L</TableHead>
+                          <TableHead className="w-12 text-center text-[10px] font-semibold hidden md:table-cell bg-muted/80 backdrop-blur-sm">Selisih</TableHead>
+                          <TableHead className="w-14 text-right text-[10px] font-semibold bg-muted/80 backdrop-blur-sm">Pts</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>

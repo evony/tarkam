@@ -266,3 +266,23 @@ Stage Summary:
 - Scroll containers in standings-tab no longer use contain: layout style which blocked touch scrolling
 - All touch-action properties set correctly for nested scroll containers
 - DO NOT PUSH until user confirms
+
+---
+Task ID: 2
+Agent: main
+Task: Fix mobile scroll trap in Peringkat — user stuck in inner scroll, can't scroll page
+
+Work Log:
+- Identified root cause: `max-h-[400px] overflow-y-auto` creates a nested scroll container that captures all touch events on mobile
+- When list fills viewport, user can only scroll inside the list — page itself doesn't move (nested scroll trap)
+- Fix: Remove max-height and overflow-y-auto on mobile, let the table expand to full height
+- Only apply inner scroll on desktop (sm:max-h-[500px] sm:overflow-y-auto)
+- Added sticky table headers with bg-muted/80 backdrop-blur-sm so headers stay visible when page scrolling
+- Also removed all touch-action inline styles since they're no longer needed (no nested scroll conflict)
+- TypeScript check passed with zero errors
+
+Stage Summary:
+- Mobile: No inner scroll container — page scrolls naturally, user can reach top/bottom
+- Desktop: Same as before with max-height and inner scroll
+- Table headers are sticky with backdrop blur for visibility during scroll
+- DO NOT PUSH until user confirms
