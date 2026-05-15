@@ -8102,8 +8102,12 @@ html {
   50% { transform: translateX(3px); opacity: 1; }
 }
 
-/* Mobile swipe arrows — always visible on mobile with subtle pulse */
+/* Mobile swipe arrows — always visible on mobile */
 .swipe-arrow-left,
+.swipe-arrow-right {
+  opacity: 0.7;
+}
+
 @keyframes swipe-arrow-pulse {
   0%, 100% { opacity: 0.7; }
   50% { opacity: 1; }
