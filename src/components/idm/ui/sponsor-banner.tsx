@@ -34,7 +34,7 @@ export function SponsorBanner({ placement, className = '' }: SponsorBannerProps)
 
   const banners: Banner[] = bannersData?.banners || [];
 
-  if (isLoading || banners.length === 0) return <div className={`sponsor-banners min-h-[40px] ${className}`} />;
+  if (isLoading || banners.length === 0) return null;
 
   return (
     <div className={`sponsor-banners ${className}`}>
