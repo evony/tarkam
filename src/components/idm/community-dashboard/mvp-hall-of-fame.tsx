@@ -242,7 +242,7 @@ function DivisionTimeline({
 /* ═══════════════════════════════════════════
    Main Component — MVP Hall of Fame
    ═══════════════════════════════════════════ */
-export function MvpHallOfFame({ maleData, femaleData, selectedDivision = 'all' }: MvpHallOfFameProps) {
+export const MvpHallOfFame = React.memo(function MvpHallOfFame({ maleData, femaleData, selectedDivision = 'all' }: MvpHallOfFameProps) {
   const ct = getCommunityTheme();
   const showMale = selectedDivision === 'all' || selectedDivision === 'male';
   const showFemale = selectedDivision === 'all' || selectedDivision === 'female';
@@ -305,4 +305,4 @@ export function MvpHallOfFame({ maleData, femaleData, selectedDivision = 'all' }
       </div>
     </Card>
   );
-}
+});

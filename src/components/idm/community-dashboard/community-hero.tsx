@@ -1,7 +1,8 @@
 'use client';
 
+import React from 'react';
 import Image from 'next/image';
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import {
   Trophy,
   Users,
@@ -24,35 +25,42 @@ import { parseWIBDate, formatWIBTime, formatWIBDateNumeric, getWIBDayOfWeek, for
 import type { StatsData } from '@/types/stats';
 
 /* ═══════════════════════════════════════════════════════
-   Animated Number — count-up with ease-out cubic
+   Animated Number — count-up with ease-out expo (ref-based, no setState)
    ═══════════════════════════════════════════════════════ */
-function AnimatedNumber({ value, duration = 1200 }: { value: number; duration?: number }) {
-  const [display, setDisplay] = useState(0);
-  const ref = useRef(value);
-  const rafRef = useRef<number>(0);
+const AnimatedNumber = React.memo(function AnimatedNumber({ target, duration = 1500, prefix = '', suffix = '' }: { target: number; duration?: number; prefix?: string; suffix?: string }) {
+  const spanRef = useRef<HTMLSpanElement>(null);
+  const currentValueRef = useRef(0);
 
   useEffect(() => {
-    const start = ref.current;
-    const end = value;
-    const startTime = performance.now();
-    const diff = end - start;
+    const start = currentValueRef.current;
+    const diff = target - start;
+    if (diff === 0) return;
 
-    function tick(now: number) {
+    const startTime = performance.now();
+    let rafId: number;
+
+    const animate = (now: number) => {
       const elapsed = now - startTime;
       const progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setDisplay(Math.round(start + diff * eased));
-      if (progress < 1) {
-        rafRef.current = requestAnimationFrame(tick);
-      }
-    }
-    rafRef.current = requestAnimationFrame(tick);
-    ref.current = value;
-    return () => cancelAnimationFrame(rafRef.current);
-  }, [value, duration]);
+      const eased = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+      const current = Math.round(start + diff * eased);
+      currentValueRef.current = current;
 
-  return <>{display.toLocaleString('id-ID')}</>;
-}
+      if (spanRef.current) {
+        spanRef.current.textContent = `${prefix}${current.toLocaleString('id-ID')}${suffix}`;
+      }
+
+      if (progress < 1) {
+        rafId = requestAnimationFrame(animate);
+      }
+    };
+
+    rafId = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(rafId);
+  }, [target, duration, prefix, suffix]);
+
+  return <span ref={spanRef}>{prefix}0{suffix}</span>;
+});
 
 /* ═══════════════════════════════════════════════════════
    Date/Time Helpers — WIB (Asia/Jakarta) timezone formatting
@@ -469,7 +477,7 @@ interface CommunityHeroProps {
   onPayment?: (division: 'male' | 'female') => void;
 }
 
-export function CommunityHero({ maleData, femaleData, leagueData, onSawer, onRegister, onPayment }: CommunityHeroProps) {
+export const CommunityHero = React.memo(function CommunityHero({ maleData, femaleData, leagueData, onSawer, onRegister, onPayment }: CommunityHeroProps) {
   const { setCurrentView, setDivision, playerAuth } = useAppStore();
   const { heroBannerDashboard } = useBackgroundImages();
 
@@ -740,7 +748,7 @@ export function CommunityHero({ maleData, femaleData, leagueData, onSawer, onReg
                 <stat.icon className={`w-3.5 h-3.5 ${stat.color} opacity-70`} />
                 <div className="flex flex-col">
                   <span className={`text-xs sm:text-sm font-black tabular-nums ${stat.color} leading-tight`}>
-                    <AnimatedNumber value={stat.value} />
+                    <AnimatedNumber target={stat.value} />
                   </span>
                   <span className="text-[7px] sm:text-[8px] text-muted-foreground uppercase tracking-wider font-semibold leading-tight">
                     {stat.label}
@@ -782,4 +790,4 @@ export function CommunityHero({ maleData, femaleData, leagueData, onSawer, onReg
       </div>
     </section>
   );
-}
+});

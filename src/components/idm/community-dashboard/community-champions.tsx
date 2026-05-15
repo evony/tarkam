@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { useState } from 'react';
 import { Crown, TrendingUp, Flame, BarChart3, Music, Shield, Gem, Heart, Banknote } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -167,7 +168,7 @@ function ChampionsSection({
 }
 
 /* ─── Sultan of the Week Section — Top Penyawer per division ─── */
-export function SultanOfWeekSection({
+export const SultanOfWeekSection = React.memo(function SultanOfWeekSection({
   division,
   sultanData,
   skinMap,
@@ -356,7 +357,7 @@ export function SultanOfWeekSection({
       </div>
     </Card>
   );
-}
+});
 
 /* ─── Top Form Section — Weekly Best Performer per division (LEGACY — kept for backward compat) ─── */
 export function TopFormSection({

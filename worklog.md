@@ -448,3 +448,123 @@ Stage Summary:
 - Total amount (e.g. Rp.150.000) now inline with "Top Saweran Week 2" in the header
 - Styled with bold gold gradient matching PUBG Esports gold palette
 - Per-division totals remain below division badges (unchanged)
+
+---
+Task ID: 1b
+Agent: React.memo Optimizer
+Task: Wrap 16 internal components + 9 external component files in React.memo
+
+Work Log:
+- Read worklog.md and all target files before starting
+- Wrapped 16 internal components in `src/components/idm/community-dashboard/index.tsx`:
+  1. SectionTabBar (generic — opening already converted, added closing `)`)
+  2. TournamentProgress
+  3. ChampionsMvpHeader
+  4. ChampionsMvpContent
+  5. ReigningChampionPlaque
+  6. ChampionBadge
+  7. GhostChampionBadge
+  8. CompactWeeklyChampionCard
+  9. CompactMvpCard
+  10. CompactTopFormCard
+  11. BracketHasilSection
+  12. DivisionHasilCard
+  13. DivisionStandingsSection
+  14. TourSayaSection
+  15. Section
+  16. CommunityDashboardSkeleton
+
+- Wrapped 10 exported components across 9 external files:
+  1. `community-leaderboard.tsx` — CommunityLeaderboard, PeringkatHeader
+  2. `weekly-champion-card.tsx` — WeeklyChampionCard
+  3. `mvp-spotlight.tsx` — MvpSpotlight
+  4. `community-champions.tsx` — SultanOfWeekSection
+  5. `mvp-hall-of-fame.tsx` — MvpHallOfFame
+  6. `community-hero.tsx` — CommunityHero
+  7. `top-donors-widget.tsx` — TopDonorsWidget
+  8. `season-selector.tsx` — SeasonSelector
+  9. `historical-season-view.tsx` — HistoricalSeasonView
+
+- Added `import React from 'react'` or `import React, { ... } from 'react'` to files that didn't already have it
+- Fixed duplicate React imports in mvp-hall-of-fame.tsx and weekly-champion-card.tsx
+- Fixed duplicate SelectedSeason import in index.tsx (line 27 type import + line 69 value import)
+- Fixed incorrectly placed `});` in destructured props of external components (Python script bug — placed closing at props destructuring depth-0 brace instead of function body brace)
+- All changes are purely structural — no visual behavior, CSS, or logic was modified
+
+Verification:
+- `npx tsc --noEmit` passes with zero errors
+- `bun run lint` passes with zero errors
+- Python verification script confirms all 26 components (16 internal + 10 external) have correct React.memo opening and `});` closing
+
+Stage Summary:
+- 26 components total wrapped in React.memo across 10 files
+- All TypeScript and lint checks pass
+- No visual or behavioral changes — only memoization wrapping
+
+---
+Task ID: 5
+Agent: CSS Animation Optimizer
+Task: Reduce infinite CSS animations by making decorative ones static
+
+Work Log:
+- Read globals.css (11,630 lines) and inventoried all 243 `animation: ... infinite` declarations
+- Identified 18 essential animations to KEEP (per task spec): donor-name-neon-pulse, donor-name-gold-pulse, neon-pulse-male/female/community, live-match-pulse, live-indicator-pulse, live-pulse, marquee, bracket-live-pulse, hero-btn-glow-pulse, scroll-bounce, scroll-dot, chevron-bounce, hero-scroll-mouse-border, hero-scroll-dot-move, hero-shimmer-sweep
+- Wrote Python script to systematically remove 225 non-essential infinite animation lines
+- Cleaned up 49 empty rule blocks left after animation removal (classes that only had animation property)
+- Added `opacity: 0 !important` to 24 shimmer/sweep pseudo-elements (::before/::after) whose gradient stripe animations would look broken when static
+- Preserved all @keyframes definitions (no deletion of keyframe blocks)
+- Verified CSS brace balance (2249 opening = 2249 closing)
+- No empty rule blocks, trailing commas, or syntax issues remain
+
+Animations Removed (225 total): shimmer, spin-slow, pulse-scale, float-subtle, float-medium, bob-fade, empty-icon-bob, empty-glow-pulse, empty-sparkle-blink-*, empty-gradient-shift, division-badge-glow-*, activity-card-shimmer, donor-empty-float, rank-badge-*-shimmer, tier-badge-glow, vs-badge-glow, rivalry-vs-gradient, chart-bar-gradient, countdown-digit-pulse, tournament-header-mesh-drift, tournament-watermark-float, play-pulse-ring/glow, header-shimmer-sweep, gradient-animated-shift, sdp-line-pulse/shimmer, slot-pulse, badge-glow-pulse, glow-pulse, float, pulse-pointer, pulse-ring, champion-border, sdp-orb-shimmer, sdp-glow-breathe, sdp-dot-drift, compare-btn-glow, glow-champion-pulse, glow-elite-pulse, particle-float-*, gold-shimmer, champion-text, fire-text, float-up, bounce-slow, border-glow-trace, fog-drift, parallax-drift-*, gradient-rotate, gradient-shift, ambient-orbit, glow-champion-pulse-male/female, casino-bar-shimmer, progress-shimmer, shimmer-sweep, spotlight-pulse, tier-glow-pulse, winner-glow, gold-pulse, mvp-border-glow, champion-frame-shimmer, trophy-float, empty-pulse, gold-shimmer-sweep, badge-glow, empty-ring-pulse, donor-heart-pulse, skin-chase-rotate, skin-pulse-glow, skin-corner-flash, skin-accent-travel, skin-border-shimmer, skin-name-shimmer, skin-glow-breathe, skin-sweep-light, footer-border-slide, typewriter-blink, empty-icon-float, empty-sparkle-*, hero-mesh-shift, hero-shine-sweep, badge-glow-breathe, progress-breathe, timeline-milestone-pulse, empty-pattern-drift, trend-bounce-*, empty-cta-shimmer, top-rank-pulse-*, trend-up-bounce, cta-hint-pulse, spotlight-glow-*, spotlight-ring-rotate, leaderboard-gold-glow, hero-constellation-drift, hero-light-sweep, hero-vignette-pulse, confetti-fall, crown-bounce, golden-sparkle, spotlight-beam, leaderboard-rank-*/tournament-glow-*, champions-crown-bob, champion-name-shimmer, mvp-ring-pulse-*, mvp-text-gradient, rivalry-leading-pulse, rivalry-vs-pulse-ring, tournament-icon-pulse, hero-title-breathe, hero-scanline-scroll, hero-btn-shimmer, leaderboard-crown-bob, champion-sparkle-*, champion-border-rotate, mvp-spotlight-pulse, mvp-border-pulse-*, hero-float-up, swipe-arrow-pulse, hero-gold-line-shimmer, hero-breath, cta-glow-breathe, cta-rotate-border, cta-gold-sweep, cta-float-*, cta-pulse-glow, crown-float, gold-shimmer-sweep, avatar-shimmer-sweep, hero-badge-glow-pulse, hero-geo-float-*, hero-title-text-glow, hero-underline-shimmer, hero-particle-rise, trophy-ring-spin, footer-logo-glow, footer-divider-shimmer, dashboard-card/header/tab-shimmer, champion-gold-pulse, mvp-platinum-pulse, cinema-flare-drift, skeleton-shimmer, esports-storm-drift, lightning-flash-*/glow, esports-energy-pulse, champion-gold-sweep, green-storm-drift, esports-player-glow-pulse, aurora-drift, text-gradient-shift, badge-shimmer, skeleton-premium
+
+Verification:
+- `npx tsc --noEmit`: passed (zero errors)
+- `bun run lint`: passed (zero errors)
+- `rg 'animation:.*infinite' src/app/globals.css | wc -l` = 18 (target: under 20) ✓
+- CSS brace balance: 2249 = 2249 ✓
+- No empty rule blocks ✓
+- Dev server running (GET / 200)
+
+Stage Summary:
+- Reduced infinite animations from 243 to 18 (92.6% reduction)
+- All 18 remaining are essential UI animations (CTAs, live indicators, marquee, donor engagement, scroll cues)
+- 24 shimmer/sweep pseudo-elements hidden with opacity: 0 !important (static gradient stripe would look broken)
+- 49 empty rule blocks cleaned up (classes that only contained animation)
+- Estimated GPU savings: ~225 fewer compositor-layer animations running per page
+
+---
+Task ID: 3-4-6-combined
+Agent: INP Optimizer
+Task: Apply 3 INP fixes — content-visibility, ref-based AnimatedNumber, memoized donor pipeline
+
+Work Log:
+- Read worklog.md and all 3 target files before starting
+- Applied Fix #3: Added `skipContentVisibility` prop to Section component in community-dashboard/index.tsx
+  - Default false means all sections get `content-visibility: auto; contain-intrinsic-size: 0 600px`
+  - Hero section (sectionId="hero") gets `skipContentVisibility` to avoid layout shift on first paint
+  - All other sections (tour-saya, matches, saweran, season-selector, champions, rankings, quick-stats) get content-visibility: auto by default
+- Applied Fix #4: Replaced AnimatedNumber setState with ref + direct DOM update in community-hero.tsx
+  - Old: used `useState` + `setDisplay()` triggering re-renders on every animation frame
+  - New: uses `useRef<HTMLSpanElement>` + `spanRef.current.textContent = ...` for zero re-render animation
+  - Uses `currentValueRef` to track current value across animation cycles (no stale closures)
+  - Changed easing from cubic ease-out to exponential ease-out (1 - 2^(-10*progress))
+  - Changed prop name from `value` to `target`, added `prefix`/`suffix` props
+  - Updated usage site: `<AnimatedNumber value={stat.value} />` → `<AnimatedNumber target={stat.value} />`
+  - Removed unused `useState` import
+  - Initial render uses static "0" (lint: no ref.current access during render), effect updates immediately
+- Applied Fix #6: Wrapped TopDonorsWidget donor pipeline in `React.useMemo`
+  - Moved donorMap creation, mergeWeeklyDonors, allDonors, maleDonors, femaleDonors, totals into useMemo
+  - Moved early returns (isLoading, empty state) to AFTER all hooks (rules of hooks compliance)
+  - Added separate useMemo for weekLabel
+  - Dependencies: weeklyTopDonors, data?.donors, data?.summary, activeTournament?.division, hasWeekly, weekNumber
+
+Verification:
+- `npx tsc --noEmit`: passed (zero errors)
+- `bun run lint`: passed (zero errors)
+- Fixed React 19 lint rule: cannot access ref.current during render — changed initial render from `currentValueRef.current` to static `0`
+
+Stage Summary:
+- Fix #3: content-visibility: auto on 7 off-screen sections, skipped on hero (always visible)
+- Fix #4: AnimatedNumber now uses ref-based DOM updates instead of setState — eliminates ~30-60 re-renders per number animation
+- Fix #6: TopDonorsWidget donor merge logic memoized — only recomputes when donor data changes

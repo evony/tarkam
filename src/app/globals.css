@@ -266,6 +266,7 @@
 /* Light mode activity card shimmer */
 :root:not(.dark) .activity-card-glass::after {
   background: linear-gradient(105deg, transparent 40%, rgba(0,0,0,0.01) 45%, rgba(0,0,0,0.03) 50%, rgba(0,0,0,0.01) 55%, transparent 60%);
+  opacity: 0 !important;
 }
 
 /* Light mode dashboard corner accents */
@@ -366,7 +367,6 @@
 :root:not(.dark) .skeleton-shimmer {
   background: linear-gradient(90deg, rgba(0,0,0,0.04) 25%, rgba(0,0,0,0.08) 50%, rgba(0,0,0,0.04) 75%);
   background-size: 200% 100%;
-  animation: shimmer 1.5s ease-in-out infinite;
 }
 
 /* Light mode card-premium borders — visible border on white */
@@ -459,11 +459,9 @@
   to { transform: rotate(360deg); }
 }
 .animate-spin-slow {
-  animation: spin-slow 1s linear infinite;
   contain: layout style;
 }
 .animate-spin-slower {
-  animation: spin-slow 1.5s linear infinite;
   contain: layout style;
 }
 
@@ -473,7 +471,6 @@
   50% { transform: scale(1.2); }
 }
 .animate-pulse-scale {
-  animation: pulse-scale 2s ease-in-out infinite;
   contain: layout style;
 }
 
@@ -483,7 +480,6 @@
   50% { transform: translateY(-3px); }
 }
 .animate-float-subtle {
-  animation: float-subtle 3s ease-in-out infinite;
   contain: layout style;
 }
 
@@ -493,7 +489,6 @@
   50% { transform: translateY(-6px); }
 }
 .animate-float-medium {
-  animation: float-medium 3s ease-in-out infinite;
   contain: layout style;
 }
 
@@ -503,7 +498,6 @@
   50% { transform: translateY(3px); opacity: 1; }
 }
 .animate-bob-fade {
-  animation: bob-fade 2.5s ease-in-out infinite;
   contain: layout style;
 }
 
@@ -546,7 +540,6 @@
   75% { transform: translateY(2px) rotate(-2deg); }
 }
 .empty-icon-float {
-  animation: empty-icon-bob 3s ease-in-out infinite;
   contain: layout style;
 }
 
@@ -560,7 +553,6 @@
   width: 64px;
   height: 64px;
   background: radial-gradient(circle, rgba(249, 203, 37, 0.3) 0%, rgba(249, 203, 37, 0.05) 60%, transparent 100%);
-  animation: empty-glow-pulse 2.5s ease-in-out infinite;
   contain: layout style;
 }
 
@@ -586,22 +578,18 @@
 .empty-sparkle-1 {
   top: -4px;
   right: -6px;
-  animation: empty-sparkle-blink-1 2s ease-in-out infinite;
 }
 .empty-sparkle-2 {
   top: -8px;
   left: 2px;
-  animation: empty-sparkle-blink-2 2.5s ease-in-out infinite 0.3s;
 }
 .empty-sparkle-3 {
   bottom: -2px;
   right: -8px;
-  animation: empty-sparkle-blink-3 2.2s ease-in-out infinite 0.6s;
 }
 .empty-sparkle-4 {
   bottom: 2px;
   left: -4px;
-  animation: empty-sparkle-blink-4 2.8s ease-in-out infinite 0.9s;
 }
 
 /* Gradient text subtle shimmer for empty state */
@@ -612,7 +600,6 @@
 }
 .empty-gradient-text {
   background-size: 200% auto;
-  animation: empty-gradient-shift 4s ease-in-out infinite;
 }
 
 /* ============================================
@@ -686,13 +673,6 @@
   50% { box-shadow: 0 0 12px rgba(255, 92, 154, 0.4), 0 0 20px rgba(255, 92, 154, 0.2); }
 }
 
-.division-badge-glow-male {
-  animation: division-badge-glow-male 2.5s ease-in-out infinite;
-}
-.division-badge-glow-female {
-  animation: division-badge-glow-female 2.5s ease-in-out infinite;
-}
-
 /* ============================================
    ACTIVITY FEED — Dashboard enhancements
    ============================================ */
@@ -723,7 +703,6 @@
     transparent 60%
   );
   background-size: 200% 100%;
-  animation: activity-card-shimmer 4s ease-in-out infinite;
 }
 
 /* Scroll-to-top button for activity feed */
@@ -774,36 +753,38 @@
   contain: layout style;
 }
 
-/* Donor name neon glow pulse — visible blinking/breathing effect on desktop */
+/* Donor name neon glow pulse — compositor-friendly opacity+scale */
 @keyframes donor-name-neon-pulse {
   0%, 100% {
-    text-shadow: 0 0 4px rgba(249, 203, 37, 0.3), 0 0 8px rgba(249, 203, 37, 0.1);
     opacity: 1;
+    transform: scale(1);
   }
   50% {
-    text-shadow: 0 0 8px rgba(249, 203, 37, 0.6), 0 0 16px rgba(249, 203, 37, 0.3), 0 0 24px rgba(249, 203, 37, 0.1);
-    opacity: 0.85;
+    opacity: 0.82;
+    transform: scale(1.02);
   }
 }
 
-/* Top donor (#1) — more intense gold pulse */
+/* Top donor (#1) — more intense gold pulse, compositor-friendly */
 @keyframes donor-name-gold-pulse {
   0%, 100% {
-    text-shadow: 0 0 6px rgba(250, 204, 21, 0.4), 0 0 12px rgba(250, 204, 21, 0.2);
     opacity: 1;
+    transform: scale(1);
   }
   50% {
-    text-shadow: 0 0 12px rgba(250, 204, 21, 0.7), 0 0 20px rgba(250, 204, 21, 0.4), 0 0 32px rgba(250, 204, 21, 0.15);
-    opacity: 0.8;
+    opacity: 0.78;
+    transform: scale(1.03);
   }
 }
 
-/* Donor name pulse — all screen sizes */
+/* Donor name pulse — all screen sizes, static glow + compositor animation */
 .donor-name-pulse {
+  text-shadow: 0 0 6px rgba(249, 203, 37, 0.4), 0 0 12px rgba(249, 203, 37, 0.2);
   animation: donor-name-neon-pulse 2.5s ease-in-out infinite;
   contain: layout style;
 }
 .donor-name-pulse-gold {
+  text-shadow: 0 0 8px rgba(250, 204, 21, 0.5), 0 0 16px rgba(250, 204, 21, 0.3);
   animation: donor-name-gold-pulse 2s ease-in-out infinite;
   contain: layout style;
 }
@@ -837,7 +818,6 @@ div.group:hover .donor-rank-badge {
 }
 
 .donor-empty-state .empty-icon-float {
-  animation: donor-empty-float 2.5s ease-in-out infinite;
   contain: layout style;
 }
 
@@ -869,7 +849,6 @@ div.group:hover .donor-rank-badge {
 .rank-badge-gold-enhanced {
   background: linear-gradient(135deg, #fbbf24, #f59e0b, #fbbf24);
   background-size: 200% 200%;
-  animation: rank-badge-gold-shimmer 2.5s ease-in-out infinite;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 .rank-badge-silver-enhanced {
@@ -889,7 +868,6 @@ div.group:hover .donor-rank-badge {
   50% { box-shadow: 0 0 8px var(--tier-glow-color, rgba(249, 203, 37, 0.4)), 0 0 16px var(--tier-glow-color, rgba(249, 203, 37, 0.15)); }
 }
 .tier-badge-glow {
-  animation: tier-badge-glow 2.5s ease-in-out infinite;
   contain: layout style;
 }
 .tier-badge-glow-s { --tier-glow-color: rgba(248, 113, 113, 0.4); }
@@ -939,7 +917,6 @@ div.group:hover .donor-rank-badge {
   50% { box-shadow: 0 0 12px rgba(249, 203, 37, 0.4), 0 0 16px rgba(249, 203, 37, 0.15); text-shadow: 0 0 8px rgba(249, 203, 37, 0.5); }
 }
 .vs-badge-glow {
-  animation: vs-badge-glow 2s ease-in-out infinite;
   contain: layout style;
 }
 
@@ -953,7 +930,6 @@ div.group:hover .donor-rank-badge {
   background: linear-gradient(135deg, rgba(249,203,37,0.15), rgba(249,203,37,0.05), rgba(249,203,37,0.15), rgba(249,203,37,0.05));
   background-size: 300% 300%;
   border: 1.5px solid rgba(249,203,37,0.3);
-  animation: rivalry-vs-gradient 3s ease-in-out infinite, vs-badge-glow 2s ease-in-out infinite;
   contain: layout style;
 }
 
@@ -1087,7 +1063,6 @@ div.group:hover .donor-rank-badge {
 }
 .chart-bar-animated {
   background-size: 200% 100%;
-  animation: chart-bar-gradient 3s ease-in-out infinite;
 }
 
 /* ─── Quick Stats Bar Enhancements ─── */
@@ -1186,7 +1161,6 @@ div.group:hover .donor-rank-badge {
   50% { box-shadow: 0 0 8px rgba(249, 203, 37, 0.2), 0 0 16px rgba(249, 203, 37, 0.05); }
 }
 .countdown-digit {
-  animation: countdown-digit-pulse 2s ease-in-out infinite;
   contain: layout style;
 }
 
@@ -1374,7 +1348,6 @@ div.group:hover .donor-rank-badge {
 
 .tournament-header-mesh {
   background-size: 200% 200%;
-  animation: tournament-header-mesh-drift 8s ease-in-out infinite;
 }
 
 .tournament-header-mesh-male {
@@ -1405,7 +1378,6 @@ div.group:hover .donor-rank-badge {
   50% { transform: translateY(-8px); }
 }
 .tournament-watermark-float {
-  animation: tournament-watermark-float 5s ease-in-out infinite;
   contain: layout style;
 }
 
@@ -1488,11 +1460,9 @@ div.group:hover .donor-rank-badge {
   50% { opacity: 1; transform: scale(1.15); }
 }
 .play-btn-pulse-ring {
-  animation: play-pulse-ring 2.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
   contain: layout style;
 }
 .play-btn-pulse-glow {
-  animation: play-pulse-glow 2.5s ease-in-out infinite;
   contain: layout style;
 }
 
@@ -1600,7 +1570,7 @@ div.group:hover .donor-rank-badge {
   height: 100%;
   background: linear-gradient(90deg, transparent, rgba(249, 203, 37, 0.6), rgba(245, 215, 122, 0.9), rgba(249, 203, 37, 0.6), transparent);
   border-radius: inherit;
-  animation: header-shimmer-sweep 3s ease-in-out infinite;
+  opacity: 0 !important;
 }
 @media (min-width: 640px) {
   .section-header-shimmer-line {
@@ -1640,7 +1610,6 @@ div.group:hover .donor-rank-badge {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: gradient-animated-shift 5s ease-in-out infinite;
 }
 /* Light mode — deeper golds for readability on white */
 :root:not(.dark) .text-gradient-animated {
@@ -1673,7 +1642,6 @@ div.group:hover .donor-rank-badge {
 .sdp-line {
   position: relative;
   overflow: hidden;
-  animation: sdp-line-pulse 4s ease-in-out infinite;
 }
 .sdp-line-shimmer {
   position: absolute;
@@ -1682,7 +1650,6 @@ div.group:hover .donor-rank-badge {
   width: 40%;
   height: 100%;
   background: linear-gradient(90deg, transparent, rgba(245, 215, 122, 0.4), rgba(249, 203, 37, 0.6), rgba(245, 215, 122, 0.4), transparent);
-  animation: sdp-line-shimmer-sweep 4s ease-in-out infinite;
   pointer-events: none;
 }
 
@@ -1837,6 +1804,7 @@ div.group:hover .donor-rank-badge {
   }
   .hero-btn-gradient-border::before {
     background-position: 0% center !important;
+  opacity: 0 !important;
   }
   .leaderboard-hover-stats {
     max-height: none !important;
@@ -1976,9 +1944,6 @@ div.group:hover .donor-rank-badge {
   0%, 100% { box-shadow: 0 0 10px rgba(249, 203, 37, 0.15); }
   50% { box-shadow: 0 0 25px rgba(249, 203, 37, 0.35); }
 }
-.animate-slot-pulse {
-  animation: slot-pulse 0.6s ease-in-out infinite;
-}
 
 /* Fade out — replaces motion.div initial={{ opacity: 1 }} animate={{ opacity: 0 }} */
 @keyframes fade-out {
@@ -2095,9 +2060,6 @@ div.group:hover .donor-rank-badge {
 @keyframes badge-glow-pulse {
   0%, 100% { transform: scale(1); opacity: 0.3; }
   50% { transform: scale(1.2); opacity: 0.5; }
-}
-.badge-glow-animate {
-  animation: badge-glow-pulse 2s ease-in-out infinite;
 }
 
 /* Stagger delay — apply via style={{ animationDelay: `${i * 50}ms` }} */
@@ -2248,7 +2210,6 @@ div.group:hover .donor-rank-badge {
 
 /* Active glow animation — use ONLY for truly special elements */
 .glow-pulse-active {
-  animation: glow-pulse 3s ease-in-out infinite;
   contain: layout style;
 }
 
@@ -2265,10 +2226,6 @@ div.group:hover .donor-rank-badge {
   50% { transform: translateY(-6px); }
 }
 
-.animate-float {
-  animation: float 4s ease-in-out infinite;
-}
-
 /* Shimmer effect — Gold shimmer */
 @keyframes shimmer {
   0% { background-position: -200% 0; }
@@ -2283,7 +2240,6 @@ div.group:hover .donor-rank-badge {
     transparent 100%
   );
   background-size: 200% 100%;
-  animation: shimmer 2s ease-in-out infinite;
 }
 
 /* Skeleton loading shimmer — subtle dark shimmer for loading states */
@@ -2295,7 +2251,6 @@ div.group:hover .donor-rank-badge {
     transparent 100%
   );
   background-size: 200% 100%;
-  animation: shimmer 1.5s ease-in-out infinite;
 }
 
 /* Main brand gradient text — Gold-to-amber-to-champagne */
@@ -2380,10 +2335,6 @@ div.group:hover .donor-rank-badge {
     opacity: 1;
     transform: scale(1.15);
   }
-}
-
-.animate-pulse-pointer {
-  animation: pulse-pointer 2s ease-in-out infinite;
 }
 
 /* Tournament bracket line */
@@ -2493,7 +2444,6 @@ div.group:hover .donor-rank-badge {
   inset: 0;
   border-radius: 50%;
   border: 2px solid currentColor;
-  animation: pulse-ring 1.5s ease-out infinite;
 }
 
 /* ============================================
@@ -2803,7 +2753,6 @@ div.group:hover .donor-rank-badge {
     var(--idm-gold)
   );
   background-size: 200% 100%;
-  animation: champion-border 3s linear infinite;
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);
@@ -2921,7 +2870,6 @@ div.group:hover .donor-rank-badge {
   background: linear-gradient(135deg, #EFF923 0%, #F9CB25 50%, #EFF923 100%);
   border: 1px solid rgba(245, 231, 200, 0.5);
   transform: rotate(45deg);
-  animation: sdp-orb-shimmer 3s ease-in-out infinite;
   z-index: 2;
 }
 
@@ -2935,7 +2883,6 @@ div.group:hover .donor-rank-badge {
   transform: translate(-50%, -50%);
   border-radius: 50%;
   background: radial-gradient(circle, rgba(239, 249, 35, 0.25) 0%, rgba(239, 249, 35, 0.08) 40%, transparent 70%);
-  animation: sdp-glow-breathe 3s ease-in-out infinite;
   z-index: 1;
   pointer-events: none;
 }
@@ -2955,21 +2902,18 @@ div.group:hover .donor-rank-badge {
   top: -4px;
   left: 14px;
   --sdp-drift: translate(3px, -4px);
-  animation: sdp-dot-drift 4.5s ease-in-out infinite;
 }
 
 .sdp-dot-2 {
   bottom: -3px;
   right: 14px;
   --sdp-drift: translate(-4px, 3px);
-  animation: sdp-dot-drift 4.5s ease-in-out 1.5s infinite;
 }
 
 .sdp-dot-3 {
   top: 8px;
   left: -8px;
   --sdp-drift: translate(-3px, -3px);
-  animation: sdp-dot-drift 4.5s ease-in-out 3s infinite;
 }
 
 /* Responsive: larger on sm+ */
@@ -3183,10 +3127,6 @@ div.group:hover .donor-rank-badge {
   }
 }
 
-.compare-btn-glow {
-  animation: compare-btn-glow 3s ease-in-out infinite;
-}
-
 .compare-btn-glow:hover {
   box-shadow: 0 0 16px rgba(249, 203, 37, 0.2), 0 0 32px rgba(249, 203, 37, 0.08) !important;
 }
@@ -3254,10 +3194,6 @@ div.group:hover .donor-rank-badge {
   }
 }
 
-.glow-champion {
-  animation: glow-champion-pulse 2.5s ease-in-out infinite;
-}
-
 @keyframes glow-elite-pulse {
   0%, 100% {
     box-shadow:
@@ -3268,10 +3204,6 @@ div.group:hover .donor-rank-badge {
     box-shadow:
       0 0 20px rgba(217, 119, 6, 0.4);
   }
-}
-
-.glow-elite {
-  animation: glow-elite-pulse 3s ease-in-out infinite;
 }
 
 .glow-card-hover {
@@ -3366,7 +3298,6 @@ div.group:hover .donor-rank-badge {
     100px 350px var(--idm-gold),
     750px 80px #FAF0DC,
     450px 250px var(--idm-amber);
-  animation: particle-float-1 6s ease-in-out infinite;
   opacity: 0.4;
 }
 
@@ -3386,7 +3317,6 @@ div.group:hover .donor-rank-badge {
     40px 180px #FAF0DC,
     400px 140px var(--idm-gold),
     720px 130px #FAF0DC;
-  animation: particle-float-2 8s ease-in-out infinite;
   opacity: 0.3;
 }
 
@@ -3472,7 +3402,6 @@ div.group:hover .donor-rank-badge {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: gold-shimmer 4s linear infinite;
 }
 
 @keyframes champion-text {
@@ -3496,7 +3425,6 @@ div.group:hover .donor-rank-badge {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: champion-text 4s ease-in-out infinite;
 }
 
 @keyframes fire-text {
@@ -3517,7 +3445,6 @@ div.group:hover .donor-rank-badge {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: fire-text 3s ease-in-out infinite;
 }
 
 /* ============================================
@@ -3618,7 +3545,6 @@ div.group:hover .donor-rank-badge {
   bottom: -10px;
   border-radius: 50%;
   background: var(--idm-gold-warm);
-  animation: float-up linear infinite;
   pointer-events: none;
 }
 
@@ -3627,7 +3553,6 @@ div.group:hover .donor-rank-badge {
   bottom: -10px;
   border-radius: 50%;
   background: #e8d5a3;
-  animation: float-up linear infinite;
   pointer-events: none;
 }
 
@@ -3664,10 +3589,6 @@ div.group:hover .donor-rank-badge {
 @keyframes bounce-slow {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(6px); }
-}
-
-.bounce-slow {
-  animation: bounce-slow 2s ease-in-out infinite;
 }
 
 /* ============================================
@@ -3855,7 +3776,6 @@ div.group:hover .donor-rank-badge {
 
 .card-border-glow:hover::before {
   opacity: 1;
-  animation: border-glow-trace 2s linear infinite;
 }
 
 /* ============================================
@@ -3867,10 +3787,6 @@ div.group:hover .donor-rank-badge {
 @keyframes fog-drift {
   0% { transform: translateX(-50%); }
   100% { transform: translateX(0%); }
-}
-
-.fog-effect {
-  animation: fog-drift 25s linear infinite;
 }
 
 /* ============================================
@@ -3894,22 +3810,6 @@ div.group:hover .donor-rank-badge {
 @keyframes parallax-drift-accent {
   0% { transform: translateX(0%); }
   100% { transform: translateX(-50%); }
-}
-
-.parallax-block {
-  animation: parallax-drift 20s linear infinite;
-}
-
-.parallax-block-slow {
-  animation: parallax-drift-slow 30s linear infinite;
-}
-
-.parallax-block-fast {
-  animation: parallax-drift-fast 15s linear infinite;
-}
-
-.parallax-block-accent {
-  animation: parallax-drift-accent 12s linear infinite;
 }
 
 /* ============================================
@@ -3966,7 +3866,6 @@ div.group:hover .donor-rank-badge {
     var(--idm-amber),
     transparent
   );
-  animation: gradient-rotate 4s linear infinite;
   opacity: 0;
   transition: opacity 0.4s ease;
 }
@@ -4091,7 +3990,6 @@ div.group:hover .donor-rank-badge {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: gradient-shift 4s ease-in-out infinite;
 }
 
 .card-premium-male::before {
@@ -4117,7 +4015,6 @@ div.group:hover .donor-rank-badge {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: gradient-shift 4s ease-in-out infinite;
 }
 
 .card-premium-female::before {
@@ -4172,7 +4069,6 @@ div.group:hover .donor-rank-badge {
   border-radius: 50%;
   background: radial-gradient(circle, rgba(87, 181, 255, 0.08) 0%, transparent 70%);
   pointer-events: none;
-  animation: ambient-orbit 20s linear infinite;
 }
 
 .ambient-light-female {
@@ -4182,7 +4078,6 @@ div.group:hover .donor-rank-badge {
   border-radius: 50%;
   background: radial-gradient(circle, rgba(255, 92, 154, 0.08) 0%, transparent 70%);
   pointer-events: none;
-  animation: ambient-orbit 20s linear infinite;
 }
 
 /* Division border colors */
@@ -4246,7 +4141,6 @@ div.group:hover .donor-rank-badge {
     #2E9FFF
   );
   background-size: 200% 200%;
-  animation: gradient-shift 6s ease-in-out infinite;
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);
@@ -4295,7 +4189,6 @@ div.group:hover .donor-rank-badge {
     #FF2D78
   );
   background-size: 200% 200%;
-  animation: gradient-shift 6s ease-in-out infinite;
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);
@@ -4347,7 +4240,6 @@ div.group:hover .donor-rank-badge {
     #2E9FFF
   );
   background-size: 200% 100%;
-  animation: champion-border 3s linear infinite;
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);
@@ -4400,7 +4292,6 @@ div.group:hover .donor-rank-badge {
     #FF2D78
   );
   background-size: 200% 100%;
-  animation: champion-border 3s linear infinite;
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);
@@ -4436,10 +4327,6 @@ div.group:hover .donor-rank-badge {
   }
 }
 
-.glow-champion-male {
-  animation: glow-champion-pulse-male 2.5s ease-in-out infinite;
-}
-
 @keyframes glow-champion-pulse-female {
   0%, 100% {
     box-shadow:
@@ -4450,10 +4337,6 @@ div.group:hover .donor-rank-badge {
     box-shadow:
       0 0 20px rgba(255, 45, 120, 0.5);
   }
-}
-
-.glow-champion-female {
-  animation: glow-champion-pulse-female 2.5s ease-in-out infinite;
 }
 
 /* --- Division card-glow-hover variants --- */
@@ -4796,26 +4679,35 @@ div.group:hover .donor-rank-badge {
     0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
-/* Neon pulse for LIVE elements — Male */
+/* Neon pulse for LIVE elements — Male (compositor-friendly) */
 @keyframes neon-pulse-male {
-  0%, 100% { box-shadow: 0 0 4px rgba(87, 181, 255, 0.15), 0 0 8px rgba(87, 181, 255, 0.05); }
-  50% { box-shadow: 0 0 8px rgba(87, 181, 255, 0.25), 0 0 16px rgba(87, 181, 255, 0.1); }
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.65; }
 }
-.neon-pulse-male { animation: neon-pulse-male 2s ease-in-out infinite; }
+.neon-pulse-male {
+  box-shadow: 0 0 6px rgba(87, 181, 255, 0.2), 0 0 12px rgba(87, 181, 255, 0.08);
+  animation: neon-pulse-male 2s ease-in-out infinite;
+}
 
-/* Neon pulse for LIVE elements — Female */
+/* Neon pulse for LIVE elements — Female (compositor-friendly) */
 @keyframes neon-pulse-female {
-  0%, 100% { box-shadow: 0 0 4px rgba(255, 92, 154, 0.15), 0 0 8px rgba(255, 92, 154, 0.05); }
-  50% { box-shadow: 0 0 8px rgba(255, 92, 154, 0.25), 0 0 16px rgba(255, 92, 154, 0.1); }
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.65; }
 }
-.neon-pulse-female { animation: neon-pulse-female 2s ease-in-out infinite; }
+.neon-pulse-female {
+  box-shadow: 0 0 6px rgba(255, 92, 154, 0.2), 0 0 12px rgba(255, 92, 154, 0.08);
+  animation: neon-pulse-female 2s ease-in-out infinite;
+}
 
-/* Neon pulse for LIVE elements — Community */
+/* Neon pulse for LIVE elements — Community (compositor-friendly) */
 @keyframes neon-pulse-community {
-  0%, 100% { box-shadow: 0 0 4px rgba(239, 249, 35, 0.15), 0 0 8px rgba(239, 249, 35, 0.05); }
-  50% { box-shadow: 0 0 8px rgba(239, 249, 35, 0.25), 0 0 16px rgba(239, 249, 35, 0.1); }
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.65; }
 }
-.neon-pulse-community { animation: neon-pulse-community 2s ease-in-out infinite; }
+.neon-pulse-community {
+  box-shadow: 0 0 6px rgba(239, 249, 35, 0.2), 0 0 12px rgba(239, 249, 35, 0.08);
+  animation: neon-pulse-community 2s ease-in-out infinite;
+}
 
 /* Casino stat pill — dark pill with neon accent */
 .casino-pill {
@@ -4900,7 +4792,6 @@ div.group:hover .donor-rank-badge {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: gradient-shift 4s ease-in-out infinite;
 }
 
 /* Neon gradient text — Female (animated) */
@@ -4917,7 +4808,6 @@ div.group:hover .donor-rank-badge {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: gradient-shift 4s ease-in-out infinite;
 }
 
 /* Neon gradient text — Community (animated) */
@@ -4934,7 +4824,6 @@ div.group:hover .donor-rank-badge {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: gradient-shift 4s ease-in-out infinite;
 }
 
 /* Casino corner accent — decorative neon corner (inherits position:relative from .casino-card) */
@@ -5072,7 +4961,6 @@ div.group:hover .donor-rank-badge {
 
 .casino-card-bar-community {
   background-size: 200% 100%;
-  animation: casino-bar-shimmer 6s ease-in-out infinite;
 }
 
 /* ─── Division Card Hover — tight edge glow ─── */
@@ -5123,7 +5011,7 @@ div.group:hover .donor-rank-badge {
     rgba(255, 255, 255, 0.15) 50%,
     transparent 70%
   );
-  animation: progress-shimmer 3s ease-in-out infinite;
+  opacity: 0 !important;
 }
 
 /* ─── Stats Card Hover ─── */
@@ -5197,9 +5085,6 @@ div.group:hover .donor-rank-badge {
 @keyframes shimmer-sweep {
   0% { transform: translateX(-100%); }
   100% { transform: translateX(100%); }
-}
-.animate-shimmer {
-  animation: shimmer-sweep 3s ease-in-out infinite;
 }
 
 /* ============================================
@@ -5288,7 +5173,6 @@ div.group:hover .donor-rank-badge {
     transparent 70%
   );
   pointer-events: none;
-  animation: spotlight-pulse 3s ease-in-out infinite;
 }
 
 @keyframes spotlight-pulse {
@@ -5340,7 +5224,7 @@ div.group:hover .donor-rank-badge {
     rgba(255, 255, 255, 0.3),
     transparent
   );
-  animation: progress-shimmer 2s ease-in-out infinite;
+  opacity: 0 !important;
 }
 
 @keyframes progress-shimmer {
@@ -5351,7 +5235,6 @@ div.group:hover .donor-rank-badge {
 /* Tier Progress Bar Glow */
 .tier-progress-glow {
   box-shadow: 0 0 10px currentColor;
-  animation: tier-glow-pulse 2s ease-in-out infinite;
 }
 
 @keyframes tier-glow-pulse {
@@ -5494,7 +5377,6 @@ div.group:hover .donor-rank-badge {
 
 .match-result-card.winner::before {
   background: linear-gradient(90deg, var(--idm-gold-warm), #F9CB25, var(--idm-gold-warm));
-  animation: winner-glow 2s ease-in-out infinite;
 }
 
 .match-result-card.loser::before {
@@ -5647,18 +5529,10 @@ div.group:hover .donor-rank-badge {
   50% { box-shadow: 0 0 20px 5px rgba(239, 249, 35, 0.15); }
 }
 
-.gold-pulse-ring {
-  animation: gold-pulse 3s ease-in-out infinite;
-}
-
 /* MVP card border glow animation */
 @keyframes mvp-border-glow {
   0%, 100% { border-color: rgba(239, 249, 35, 0.15); }
   50% { border-color: rgba(239, 249, 35, 0.35); }
-}
-
-.mvp-card-glow {
-  animation: mvp-border-glow 3s ease-in-out infinite;
 }
 
 /* Champion card gold frame effect */
@@ -5687,7 +5561,6 @@ div.group:hover .donor-rank-badge {
     var(--idm-gold-warm)
   );
   background-size: 200% 100%;
-  animation: champion-frame-shimmer 3s linear infinite;
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);
@@ -5698,6 +5571,7 @@ div.group:hover .donor-rank-badge {
   mask-composite: exclude;
   opacity: 0.6;
   z-index: 1;
+  opacity: 0 !important;
 }
 
 .champion-gold-frame:hover::after {
@@ -5715,10 +5589,6 @@ div.group:hover .donor-rank-badge {
   0%, 100% { transform: translateY(0) rotate(0deg); }
   25% { transform: translateY(-4px) rotate(2deg); }
   75% { transform: translateY(-4px) rotate(-2deg); }
-}
-
-.trophy-float {
-  animation: trophy-float 4s ease-in-out infinite;
 }
 
 /* Stats panel subtle bg for MVP cards */
@@ -5744,10 +5614,6 @@ div.group:hover .donor-rank-badge {
 @keyframes empty-pulse {
   0%, 100% { opacity: 0.3; transform: scale(1); }
   50% { opacity: 0.5; transform: scale(1.05); }
-}
-
-.empty-state-icon {
-  animation: empty-pulse 3s ease-in-out infinite;
 }
 
 /* Touch-friendly minimum tap target */
@@ -5806,7 +5672,6 @@ a:focus-visible,
     rgba(239, 249, 35, 0.05) 75%
   );
   background-size: 200% 100%;
-  animation: gold-shimmer-sweep 2s ease-in-out infinite;
 }
 
 /* ============================================
@@ -5815,10 +5680,6 @@ a:focus-visible,
 @keyframes badge-glow {
   0%, 100% { box-shadow: 0 0 8px rgba(239, 249, 35, 0.2); }
   50% { box-shadow: 0 0 16px rgba(239, 249, 35, 0.4), 0 0 20px rgba(239, 249, 35, 0.1); }
-}
-
-.badge-glow {
-  animation: badge-glow 2.5s ease-in-out infinite;
 }
 
 /* ============================================
@@ -5873,7 +5734,6 @@ html {
   position: absolute;
   border: 2px solid rgba(239, 249, 35, 0.2);
   border-radius: 50%;
-  animation: empty-ring-pulse 3s ease-out infinite;
 }
 
 /* ============================================
@@ -5895,10 +5755,6 @@ html {
   }
 }
 
-.donor-heart-pulse {
-  animation: donor-heart-pulse 1.5s ease-in-out infinite;
-}
-
 /* ============================================
    SKIN EFFECTS — Billboard / Neon Sign Style
    Inspired by roadside advertisement signs with
@@ -5916,7 +5772,6 @@ html {
 }
 
 .skin-chase-border {
-  animation: skin-chase-rotate 3s linear infinite;
   will-change: transform;
 }
 
@@ -5936,10 +5791,6 @@ html {
       0 0 60px var(--skin-glow, rgba(255,215,0,0.15)),
       0 0 100px var(--skin-glow, rgba(255,215,0,0.05));
   }
-}
-
-.skin-pulse-glow {
-  animation: skin-pulse-glow 2s ease-in-out infinite;
 }
 
 /* ═══ 3. CORNER FLASH — bright LED-like corner dots ═══
@@ -5962,7 +5813,6 @@ html {
 }
 
 .skin-corner-dot {
-  animation: skin-corner-flash 1.2s ease-in-out infinite;
   contain: layout style;
 }
 
@@ -5975,7 +5825,6 @@ html {
 
 .skin-accent-line {
   background-size: 50% 100%;
-  animation: skin-accent-travel 2s linear infinite;
 }
 
 /* ═══ 5. BORDER SHIMMER — gradient slides for card borders ═══ */
@@ -5986,7 +5835,6 @@ html {
 
 .skin-border-shimmer {
   background-size: 200% 100%;
-  animation: skin-border-shimmer 3s linear infinite;
 }
 
 /* ═══ 6. NAME NEON FLICKER — text gradient shimmers like neon ═══ */
@@ -5997,7 +5845,6 @@ html {
 
 .skin-name-animate {
   background-size: 200% auto;
-  animation: skin-name-shimmer 2.5s linear infinite;
 }
 
 /* ═══ 7. AVATAR GLOW BREATHING ═══ */
@@ -6007,7 +5854,6 @@ html {
 }
 
 .skin-glow-animate {
-  animation: skin-glow-breathe 2s ease-in-out infinite;
   contain: layout style;
 }
 
@@ -6015,10 +5861,6 @@ html {
 @keyframes skin-sweep-light {
   0% { background-position: 0% 50%; }
   100% { background-position: 200% 50%; }
-}
-
-.skin-sweep-border {
-  animation: skin-sweep-light 2.5s linear infinite;
 }
 
 /* ═══ 9. BILLBOARD CHASE LIGHT BULBS — individual dots blink in sequence ═══
@@ -6122,18 +5964,10 @@ html {
   100% { transform: translateX(-50%); }
 }
 
-.footer-gradient-border {
-  animation: footer-border-slide 6s linear infinite;
-}
-
 /* Typewriter cursor blink */
 @keyframes typewriter-blink {
   0%, 50% { opacity: 1; }
   51%, 100% { opacity: 0; }
-}
-
-.typewriter-cursor {
-  animation: typewriter-blink 1s step-end infinite;
 }
 
 /* Stat count-up animation using CSS counters */
@@ -6202,9 +6036,6 @@ html {
     transform: translateY(2px) rotate(-1deg);
   }
 }
-.empty-icon-float {
-  animation: empty-icon-float 4s ease-in-out infinite;
-}
 
 /* Sparkle dots around empty state icon */
 @keyframes empty-sparkle-1 {
@@ -6219,9 +6050,6 @@ html {
   0%, 100% { opacity: 0; transform: scale(0.5) translate(0, 0); }
   50% { opacity: 1; transform: scale(1) translate(3px, 5px); }
 }
-.empty-sparkle-1 { animation: empty-sparkle-1 2.5s ease-in-out infinite; }
-.empty-sparkle-2 { animation: empty-sparkle-2 3s ease-in-out infinite 0.5s; }
-.empty-sparkle-3 { animation: empty-sparkle-3 2.8s ease-in-out infinite 1s; }
 
 /* ── Hero Banner Enhancements ── */
 
@@ -6239,7 +6067,6 @@ html {
 }
 .hero-mesh-bg {
   background-size: 200% 200%, 200% 200%, 200% 200%;
-  animation: hero-mesh-shift 8s ease-in-out infinite;
 }
 
 /* Shimmer/shine sweep across hero banner */
@@ -6262,8 +6089,8 @@ html {
     rgba(255, 255, 255, 0.03),
     transparent
   );
-  animation: hero-shine-sweep 6s ease-in-out infinite;
   pointer-events: none;
+  opacity: 0 !important;
 }
 
 /* Division badge glow effect */
@@ -6275,9 +6102,6 @@ html {
     box-shadow: 0 0 12px var(--idm-glow), 0 0 20px rgba(249, 203, 37, 0.2);
   }
 }
-.badge-glow-breathe {
-  animation: badge-glow-breathe 3s ease-in-out infinite;
-}
 
 
 /* Breathing progress bar glow */
@@ -6288,9 +6112,6 @@ html {
   50% {
     box-shadow: 0 0 10px rgba(249, 203, 37, 0.5), 0 0 20px rgba(249, 203, 37, 0.15);
   }
-}
-.progress-breathe {
-  animation: progress-breathe 3s ease-in-out infinite;
 }
 
 /* ── Player List Row Enhancements ── */
@@ -6347,9 +6168,9 @@ html {
     transparent 100%
   );
   background-size: 200% 100%;
-  animation: activity-card-shimmer 4s ease-in-out infinite;
   pointer-events: none;
   border-radius: inherit;
+  opacity: 0 !important;
 }
 
 /* Ripple effect on new activity items */
@@ -6413,7 +6234,6 @@ html {
 }
 
 .timeline-milestone-pulse {
-  animation: timeline-milestone-pulse 2s ease-in-out infinite;
   contain: layout style;
 }
 
@@ -6449,7 +6269,6 @@ html {
     #F9CB25 100%
   );
   background-size: 200% 100%;
-  animation: rank-badge-gold-shimmer 2.5s ease-in-out infinite;
   box-shadow: 0 0 10px rgba(249, 203, 37, 0.3), 0 0 20px rgba(249, 203, 37, 0.1);
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
@@ -6469,7 +6288,6 @@ html {
     #9ca3af 100%
   );
   background-size: 200% 100%;
-  animation: rank-badge-silver-shimmer 2.5s ease-in-out infinite;
   box-shadow: 0 0 8px rgba(156, 163, 175, 0.25), 0 0 16px rgba(156, 163, 175, 0.08);
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
@@ -6489,7 +6307,6 @@ html {
     #b45309 100%
   );
   background-size: 200% 100%;
-  animation: rank-badge-bronze-shimmer 2.5s ease-in-out infinite;
   box-shadow: 0 0 8px rgba(180, 83, 9, 0.25), 0 0 16px rgba(180, 83, 9, 0.08);
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
@@ -6551,7 +6368,6 @@ html {
     radial-gradient(circle at 15% 85%, currentColor 0.4px, transparent 0.4px);
   background-size: 60px 60px, 80px 80px, 50px 50px, 70px 70px, 90px 90px,
     55px 55px, 65px 65px, 75px 75px, 85px 85px, 45px 45px;
-  animation: empty-pattern-drift 20s linear infinite;
 }
 
 @keyframes empty-pattern-drift {
@@ -6600,16 +6416,10 @@ html {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-1px); }
 }
-.trend-up {
-  animation: trend-bounce-up 1.5s ease-in-out infinite;
-}
 
 @keyframes trend-bounce-down {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(1px); }
-}
-.trend-down {
-  animation: trend-bounce-down 1.5s ease-in-out infinite;
 }
 
 /* ─── Empty State CTA Hint Shimmer ─── */
@@ -6618,9 +6428,6 @@ html {
   0% { opacity: 0.5; }
   50% { opacity: 1; }
   100% { opacity: 0.5; }
-}
-.empty-cta-hint {
-  animation: empty-cta-shimmer 2s ease-in-out infinite;
 }
 
 /* ============================================
@@ -6634,7 +6441,6 @@ html {
 }
 
 .timeline-milestone-pulse {
-  animation: timeline-milestone-pulse-keyframes 2s ease-in-out infinite;
   contain: layout style;
 }
 
@@ -6660,7 +6466,6 @@ html {
 .rank-badge-gold {
   background: linear-gradient(90deg, #F9CB25, #F9CB25, #F9CB25, #F9CB25);
   background-size: 200% 100%;
-  animation: rank-badge-gold-shimmer 3s ease-in-out infinite;
   color: var(--background);
   text-shadow: none;
 }
@@ -6674,7 +6479,6 @@ html {
 .rank-badge-silver {
   background: linear-gradient(90deg, #9ca3af, #d1d5db, #9ca3af, #d1d5db);
   background-size: 200% 100%;
-  animation: rank-badge-silver-shimmer 3s ease-in-out infinite;
   color: var(--background);
   text-shadow: none;
 }
@@ -6688,7 +6492,6 @@ html {
 .rank-badge-bronze {
   background: linear-gradient(90deg, #b45309, #d97706, #b45309, #d97706);
   background-size: 200% 100%;
-  animation: rank-badge-bronze-shimmer 3s ease-in-out infinite;
   color: var(--background);
   text-shadow: none;
 }
@@ -6752,7 +6555,6 @@ html {
   height: 30px !important;
   font-size: 14px !important;
   background: linear-gradient(135deg, #F9CB25 0%, #F9CB25 40%, #fbbf24 60%, #B88200 100%) !important;
-  animation: top-rank-pulse-gold 2.5s ease-in-out infinite, rank-badge-gold-shimmer 3s ease-in-out infinite;
   background-size: 200% 100% !important;
   border: 2px solid rgba(255, 255, 255, 0.3);
   color: var(--background) !important;
@@ -6765,7 +6567,6 @@ html {
   height: 30px !important;
   font-size: 14px !important;
   background: linear-gradient(135deg, #9ca3af 0%, #e5e7eb 40%, #d1d5db 60%, #6b7280 100%) !important;
-  animation: top-rank-pulse-silver 2.5s ease-in-out infinite, rank-badge-silver-shimmer 3s ease-in-out infinite;
   background-size: 200% 100% !important;
   border: 2px solid rgba(255, 255, 255, 0.25);
   color: var(--background) !important;
@@ -6778,7 +6579,6 @@ html {
   height: 30px !important;
   font-size: 14px !important;
   background: linear-gradient(135deg, #b45309 0%, #d97706 40%, #f59e0b 60%, #7A360A 100%) !important;
-  animation: top-rank-pulse-bronze 2.5s ease-in-out infinite, rank-badge-bronze-shimmer 3s ease-in-out infinite;
   background-size: 200% 100% !important;
   border: 2px solid rgba(255, 255, 255, 0.2);
   color: var(--background) !important;
@@ -6893,7 +6693,6 @@ html {
 
 .trend-up {
   color: #22c55e;
-  animation: trend-up-bounce 2s ease-in-out infinite;
 }
 
 .trend-down {
@@ -6904,10 +6703,6 @@ html {
 @keyframes cta-hint-pulse {
   0%, 100% { opacity: 0.7; }
   50% { opacity: 1; }
-}
-
-.empty-cta-hint {
-  animation: cta-hint-pulse 2s ease-in-out infinite;
 }
 
 /* Sidebar gradient border */
@@ -6970,14 +6765,6 @@ html {
   50% { box-shadow: 0 0 20px rgba(255, 45, 120, 0.15); }
 }
 
-.spotlight-glow-male {
-  animation: spotlight-glow-male 3s ease-in-out infinite;
-}
-
-.spotlight-glow-female {
-  animation: spotlight-glow-female 3s ease-in-out infinite;
-}
-
 /* Spotlight avatar ring — animated conic gradient ring */
 @keyframes spotlight-ring-rotate {
   from { transform: rotate(0deg); }
@@ -7001,7 +6788,6 @@ html {
     var(--ring-color, rgba(249, 203, 37, 0.5)) 75%,
     transparent 100%
   );
-  animation: spotlight-ring-rotate 4s linear infinite;
   z-index: -1;
 }
 
@@ -7033,10 +6819,6 @@ html {
   50% {
     box-shadow: 0 0 12px rgba(250, 204, 21, 0.5), 0 0 16px rgba(250, 204, 21, 0.15);
   }
-}
-
-.leaderboard-rank-glow-gold {
-  animation: leaderboard-gold-glow 2.5s ease-in-out infinite;
 }
 
 /* Win rate bar fill animation */
@@ -7102,7 +6884,6 @@ html {
   border-radius: 50%;
   background: rgba(249, 203, 37, 0.25);
   box-shadow: 0 0 4px rgba(249, 203, 37, 0.15);
-  animation: hero-constellation-drift 20s ease-in-out infinite;
   contain: layout style;
   pointer-events: none;
 }
@@ -7134,8 +6915,8 @@ html {
     rgba(249, 203, 37, 0.02) 70%,
     transparent 100%
   );
-  animation: hero-light-sweep 8s ease-in-out infinite;
   animation-delay: 3s;
+  opacity: 0 !important;
 }
 
 /* ─── Hero: Pulsing vignette ─── */
@@ -7149,7 +6930,6 @@ html {
   pointer-events: none;
   z-index: 3;
   background: radial-gradient(ellipse at center, transparent 40%, rgba(12, 15, 26, 0.8) 100%);
-  animation: hero-vignette-pulse 6s ease-in-out infinite;
 }
 
 /* ─── Hero: Dramatic text glow ─── */
@@ -7204,7 +6984,6 @@ html {
   height: 6px;
   border-radius: 1px;
   pointer-events: none;
-  animation: confetti-fall linear infinite;
   contain: layout style;
 }
 
@@ -7216,7 +6995,6 @@ html {
   75% { transform: translateY(-4px) rotate(-2deg); }
 }
 .champion-crown-bounce {
-  animation: crown-bounce 2.5s ease-in-out infinite;
   contain: layout style;
 }
 
@@ -7232,7 +7010,6 @@ html {
   border-radius: 50%;
   background: #F9CB25;
   box-shadow: 0 0 6px rgba(245, 215, 122, 0.6);
-  animation: golden-sparkle 1.5s ease-in-out infinite;
   pointer-events: none;
   contain: layout style;
 }
@@ -7256,7 +7033,6 @@ html {
     transparent 100%
   );
   clip-path: polygon(35% 0%, 65% 0%, 100% 100%, 0% 100%);
-  animation: spotlight-beam 4s ease-in-out infinite;
   pointer-events: none;
 }
 
@@ -7278,9 +7054,6 @@ html {
   0%, 100% { box-shadow: 0 0 8px rgba(180, 83, 9, 0.1), inset 0 0 12px rgba(180, 83, 9, 0.02); }
   50% { box-shadow: 0 0 14px rgba(180, 83, 9, 0.18), inset 0 0 16px rgba(180, 83, 9, 0.04); }
 }
-.leaderboard-rank-gold { animation: leaderboard-gold-glow 2.5s ease-in-out infinite; }
-.leaderboard-rank-silver { animation: leaderboard-silver-glow 2.5s ease-in-out infinite; }
-.leaderboard-rank-bronze { animation: leaderboard-bronze-glow 2.5s ease-in-out infinite; }
 
 /* ─── Tournament Hub: Border glow ─── */
 @keyframes tournament-border-glow {
@@ -7291,8 +7064,6 @@ html {
   0%, 100% { box-shadow: 0 0 8px rgba(255, 45, 120, 0.1), 0 0 20px rgba(255, 45, 120, 0.05); }
   50% { box-shadow: 0 0 20px rgba(255, 45, 120, 0.2); }
 }
-.tournament-glow-cyan { animation: tournament-border-glow 3s ease-in-out infinite; }
-.tournament-glow-purple { animation: tournament-border-glow-purple 3s ease-in-out infinite; }
 
 /* ─── Tournament Hub: LIVE pulse indicator ─── */
 @keyframes live-indicator-pulse {
@@ -7443,7 +7214,6 @@ html {
 }
 
 .champions-crown-float {
-  animation: champions-crown-bob 4s ease-in-out infinite;
   contain: layout style;
 }
 
@@ -7466,7 +7236,6 @@ html {
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: champion-name-shimmer 4s ease-in-out infinite;
 }
 
 /* ─── Champion Member Card Hover Glow ─── */
@@ -7499,7 +7268,6 @@ html {
 .mvp-glow-ring {
   border: 2px solid rgba(87, 181, 255, 0.25);
   border-radius: 50%;
-  animation: mvp-ring-pulse 2.5s ease-in-out infinite;
   contain: layout style;
 }
 
@@ -7524,7 +7292,6 @@ html {
 .mvp-glow-ring-female {
   border: 2px solid rgba(255, 92, 154, 0.25);
   border-radius: 50%;
-  animation: mvp-ring-pulse-female 2.5s ease-in-out infinite;
   contain: layout style;
 }
 
@@ -7541,7 +7308,6 @@ html {
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: mvp-text-gradient 3s ease-in-out infinite;
 }
 
 /* ─── MVP Stats Enhanced — subtle panel glow ─── */
@@ -7571,7 +7337,6 @@ html {
 }
 
 .rivalry-leading-glow {
-  animation: rivalry-leading-pulse 2.5s ease-in-out infinite;
   contain: layout style;
 }
 
@@ -7597,7 +7362,6 @@ html {
 .rivalry-vs-pulse {
   border: 1.5px solid rgba(249, 203, 37, 0.25);
   border-radius: 50%;
-  animation: rivalry-vs-pulse-ring 2s ease-in-out infinite;
   contain: layout style;
 }
 
@@ -7657,7 +7421,6 @@ html {
 }
 
 .tournament-icon-pulse {
-  animation: tournament-icon-pulse 2.5s ease-in-out infinite;
   contain: layout style;
 }
 
@@ -7810,7 +7573,6 @@ html {
   inset: -20px -40px;
   border-radius: 50%;
   background: radial-gradient(ellipse, rgba(239, 249, 35, 0.08) 0%, transparent 70%);
-  animation: hero-title-breathe 4s ease-in-out infinite;
   contain: layout style;
   pointer-events: none;
 }
@@ -7857,7 +7619,6 @@ html {
     rgba(239, 249, 35, 0.015) 60%,
     transparent 100%
   );
-  animation: hero-scanline-scroll 8s linear infinite;
 }
 
 /* ─── Hero: Button Gradient Border + Shimmer ─── */
@@ -7886,7 +7647,6 @@ html {
   );
   background-size: 200% 100%;
   z-index: -1;
-  animation: hero-btn-shimmer 3s ease-in-out infinite;
 }
 
 .hero-btn-gradient-border::after {
@@ -7905,7 +7665,6 @@ html {
 }
 
 .leaderboard-crown-icon {
-  animation: leaderboard-crown-bob 2s ease-in-out infinite;
   contain: layout style;
   filter: drop-shadow(0 0 4px rgba(250, 204, 21, 0.4));
 }
@@ -7977,7 +7736,6 @@ html {
   top: 10%;
   left: 15%;
   background: radial-gradient(circle, rgba(249, 203, 37, 0.8), transparent);
-  animation: champion-sparkle-1 3s ease-in-out infinite;
   animation-delay: 0s;
 }
 
@@ -7985,7 +7743,6 @@ html {
   top: 8%;
   right: 20%;
   background: radial-gradient(circle, rgba(245, 215, 122, 0.8), transparent);
-  animation: champion-sparkle-2 3.5s ease-in-out infinite;
   animation-delay: 0.8s;
 }
 
@@ -7993,7 +7750,6 @@ html {
   bottom: 20%;
   left: 10%;
   background: radial-gradient(circle, rgba(239, 249, 35, 0.6), transparent);
-  animation: champion-sparkle-3 4s ease-in-out infinite;
   animation-delay: 1.5s;
 }
 
@@ -8001,7 +7757,6 @@ html {
   bottom: 15%;
   right: 15%;
   background: radial-gradient(circle, rgba(249, 203, 37, 0.7), transparent);
-  animation: champion-sparkle-4 3.2s ease-in-out infinite;
   animation-delay: 2.2s;
 }
 
@@ -8039,7 +7794,6 @@ html {
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
-  animation: champion-border-rotate 4s linear infinite;
   pointer-events: none;
 }
 
@@ -8094,7 +7848,6 @@ html {
   position: absolute;
   inset: -20%;
   background: radial-gradient(ellipse at 50% 60%, rgba(239, 249, 35, 0.12) 0%, rgba(239, 249, 35, 0.04) 30%, transparent 60%);
-  animation: mvp-spotlight-pulse 4s ease-in-out infinite;
   pointer-events: none;
   contain: layout style;
 }
@@ -8119,12 +7872,10 @@ html {
 }
 
 .mvp-border-pulse-male {
-  animation: mvp-border-pulse-male 3s ease-in-out infinite;
   contain: layout style;
 }
 
 .mvp-border-pulse-female {
-  animation: mvp-border-pulse-female 3s ease-in-out infinite;
   contain: layout style;
 }
 
@@ -8271,7 +8022,6 @@ html {
 
 /* Floating particle animation (CSS-only, replaces motion.animate) */
 .hero-particle {
-  animation: hero-float-up var(--duration, 8s) var(--delay, 0s) linear infinite;
   will-change: transform, opacity;
   contain: layout style paint;
 }
@@ -8354,9 +8104,6 @@ html {
 
 /* Mobile swipe arrows — always visible on mobile with subtle pulse */
 .swipe-arrow-left,
-.swipe-arrow-right {
-  animation: swipe-arrow-pulse 2s ease-in-out infinite;
-}
 @keyframes swipe-arrow-pulse {
   0%, 100% { opacity: 0.7; }
   50% { opacity: 1; }
@@ -8403,7 +8150,6 @@ html {
 .hero-top-gold-line {
   background: linear-gradient(90deg, transparent 0%, rgba(239,249,35,0.6) 20%, rgba(245,230,200,0.8) 50%, rgba(239,249,35,0.6) 80%, transparent 100%);
   background-size: 200% 100%;
-  animation: hero-gold-line-shimmer 3s ease-in-out infinite;
 }
 @keyframes hero-gold-line-shimmer {
   0%, 100% { background-position: 200% 0; }
@@ -8430,7 +8176,6 @@ html {
 /* ─── Hero: Breathing gold glow behind title — opacity-only for GPU ─── */
 .hero-title-breath {
   background: radial-gradient(ellipse at 50% 50%, rgba(239,249,35,0.08) 0%, transparent 70%);
-  animation: hero-breath 4s ease-in-out infinite;
 }
 @keyframes hero-breath {
   0%, 100% { opacity: 0.4; }
@@ -8444,7 +8189,6 @@ html {
   inset: -6px;
   border-radius: 1rem;
   border: 1px solid rgba(239,249,35,0.15);
-  animation: cta-glow-breathe 3s ease-in-out infinite;
   pointer-events: none;
 }
 @keyframes cta-glow-breathe {
@@ -8502,7 +8246,6 @@ html {
     transparent 78%,
     transparent 100%
   );
-  animation: cta-rotate-border 4s linear infinite;
   contain: layout style;
 }
 @keyframes cta-rotate-border {
@@ -8519,7 +8262,7 @@ html {
   width: 30%;
   height: 100%;
   background: linear-gradient(90deg, transparent, rgba(239,249,35,0.4), transparent);
-  animation: cta-gold-sweep 3s ease-in-out infinite;
+  opacity: 0 !important;
 }
 @keyframes cta-gold-sweep {
   0% { left: -30%; }
@@ -8530,32 +8273,26 @@ html {
 .cta-particle-1 {
   top: -8px;
   left: 15%;
-  animation: cta-float-1 5s ease-in-out infinite;
 }
 .cta-particle-2 {
   top: 25%;
   right: -10px;
-  animation: cta-float-2 6s ease-in-out infinite 0.5s;
 }
 .cta-particle-3 {
   bottom: -6px;
   right: 20%;
-  animation: cta-float-3 5.5s ease-in-out infinite 1s;
 }
 .cta-particle-4 {
   bottom: 20%;
   left: -8px;
-  animation: cta-float-4 6.5s ease-in-out infinite 1.5s;
 }
 .cta-particle-5 {
   top: 40%;
   right: -6px;
-  animation: cta-float-5 5s ease-in-out infinite 0.8s;
 }
 .cta-particle-6 {
   top: -5px;
   right: 30%;
-  animation: cta-float-6 7s ease-in-out infinite 2s;
 }
 
 @keyframes cta-float-1 {
@@ -8632,9 +8369,6 @@ html {
 }
 
 /* ─── CTA: Pulsing glow on primary button ─── */
-.cta-btn-pulse {
-  animation: cta-pulse-glow 2.5s ease-in-out infinite;
-}
 @keyframes cta-pulse-glow {
   0%, 100% { box-shadow: 0 0 20px rgba(239,249,35,0.2); }
   50% { box-shadow: 0 0 35px rgba(239,249,35,0.35); }
@@ -8674,9 +8408,6 @@ html {
 }
 
 /* ─── Champion: Crown float animation ─── */
-.champion-crown-float {
-  animation: crown-float 3s ease-in-out infinite;
-}
 @keyframes crown-float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-4px); }
@@ -8695,8 +8426,8 @@ html {
   width: 100%;
   height: 100%;
   background: linear-gradient(90deg, transparent, rgba(239,249,35,0.15), transparent);
-  animation: gold-shimmer-sweep 5s ease-in-out infinite;
   pointer-events: none;
+  opacity: 0 !important;
 }
 @keyframes gold-shimmer-sweep {
   0%, 100% { left: -100%; }
@@ -8706,7 +8437,6 @@ html {
 /* ─── MVP: Spotlight glow effect ─── */
 .mvp-spotlight-bg {
   background: radial-gradient(ellipse at 50% 60%, rgba(239,249,35,0.08) 0%, transparent 60%);
-  animation: mvp-spotlight-pulse 3s ease-in-out infinite;
 }
 @keyframes mvp-spotlight-pulse {
   0%, 100% { opacity: 0.4; }
@@ -8738,9 +8468,9 @@ html {
     transparent 70%
   );
   transform: translateX(-120%);
-  animation: avatar-shimmer-sweep 6s ease-in-out infinite;
   pointer-events: none;
   z-index: 5;
+  opacity: 0 !important;
 }
 
 /* Platinum — MVP */
@@ -8761,9 +8491,9 @@ html {
     transparent 70%
   );
   transform: translateX(-120%);
-  animation: avatar-shimmer-sweep 6s ease-in-out 1s infinite;
   pointer-events: none;
   z-index: 5;
+  opacity: 0 !important;
 }
 
 /* Diamond — Season Champion */
@@ -8784,9 +8514,9 @@ html {
     transparent 70%
   );
   transform: translateX(-120%);
-  animation: avatar-shimmer-sweep 6s ease-in-out 2s infinite;
   pointer-events: none;
   z-index: 5;
+  opacity: 0 !important;
 }
 
 /* Emerald — Season Sultan */
@@ -8807,9 +8537,9 @@ html {
     transparent 70%
   );
   transform: translateX(-120%);
-  animation: avatar-shimmer-sweep 6s ease-in-out 0.5s infinite;
   pointer-events: none;
   z-index: 5;
+  opacity: 0 !important;
 }
 
 /* Maroon — Sultan of the Week */
@@ -8830,9 +8560,9 @@ html {
     transparent 70%
   );
   transform: translateX(-120%);
-  animation: avatar-shimmer-sweep 6s ease-in-out 1.5s infinite;
   pointer-events: none;
   z-index: 5;
+  opacity: 0 !important;
 }
 
 /* Shared shimmer sweep keyframe — smooth diagonal pass */
@@ -8998,9 +8728,6 @@ html {
   0%, 100% { box-shadow: 0 0 8px rgba(239,249,35,0.1), 0 0 16px rgba(239,249,35,0.05); }
   50% { box-shadow: 0 0 16px rgba(239,249,35,0.25), 0 0 32px rgba(239,249,35,0.1), 0 0 48px rgba(239,249,35,0.05); }
 }
-.hero-badge-glow {
-  animation: hero-badge-glow-pulse 3s ease-in-out infinite;
-}
 
 /* ─── 3. Premium Stats Counter Bar ─── */
 @keyframes hero-stats-bar-enter {
@@ -9079,14 +8806,12 @@ html {
   right: 6%;
   width: 24px;
   height: 24px;
-  animation: hero-geo-float-1 6s ease-in-out infinite;
 }
 .hero-geo-diamond-2 {
   bottom: 22%;
   left: 5%;
   width: 18px;
   height: 18px;
-  animation: hero-geo-float-2 7s ease-in-out infinite 1s;
 }
 .hero-geo-hex {
   top: 60%;
@@ -9094,7 +8819,6 @@ html {
   width: 20px;
   height: 20px;
   border-radius: 3px;
-  animation: hero-geo-float-3 8s ease-in-out infinite 0.5s;
 }
 
 /* ─── 6. Title Enhancement — Breathing text-shadow glow ───
@@ -9103,9 +8827,6 @@ html {
 @keyframes hero-title-text-glow {
   0%, 100% { opacity: 0.85; }
   50% { opacity: 1; }
-}
-.hero-title-glow-enhanced {
-  animation: hero-title-text-glow 5s ease-in-out infinite;
 }
 
 /* Dramatic underline shimmer sweep — INP OPTIMIZED
@@ -9137,7 +8858,7 @@ html {
     rgba(239,249,35,0.3) 85%,
     transparent 100%
   );
-  animation: hero-underline-shimmer 3s ease-in-out infinite;
+  opacity: 0 !important;
 }
 
 /* ─── 7. Cinematic Vignette — Blue-tinted, darker edges ─── */
@@ -9242,10 +8963,6 @@ html {
   }
 }
 
-.animate-float-up {
-  animation: hero-particle-rise linear infinite;
-}
-
 .animate-fade-in-scale {
   animation: fade-in-scale 0.5s ease-out both;
 }
@@ -9268,10 +8985,6 @@ html {
   to { transform: rotate(360deg); }
 }
 
-.club-trophy-glow {
-  animation: trophy-ring-spin 8s linear infinite;
-}
-
 /* ============================================
    PREMIUM FOOTER — Landing Page
    CSS-only animations, GPU-accelerated
@@ -9288,7 +9001,6 @@ html {
 }
 
 .footer-logo-glow {
-  animation: footer-logo-glow 3s ease-in-out infinite;
   contain: layout style;
 }
 
@@ -9346,7 +9058,6 @@ html {
     transparent 100%
   );
   background-size: 200% 100%;
-  animation: footer-divider-shimmer 6s ease-in-out infinite;
   contain: layout style;
 }
 
@@ -9422,7 +9133,7 @@ html {
     transparent 60%
   );
   background-size: 200% 100%;
-  animation: dashboard-card-shimmer 5s ease-in-out infinite;
+  opacity: 0 !important;
 }
 
 /* Dashboard section header — gradient text shimmer */
@@ -9438,7 +9149,6 @@ html {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: dashboard-header-shimmer 4s ease-in-out infinite;
 }
 
 /* Dashboard tab — active shimmer */
@@ -9467,7 +9177,7 @@ html {
     transparent 60%
   );
   background-size: 200% 100%;
-  animation: dashboard-tab-shimmer 3s ease-in-out infinite;
+  opacity: 0 !important;
 }
 
 /* Dashboard card hover glow — gold accent */
@@ -9490,10 +9200,6 @@ html {
   }
 }
 
-.champion-gold-pulse {
-  animation: champion-gold-pulse 2.5s ease-in-out infinite;
-}
-
 /* MVP platinum shimmer — subtle silver/platinum glow */
 @keyframes mvp-platinum-pulse {
   0%, 100% { 
@@ -9502,10 +9208,6 @@ html {
   50% { 
     box-shadow: 0 0 8px rgba(229, 228, 226, 0.4), 0 0 16px rgba(229, 228, 226, 0.1);
   }
-}
-
-.mvp-platinum-pulse {
-  animation: mvp-platinum-pulse 2.5s ease-in-out infinite;
 }
 
 /* ============================================
@@ -9591,7 +9293,6 @@ html {
     transparent 85%
   );
   filter: blur(1px);
-  animation: cinema-flare-drift 8s ease-in-out infinite;
   border-radius: inherit;
 }
 
@@ -9792,7 +9493,6 @@ html {
     rgba(249, 203, 37, 0.03) 100%
   );
   background-size: 200% 100%;
-  animation: skeleton-shimmer 2s ease-in-out infinite;
 }
 
 /* Avatar skeleton — circular pulse */
@@ -9816,7 +9516,7 @@ html {
     transparent 70%
   );
   background-size: 200% 100%;
-  animation: skeleton-shimmer 1.8s ease-in-out infinite;
+  opacity: 0 !important;
 }
 
 /* Text line skeleton — 60% width, rounded */
@@ -9842,7 +9542,7 @@ html {
     transparent 70%
   );
   background-size: 200% 100%;
-  animation: skeleton-shimmer 2s ease-in-out infinite;
+  opacity: 0 !important;
 }
 
 .skeleton-text-short { width: 40%; }
@@ -9870,7 +9570,7 @@ html {
     transparent 60%
   );
   background-size: 200% 100%;
-  animation: skeleton-shimmer 2.5s ease-in-out infinite;
+  opacity: 0 !important;
 }
 
 /* ============================================
@@ -10087,7 +9787,6 @@ main, [role="main"] {
     rgba(249, 203, 37, 0.04) 100%
   );
   background-size: 200% 100%;
-  animation: skeleton-shimmer 1.8s ease-in-out infinite;
   border-radius: 8px;
 }
 /* Circular skeleton for avatars */
@@ -10650,7 +10349,6 @@ main, [role="main"] {
     radial-gradient(ellipse at 50% 80%, rgba(249, 203, 37, 0.05) 0%, transparent 50%),
     linear-gradient(180deg, #06080f 0%, #0a0c18 40%, #080a14 100%);
   background-size: 200% 200%;
-  animation: esports-storm-drift 10s ease-in-out infinite;
   position: relative;
   overflow: hidden;
 }
@@ -10684,7 +10382,6 @@ main, [role="main"] {
   );
   filter: blur(1px);
   opacity: 0;
-  animation: lightning-flash-left 5s ease-in-out infinite;
   pointer-events: none;
   z-index: 1;
 }
@@ -10729,7 +10426,6 @@ main, [role="main"] {
   );
   filter: blur(1px);
   opacity: 0;
-  animation: lightning-flash-right 7s ease-in-out infinite 2s;
   pointer-events: none;
   z-index: 1;
 }
@@ -10764,7 +10460,6 @@ main, [role="main"] {
               radial-gradient(ellipse at 85% 40%, rgba(249, 203, 37, 0.04) 0%, transparent 35%);
   pointer-events: none;
   opacity: 0;
-  animation: lightning-glow 5s ease-in-out infinite;
   z-index: 0;
 }
 
@@ -10772,7 +10467,6 @@ main, [role="main"] {
 .esports-rank-1st {
   background: linear-gradient(135deg, #fbbf24, #f59e0b, #fbbf24);
   background-size: 200% 200%;
-  animation: rank-badge-gold-shimmer 2.5s ease-in-out infinite;
   color: #1a1a2e;
   text-shadow: none;
   font-weight: 900;
@@ -10800,10 +10494,6 @@ main, [role="main"] {
     opacity: 0.6; 
     transform: scale(1.15); 
   }
-}
-
-.esports-energy-ring {
-  animation: esports-energy-pulse 3s ease-in-out infinite;
 }
 
 /* Dramatic text glow for JUARA heading */
@@ -10845,7 +10535,7 @@ main, [role="main"] {
   width: 30%;
   height: 200%;
   background: linear-gradient(90deg, transparent, rgba(249, 203, 37, 0.04), rgba(249, 203, 37, 0.08), rgba(249, 203, 37, 0.04), transparent);
-  animation: champion-gold-sweep 4s ease-in-out infinite 1s;
+  opacity: 0 !important;
 }
 
 /* Light mode overrides */
@@ -10888,7 +10578,6 @@ main, [role="main"] {
     radial-gradient(ellipse at 10% 80%, rgba(20, 80, 50, 0.06) 0%, transparent 40%),
     linear-gradient(180deg, #040d0a 0%, #061510 25%, #081a12 50%, #061510 75%, #040d0a 100%);
   background-size: 200% 200%;
-  animation: green-storm-drift 12s ease-in-out infinite;
   position: relative;
   overflow: hidden;
 }
@@ -10987,9 +10676,6 @@ main, [role="main"] {
 }
 
 /* ─── Glow Effect Behind Individual Player Cards ─── */
-.esports-player-glow {
-  animation: esports-player-glow-pulse 3s ease-in-out infinite;
-}
 @keyframes esports-player-glow-pulse {
   0%, 100% { opacity: 0.5; transform: scale(1); }
   50% { opacity: 0.8; transform: scale(1.05); }
@@ -11094,7 +10780,6 @@ main, [role="main"] {
     radial-gradient(ellipse at 40% 80%, rgba(239, 249, 35, 0.1) 0%, transparent 50%),
     radial-gradient(ellipse at 60% 30%, rgba(139, 92, 246, 0.08) 0%, transparent 50%);
   background-size: 400% 400%;
-  animation: aurora-drift 20s ease-in-out infinite;
   filter: blur(60px);
   will-change: background-position;
   contain: layout style;
@@ -11107,7 +10792,6 @@ main, [role="main"] {
     radial-gradient(ellipse at 80% 20%, rgba(46, 159, 255, 0.12) 0%, transparent 50%),
     radial-gradient(ellipse at 50% 80%, rgba(239, 249, 35, 0.08) 0%, transparent 50%);
   background-size: 400% 400%;
-  animation: aurora-drift 20s ease-in-out infinite;
   filter: blur(60px);
 }
 
@@ -11118,7 +10802,6 @@ main, [role="main"] {
     radial-gradient(ellipse at 20% 20%, rgba(255, 45, 120, 0.12) 0%, transparent 50%),
     radial-gradient(ellipse at 50% 80%, rgba(239, 249, 35, 0.08) 0%, transparent 50%);
   background-size: 400% 400%;
-  animation: aurora-drift 20s ease-in-out infinite;
   filter: blur(60px);
 }
 
@@ -11263,7 +10946,6 @@ main, [role="main"] {
 
 .text-gradient-animated {
   background-size: 200% auto;
-  animation: text-gradient-shift 4s ease-in-out infinite;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -11275,7 +10957,6 @@ main, [role="main"] {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: text-gradient-shift 6s ease-in-out infinite;
 }
 
 .text-shimmer {
@@ -11289,7 +10970,6 @@ main, [role="main"] {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: text-gradient-shift 3s ease-in-out infinite;
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -11346,8 +11026,8 @@ main, [role="main"] {
   inset: 0;
   background: linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, 0.1) 50%, transparent 60%);
   background-size: 200% 100%;
-  animation: badge-shimmer 3s ease-in-out infinite;
   pointer-events: none;
+  opacity: 0 !important;
 }
 
 @keyframes badge-shimmer {
@@ -11415,7 +11095,6 @@ main, [role="main"] {
     rgba(239, 249, 35, 0.05) 75%
   );
   background-size: 200% 100%;
-  animation: skeleton-premium 1.8s ease-in-out infinite;
   border-radius: 0.5rem;
 }
 
