@@ -305,7 +305,7 @@ export function LandingPage() {
       return res.json();
     },
     staleTime: 30000, // 30s — fast refresh since this is a lightweight query
-    refetchInterval: 60000, // 60s polling
+    refetchInterval: 120000, // 2min polling — reduced from 60s to lower INP impact
     refetchOnWindowFocus: true,
     gcTime: 60000,
   });
@@ -317,8 +317,8 @@ export function LandingPage() {
       const url = `/api/stats?division=male${selectedSeasonId ? `&seasonId=${selectedSeasonId}` : ''}`;
       const res = await fetch(url); return res.json();
     },
-    staleTime: 60000, // 60s — faster refresh for champion data
-    refetchInterval: 120000, // 2min polling — reduced from 2min for faster recovery
+    staleTime: 120000, // 2min — reduced polling frequency to lower INP impact
+    refetchInterval: 300000, // 5min polling — reduced from 2min for INP optimization
     refetchOnWindowFocus: true,
     gcTime: 300000,
     placeholderData: (prev) => prev, // keep previous data during refetch/season switch — prevents FOUC
@@ -330,8 +330,8 @@ export function LandingPage() {
       const url = `/api/stats?division=female${selectedSeasonId ? `&seasonId=${selectedSeasonId}` : ''}`;
       const res = await fetch(url); return res.json();
     },
-    staleTime: 60000, // 60s — faster refresh for champion data
-    refetchInterval: 120000, // 2min polling — reduced from 2min for faster recovery
+    staleTime: 120000, // 2min — reduced polling frequency to lower INP impact
+    refetchInterval: 300000, // 5min polling — reduced from 2min for INP optimization
     refetchOnWindowFocus: true,
     gcTime: 300000,
     placeholderData: (prev) => prev, // keep previous data during refetch/season switch — prevents FOUC
@@ -406,9 +406,13 @@ export function LandingPage() {
     setCurrentView('community');
   };
 
-  /* Nav scroll state */
+  /* Nav scroll state — optimized for INP:
+     - Use refs to skip setState when value hasn't changed (prevents unnecessary re-renders)
+     - rAF throttle already in place, now also guards against no-op state updates */
   const [scrolled, setScrolled] = useState(false);
+  const scrolledRef = useRef(false);
   const [activeSection, setActiveSection] = useState('');
+  const activeSectionRef = useRef('');
   const scrollTickingRef = useRef(false);
 
   useEffect(() => {
@@ -417,7 +421,12 @@ export function LandingPage() {
       if (scrollTickingRef.current) return;
       scrollTickingRef.current = true;
       requestAnimationFrame(() => {
-        setScrolled(window.scrollY > 20);
+        const isScrolled = window.scrollY > 20;
+        // Only update state when value actually changes — eliminates re-renders while scrolling in same zone
+        if (scrolledRef.current !== isScrolled) {
+          scrolledRef.current = isScrolled;
+          setScrolled(isScrolled);
+        }
         scrollTickingRef.current = false;
       });
     };
@@ -428,32 +437,28 @@ export function LandingPage() {
   useEffect(() => {
     const sectionIds = ['kompetisi', 'players', 'highlights', 'season-champion', 'experiences', 'clubs'];
     const observer = new IntersectionObserver(
-      (entries) => { entries.forEach((entry) => { if (entry.isIntersecting) setActiveSection(entry.target.id); }); },
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const id = entry.target.id;
+            // Only update state when section actually changes — prevents re-renders
+            if (activeSectionRef.current !== id) {
+              activeSectionRef.current = id;
+              setActiveSection(id);
+            }
+          }
+        });
+      },
       { rootMargin: '-40% 0px -55% 0px' }
     );
     sectionIds.forEach((id) => { const el = document.getElementById(id); if (el) observer.observe(el); });
     return () => observer.disconnect();
   }, []);
 
-  /* Section Reveal — IntersectionObserver for scroll-triggered fade-in animations
-     Dashboard-crisp: low threshold + generous rootMargin so animation fires early */
-  useEffect(() => {
-    const revealSections = document.querySelectorAll('.section-reveal');
-    if (!revealSections.length) return;
-    const revealObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('section-reveal--visible');
-            revealObserver.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.01, rootMargin: '0px 0px 0px 0px' }
-    );
-    revealSections.forEach((el) => revealObserver.observe(el));
-    return () => revealObserver.disconnect();
-  }, []);
+  /* Section Reveal — REMOVED: redundant IntersectionObserver
+     useScrollReveal() below already handles .reveal elements.
+     The .section-reveal class is handled by the same CSS mechanism.
+     Removing this eliminates a duplicate IntersectionObserver (was #3). */
 
   useSwipeNavigation();
   useScrollReveal();
@@ -549,46 +554,51 @@ export function LandingPage() {
       </nav>
 
       {/* ========== MOBILE BOTTOM NAVIGATION ========== */}
-      <nav aria-label="Section navigation" className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/98 border-t border-idm-gold-warm/10 safe-area-bottom">
-        <div className="flex items-center justify-around h-16 px-2">
-          {[
-            { id: 'kompetisi', label: 'Kompetisi', icon: Swords, special: false },
-            { id: 'players', label: 'Player', icon: Music, special: false },
-            { id: 'highlights', label: 'Juara', icon: Crown, special: true },
-            { id: 'season-champion', label: 'Season', icon: Trophy, special: false },
-            { id: 'experiences', label: 'Video', icon: Play, special: false },
+      <nav aria-label="Section navigation" className="md:hidden fixed bottom-0 left-0 right-0 z-50 safe-area-bottom">
+        {/* Gradient border at top — premium separator */}
+        <div className="h-px bg-gradient-to-r from-transparent via-idm-gold-warm/30 to-transparent" aria-hidden="true" />
+        {/* Frosted glass background */}
+        <div className="bg-background/95 backdrop-blur-lg">
+          <div className="flex items-center justify-around h-16 px-1">
+            {[
+              { id: 'kompetisi', label: 'Kompetisi', icon: Swords, special: false },
+              { id: 'players', label: 'Player', icon: Music, special: false },
+              { id: 'highlights', label: 'Juara', icon: Crown, special: true },
+              { id: 'season-champion', label: 'Season', icon: Trophy, special: false },
+              { id: 'experiences', label: 'Video', icon: Play, special: false },
 
-          ].map(item => {
-            const isActive = activeSection === item.id;
-            return (
-              <button
-                key={item.id}
-                onClick={() => scrollToSection(item.id)}
-                className={`relative flex flex-col items-center justify-center py-2 px-3 rounded-lg transition-all duration-300 ${
-                  item.special
-                    ? isActive
+            ].map(item => {
+              const isActive = activeSection === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => scrollToSection(item.id)}
+                  className={`relative flex flex-col items-center justify-center min-h-[44px] min-w-[44px] py-1.5 px-2 rounded-xl transition-all duration-200 active:scale-90 ${
+                    item.special
+                      ? isActive
+                        ? 'text-idm-gold-warm'
+                        : 'text-idm-gold-warm/70'
+                      : isActive
                       ? 'text-idm-gold-warm'
-                      : 'text-idm-gold-warm/70'
-                    : isActive
-                    ? 'text-idm-gold-warm'
-                    : 'text-muted-foreground hover:text-idm-gold-warm/70'
-                }`}
-              >
-                {item.special && (
-                  <span className="absolute inset-0 rounded-lg bg-idm-gold-warm/[0.04] border border-idm-gold-warm/10" />
-                )}
-                {item.special && !isActive && (
-                  <span className="absolute inset-0 rounded-lg animate-pulse bg-idm-gold-warm/[0.03] shadow-[0_0_8px_rgba(212,168,83,0.08)]" />
-                )}
-                <item.icon className={`relative z-10 w-5 h-5 ${item.special ? 'drop-shadow-[0_0_4px_rgba(212,168,83,0.3)]' : ''}`} />
-                <span className={`relative z-10 text-[11px] font-medium mt-1 ${item.special ? 'font-bold' : ''}`}>{item.label}</span>
-                {isActive && (
-                  <div className={`nav-indicator absolute -bottom-0.5 rounded-full ${item.special ? 'w-10 h-1 bg-idm-gold-warm shadow-[0_0_8px_rgba(212,168,83,0.5)]' : 'w-8 h-0.5 bg-idm-gold-warm'}`} />
-                )}
-              </button>
-            );
-          })}
-
+                      : 'text-muted-foreground hover:text-idm-gold-warm/70'
+                  }`}
+                >
+                  {item.special && (
+                    <span className="absolute inset-0 rounded-xl bg-idm-gold-warm/[0.04] border border-idm-gold-warm/10" />
+                  )}
+                  {item.special && !isActive && (
+                    <span className="absolute inset-0 rounded-xl animate-pulse bg-idm-gold-warm/[0.03] shadow-[0_0_8px_rgba(212,168,83,0.08)]" />
+                  )}
+                  <item.icon className={`relative z-10 w-5 h-5 ${item.special ? 'drop-shadow-[0_0_4px_rgba(212,168,83,0.3)]' : ''}`} />
+                  <span className={`relative z-10 text-[10px] font-medium mt-0.5 ${item.special ? 'font-bold' : ''}`}>{item.label}</span>
+                  {/* Gold dot indicator — replaces the line for a premium iOS feel */}
+                  {isActive && (
+                    <div className="absolute -bottom-0.5 w-1.5 h-1.5 rounded-full bg-idm-gold-warm shadow-[0_0_6px_rgba(212,168,83,0.6)]" />
+                  )}
+                </button>
+              );
+            })}
+          </div>
         </div>
       </nav>
 

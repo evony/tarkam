@@ -123,7 +123,7 @@ export function StandingsTab({ data, otherDivisionData, currentDivision, setSele
               </div>
             </div>
             {/* Horizontal scroll wrapper for mobile */}
-            <div className="max-h-[500px] overflow-y-auto custom-scrollbar">
+            <div className="max-h-[400px] sm:max-h-[500px] overflow-y-auto custom-scrollbar" style={{ contain: 'layout style' }}>
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
@@ -259,7 +259,7 @@ export function StandingsTab({ data, otherDivisionData, currentDivision, setSele
             </div>
             {data.clubs?.length > 0 ? (
               <>
-                <div className="max-h-[500px] overflow-y-auto custom-scrollbar">
+                <div className="max-h-[400px] sm:max-h-[500px] overflow-y-auto custom-scrollbar" style={{ contain: 'layout style' }}>
                   <div className="overflow-x-auto">
                     <Table>
                       <TableHeader>

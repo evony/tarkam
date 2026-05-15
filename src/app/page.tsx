@@ -1,7 +1,7 @@
 import { ClientApp } from '@/components/idm/client-app';
 import { fetchCmsContent } from '@/lib/cms-data';
-import { fetchLandingStats, fetchLandingLeague } from '@/lib/landing-data';
-import { getAvatarUrl, getClubLogoUrl } from '@/lib/utils';
+import { fetchLandingStats } from '@/lib/landing-data';
+import { getAvatarUrl } from '@/lib/utils';
 
 export const metadata = {
   title: 'TARKAM — Idol Meta Fan Made Edition',
@@ -13,10 +13,10 @@ export const metadata = {
   },
 };
 
-// ★ Revalidate every 60 seconds — data is served from cache
-// but revalidated in the background. This gives instant SSR
-// while still keeping content fresh.
-export const revalidate = 60;
+// ★ Revalidate every 120 seconds — data is served from cache
+// but revalidated in the background. 2min is fine for ISR since
+// data is cached anyway and league data fetches client-side.
+export const revalidate = 120;
 
 /**
  * Convert a raw Cloudinary URL to an optimized version matching the cloudinary-loader.
@@ -37,11 +37,10 @@ function optimizeCloudinaryUrl(rawUrl: string, width: number): string {
 export default async function Home() {
   // ★ SSR: Fetch ALL landing page data on the server so the initial HTML
   // already contains real data. No more "stale flash" or loading delay.
-  const [initialCms, initialMaleStats, initialFemaleStats, initialLeagueData] = await Promise.all([
+  const [initialCms, initialMaleStats, initialFemaleStats] = await Promise.all([
     fetchCmsContent(),
     fetchLandingStats('male'),
     fetchLandingStats('female'),
-    fetchLandingLeague(),
   ]);
 
   // Preload hero background image from CMS settings
@@ -55,7 +54,9 @@ export default async function Home() {
   // loader generates to avoid double-downloads.
   // ═══════════════════════════════════════════════════════════════
 
-  // High-priority: Champion player avatars (w=400 for sharp display on retina screens)
+  // Low-priority: Champion player avatars (w=400 for sharp display on retina screens)
+  // Only champion avatars are preloaded — club logos and member avatars are NOT LCP elements
+  // and will load naturally via lazy loading.
   const criticalPreloads: { url: string; fetchPriority: 'high' | 'low' }[] = [];
 
   for (const stats of [initialMaleStats, initialFemaleStats]) {
@@ -70,40 +71,11 @@ export default async function Home() {
           championSeason.championPlayer.avatar
         );
         if (avatarUrl.startsWith('http')) {
-          // ★ Preload the OPTIMIZED URL (w=400, f_auto, q_auto:good) — sharp on retina displays
+          // ★ Champion avatars are low priority — they're below the fold and not LCP elements
           criticalPreloads.push({
             url: optimizeCloudinaryUrl(avatarUrl, 400),
-            fetchPriority: 'high',
+            fetchPriority: 'low',
           });
-        }
-      }
-
-      // ★ Also preload champion CLUB logo (w=256 for sharp display)
-      if (championSeason?.championClub?.logo) {
-        const logoUrl = getClubLogoUrl(
-          championSeason.championClub.name,
-          championSeason.championClub.logo
-        );
-        if (logoUrl.startsWith('http')) {
-          criticalPreloads.push({
-            url: optimizeCloudinaryUrl(logoUrl, 256),
-            fetchPriority: 'high',
-          });
-        }
-      }
-
-      // ★ Preload club member avatars (w=128 for top performers row)
-      if (championSeason?.championClub?.members) {
-        for (const member of championSeason.championClub.members.slice(0, 5)) {
-          if (member.avatar) {
-            const memberAvatarUrl = getAvatarUrl(member.gamertag, member.division, member.avatar);
-            if (memberAvatarUrl.startsWith('http')) {
-              criticalPreloads.push({
-                url: optimizeCloudinaryUrl(memberAvatarUrl, 128),
-                fetchPriority: 'low', // Members are secondary — don't block critical resources
-              });
-            }
-          }
         }
       }
     }
@@ -141,7 +113,6 @@ export default async function Home() {
         initialCms={initialCms}
         initialMaleStats={initialMaleStats}
         initialFemaleStats={initialFemaleStats}
-        initialLeagueData={initialLeagueData}
       />
     </>
   );

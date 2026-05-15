@@ -66,15 +66,16 @@ export function usePusherRealtime() {
     const pusherKey = process.env.NEXT_PUBLIC_PUSHER_KEY;
     const pusherCluster = process.env.NEXT_PUBLIC_PUSHER_CLUSTER;
 
-    // ★ Polling fallback — when Pusher is not configured, poll every 30s
-    // This ensures data stays reasonably fresh even without real-time
+    // ★ Polling fallback — when Pusher is not configured, poll every 120s
+    // INP optimization: reduced from 30s to 120s — 4x fewer query invalidations
+    // Stats/feed data has its own refetchInterval, so this is just a safety net
     if (!pusherKey || !pusherCluster) {
       const pollInterval = setInterval(() => {
         qcRef.current.invalidateQueries({ queryKey: ['stats'] });
         qcRef.current.invalidateQueries({ queryKey: ['league-landing'] });
         qcRef.current.invalidateQueries({ queryKey: ['league-summary'] });
         qcRef.current.invalidateQueries({ queryKey: ['feed'] });
-      }, 30_000);
+      }, 120_000);
       return () => clearInterval(pollInterval);
     }
 
@@ -169,13 +170,13 @@ export function usePusherRealtime() {
       });
       channels.push(lCh);
     }).catch(() => {
-      // Pusher not available — graceful fallback to polling
+      // Pusher not available — graceful fallback to polling (120s interval for INP)
       const pollInterval = setInterval(() => {
         qcRef.current.invalidateQueries({ queryKey: ['stats'] });
         qcRef.current.invalidateQueries({ queryKey: ['league-landing'] });
         qcRef.current.invalidateQueries({ queryKey: ['league-summary'] });
         qcRef.current.invalidateQueries({ queryKey: ['feed'] });
-      }, 30_000);
+      }, 120_000);
       // Store cleanup for fallback polling
       return () => clearInterval(pollInterval);
     });

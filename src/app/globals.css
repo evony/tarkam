@@ -11451,3 +11451,164 @@ main, [role="main"] {
     0 0 0 4px rgba(255, 92, 154, 0.5),
     0 0 12px rgba(255, 92, 154, 0.2);
 }
+
+/* ============================================
+   PERFORMANCE OPTIMIZATIONS — Speed Insight Score 99
+   Targeting LCP <2.5s and INP <200ms
+   Preserves Night Fury dark gold aesthetic
+   ============================================ */
+
+/* ─── 1. Reduce Animation Overhead on Mobile ─── */
+@media (max-width: 640px) {
+  /* Disable expensive mesh drift animations on mobile */
+  .hero-mesh-bg-male,
+  .hero-mesh-bg-female {
+    animation: none !important;
+    background-size: 100% 100% !important;
+  }
+
+  /* Disable shimmer sweeps on mobile */
+  .hero-shimmer-sweep::after,
+  .activity-card-glass::after,
+  .stat-card-shimmer::after {
+    animation: none !important;
+  }
+
+  /* Simplify casino shimmer on mobile */
+  .casino-shimmer::after {
+    animation: none !important;
+  }
+
+  /* Reduce particle animation complexity */
+  .hero-particle {
+    animation-duration: 12s !important;
+  }
+
+  /* Disable tournament card tilt on mobile */
+  .tournament-card-tilt {
+    transform: none !important;
+  }
+
+  /* Reduce parallax on mobile */
+  .parallax-hero-bg,
+  .parallax-hero-mid,
+  .parallax-hero-slow,
+  .parallax-section-bg,
+  .parallax-particles {
+    transform: none !important;
+  }
+
+  /* Simplify float animations */
+  .animate-float-subtle,
+  .animate-float-medium,
+  .animate-bob-fade {
+    animation: none !important;
+  }
+
+  /* Simplify hero CTA breath animation */
+  .hero-cta-breath > div:first-child {
+    animation: none !important;
+  }
+}
+
+/* ─── 2. Respect prefers-reduced-motion (Global) ─── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ─── 3. CSS Containment for Layout Stability ─── */
+/* Landing sections already have content-visibility; add contain for layout stability */
+.landing-section {
+  contain: layout style;
+}
+
+/* Dashboard cards containment */
+.casino-pill,
+.ios-player-card,
+.ios-tournament-card {
+  contain: layout style;
+}
+
+/* Navigation containment */
+nav {
+  contain: layout style;
+}
+
+/* ─── 4. will-change Optimization ─── */
+/* Only apply will-change to elements that actually animate frequently */
+/* hero-particle and nav-indicator already have will-change declared above */
+
+/* ─── 5. Scroll Performance ─── */
+/* Smooth scroll with GPU acceleration */
+.landing-scroll {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  overscroll-behavior-y: contain;
+}
+
+/* Improve scroll performance for overflow containers */
+.custom-scrollbar {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* ─── 6. Font Rendering Optimization ─── */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Disable font smoothing for very small text (10px and below) */
+.text-\[8px\],
+.text-\[9px\],
+.text-\[10px\] {
+  -webkit-font-smoothing: subpixel-antialiased;
+}
+
+/* ─── 7. Touch Action Hints for Better INP ─── */
+/* Prevent delays on interactive elements */
+button, a, [role="button"] {
+  touch-action: manipulation;
+}
+
+/* Prevent pull-to-refresh on non-scrollable areas */
+.landing-scroll {
+  overscroll-behavior-y: contain;
+}
+
+/* ─── 8. Image Rendering for Avatars ─── */
+/* Crisp rendering for small avatar images */
+img[alt] {
+  image-rendering: -webkit-optimize-contrast;
+}
+
+/* Better quality for hero images */
+.hero-mesh-bg-male img,
+.hero-mesh-bg-female img {
+  image-rendering: auto;
+}
+
+/* ─── 9. Mobile-specific Scrollbar Styling ─── */
+/* Hide scrollbar on mobile for cleaner look */
+@media (max-width: 640px) {
+  .scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* ─── 10. Safe Area Support ─── */
+/* iOS safe area support — top (safe-area-bottom already exists above) */
+.safe-area-top {
+  padding-top: env(safe-area-inset-top, 0px);
+}

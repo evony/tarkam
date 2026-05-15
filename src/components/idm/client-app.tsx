@@ -10,10 +10,9 @@ interface ClientAppProps {
   initialCms?: CmsContent;
   initialMaleStats?: any | null;
   initialFemaleStats?: any | null;
-  initialLeagueData?: any | null;
 }
 
-export function ClientApp({ initialCms, initialMaleStats, initialFemaleStats, initialLeagueData }: ClientAppProps) {
+export function ClientApp({ initialCms, initialMaleStats, initialFemaleStats }: ClientAppProps) {
   const [queryClient] = useState(
     () => {
       const qc = new QueryClient({
@@ -44,18 +43,13 @@ export function ClientApp({ initialCms, initialMaleStats, initialFemaleStats, in
         qc.setQueryData(['stats', 'female', null], initialFemaleStats);
       }
 
-      // ★ Pre-hydrate league data
-      // Query key: ['league-landing']
-      if (initialLeagueData) {
-        qc.setQueryData(['league-landing'], initialLeagueData);
-      }
-
       return qc;
     }
   );
 
   // ★ Non-blocking: init deferred until after page render
   // NOTE: Auto-seed DISABLED — manual seed only via admin panel or /api/seed?force=true
+  // INP optimization: longer timeout (5s) and requestIdleCallback to avoid blocking first paint
   useEffect(() => {
     const deferInit = () => {
       // Init admin — fire and forget (only creates if none exists)
@@ -63,9 +57,9 @@ export function ClientApp({ initialCms, initialMaleStats, initialFemaleStats, in
     };
 
     if (typeof requestIdleCallback !== 'undefined') {
-      requestIdleCallback(deferInit);
+      requestIdleCallback(deferInit, { timeout: 5000 });
     } else {
-      setTimeout(deferInit, 2000);
+      setTimeout(deferInit, 5000);
     }
   }, []);
 
@@ -88,7 +82,7 @@ export function ClientApp({ initialCms, initialMaleStats, initialFemaleStats, in
     };
 
     checkVersion();
-    const interval = setInterval(checkVersion, 120_000);
+    const interval = setInterval(checkVersion, 300_000); // 5min — reduced from 2min for INP optimization
     return () => clearInterval(interval);
   }, [queryClient]);
 

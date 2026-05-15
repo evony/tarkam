@@ -33,7 +33,7 @@ export function OverviewTab({ data, division, setSelectedPlayer, setSelectedClub
   const [compareOpen, setCompareOpen] = useState(false);
 
   return (
-    <div className="space-y-3 sm:space-y-4 lg:space-y-6">
+    <div className="space-y-3 sm:space-y-4 lg:space-y-6" style={{ contain: 'layout style' }}>
 
       {/* ★ Compare Players Button */}
       <div className="stagger-item-subtle">

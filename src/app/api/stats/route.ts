@@ -66,17 +66,31 @@ export async function GET(request: Request) {
   const clubSeasonId = seasonWithClubs?.id || season.id; // Season with clubs (for club-related queries)
   const seasonForClubs = seasonWithClubs || season;
 
-  // ═══ Active Tournament — smart lookup ═══
-  // Priority 1: Find a non-completed tournament (registration, live, etc.) in the ACTIVE season
-  // Priority 2: Find the latest tournament in the active season (any status)
-  // Priority 3: Fall back to clubSeasonId (season with clubs/data)
-  // This ensures newly created tournaments with "registration" status are found immediately,
-  // even if the active season has no clubs yet.
+  // ═══ Collect IDs for batched enrichment queries ═══
+  // Instead of N+1 per-season findUnique calls, we collect all IDs upfront
+  // and issue a single findMany for each entity type.
+  const allPlayerIds = Array.from(new Set([
+    ...allSeasons.filter((s: any) => s.championPlayerId).map((s: any) => s.championPlayerId as string),
+    ...allSeasons.filter((s: any) => s.sultanPlayerId).map((s: any) => s.sultanPlayerId as string),
+  ]));
+
+  const allClubProfileIds = Array.from(new Set(
+    allSeasons.filter((s: any) => s.championClubId).map((s: any) => s.championClubId as string)
+  ));
+
+  const completedClubIds = Array.from(new Set(
+    allSeasons.filter((s: any) => s.championClubId && s.status === 'completed').map((s: any) => s.championClubId as string)
+  ));
+
+  // ═══ Active Tournament — optimized 2-query lookup ═══
+  // Priority 1: Find a non-completed tournament in either season
+  // Priority 2: Find the latest tournament in either season (any status)
+  // This reduces from 3 sequential queries to at most 2.
   const activeTournament = await (async () => {
-    // 1. Non-completed tournament in active season (most important)
+    // 1. Non-completed tournament across both seasons (most important)
     const activeNonCompleted = await db.tournament.findFirst({
       where: {
-        seasonId: activeSeasonId,
+        seasonId: { in: [activeSeasonId, clubSeasonId] },
         status: { not: 'completed' },
       },
       orderBy: { weekNumber: 'desc' },
@@ -89,22 +103,9 @@ export async function GET(request: Request) {
     });
     if (activeNonCompleted) return activeNonCompleted;
 
-    // 2. Latest tournament in active season (any status, including completed)
-    const activeLatest = await db.tournament.findFirst({
-      where: { seasonId: activeSeasonId },
-      orderBy: { weekNumber: 'desc' },
-      include: {
-        teams: { include: { teamPlayers: { include: { player: true } } } },
-        matches: { include: { team1: true, team2: true, mvpPlayer: true } },
-        participations: { include: { player: true } },
-        donations: true,
-      },
-    });
-    if (activeLatest) return activeLatest;
-
-    // 3. Fall back to clubSeasonId (season with clubs/data)
+    // 2. Fallback: latest tournament in either season (any status, including completed)
     return db.tournament.findFirst({
-      where: { seasonId: clubSeasonId },
+      where: { seasonId: { in: [activeSeasonId, clubSeasonId] } },
       orderBy: { weekNumber: 'desc' },
       include: {
         teams: { include: { teamPlayers: { include: { player: true } } } },
@@ -115,7 +116,12 @@ export async function GET(request: Request) {
     });
   })();
 
-  // Run ALL other independent queries in parallel
+  // ★ Pre-compute completed season numbers for batched stats query
+  const completedSeasonNumbers: number[] = Array.from(new Set(
+    allSeasons.filter((s: any) => s.championClubId && s.status === 'completed').map((s: any) => s.number as number)
+  ));
+
+  // Run ALL independent queries in parallel (main + batched enrichment)
   const [
     totalPlayers,
     approvedPlayerCount,
@@ -128,6 +134,11 @@ export async function GET(request: Request) {
     playoffMatches,
     tournaments,
     leagueMatches,
+    batchPlayers,
+    batchClubProfiles,
+    batchClubMembers,
+    allPlayersForDonorMatching,
+    allDivSeasonsForStats,
   ] = await Promise.all([
 
     // Total players
@@ -257,9 +268,97 @@ export async function GET(request: Request) {
       orderBy: [{ week: 'asc' }],
       include: { club1: { include: { profile: true } }, club2: { include: { profile: true } } },
     }),
+
+    // ★ Batch: all champion + sultan players (replaces per-season findUnique)
+    allPlayerIds.length > 0
+      ? db.player.findMany({
+          where: { id: { in: allPlayerIds } },
+          include: {
+            clubMembers: {
+              where: { leftAt: null },
+              include: { profile: { select: { id: true, name: true, logo: true } } },
+              take: 1,
+            },
+          },
+        })
+      : Promise.resolve([] as any[]),
+
+    // ★ Batch: all champion club profiles (replaces per-season findUnique)
+    allClubProfileIds.length > 0
+      ? db.clubProfile.findMany({
+          where: { id: { in: allClubProfileIds } },
+          select: { id: true, name: true, logo: true },
+        })
+      : Promise.resolve([] as any[]),
+
+    // ★ Batch: all club members for completed seasons (replaces per-season findMany)
+    completedClubIds.length > 0
+      ? db.clubMember.findMany({
+          where: { profileId: { in: completedClubIds }, leftAt: null },
+          include: {
+            player: { select: { id: true, gamertag: true, avatar: true, tier: true, division: true } },
+          },
+        })
+      : Promise.resolve([] as any[]),
+
+    // ★ Cross-division players for Sultan of the Week donor matching (moved into Promise.all)
+    // Sultan donor can be from ANY division, so we must search both male & female players
+    db.player.findMany({
+      where: { isActive: true, registrationStatus: 'approved' },
+      select: {
+        id: true,
+        name: true,
+        gamertag: true,
+        avatar: true,
+        tier: true,
+        points: true,
+        totalWins: true,
+        totalMvp: true,
+        streak: true,
+        division: true,
+        city: true,
+        clubMembers: {
+          where: { leftAt: null },
+          include: { profile: { select: { id: true, name: true, logo: true } } },
+          take: 1,
+        },
+      },
+    }),
+
+    // ★ Batch: ALL season IDs for completed season numbers (across BOTH divisions)
+    // Needed for playerSeasonStats because club members span both male and female divisions.
+    // This replaces the per-season db.season.findMany({ where: { number: s.number } }) pattern.
+    completedSeasonNumbers.length > 0
+      ? db.season.findMany({
+          where: { number: { in: completedSeasonNumbers } },
+          select: { id: true, number: true },
+        })
+      : Promise.resolve([] as any[]),
   ]);
 
-  // ── Compute per-season topPlayers leaderboard ──
+  // ═══ Build lookup maps from batched results ═══
+  const playersMap = new Map((batchPlayers as any[]).map((p: any) => [p.id, p]));
+  const clubProfilesMap = new Map((batchClubProfiles as any[]).map((c: any) => [c.id, c]));
+  const clubMembersByProfileId = new Map<string, any[]>();
+  for (const cm of batchClubMembers as any[]) {
+    const existing = clubMembersByProfileId.get(cm.profileId) || [];
+    existing.push(cm);
+    clubMembersByProfileId.set(cm.profileId, existing);
+  }
+
+  // ═══ Build season number → IDs map from allSeasons (no DB query needed) ═══
+  // Note: This map only contains seasons from the requested division(s).
+  // For playerSeasonStats, we need ALL divisions' seasons for each season number,
+  // because club members span both divisions. That's handled by the separate
+  // allSeasonsForStats query below.
+  const seasonNumberToIds = new Map<number, string[]>();
+  for (const s of allSeasons) {
+    const existing = seasonNumberToIds.get(s.number) || [];
+    existing.push(s.id);
+    seasonNumberToIds.set(s.number, existing);
+  }
+
+  // ═══ Compute per-season topPlayers leaderboard ═══
   // Build a map of playerId → per-season points from PlayerPoint aggregation
   const seasonPointsMap = new Map(seasonPointsRaw.map((sp: { playerId: string; _sum: { amount: number | null } }) => [sp.playerId, sp._sum.amount || 0]));
 
@@ -281,21 +380,55 @@ export async function GET(request: Request) {
       return b.totalMvp - a.totalMvp;
     });
 
-  // ── No more fallback logo/banner resolution needed ──
-  // ClubProfile is now persistent — logo/banner are always on the profile
-  // Clubs include their profile via { include: { profile: true } }
+  // ═══ Secondary parallel batch: playerSeasonStats + buildSkinMap ═══
+  // playerSeasonStats depends on batchClubMembers player IDs (now available)
+  // buildSkinMap depends on topPlayers + completedTournaments (now available)
+  const completedTournaments = tournaments.filter(t => t.status === 'completed');
+  const playerIds = topPlayers.map((p: { id: string }) => p.id);
+
+  const memberPlayerIds = Array.from(new Set((batchClubMembers as any[]).map((cm: any) => cm.player.id)));
+  const allStatsSeasonIds: string[] = Array.from(new Set(
+    (allDivSeasonsForStats as any[]).map((s: any) => s.id)
+  ));
+
+  const [batchPlayerSeasonStats, skinMap] = await Promise.all([
+    // ★ Batch: playerSeasonStats — uses pre-fetched allDivSeasonsForStats for season IDs
+    (memberPlayerIds.length > 0 && allStatsSeasonIds.length > 0)
+      ? db.playerSeasonStats.findMany({
+          where: { playerId: { in: memberPlayerIds }, seasonId: { in: allStatsSeasonIds } },
+        })
+      : Promise.resolve([] as any[]),
+
+    buildSkinMap({
+      playerIds,
+      allSeasons: allSeasons as any[],
+      completedTournaments: completedTournaments as any[],
+    }),
+  ]);
+
+  // ═══ Build stats map keyed by playerId → seasonNumber → { points, tier } ═══
+  // Replaces the per-season local statsMap with a single pre-computed structure
+  const statsByPlayerAndSeasonNumber = new Map<string, Map<number, { points: number; tier: string }>>();
+  for (const ps of batchPlayerSeasonStats as any[]) {
+    const seasonForId = allSeasons.find(s => s.id === ps.seasonId);
+    if (!seasonForId) continue;
+    const sNumber = seasonForId.number;
+
+    if (!statsByPlayerAndSeasonNumber.has(ps.playerId)) {
+      statsByPlayerAndSeasonNumber.set(ps.playerId, new Map());
+    }
+    const playerStats = statsByPlayerAndSeasonNumber.get(ps.playerId)!;
+    const existing = playerStats.get(sNumber);
+    if (existing) {
+      existing.points += ps.points;
+      const tierOrder = ['S', 'A', 'B'];
+      if (tierOrder.indexOf(ps.tier) < tierOrder.indexOf(existing.tier)) existing.tier = ps.tier;
+    } else {
+      playerStats.set(sNumber, { points: ps.points, tier: ps.tier });
+    }
+  }
 
   // ── Compute derived values in-memory (no extra DB queries) ──
-
-  // ═══ SKIN MAP — Build using shared utility ═══
-  const playerIds = topPlayers.map((p: { id: string }) => p.id);
-  const completedTournaments = tournaments.filter(t => t.status === 'completed');
-
-  const skinMap = await buildSkinMap({
-    playerIds,
-    allSeasons: allSeasons as any[],
-    completedTournaments: completedTournaments as any[],
-  });
 
   // Total prize pool — base prizePool from tournaments + weekly donations (saweran)
   const weeklyDonations = seasonDonations.filter(d => d.type === 'weekly');
@@ -434,6 +567,9 @@ export async function GET(request: Request) {
     .sort((a, b) => +b._sortKey - +a._sortKey)
     .map(({ _sortKey, ...rest }) => rest);
 
+  // ═══ Assemble allSeasonsInfo using batched lookup maps ═══
+  // This replaces the Promise.all(allSeasons.map(async ...)) N+1 pattern
+  // with synchronous map lookups over the pre-fetched batch data.
   // Type for champion player in season info
   type SeasonChampionPlayer = {
     id: string;
@@ -454,207 +590,147 @@ export async function GET(request: Request) {
     hasSeasonChampionSkin?: boolean;
   };
 
-  // All seasons info for season selector — include champion player data
-  // For completed seasons: use JSON snapshots (preserves historical data even when new seasons run)
-  // For active seasons: query live player data (no snapshot exists yet)
-  const allSeasonsInfo = await Promise.all(allSeasons.map(async (s: { id: string; name: string; number: number; status: string; startDate: Date | null; endDate: Date | null; championClubId: string | null; championPlayerId: string | null; championPlayerPoints: number | null; championPlayerSnapshot?: string | null; championClubSnapshot?: string | null; sultanPlayerId?: string | null; _count?: { tournaments?: number } }) => {
+  const allSeasonsInfo = allSeasons.map((s: any) => {
+    // ── Champion player ──
     let championPlayer: SeasonChampionPlayer | null = null;
 
-    // Priority 1: Use snapshot for completed seasons (preserves historical data even if player was deleted)
-    // This is the primary source of truth for completed seasons — snapshots survive player deletions
-    if (s.championPlayerSnapshot && s.status === 'completed') {
-      try {
-        const snapshot = JSON.parse(s.championPlayerSnapshot);
-        championPlayer = {
-          id: s.championPlayerId || `snapshot-${s.id}`,
-          gamertag: snapshot.gamertag || '',
-          avatar: snapshot.avatar || null,
-          tier: snapshot.tier || 'B',
-          points: snapshot.points || 0, // Per-season points at time of closure
-          totalWins: snapshot.totalWins || 0,
-          totalMvp: snapshot.totalMvp || 0,
-          streak: snapshot.streak || 0,
-          maxStreak: snapshot.maxStreak || 0,
-          matches: snapshot.matches || 0,
-          club: snapshot.club || null,
-          city: snapshot.city || null,
-          division: snapshot.division,
-          hasSeasonChampionSkin: true, // Season champions always have the virtual skin
-        };
+    if (s.championPlayerId) {
+      // Priority 1: Use snapshot for completed seasons (preserves historical data even if player was deleted)
+      if (s.championPlayerSnapshot && s.status === 'completed') {
+        try {
+          const snapshot = JSON.parse(s.championPlayerSnapshot);
+          championPlayer = {
+            id: s.championPlayerId || `snapshot-${s.id}`,
+            gamertag: snapshot.gamertag || '',
+            avatar: snapshot.avatar || null,
+            tier: snapshot.tier || 'B',
+            points: snapshot.points || 0, // Per-season points at time of closure
+            totalWins: snapshot.totalWins || 0,
+            totalMvp: snapshot.totalMvp || 0,
+            streak: snapshot.streak || 0,
+            maxStreak: snapshot.maxStreak || 0,
+            matches: snapshot.matches || 0,
+            club: snapshot.club || null,
+            city: snapshot.city || null,
+            division: snapshot.division,
+            hasSeasonChampionSkin: true, // Season champions always have the virtual skin
+          };
 
-        // Enrich snapshot with live avatar/city/club if missing (backwards compat for old snapshots)
-        // Only attempt if championPlayerId still exists (player not deleted)
-        if (s.championPlayerId && (!snapshot.avatar || !snapshot.city || (typeof snapshot.club === 'string' || !snapshot.club))) {
-          const livePlayer = await db.player.findUnique({
-            where: { id: s.championPlayerId },
-            select: { avatar: true, city: true, clubMembers: { where: { leftAt: null }, include: { profile: { select: { id: true, name: true, logo: true } } }, take: 1 } },
-          });
-          if (livePlayer) {
-            if (!snapshot.avatar && livePlayer.avatar) {
-              championPlayer.avatar = livePlayer.avatar;
-            }
-            if (!snapshot.city && livePlayer.city) {
-              championPlayer.city = livePlayer.city;
-            }
-            if (typeof snapshot.club === 'string' || !snapshot.club) {
-              const activeClub = livePlayer.clubMembers[0]?.profile;
-              if (activeClub) {
-                championPlayer.club = { id: activeClub.id, name: activeClub.name, logo: activeClub.logo };
+          // ★ Enrich snapshot with live data only when snapshot is missing fields.
+          // Uses batched playersMap instead of per-season findUnique.
+          if (!snapshot.avatar || !snapshot.city || (typeof snapshot.club === 'string' || !snapshot.club)) {
+            const livePlayer = playersMap.get(s.championPlayerId);
+            if (livePlayer) {
+              if (!snapshot.avatar && livePlayer.avatar) {
+                championPlayer.avatar = livePlayer.avatar;
+              }
+              if (!snapshot.city && (livePlayer as any).city) {
+                championPlayer.city = (livePlayer as any).city;
+              }
+              if (typeof snapshot.club === 'string' || !snapshot.club) {
+                const activeClub = (livePlayer as any).clubMembers?.[0]?.profile;
+                if (activeClub) {
+                  championPlayer.club = { id: activeClub.id, name: activeClub.name, logo: activeClub.logo };
+                }
               }
             }
           }
+        } catch {
+          // Fallback to live data from batch
         }
-      } catch {
-        // Fallback to live data if snapshot is corrupted
+      }
+
+      // Priority 2: Query live player data from batch (for active seasons or if snapshot is missing/corrupted)
+      if (!championPlayer) {
+        const player = playersMap.get(s.championPlayerId);
+        if (player) {
+          const activeClubProfile = (player as any).clubMembers?.[0]?.profile;
+          championPlayer = {
+            id: player.id,
+            gamertag: player.gamertag,
+            avatar: player.avatar,
+            tier: player.tier,
+            points: s.championPlayerPoints ?? player.points, // Use snapshot per-season points if available
+            totalWins: player.totalWins,
+            totalMvp: player.totalMvp,
+            streak: player.streak,
+            maxStreak: player.maxStreak,
+            matches: player.matches,
+            club: activeClubProfile ? { id: activeClubProfile.id, name: activeClubProfile.name, logo: activeClubProfile.logo } : null,
+            city: player.city || null,
+            division: player.division,
+            hasSeasonChampionSkin: true, // Season champions always have the virtual skin
+          };
+        }
       }
     }
 
-    // Priority 2: Query live player data (for active seasons or if snapshot is missing/corrupted)
-    if (!championPlayer && s.championPlayerId) {
-      const player = await db.player.findUnique({
-        where: { id: s.championPlayerId },
-        include: {
-          clubMembers: {
-            where: { leftAt: null },
-            include: { profile: { select: { id: true, name: true, logo: true } } },
-            take: 1,
-          },
-        },
-      });
-      if (player) {
-        const activeClubProfile = player.clubMembers[0]?.profile;
-        championPlayer = {
-          id: player.id,
-          gamertag: player.gamertag,
-          avatar: player.avatar,
-          tier: player.tier,
-          points: s.championPlayerPoints ?? player.points, // Use snapshot per-season points if available
-          totalWins: player.totalWins,
-          totalMvp: player.totalMvp,
-          streak: player.streak,
-          maxStreak: player.maxStreak,
-          matches: player.matches,
-          club: activeClubProfile ? { id: activeClubProfile.id, name: activeClubProfile.name, logo: activeClubProfile.logo } : null,
-          city: player.city || null,
-          division: player.division,
-          hasSeasonChampionSkin: true, // Season champions always have the virtual skin
-        };
-      }
-    }
-
-    // Enrich champion club — use snapshot for completed seasons (survives club deletions)
+    // ── Champion club ──
     let championClub: { id: string; name: string; logo: string | null; members?: { id: string; gamertag: string; avatar: string | null; tier: string; points: number; division: string }[]; totalPoints?: number; maleScore?: number; femaleScore?: number } | null = null;
 
-    // Priority 1: Use snapshot for completed seasons (preserves historical data even if club was deleted)
-    if (s.championClubSnapshot && s.status === 'completed') {
-      try {
-        const snapshot = JSON.parse(s.championClubSnapshot);
-        championClub = {
-          id: s.championClubId || `snapshot-club-${s.id}`,
-          name: snapshot.name || '',
-          logo: snapshot.logo || null,
-        };
-      } catch {
-        // Fallback to live data
-      }
-    }
+    if (s.championClubId) {
+      // Priority 1: Use snapshot for completed seasons (preserves historical data even if club was deleted)
+      if (s.championClubSnapshot && s.status === 'completed') {
+        try {
+          const snapshot = JSON.parse(s.championClubSnapshot);
+          championClub = {
+            id: s.championClubId || `snapshot-club-${s.id}`,
+            name: snapshot.name || '',
+            logo: snapshot.logo || null,
+          };
 
-    // Priority 2: Query live ClubProfile (for active seasons or if snapshot is missing/corrupted)
-    if (!championClub && s.championClubId) {
-      const profile = await db.clubProfile.findUnique({
-        where: { id: s.championClubId },
-        select: { id: true, name: true, logo: true },
-      });
-      if (profile) championClub = profile;
-    }
-
-    // Enrich with members and their per-season points for completed seasons
-    if (championClub && s.championClubId && s.status === 'completed') {
-      // Get all members of this club
-      const clubMembers = await db.clubMember.findMany({
-        where: { profileId: s.championClubId, leftAt: null },
-        include: {
-          player: {
-            select: { id: true, gamertag: true, avatar: true, tier: true, division: true },
-          },
-        },
-      });
-
-      // Get per-season points from PlayerSeasonStats
-      // Query BOTH male and female seasons for this season number to get all member points
-      const memberIds = clubMembers.map(cm => cm.player.id);
-      const sameNumberSeasons = await db.season.findMany({
-        where: { number: s.number },
-        select: { id: true },
-      });
-      const seasonIds = sameNumberSeasons.map((as2: any) => as2.id);
-
-      const seasonStats = await db.playerSeasonStats.findMany({
-        where: {
-          playerId: { in: memberIds },
-          seasonId: { in: seasonIds },
-        },
-      });
-
-      const statsMap = new Map<string, { points: number; tier: string }>();
-      for (const ps of seasonStats) {
-        const existing = statsMap.get(ps.playerId);
-        if (existing) {
-          existing.points += ps.points;
-          // Keep the higher tier
-          const tierOrder = ['S', 'A', 'B'];
-          if (tierOrder.indexOf(ps.tier) < tierOrder.indexOf(existing.tier)) {
-            existing.tier = ps.tier;
+          // ★ Enrich snapshot with live logo only if missing.
+          // Uses batched clubProfilesMap instead of per-season findUnique.
+          if (!snapshot.logo) {
+            const liveProfile = clubProfilesMap.get(s.championClubId);
+            if (liveProfile?.logo) championClub.logo = liveProfile.logo;
           }
-        } else {
-          statsMap.set(ps.playerId, { points: ps.points, tier: ps.tier });
+        } catch {
+          // Fallback to live data from batch
         }
       }
 
-      const members = clubMembers.map(cm => {
-        const stat = statsMap.get(cm.player.id);
-        return {
-          id: cm.player.id,
-          gamertag: cm.player.gamertag,
-          avatar: cm.player.avatar,
-          tier: stat?.tier || cm.player.tier,
-          points: stat?.points || 0,
-          division: cm.player.division,
-        };
-      }); // Include all members — even those with 0 points for correct member count
+      // Priority 2: Query live ClubProfile from batch (for active seasons or if snapshot is missing/corrupted)
+      if (!championClub) {
+        const profile = clubProfilesMap.get(s.championClubId);
+        if (profile) championClub = { id: profile.id, name: profile.name, logo: profile.logo };
+      }
 
-      const totalPoints = members.reduce((sum, m) => sum + m.points, 0);
-      const maleScore = members.filter(m => m.division === 'male').reduce((sum, m) => sum + m.points, 0);
-      const femaleScore = members.filter(m => m.division === 'female').reduce((sum, m) => sum + m.points, 0);
-
-      championClub.members = members;
-      championClub.totalPoints = totalPoints;
-      championClub.maleScore = maleScore;
-      championClub.femaleScore = femaleScore;
-
-      // Also update logo from live data if snapshot logo is missing
-      if (!championClub.logo) {
-        const profile = await db.clubProfile.findUnique({
-          where: { id: s.championClubId },
-          select: { logo: true },
+      // ★ Enrich with members for completed seasons.
+      // Uses batched clubMembersByProfileId + statsByPlayerAndSeasonNumber
+      // instead of per-season findMany for clubMember, season, and playerSeasonStats.
+      if (championClub && s.status === 'completed') {
+        const members = (clubMembersByProfileId.get(s.championClubId) || []).map((cm: any) => {
+          const seasonStats = statsByPlayerAndSeasonNumber.get(cm.player.id);
+          const stat = seasonStats?.get(s.number);
+          return {
+            id: cm.player.id,
+            gamertag: cm.player.gamertag,
+            avatar: cm.player.avatar,
+            tier: stat?.tier || cm.player.tier,
+            points: stat?.points || 0,
+            division: cm.player.division,
+          };
         });
-        if (profile?.logo) championClub.logo = profile.logo;
+
+        const totalPoints = members.reduce((sum: number, m: any) => sum + m.points, 0);
+        const maleScore = members.filter((m: any) => m.division === 'male').reduce((sum: number, m: any) => sum + m.points, 0);
+        const femaleScore = members.filter((m: any) => m.division === 'female').reduce((sum: number, m: any) => sum + m.points, 0);
+
+        championClub.members = members;
+        championClub.totalPoints = totalPoints;
+        championClub.maleScore = maleScore;
+        championClub.femaleScore = femaleScore;
       }
     }
 
-    // Sultan of Season (top penyawer) — fetch from sultanPlayerId
+    // ── Sultan of Season (top penyawer) ──
+    // Uses batched playersMap instead of per-season findUnique.
     let sultanPlayer: { id: string; gamertag: string; avatar: string | null; division: string; tier: string; points: number; city: string | null; club: { id: string; name: string; logo: string | null } | null } | null = null;
     if (s.sultanPlayerId) {
-      const sultan = await db.player.findUnique({
-        where: { id: s.sultanPlayerId },
-        select: {
-          id: true, gamertag: true, avatar: true, division: true, tier: true,
-          points: true, city: true,
-          clubMembers: { where: { leftAt: null }, include: { profile: { select: { id: true, name: true, logo: true } } }, take: 1 },
-        },
-      });
+      const sultan = playersMap.get(s.sultanPlayerId);
       if (sultan) {
-        const activeClub = sultan.clubMembers[0]?.profile;
+        const activeClub = (sultan as any).clubMembers?.[0]?.profile;
         sultanPlayer = {
           id: sultan.id,
           gamertag: sultan.gamertag,
@@ -683,7 +759,7 @@ export async function GET(request: Request) {
       sultanPlayerId: s.sultanPlayerId,
       sultanPlayer,
     };
-  }));
+  });
 
   // ── Flatten club data for frontend compatibility ──
   // New schema: Club has profileId → ClubProfile (name, logo, bannerImage)
@@ -937,33 +1013,9 @@ export async function GET(request: Request) {
   }
 
   // ═══ Build cross-division player map for Sultan of the Week donor matching ═══
-  // IMPORTANT: A Female player can donate to a Male tournament (and vice versa).
-  // The Sultan of the Week is per-tournament, regardless of the donor's own division.
-  // Therefore, we must search ALL players from BOTH divisions when matching donors.
-  const allPlayersForDonorMatching = await db.player.findMany({
-    where: { isActive: true, registrationStatus: 'approved' },
-    select: {
-      id: true,
-      name: true,
-      gamertag: true,
-      avatar: true,
-      tier: true,
-      points: true,
-      totalWins: true,
-      totalMvp: true,
-      streak: true,
-      division: true,
-      city: true,
-      clubMembers: {
-        where: { leftAt: null },
-        include: { profile: { select: { id: true, name: true, logo: true } } },
-        take: 1,
-      },
-    },
-  });
-
+  // Uses allPlayersForDonorMatching (already fetched in main Promise.all)
   const playerByGamertag = new Map(
-    allPlayersForDonorMatching.map(p => {
+    (allPlayersForDonorMatching as any[]).map((p: any) => {
       const activeClub = p.clubMembers?.[0]?.profile;
       return [p.gamertag?.toLowerCase(), { ...p, club: activeClub ? { id: activeClub.id, name: activeClub.name, logo: activeClub.logo } : null }];
     })
@@ -1044,7 +1096,7 @@ export async function GET(request: Request) {
       const pid = sultan.player.id;
       if (!skinMap[pid]) skinMap[pid] = [];
       // Only add if not already present
-      if (!skinMap[pid].some(s => s.type === 'sultan_weekly')) {
+      if (!skinMap[pid].some((s: any) => s.type === 'sultan_weekly')) {
         skinMap[pid].push({
           type: 'sultan_weekly',
           icon: '❤️',

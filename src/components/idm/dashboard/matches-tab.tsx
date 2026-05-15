@@ -126,7 +126,7 @@ export function MatchesTab({ data, recentMatches, upcomingMatches, matchesByWeek
   const isClubSelected = selectedClubId !== 'all';
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4" style={{ contain: 'layout style' }}>
 
       {/* Bracket View — with type selector */}
       <div className="stagger-item-subtle stagger-d0">

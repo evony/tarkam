@@ -200,7 +200,7 @@ function ChampionsMvpSection({
   const ct = useCommunityTheme();
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-4 sm:space-y-5">
       {/* Section Header + Division Filter */}
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
@@ -351,7 +351,7 @@ function ReigningChampionPlaque({
         </div>
 
         {/* Plaque Content — duo or single */}
-        <div className="p-4 sm:p-6">
+        <div className="p-3 sm:p-6">
           <div className={`grid gap-3 ${showBothDivisions ? 'grid-cols-2' : 'grid-cols-1'}`}>
             {/* Male Champion — filled or ghost */}
             {showMale && (
@@ -1601,7 +1601,7 @@ export function CommunityDashboard() {
   };
 
   return (
-    <div className="space-y-6 lg:space-y-8">
+    <div className="space-y-4 sm:space-y-6 lg:space-y-8">
 
       {/* ═══ UNIFIED CONTENT SURFACE ═══
           Mobile: Full-bleed, no border-radius, no border — edge-to-edge like iOS apps
@@ -1615,7 +1615,7 @@ export function CommunityDashboard() {
           <div className="absolute inset-0 pointer-events-none" style={{
             background: 'radial-gradient(ellipse at 30% 10%, rgba(212,168,83,0.03) 0%, transparent 50%), radial-gradient(ellipse at 70% 90%, rgba(212,168,83,0.02) 0%, transparent 50%)'
           }} />
-          <div className="relative z-10 p-2 sm:p-4 lg:p-5 space-y-5 sm:space-y-6 lg:space-y-8">
+          <div className="relative z-10 p-1.5 sm:p-4 lg:p-5 space-y-4 sm:space-y-6 lg:space-y-8">
 
       {/* Context Header */}
       <div className="flex items-center gap-2.5">

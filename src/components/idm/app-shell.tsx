@@ -704,51 +704,51 @@ export function AppShell() {
         </main>
       </div>
 
-      {/* Mobile Bottom Nav — 4 regular + 1 center FAB (Live) */}
-      <nav className={`lg:hidden fixed bottom-0 left-0 right-0 z-40 ${dt.glassStrong} border-t border-border safe-area-bottom`}>
+      {/* Mobile Bottom Nav — 5 items with center FAB (Live) + gold dot indicators */}
+      <nav className={`lg:hidden fixed bottom-0 left-0 right-0 z-40 ${dt.glassStrong} border-t border-border`} style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
         <div className="flex justify-around items-end py-1 px-1 relative">
           {/* Left group: Home + Komunitas */}
           <button
             onClick={() => { hapticTap(); setCurrentView('landing'); }}
             className={`flex flex-col items-center justify-center gap-0.5 px-2.5 py-2 min-h-[44px] rounded-lg transition-all duration-200 relative ${
-              (currentView as AppView) === 'landing' ? 'text-idm-gold-warm drop-shadow-[0_0_4px_rgba(212,168,83,0.4)]' : 'text-muted-foreground/70'
+              (currentView as AppView) === 'landing' ? 'text-idm-gold-warm' : 'text-muted-foreground/70'
             }`}
           >
             <Home className={`w-5 h-5 transition-transform duration-200 ${(currentView as AppView) === 'landing' ? 'scale-110' : ''}`} />
             <span className="text-[10px] font-semibold leading-tight">Home</span>
             {(currentView as AppView) === 'landing' && (
-              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-5 h-[3px] rounded-full bg-idm-gold-warm shadow-[0_0_6px_rgba(212,168,83,0.5)]" />
+              <div className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-idm-gold-warm shadow-[0_0_6px_rgba(212,168,83,0.5)]" />
             )}
           </button>
 
           <button
             onClick={() => { hapticTap(); setCurrentView('community'); }}
             className={`flex flex-col items-center justify-center gap-0.5 px-2.5 py-2 min-h-[44px] rounded-lg transition-all duration-200 relative ${
-              currentView === 'community' ? 'text-idm-gold-warm drop-shadow-[0_0_4px_rgba(212,168,83,0.4)]' : 'text-muted-foreground/70'
+              currentView === 'community' ? 'text-idm-gold-warm' : 'text-muted-foreground/70'
             }`}
           >
             <Users className={`w-5 h-5 transition-transform duration-200 ${currentView === 'community' ? 'scale-110' : ''}`} />
             <span className="text-[10px] font-semibold leading-tight">Komunitas</span>
             {currentView === 'community' && (
-              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-5 h-[3px] rounded-full bg-idm-gold-warm shadow-[0_0_6px_rgba(212,168,83,0.5)]" />
+              <div className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-idm-gold-warm shadow-[0_0_6px_rgba(212,168,83,0.5)]" />
             )}
           </button>
 
-          {/* ★ Center FAB — Arena Live (golden, elevated) ★ */}
-          <div className="flex flex-col items-center -mt-4 relative z-50">
+          {/* ★ Center FAB — Arena Live (golden, elevated, larger) ★ */}
+          <div className="flex flex-col items-center -mt-5 relative z-50">
             <button
               onClick={() => { hapticTap(); setCurrentView('matchday'); }}
-              className={`w-11 h-11 rounded-2xl flex items-center justify-center shadow-lg transition-all duration-200 active:scale-90 ${
+              className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg transition-all duration-200 active:scale-90 ${
                 currentView === 'matchday'
-                  ? 'bg-gradient-to-br from-idm-gold-warm to-[#e8b94a] shadow-idm-gold-warm/50 scale-105 animate-pulse'
-                  : 'bg-gradient-to-br from-idm-gold-warm to-[#d4a03c] shadow-idm-gold-warm/30 hover:scale-105'
+                  ? 'bg-gradient-to-br from-idm-gold-warm to-[#e8b94a] shadow-[0_0_16px_rgba(212,168,83,0.5)] scale-105'
+                  : 'bg-gradient-to-br from-idm-gold-warm to-[#d4a03c] shadow-[0_0_10px_rgba(212,168,83,0.25)] hover:scale-105'
               }`}
               title="Arena Live"
             >
               <Radio className="w-5 h-5 text-black" />
             </button>
             <span className={`text-[9px] font-bold mt-0.5 leading-tight ${
-              currentView === 'matchday' ? 'text-idm-gold-warm drop-shadow-[0_0_4px_rgba(212,168,83,0.4)]' : 'text-idm-gold-warm/70'
+              currentView === 'matchday' ? 'text-idm-gold-warm' : 'text-idm-gold-warm/70'
             }`}>
               Live
             </span>
@@ -758,26 +758,26 @@ export function AppShell() {
           <button
             onClick={() => { hapticTap(); setCurrentView('marketplace'); }}
             className={`flex flex-col items-center justify-center gap-0.5 px-2.5 py-2 min-h-[44px] rounded-lg transition-all duration-200 relative ${
-              currentView === 'marketplace' ? 'text-idm-gold-warm drop-shadow-[0_0_4px_rgba(212,168,83,0.4)]' : 'text-muted-foreground/70'
+              currentView === 'marketplace' ? 'text-idm-gold-warm' : 'text-muted-foreground/70'
             }`}
           >
             <ShoppingBag className={`w-5 h-5 transition-transform duration-200 ${currentView === 'marketplace' ? 'scale-110' : ''}`} />
             <span className="text-[10px] font-semibold leading-tight">Market</span>
             {currentView === 'marketplace' && (
-              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-5 h-[3px] rounded-full bg-idm-gold-warm shadow-[0_0_6px_rgba(212,168,83,0.5)]" />
+              <div className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-idm-gold-warm shadow-[0_0_6px_rgba(212,168,83,0.5)]" />
             )}
           </button>
 
           <button
             onClick={() => { hapticTap(); setCurrentView('league'); }}
             className={`flex flex-col items-center justify-center gap-0.5 px-2.5 py-2 min-h-[44px] rounded-lg transition-all duration-200 relative ${
-              currentView === 'league' ? 'text-idm-gold-warm drop-shadow-[0_0_4px_rgba(212,168,83,0.4)]' : 'text-muted-foreground/70'
+              currentView === 'league' ? 'text-idm-gold-warm' : 'text-muted-foreground/70'
             }`}
           >
             <BookOpen className={`w-5 h-5 transition-transform duration-200 ${currentView === 'league' ? 'scale-110' : ''}`} />
             <span className="text-[10px] font-semibold leading-tight">Aturan</span>
             {currentView === 'league' && (
-              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-5 h-[3px] rounded-full bg-idm-gold-warm shadow-[0_0_6px_rgba(212,168,83,0.5)]" />
+              <div className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-idm-gold-warm shadow-[0_0_6px_rgba(212,168,83,0.5)]" />
             )}
           </button>
         </div>

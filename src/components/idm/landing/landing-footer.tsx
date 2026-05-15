@@ -82,7 +82,7 @@ export function LandingFooter({ cmsSettings, className }: LandingFooterProps) {
   const hasSocial = discordUrl || instagramUrl || youtubeUrl || whatsappUrl;
 
   return (
-    <footer className={`landing-footer relative bg-background border-t border-[rgba(212,168,83,0.08)] overflow-hidden ${className || ''}`}>
+    <footer className={`landing-footer relative bg-background border-t border-[rgba(212,168,83,0.08)] overflow-hidden pb-[env(safe-area-inset-bottom)] ${className || ''}`}>
       {/* ── Aurora atmospheric glow above footer ── */}
       <div className="aurora-bg absolute top-0 left-0 right-0 h-32 pointer-events-none opacity-50" aria-hidden="true" />
       {/* ── Premium gold gradient line at top ── */}
@@ -106,7 +106,7 @@ export function LandingFooter({ cmsSettings, className }: LandingFooterProps) {
       <div className="footer-atmosphere" aria-hidden="true" />
 
       <div
-        className="reveal reveal-fade-up relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10"
+        className="reveal reveal-fade-up relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10"
       >
         {/* ═══ 2-Column: Brand + Links ═══ */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 sm:gap-8">
@@ -179,7 +179,7 @@ export function LandingFooter({ cmsSettings, className }: LandingFooterProps) {
         </div>
 
         {/* ═══ Premium Divider ═══ */}
-        <div className="mt-7 mb-5">
+        <div className="mt-5 mb-4 sm:mb-5">
           <div className="footer-premium-divider" aria-hidden="true" />
         </div>
 

@@ -5,8 +5,11 @@ import {
   Users,
   TrendingUp,
   Zap,
+  Trophy,
+  Shield,
 } from 'lucide-react';
 import { useDivisionTheme } from '@/hooks/use-division-theme';
+import { formatCurrencyShort } from '@/lib/utils';
 import type { StatsData } from '@/types/stats';
 
 /* ─── Stat Card Item ─── */
@@ -36,6 +39,16 @@ export function QuickStatsBar({ data, division }: QuickStatsBarProps) {
       isPrimary: true,
     },
     {
+      icon: Shield,
+      value: data.clubs?.length || 0,
+      label: 'Clubs',
+    },
+    {
+      icon: Trophy,
+      value: formatCurrencyShort(data.activeTournamentPrizePool ?? data.totalPrizePool),
+      label: 'Prize Pool',
+    },
+    {
       icon: TrendingUp,
       value: `${data.seasonProgress?.percentage ?? 0}%`,
       label: 'Season Progress',
@@ -45,12 +58,13 @@ export function QuickStatsBar({ data, division }: QuickStatsBarProps) {
   return (
     <div
       className="
-        grid grid-cols-2 gap-2
+        grid grid-cols-2 sm:grid-cols-4 gap-2
         sm:gap-3
         lg:gap-4
       "
       role="list"
       aria-label="Quick stats summary"
+      style={{ contain: 'layout style' }}
     >
       {stats.map((stat, idx) => {
         const Icon = stat.icon;
@@ -65,7 +79,7 @@ export function QuickStatsBar({ data, division }: QuickStatsBarProps) {
             <div
               className={`
                 relative flex flex-col items-center justify-center
-                p-3 sm:p-4 lg:p-5
+                p-2.5 sm:p-4 lg:p-5
                 rounded-2xl
                 bg-muted/30 dark:bg-white/[0.05]
                 border
@@ -78,7 +92,7 @@ export function QuickStatsBar({ data, division }: QuickStatsBarProps) {
               {/* Icon */}
               <div
                 className={`
-                  w-7 h-7 sm:w-10 sm:h-10
+                  w-6 h-6 sm:w-10 sm:h-10
                   rounded-lg shrink-0
                   flex items-center justify-center
                   ${dt.iconBg}
@@ -88,7 +102,7 @@ export function QuickStatsBar({ data, division }: QuickStatsBarProps) {
               >
                 <Icon
                   className={`
-                    w-3.5 h-3.5 sm:w-5 sm:h-5
+                    w-3 h-3 sm:w-5 sm:h-5
                     text-idm-gold-warm
                   `}
                 />
@@ -97,16 +111,16 @@ export function QuickStatsBar({ data, division }: QuickStatsBarProps) {
               {/* Value */}
               <p
                 className={`
-                  text-xs sm:text-base font-bold truncate max-w-full text-center
+                  text-lg sm:text-base font-bold truncate max-w-full text-center
                   ${dt.neonText}
-                  mt-1.5 sm:mt-2
+                  mt-1 sm:mt-2
                 `}
               >
                 {stat.value}
               </p>
 
               {/* Label */}
-              <p className="text-[10px] sm:text-xs text-muted-foreground mt-0.5 truncate max-w-full text-center">
+              <p className="text-[9px] sm:text-xs text-muted-foreground mt-0.5 truncate max-w-full text-center">
                 {stat.label}
               </p>
 

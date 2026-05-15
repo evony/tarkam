@@ -62,7 +62,7 @@ export function CTASection({
   }));
 
   return (
-    <section id="cta" aria-label="Call to Action" className="landing-section cta-section relative py-16 sm:py-28 px-4 overflow-hidden bg-deep">
+    <section id="cta" aria-label="Call to Action" className="landing-section cta-section relative py-10 sm:py-28 px-4 overflow-hidden bg-deep" style={{ contain: 'layout style' }}>
       {/* Aurora background layer — separate div so it doesn't affect section layout */}
       <div className="aurora-bg" aria-hidden="true" />
 
@@ -94,7 +94,7 @@ export function CTASection({
           </div>
 
           {/* Card content with background to mask the rotating border */}
-          <div className="relative rounded-3xl glass-premium-strong px-6 sm:px-10 py-10 sm:py-14 m-[1.5px]">
+          <div className="relative rounded-3xl glass-premium-strong px-5 sm:px-10 py-8 sm:py-14 m-[1.5px]">
             {/* Diamond pattern overlay */}
             <div className="absolute inset-0 rounded-3xl opacity-[0.025] pointer-events-none" style={{ backgroundImage: 'repeating-linear-gradient(45deg, rgba(212,168,83,1) 0, rgba(212,168,83,1) 1px, transparent 1px, transparent 12px), repeating-linear-gradient(-45deg, rgba(212,168,83,1) 0, rgba(212,168,83,1) 1px, transparent 1px, transparent 12px)', backgroundSize: '17px 17px' }} aria-hidden="true" />
             {/* Gold particle trail — CSS pseudo-element */}
@@ -121,11 +121,11 @@ export function CTASection({
             </p>
 
             {/* Action Buttons */}
-            <div className="reveal reveal-fade-up reveal-delay-2 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <div className="reveal reveal-fade-up reveal-delay-2 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4">
               {/* Masuk Arena — Primary Gold Button with pulsing glow */}
               <button
                 onClick={onEnterCommunity}
-                className="btn-press focus-ring-premium cta-btn-pulse group relative px-8 py-4 rounded-2xl bg-gradient-to-r from-[#c4963a] via-[#d4a853] to-[#b8860b] text-mid font-bold text-sm tracking-wider cursor-pointer overflow-hidden sm:shadow-[0_0_24px_rgba(212,168,83,0.3)] sm:hover:shadow-[0_0_36px_rgba(212,168,83,0.5)] transition-shadow duration-300"
+                className="btn-press focus-ring-premium cta-btn-pulse group relative px-6 sm:px-8 py-4 min-h-[48px] rounded-2xl bg-gradient-to-r from-[#c4963a] via-[#d4a853] to-[#b8860b] text-mid font-bold text-sm tracking-wider cursor-pointer overflow-hidden sm:shadow-[0_0_24px_rgba(212,168,83,0.3)] sm:hover:shadow-[0_0_36px_rgba(212,168,83,0.5)] transition-shadow duration-300"
               >
                 {/* Glow ripple on hover — desktop only */}
                 <div className="hidden sm:block absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ boxShadow: '0 0 30px 4px rgba(212,168,83,0.35), 0 0 60px 8px rgba(212,168,83,0.15)' }} />
@@ -139,7 +139,7 @@ export function CTASection({
               <button
                 onClick={isRegistrationOpen ? onRegister : undefined}
                 disabled={!isRegistrationOpen}
-                className={`btn-press focus-ring-premium group relative px-8 py-4 rounded-2xl font-bold text-sm tracking-wider transition-all overflow-hidden ${
+                className={`btn-press focus-ring-premium group relative px-6 sm:px-8 py-4 min-h-[48px] rounded-2xl font-bold text-sm tracking-wider transition-all overflow-hidden ${
                   isRegistrationOpen
                     ? 'border-2 border-[rgba(212,168,83,0.3)] text-[#d4a853] bg-transparent hover:bg-[rgba(212,168,83,0.05)] hover:border-[rgba(212,168,83,0.5)] hover:shadow-[0_0_20px_2px_rgba(212,168,83,0.15)] cursor-pointer'
                     : 'border-2 border-gray-500/20 text-gray-500 bg-gray-500/5 cursor-not-allowed opacity-60'

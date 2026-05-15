@@ -128,7 +128,7 @@ function TournamentCard({
       {/* ═══ iOS-style gold accent line at top ═══ */}
       <div className="ios-gold-line" aria-hidden="true" />
       {/* ── Image Area ── */}
-      <div className={`relative h-52 overflow-hidden tournament-header-mesh ${division.key === 'male' ? 'tournament-header-mesh-male' : 'tournament-header-mesh-female'}`}>
+      <div className={`relative h-40 sm:h-52 overflow-hidden tournament-header-mesh ${division.key === 'male' ? 'tournament-header-mesh-male' : 'tournament-header-mesh-female'}`}>
         {/* Pattern overlay */}
         <div
           className={`absolute inset-0 ${division.patternOpacity}`}
@@ -225,7 +225,7 @@ function TournamentCard({
       </div>
 
       {/* ── Content Area ── */}
-      <div className="p-5 sm:p-6">
+      <div className="p-4 sm:p-6">
         {/* Icon + Title row — iOS clean hierarchy */}
         <div className="flex items-center gap-3 mb-3">
           <div
@@ -247,7 +247,7 @@ function TournamentCard({
 
         {/* Stats row — iOS clean stat tiles */}
         <div className="grid grid-cols-3 gap-1.5 sm:gap-2.5 mb-4">
-          <div className="ios-card relative p-3 sm:p-4 text-center tournament-stat-item tournament-stat-separator overflow-hidden" style={{ background: `linear-gradient(135deg, rgba(${division.colorRgb},0.06) 0%, rgba(${division.colorRgb},0.02) 100%)`, borderColor: `rgba(${division.colorRgb},0.1)` }}>
+          <div className="ios-card relative p-2 sm:p-4 text-center tournament-stat-item tournament-stat-separator overflow-hidden" style={{ background: `linear-gradient(135deg, rgba(${division.colorRgb},0.06) 0%, rgba(${division.colorRgb},0.02) 100%)`, borderColor: `rgba(${division.colorRgb},0.1)` }}>
             <Users className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 opacity-[0.06]" style={{ color: division.color }} />
             <p className="relative text-lg font-extrabold tabular-nums" style={{ color: division.color }}>
               {totalPlayers}
@@ -257,7 +257,7 @@ function TournamentCard({
               Pemain
             </p>
           </div>
-          <div className="ios-card relative p-3 sm:p-4 text-center tournament-stat-item tournament-stat-separator overflow-hidden" style={{ background: `linear-gradient(135deg, rgba(${division.colorRgb},0.06) 0%, rgba(${division.colorRgb},0.02) 100%)`, borderColor: `rgba(${division.colorRgb},0.1)` }}>
+          <div className="ios-card relative p-2 sm:p-4 text-center tournament-stat-item tournament-stat-separator overflow-hidden" style={{ background: `linear-gradient(135deg, rgba(${division.colorRgb},0.06) 0%, rgba(${division.colorRgb},0.02) 100%)`, borderColor: `rgba(${division.colorRgb},0.1)` }}>
             <Building2 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 opacity-[0.06]" style={{ color: division.color }} />
             <p className="relative text-lg font-extrabold tabular-nums" style={{ color: division.color }}>
               {totalClubs}
@@ -267,7 +267,7 @@ function TournamentCard({
               Club
             </p>
           </div>
-          <div className="ios-card relative p-3 sm:p-4 text-center tournament-stat-item overflow-hidden" style={{ background: `linear-gradient(135deg, rgba(${division.colorRgb},0.06) 0%, rgba(${division.colorRgb},0.02) 100%)`, borderColor: `rgba(${division.colorRgb},0.1)` }}>
+          <div className="ios-card relative p-2 sm:p-4 text-center tournament-stat-item overflow-hidden" style={{ background: `linear-gradient(135deg, rgba(${division.colorRgb},0.06) 0%, rgba(${division.colorRgb},0.02) 100%)`, borderColor: `rgba(${division.colorRgb},0.1)` }}>
             <Gamepad2 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 opacity-[0.06]" style={{ color: division.color }} />
             <p className="relative text-lg font-extrabold tabular-nums" style={{ color: division.color }}>
               {weeklyCount}
@@ -290,11 +290,11 @@ function TournamentCard({
           </div>
         )}
 
-        {/* CTA buttons */}
-        <div className="flex gap-2.5">
+        {/* CTA buttons — stacked on mobile, side-by-side on sm+ */}
+        <div className="flex flex-col sm:flex-row gap-2.5">
           <button
             onClick={() => onEnterApp(division.key)}
-            className="tournament-cta-primary flex-1 py-3 rounded-2xl text-sm font-semibold transition-all duration-300 cursor-pointer flex items-center justify-center gap-2 relative overflow-hidden"
+            className="tournament-cta-primary flex-1 py-3 min-h-[44px] rounded-2xl text-sm font-semibold transition-all duration-300 cursor-pointer flex items-center justify-center gap-2 relative overflow-hidden"
           >
             <Play className="w-4 h-4 fill-current" />
             <span>Masuk Arena</span>
@@ -303,7 +303,7 @@ function TournamentCard({
           <button
             onClick={() => isRegistrationOpen && onRegister(division.key)}
             disabled={!isRegistrationOpen}
-            className={`flex-1 py-3 rounded-2xl border text-sm font-semibold transition-all duration-300 flex items-center justify-center gap-2 relative overflow-hidden ${
+            className={`flex-1 py-3 min-h-[44px] rounded-2xl border text-sm font-semibold transition-all duration-300 flex items-center justify-center gap-2 relative overflow-hidden ${
               isRegistrationOpen
                 ? `tournament-cta-secondary cursor-pointer ${division.ctaBg}`
                 : 'bg-gray-500/10 border-gray-500/20 text-gray-500 cursor-not-allowed opacity-60'
@@ -354,7 +354,7 @@ export function TournamentHub({
       id="kompetisi"
       role="region"
       aria-label={sectionLabel}
-      className="landing-section relative py-16 sm:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden bg-deep"
+      className="landing-section relative py-10 sm:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden bg-deep"
     >
       {/* ── Top edge glow — section boundary ── */}
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[rgba(212,168,83,0.3)] to-transparent" aria-hidden="true" />

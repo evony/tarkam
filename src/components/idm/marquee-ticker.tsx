@@ -160,8 +160,8 @@ export function MarqueeTicker({ maleData, femaleData, leagueData }: UnifiedMarqu
       if (!res.ok) throw new Error('Feed fetch failed');
       return res.json();
     },
-    staleTime: 60000,
-    refetchInterval: 120000,
+    staleTime: 120000, // 2min — INP optimization: increased from 60s
+    refetchInterval: 300000, // 5min — INP optimization: reduced from 2min
     refetchOnWindowFocus: true,
     refetchOnReconnect: true,
   });

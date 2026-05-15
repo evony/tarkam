@@ -82,7 +82,7 @@ export function PlayersSection({
   const femalePlayers = [...(femaleData?.topPlayers || [])].sort((a, b) => isHistorical ? b.points - a.points : a.gamertag.localeCompare(b.gamertag));
 
   return (
-    <section id="players" className="landing-section relative py-16 sm:py-24 px-4 overflow-hidden bg-deep">
+    <section id="players" className="landing-section relative py-10 sm:py-24 px-4 overflow-hidden bg-deep" style={{ contain: 'layout style' }}>
       {/* Background — 2 layers only */}
       <div className="absolute inset-0 opacity-[0.018]" style={{ backgroundImage: 'radial-gradient(circle, rgba(212,168,83,0.5) 1px, transparent 1px)', backgroundSize: '28px 28px' }} />
       <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 50% 20%, rgba(212,168,83,0.07) 0%, transparent 50%), radial-gradient(ellipse at 12% 50%, rgba(46,159,255,0.05) 0%, transparent 40%), radial-gradient(ellipse at 88% 50%, rgba(255,45,120,0.05) 0%, transparent 40%)' }} />
@@ -211,7 +211,7 @@ export function PlayersSection({
               ) : (
                 <>
                   {/* Player Grid */}
-                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-2 gap-3 sm:gap-4">
                     {(showAllMalePlayers ? malePlayers : malePlayers.slice(0, 8)).map((player, idx) => {
                       const isTop3 = idx < 3 && isHistorical;
                       const isChampion = idx === 0 && isHistorical;
@@ -267,9 +267,9 @@ export function PlayersSection({
                             </div>
 
                             {/* Card content */}
-                            <div className="relative z-10 flex flex-col items-center px-4 pt-8 pb-5">
+                            <div className="relative z-10 flex flex-col items-center px-3 pt-6 pb-4 sm:px-4 sm:pt-8 sm:pb-5">
                               {/* Large centered avatar with glow ring */}
-                              <div className="relative mb-4">
+                              <div className="relative mb-3 sm:mb-4">
                                 {/* Outer glow ring */}
                                 <div
                                   className={`absolute -inset-1.5 rounded-3xl transition-all duration-500 ${
@@ -289,7 +289,7 @@ export function PlayersSection({
                                 />
                                 {/* Avatar container */}
                                 <div
-                                  className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-3xl overflow-hidden bg-mid border-2 flex items-center justify-center group-hover/player:scale-105 transition-all duration-500"
+                                  className="relative w-16 h-16 sm:w-24 sm:h-24 rounded-3xl overflow-hidden bg-mid border-2 flex items-center justify-center group-hover/player:scale-105 transition-all duration-500"
                                   style={skinColors
                                     ? { borderColor: skinColors.frame + '33' }
                                     : { borderColor: 'rgba(46,159,255,0.2)' }
@@ -349,9 +349,9 @@ export function PlayersSection({
                                 </div>
                               )}
 
-                              {/* Stats row */}
+                              {/* Stats row — compact on mobile */}
                               <div
-                                className="mt-2.5 flex items-center justify-center gap-3 px-3 py-1.5 rounded-lg mx-auto"
+                                className="mt-2 flex items-center justify-center gap-2 px-2 py-1 sm:px-3 sm:py-1.5 rounded-lg mx-auto"
                                 style={{ background: 'rgba(212,168,83,0.04)' }}
                               >
                                 <div className="flex items-center gap-1">
@@ -437,7 +437,7 @@ export function PlayersSection({
               ) : (
                 <>
                   {/* Player Grid */}
-                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-2 gap-3 sm:gap-4">
                     {(showAllFemalePlayers ? femalePlayers : femalePlayers.slice(0, 8)).map((player, idx) => {
                       const isTop3 = idx < 3 && isHistorical;
                       const isChampion = idx === 0 && isHistorical;
@@ -493,9 +493,9 @@ export function PlayersSection({
                             </div>
 
                             {/* Card content */}
-                            <div className="relative z-10 flex flex-col items-center px-4 pt-8 pb-5">
+                            <div className="relative z-10 flex flex-col items-center px-3 pt-6 pb-4 sm:px-4 sm:pt-8 sm:pb-5">
                               {/* Large centered avatar with glow ring */}
-                              <div className="relative mb-4">
+                              <div className="relative mb-3 sm:mb-4">
                                 {/* Outer glow ring */}
                                 <div
                                   className={`absolute -inset-1.5 rounded-3xl transition-all duration-500 ${
@@ -515,7 +515,7 @@ export function PlayersSection({
                                 />
                                 {/* Avatar container */}
                                 <div
-                                  className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-3xl overflow-hidden bg-mid border-2 flex items-center justify-center group-hover/player:scale-105 transition-all duration-500"
+                                  className="relative w-16 h-16 sm:w-24 sm:h-24 rounded-3xl overflow-hidden bg-mid border-2 flex items-center justify-center group-hover/player:scale-105 transition-all duration-500"
                                   style={skinColors
                                     ? { borderColor: skinColors.frame + '33' }
                                     : { borderColor: 'rgba(255,45,120,0.2)' }
@@ -575,9 +575,9 @@ export function PlayersSection({
                                 </div>
                               )}
 
-                              {/* Stats row */}
+                              {/* Stats row — compact on mobile */}
                               <div
-                                className="mt-2.5 flex items-center justify-center gap-3 px-3 py-1.5 rounded-lg mx-auto"
+                                className="mt-2 flex items-center justify-center gap-2 px-2 py-1 sm:px-3 sm:py-1.5 rounded-lg mx-auto"
                                 style={{ background: 'rgba(212,168,83,0.04)' }}
                               >
                                 <div className="flex items-center gap-1">

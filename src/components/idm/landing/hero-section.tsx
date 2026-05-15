@@ -294,7 +294,7 @@ export function HeroSection({
         </div>
 
         {/* ═══════════════ HERO CONTENT ═══════════════ */}
-        <div className="relative z-10 text-center px-4 sm:px-6 max-w-5xl mx-auto w-full flex-1 flex flex-col items-center justify-center pt-[12vh] sm:pt-[18vh] pb-20 sm:pb-24">
+        <div className="relative z-10 text-center px-4 sm:px-6 max-w-5xl mx-auto w-full flex-1 flex flex-col items-center justify-center pt-[8vh] sm:pt-[18vh] pb-20 sm:pb-24">
 
           {/* ── iOS Frosted Glass Badge ── */}
           <div className="hero-enter-1 mb-5 sm:mb-7">
@@ -320,7 +320,7 @@ export function HeroSection({
             />
 
             <h1
-              className="hero-title-entrance hero-title-glow-enhanced ios-heading relative text-5xl sm:text-6xl md:text-7xl uppercase leading-[1.05] min-h-[3.5rem]"
+              className="hero-title-entrance hero-title-glow-enhanced ios-heading relative text-4xl sm:text-6xl md:text-7xl uppercase leading-[1.05] min-h-[3.5rem]"
               style={{
                 background: 'linear-gradient(135deg, #f5e6c8 0%, #d4a853 30%, #e5be4a 50%, #f5d77a 70%, #d4a853 100%)',
                 WebkitBackgroundClip: 'text',
@@ -348,12 +348,12 @@ export function HeroSection({
           {/* ═══════════════ SEASON CHAMPION AVATARS ═══════════════ */}
           {showChampionSkeleton ? (
             /* ─── Skeleton placeholder during season switch / initial load ─── */
-            <div className="hero-enter-5 flex items-center justify-center gap-4 sm:gap-8 md:gap-12 mb-8 sm:mb-10">
+            <div className="hero-enter-5 flex items-center justify-center gap-3 sm:gap-8 md:gap-12 mb-6 sm:mb-10">
               {/* Male skeleton */}
               <div className="flex flex-col items-center gap-1.5 sm:gap-2">
                 <div className="relative">
                   <div className="absolute -inset-1.5 rounded-full opacity-30" style={{ background: 'radial-gradient(circle, rgba(46,159,255,0.3) 0%, transparent 70%)' }} />
-                  <div className="relative w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full bg-idm-male/10 border-2 border-idm-male/20 animate-pulse" />
+                  <div className="relative w-20 h-20 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full bg-idm-male/10 border-2 border-idm-male/20 animate-pulse" />
                 </div>
                 <div className="w-16 sm:w-20 h-2.5 rounded bg-idm-male/10 animate-pulse" />
                 <div className="w-12 h-1.5 rounded bg-idm-male/5 animate-pulse" />
@@ -370,7 +370,7 @@ export function HeroSection({
               <div className="flex flex-col items-center gap-1.5 sm:gap-2">
                 <div className="relative">
                   <div className="absolute -inset-1.5 rounded-full opacity-30" style={{ background: 'radial-gradient(circle, rgba(255,45,120,0.3) 0%, transparent 70%)' }} />
-                  <div className="relative w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full bg-idm-female/10 border-2 border-idm-female/20 animate-pulse" />
+                  <div className="relative w-20 h-20 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full bg-idm-female/10 border-2 border-idm-female/20 animate-pulse" />
                 </div>
                 <div className="w-16 sm:w-20 h-2.5 rounded bg-idm-female/10 animate-pulse" />
                 <div className="w-12 h-1.5 rounded bg-idm-female/5 animate-pulse" />
@@ -378,7 +378,7 @@ export function HeroSection({
             </div>
           ) : hasChampions ? (
             /* ─── Actual champion avatars with embedded skin visual ─── */
-            <div className="hero-enter-5 flex items-center justify-center gap-4 sm:gap-8 md:gap-12 mb-8 sm:mb-10">
+            <div className="hero-enter-5 flex items-center justify-center gap-3 sm:gap-8 md:gap-12 mb-6 sm:mb-10">
               {/* Male Champion — Left */}
               {maleChampion && (
                 <div className="flex flex-col items-center gap-1.5 sm:gap-2">
@@ -386,7 +386,7 @@ export function HeroSection({
                     {/* Glow ring — division color (blue for male) */}
                     <div className="absolute -inset-1.5 rounded-full opacity-50 group-hover:opacity-80 transition-opacity duration-500" style={{ background: 'radial-gradient(circle, rgba(46,159,255,0.3) 0%, transparent 70%)' }} />
                     {/* Avatar container — always division color ring */}
-                    <div className="relative w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full overflow-hidden border-2" style={{
+                    <div className="relative w-20 h-20 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full overflow-hidden border-2" style={{
                       borderColor: 'rgba(46,159,255,0.5)',
                       boxShadow: '0 0 20px rgba(46,159,255,0.2), inset 0 0 10px rgba(46,159,255,0.1)',
                     }}>
@@ -439,7 +439,7 @@ export function HeroSection({
                     {/* Glow ring — division color (pink for female) */}
                     <div className="absolute -inset-1.5 rounded-full opacity-50 group-hover:opacity-80 transition-opacity duration-500" style={{ background: 'radial-gradient(circle, rgba(255,45,120,0.3) 0%, transparent 70%)' }} />
                     {/* Avatar container — always division color ring */}
-                    <div className="relative w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full overflow-hidden border-2" style={{
+                    <div className="relative w-20 h-20 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full overflow-hidden border-2" style={{
                       borderColor: 'rgba(255,45,120,0.5)',
                       boxShadow: '0 0 20px rgba(255,45,120,0.2), inset 0 0 10px rgba(255,45,120,0.1)',
                     }}>
@@ -460,17 +460,17 @@ export function HeroSection({
           ) : null}
 
           {/* ═══════════════ CTA BUTTONS ═══════════════ */}
-          <div className={`flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mx-auto mb-8 sm:mb-10 ${hasChampions ? '' : 'hero-enter-5'}`}>
+          <div className={`flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mx-auto w-full sm:w-auto mb-6 sm:mb-10 ${hasChampions ? '' : 'hero-enter-5'}`}>
             {/* Masuk Arena — Primary CTA → Community Dashboard */}
             <button
               onClick={onEnterCommunity}
-              className="btn-press hero-cta-breath group relative cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-idm-gold-warm/50 focus-visible:ring-offset-2 focus-visible:ring-offset-deep"
+              className="btn-press hero-cta-breath group relative cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-idm-gold-warm/50 focus-visible:ring-offset-2 focus-visible:ring-offset-deep w-full sm:w-auto"
             >
               {/* Pulse glow ring */}
               <div className="absolute -inset-1.5 rounded-2xl animate-pulse" style={{ background: 'rgba(212,168,83,0.15)', boxShadow: '0 0 30px rgba(212,168,83,0.3)' }} />
               {/* Glow background */}
               <div className="absolute -inset-1 rounded-2xl blur-lg opacity-0 group-hover:opacity-60 transition-opacity duration-500" style={{ background: 'rgba(212,168,83,0.25)' }} />
-              <div className="relative flex items-center justify-center gap-2.5 px-7 py-3 rounded-2xl font-bold text-sm tracking-wide uppercase transition-all duration-300"
+              <div className="relative flex items-center justify-center gap-2.5 px-7 py-3 min-h-[48px] rounded-2xl font-bold text-sm tracking-wide uppercase transition-all duration-300"
                 style={{
                   background: 'linear-gradient(135deg, #d4a853 0%, #e5be4a 50%, #f5d77a 100%)',
                   color: 'var(--bg-deep)',
@@ -486,11 +486,11 @@ export function HeroSection({
             {/* Lihat Bracket — Secondary CTA → Bracket Picker */}
             <button
               onClick={() => setShowBracketPicker(true)}
-              className="btn-press hero-cta-breath group relative cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-idm-gold-warm/50 focus-visible:ring-offset-2 focus-visible:ring-offset-deep"
+              className="btn-press hero-cta-breath group relative cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-idm-gold-warm/50 focus-visible:ring-offset-2 focus-visible:ring-offset-deep w-full sm:w-auto"
             >
               {/* Glow on hover */}
               <div className="absolute -inset-1 rounded-2xl blur-lg opacity-0 group-hover:opacity-40 transition-opacity duration-500" style={{ background: 'rgba(212,168,83,0.15)' }} />
-              <div className="relative flex items-center justify-center gap-2.5 px-7 py-3 rounded-2xl font-bold text-sm tracking-wide uppercase border transition-all duration-300"
+              <div className="relative flex items-center justify-center gap-2.5 px-7 py-3 min-h-[48px] rounded-2xl font-bold text-sm tracking-wide uppercase border transition-all duration-300"
                 style={{
                   background: 'rgba(212,168,83,0.08)',
                   borderColor: 'rgba(212,168,83,0.3)',
@@ -505,25 +505,25 @@ export function HeroSection({
             </button>
           </div>
 
-          {/* 3. iOS Frosted Glass Stats Counter Bar */}
-          <div className="ios-hero-stats mt-6 sm:mt-8 mx-auto max-w-md px-6 py-3">
-            <div className="flex items-center justify-center gap-2 sm:gap-4">
-              <div className="flex items-center gap-1.5">
-                <Users className="w-3.5 h-3.5 text-idm-gold-warm/50" />
-                <span className="text-sm font-bold text-idm-gold-warm/80 tabular-nums">{totalPlayers}</span>
-                <span className="text-[10px] text-idm-gold-warm/40 uppercase tracking-wider font-semibold">Pemain</span>
+          {/* 3. iOS Frosted Glass Stats Counter Bar — compact on mobile */}
+          <div className="ios-hero-stats mt-4 sm:mt-8 mx-auto max-w-md px-3 sm:px-6 py-2 sm:py-3">
+            <div className="flex items-center justify-center gap-1.5 sm:gap-4">
+              <div className="flex items-center gap-1">
+                <Users className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-idm-gold-warm/50" />
+                <span className="text-xs sm:text-sm font-bold text-idm-gold-warm/80 tabular-nums">{totalPlayers}</span>
+                <span className="text-[9px] sm:text-[10px] text-idm-gold-warm/40 uppercase tracking-wider font-semibold">Pemain</span>
               </div>
               <div className="hero-stats-dot" />
-              <div className="flex items-center gap-1.5">
-                <Trophy className="w-3.5 h-3.5 text-idm-gold-warm/50" />
-                <span className="text-sm font-bold text-idm-gold-warm/80 tabular-nums">{totalClubs}</span>
-                <span className="text-[10px] text-idm-gold-warm/40 uppercase tracking-wider font-semibold">Club</span>
+              <div className="flex items-center gap-1">
+                <Trophy className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-idm-gold-warm/50" />
+                <span className="text-xs sm:text-sm font-bold text-idm-gold-warm/80 tabular-nums">{totalClubs}</span>
+                <span className="text-[9px] sm:text-[10px] text-idm-gold-warm/40 uppercase tracking-wider font-semibold">Club</span>
               </div>
               <div className="hero-stats-dot" />
-              <div className="flex items-center gap-1.5">
-                <Swords className="w-3.5 h-3.5 text-idm-gold-warm/50" />
-                <span className="text-sm font-bold text-idm-gold-warm/80 tabular-nums">{totalMatches}</span>
-                <span className="text-[10px] text-idm-gold-warm/40 uppercase tracking-wider font-semibold">Match</span>
+              <div className="flex items-center gap-1">
+                <Swords className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-idm-gold-warm/50" />
+                <span className="text-xs sm:text-sm font-bold text-idm-gold-warm/80 tabular-nums">{totalMatches}</span>
+                <span className="text-[9px] sm:text-[10px] text-idm-gold-warm/40 uppercase tracking-wider font-semibold">Match</span>
               </div>
             </div>
           </div>

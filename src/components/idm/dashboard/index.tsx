@@ -625,7 +625,7 @@ export function Dashboard() {
     <div className="space-y-3 sm:space-y-4">
 
       {/* ========== HERO BANNER ========== */}
-      <div className={`stagger-item-subtle stagger-d0 relative rounded-2xl sm:rounded-2xl overflow-hidden ${dt.casinoCard} min-h-[220px] sm:min-h-[260px] lg:min-h-[340px] ${!isMobile ? 'casino-shimmer' : ''}`}>
+      <div className={`stagger-item-subtle stagger-d0 relative rounded-2xl sm:rounded-2xl overflow-hidden ${dt.casinoCard} min-h-[180px] sm:min-h-[260px] lg:min-h-[340px] ${!isMobile ? 'casino-shimmer' : ''}`} style={{ contain: 'layout style' }}>
         <div className={dt.casinoBar} />
         <div className="absolute inset-0">
           {(division === 'male' ? bgMale : bgFemale) && (
@@ -661,7 +661,7 @@ export function Dashboard() {
                   />
                   <StatusBadge status={t?.status || 'registration'} />
                 </div>
-                <span className="px-2.5 py-1 rounded bg-black/60 text-xs font-bold text-idm-gold-warm">💰 {formatCurrencyShort(data.activeTournamentPrizePool ?? t?.prizePool ?? data.totalPrizePool)}</span>
+                <span className="px-2.5 py-1 rounded-md bg-gradient-to-r from-idm-gold-warm/25 to-[#e8d5a3]/15 border border-idm-gold-warm/30 text-[10px] sm:text-xs font-bold text-idm-gold-warm drop-shadow-[0_0_8px_rgba(229,190,74,0.3)]">💰 {formatCurrencyShort(data.activeTournamentPrizePool ?? t?.prizePool ?? data.totalPrizePool)}</span>
               </div>
             </div>
 
@@ -670,13 +670,14 @@ export function Dashboard() {
               <p className="text-[10px] sm:text-xs lg:text-base text-muted-foreground mt-1.5">{data.season?.name}</p>
             </div>
 
-            <div className="mt-auto pt-3 sm:pt-4">
-              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 lg:gap-3">
-                <span className="inline-flex items-center gap-1 px-1.5 py-0.5 sm:px-0 sm:py-0 rounded sm:rounded-none bg-black/30 sm:bg-transparent text-[9px] sm:text-xs lg:text-sm text-white/80"><Flame className={`w-2.5 h-2.5 sm:w-3 sm:h-3 lg:w-4 lg:h-4 ${dt.neonText}`} />Week {t?.weekNumber || 5}</span>
-                <span className="inline-flex items-center gap-1 px-1.5 py-0.5 sm:px-0 sm:py-0 rounded sm:rounded-none bg-black/30 sm:bg-transparent text-[9px] sm:text-xs lg:text-sm text-white/80"><Trophy className={`w-2.5 h-2.5 sm:w-3 sm:h-3 lg:w-4 lg:h-4 ${dt.neonText}`} />{t?.format === 'group_stage' ? 'Group + Playoff' : t?.format === 'swiss' ? 'Swiss + Playoff' : 'Single Elim.'}</span>
-                <span className="inline-flex items-center gap-1 px-1.5 py-0.5 sm:px-0 sm:py-0 rounded sm:rounded-none bg-black/30 sm:bg-transparent text-[9px] sm:text-xs lg:text-sm text-white/80"><MapPin className={`w-2.5 h-2.5 sm:w-3 sm:h-3 lg:w-4 lg:h-4 ${dt.neonText}`} />{t?.location || 'Online'}</span>
+            <div className="mt-auto pt-2 sm:pt-4">
+              {/* Mobile: compact single row info pills */}
+              <div className="flex sm:flex-wrap items-center gap-1 sm:gap-2 lg:gap-3 overflow-x-auto scrollbar-none">
+                <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 sm:px-0 sm:py-0 rounded sm:rounded-none bg-black/30 sm:bg-transparent text-[8px] sm:text-xs lg:text-sm text-white/80 whitespace-nowrap"><Flame className={`w-2 h-2 sm:w-3 sm:h-3 lg:w-4 lg:h-4 ${dt.neonText}`} />W{t?.weekNumber || 5}</span>
+                <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 sm:px-0 sm:py-0 rounded sm:rounded-none bg-black/30 sm:bg-transparent text-[8px] sm:text-xs lg:text-sm text-white/80 whitespace-nowrap"><Trophy className={`w-2 h-2 sm:w-3 sm:h-3 lg:w-4 lg:h-4 ${dt.neonText}`} />{t?.format === 'group_stage' ? 'Group' : t?.format === 'swiss' ? 'Swiss' : 'Elim'}</span>
+                <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 sm:px-0 sm:py-0 rounded sm:rounded-none bg-black/30 sm:bg-transparent text-[8px] sm:text-xs lg:text-sm text-white/80 whitespace-nowrap"><MapPin className={`w-2 h-2 sm:w-3 sm:h-3 lg:w-4 lg:h-4 ${dt.neonText}`} />{t?.location || 'Online'}</span>
               </div>
-              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 lg:gap-3 mt-1.5 sm:mt-2">
+              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 lg:gap-3 mt-1 sm:mt-2">
                 {t?.scheduledAt && <span className="inline-flex items-center gap-1 px-1.5 py-0.5 sm:px-0 sm:py-0 rounded sm:rounded-none bg-black/30 sm:bg-transparent text-[9px] sm:text-xs lg:text-sm text-white/80"><Calendar className={`w-2.5 h-2.5 sm:w-3 sm:h-3 lg:w-4 lg:h-4 ${dt.neonText}`} />{parseWitaDate(t.scheduledAt) ? formatWIBWeekdayShort(parseWitaDate(t.scheduledAt)!) : ''}</span>}
                 {t?.scheduledAt && <span className="inline-flex items-center gap-1 px-1.5 py-0.5 sm:px-0 sm:py-0 rounded sm:rounded-none bg-black/30 sm:bg-transparent text-[9px] sm:text-xs lg:text-sm text-white/80"><Clock className={`w-2.5 h-2.5 sm:w-3 sm:h-3 lg:w-4 lg:h-4 ${dt.neonText}`} />{parseWitaDate(t.scheduledAt) ? formatWIBTime(parseWitaDate(t.scheduledAt)!) : ''}</span>}
                 {t?.bpm && <span className="hidden sm:inline-flex items-center gap-1 text-xs lg:text-sm text-white/70"><Heart className="w-3 h-3 lg:w-4 lg:h-4 text-red-400 live-dot" />{t.bpm} BPM</span>}
@@ -710,13 +711,13 @@ export function Dashboard() {
           </div>
         </div>
 
-        {/* Mobile Sawer button */}
-        <div className="sm:hidden absolute bottom-0 right-0 z-20 p-3">
+        {/* Mobile Sawer button — prominent gold CTA */}
+        <div className="sm:hidden absolute bottom-2 right-2 z-20">
           <button
             onClick={() => setDonationOpen(true)}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-[10px] font-bold bg-gradient-to-r from-idm-gold-warm to-[#e8d5a3] text-black hover:opacity-90 transition-opacity cursor-pointer min-h-[28px]"
+            className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-[11px] font-bold bg-gradient-to-r from-idm-gold-warm to-[#e8d5a3] text-black shadow-lg shadow-idm-gold-warm/30 active:scale-95 transition-all cursor-pointer min-h-[44px]"
           >
-            <Gift className="w-3 h-3" />
+            <Gift className="w-4 h-4" />
             Sawer
           </button>
         </div>
@@ -724,8 +725,8 @@ export function Dashboard() {
 
       {/* ========== TAB BAR — 4 tabs: Beranda, Bracket, Peringkat, Info ========== */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
-          <div className={`border-b ${dt.border}`}>
+        <div className="sticky top-0 z-20 sm:static sm:z-auto overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
+          <div className={`border-b ${dt.border} bg-background/95 sm:bg-transparent`}>
             <TabsList className="bg-transparent h-auto p-0 gap-0 rounded-none">
               {[
                 { value: 'overview', label: 'Beranda', icon: Trophy },
@@ -736,21 +737,23 @@ export function Dashboard() {
                 <TabsTrigger
                   key={tab.value}
                   value={tab.value}
-                  className={`relative px-3 sm:px-5 py-2 sm:py-2.5 text-xs font-medium rounded-none border-b-2 border-transparent data-[state=active]:border-current data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-idm-gold-warm text-muted-foreground hover:text-foreground transition-colors whitespace-nowrap`}
+                  className={`relative px-3 sm:px-5 py-2.5 sm:py-2.5 text-xs font-medium rounded-none border-b-2 border-transparent data-[state=active]:border-current data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-idm-gold-warm text-muted-foreground hover:text-foreground transition-colors whitespace-nowrap min-h-[44px]`}
                 >
                   <tab.icon className="w-3.5 h-3.5 mr-1.5 hidden sm:inline" />
                   {tab.label}
                 </TabsTrigger>
               ))}
             </TabsList>
+            {/* Subtle gradient for visual depth on mobile */}
+            <div className="h-px bg-gradient-to-r from-transparent via-idm-gold-warm/20 to-transparent sm:hidden" />
           </div>
         </div>
 
         {/* ═══════════════ BERANDA TAB — Streamlined + Integrated Tour Saya ═══════════════ */}
         <TabsContent value="overview" className="mt-3 sm:mt-4 lg:mt-6 space-y-3 sm:space-y-4">
 
-          {/* ── Cari Turnamen Saya — Search Bar ── */}
-          <div className={`rounded-2xl border ${dt.borderSubtle} ${dt.bgSubtle} p-3 sm:p-4 relative z-10`}>
+          {/* ── Cari Turnamen Saya — Search Bar (prominent on mobile) ── */}
+          <div className={`rounded-2xl border-2 sm:border border-idm-gold-warm/20 sm:border-[inherit] ${dt.bgSubtle} p-3 sm:p-4 relative z-10 shadow-lg shadow-idm-gold-warm/5 sm:shadow-none transition-all`}>
             <div className="flex items-center gap-2.5 mb-2.5">
               <div className={`w-9 h-9 rounded-2xl flex items-center justify-center ${dt.iconBg}`}>
                 <Target className={`w-4.5 h-4.5 ${dt.neonText}`} />
@@ -760,7 +763,7 @@ export function Dashboard() {
                 <p className="text-[10px] text-muted-foreground">Ketik nama/nickname untuk cek status turnamen</p>
               </div>
               {submittedName && (
-                <Button size="sm" variant="outline" className="h-8 text-[10px] shrink-0 gap-1 min-h-[32px]" onClick={handleReset}>
+                <Button size="sm" variant="outline" className="h-8 text-[10px] shrink-0 gap-1 min-h-[44px]" onClick={handleReset}>
                   ✕ Reset
                 </Button>
               )}
@@ -774,15 +777,16 @@ export function Dashboard() {
                   value={searchName}
                   onChange={(e) => setSearchName(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                  className="pl-9 h-10 text-sm bg-background border-2 border-idm-gold/30 focus:border-idm-gold placeholder:text-muted-foreground/60 rounded-lg"
+                  className="pl-9 h-11 sm:h-10 text-sm bg-background border-2 border-idm-gold/30 focus:border-idm-gold-warm focus:ring-1 focus:ring-idm-gold-warm/30 placeholder:text-muted-foreground/60 rounded-xl sm:rounded-lg transition-all"
                   maxLength={30}
                   autoComplete="off"
+                  enterKeyHint="search"
                 />
               </div>
               <Button
                 onClick={handleSearch}
                 disabled={!searchName.trim()}
-                className={`h-10 px-4 text-sm font-bold gap-1.5 shrink-0 bg-idm-gold-warm hover:bg-idm-gold-warm/90 text-black`}
+                className={`h-11 sm:h-10 px-4 text-sm font-bold gap-1.5 shrink-0 bg-idm-gold-warm hover:bg-idm-gold-warm/90 text-black min-h-[44px] sm:min-h-0`}
               >
                 <Search className="w-4 h-4" />
                 Cari

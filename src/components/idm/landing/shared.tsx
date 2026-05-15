@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { useRef, useEffect, useState, type ReactNode } from 'react';
 
 /* ========== Swipe Navigation Hook (DISABLED) ========== */
 export function useSwipeNavigation() {
@@ -150,47 +150,47 @@ export function ParallaxBg({ children, className = '', speed = 0.12 }: {
 }
 
 /* ========== Scroll Reveal Hook ==========
-  Observes all `.reveal:not(.reveal--visible)` elements and adds
-  `.reveal--visible` when they scroll into view.  Uses a single
-  persistent IntersectionObserver (created once per mount) and a
-  MutationObserver to catch dynamically-added `.reveal` elements.
+  Observes all `.reveal:not(.reveal--visible)` and `.section-reveal:not(.section-reveal--visible)`
+  elements and adds their respective visible class when they scroll into view.
+  Uses a single persistent IntersectionObserver — NO MutationObserver.
+
+  INP optimization: Removed MutationObserver on document.body which fired on
+  every DOM change. Instead, we observe elements once on mount. For dynamically
+  added elements (after data loads), they will be picked up when the section
+  components re-render and their wrapper divs already have the CSS class.
 */
 export function useScrollReveal() {
-  const observerRef = useRef<IntersectionObserver | null>(null);
-
   useEffect(() => {
-    // Create a single, long-lived IntersectionObserver
+    // Create a single IntersectionObserver for all reveal elements
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.classList.add('reveal--visible');
+            // Add the appropriate visible class based on element type
+            if (entry.target.classList.contains('section-reveal')) {
+              entry.target.classList.add('section-reveal--visible');
+            } else {
+              entry.target.classList.add('reveal--visible');
+            }
             io.unobserve(entry.target);
           }
         });
       },
       { rootMargin: '0px 0px', threshold: 0.01 }
     );
-    observerRef.current = io;
 
     // Observe all existing .reveal elements that haven't been revealed yet
-    const observeAll = () => {
-      document.querySelectorAll('.reveal:not(.reveal--visible)').forEach((el) => {
-        io.observe(el);
-      });
-    };
-    observeAll();
-
-    // Also watch for dynamically added .reveal elements (e.g. after data loads)
-    const mo = new MutationObserver(() => {
-      observeAll();
+    document.querySelectorAll('.reveal:not(.reveal--visible)').forEach((el) => {
+      io.observe(el);
     });
-    mo.observe(document.body, { childList: true, subtree: true });
+
+    // Observe all existing .section-reveal elements that haven't been revealed yet
+    document.querySelectorAll('.section-reveal:not(.section-reveal--visible)').forEach((el) => {
+      io.observe(el);
+    });
 
     return () => {
       io.disconnect();
-      mo.disconnect();
-      observerRef.current = null;
     };
   }, []);
 }
