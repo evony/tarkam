@@ -451,7 +451,7 @@ export function PlayerProfile({ player, onClose, rank, skinMap, preferredSkinTyp
           {/* ═══ HERO BANNER — Full Avatar Card Style ═══ */}
             <div className={`relative h-[280px] sm:h-[380px] md:h-[440px] overflow-hidden cinema-hero cinema-flare ${playerDivision === 'male' ? 'cinema-flare-male' : 'cinema-flare-female'} cinema-grade`}>
             {/* Full avatar as background */}
-            <AvatarMedia src={avatarSrc} alt={player.gamertag} fill sizes="(max-width: 640px) 100vw, 512px" objectPosition="center 37%" />
+            <AvatarMedia src={avatarSrc} alt={player.gamertag} fill sizes="(max-width: 640px) 100vw, 512px" objectPosition="center 37%" autoPlay loop muted playsInline />
 
             {/* ═══ Shimmer overlay — theme-colored diagonal sweep ═══ */}
             {/* Only shown when player has a skin (champion, MVP, sultan, etc.) */}

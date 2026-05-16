@@ -26,7 +26,7 @@ interface AvatarMediaProps {
   loading?: 'lazy' | 'eager';
   /** Whether to unoptimize the image (for Cloudinary external URLs) */
   unoptimized?: boolean;
-  /** Video specific: auto play (default: true) */
+  /** Video specific: auto play (default: false — only plays inside profile modal) */
   autoPlay?: boolean;
   /** Video specific: loop (default: true) */
   loop?: boolean;
@@ -44,8 +44,8 @@ interface AvatarMediaProps {
  * AvatarMedia — Renders an image OR video based on the URL type.
  *
  * - For image URLs: uses Next.js <Image> component with Cloudinary loader
- * - For video URLs (mp4, Cloudinary /video/upload/): uses HTML5 <video> tag
- *   with autoplay, loop, muted for smooth animated avatars
+ * - For video URLs (mp4, Cloudinary /video/upload/): shows poster/thumbnail by default
+ *   Pass autoPlay={true} ONLY inside the player profile modal
  *
  * Usage:
  * ```tsx
@@ -68,7 +68,7 @@ export function AvatarMedia({
   objectPosition = 'center 37%',
   loading = 'lazy',
   unoptimized,
-  autoPlay = true,
+  autoPlay = false,
   loop = true,
   muted = true,
   playsInline = true,
@@ -81,18 +81,21 @@ export function AvatarMedia({
   const objectFitClass = objectFit === 'cover' ? 'object-cover' : objectFit === 'contain' ? 'object-contain' : 'object-fill';
 
   if (isVideo) {
-    const videoSrc = getOptimizedVideoUrl(src);
+    const videoSrc = autoPlay ? getOptimizedVideoUrl(src) : '';
     const posterSrc = getVideoPosterUrl(src);
 
     const mergedStyle = { objectPosition, ...style };
-    // Use "auto" preload for priority/above-the-fold content to ensure video loads quickly.
-    // For lazy-loaded cards, "auto" also helps because autoplay requires video data.
-    const preloadStrategy = priority ? 'auto' : 'auto';
+    // When not autoplaying, only load the poster image (not the video file)
+    // This saves significant bandwidth — video only loads when profile modal opens
+    const preloadStrategy = autoPlay ? 'auto' : 'none';
 
+    // ★ Thumbnail-only mode (default): show poster image, no video download
+    // Video <source> is only set when autoPlay=true (inside profile modal)
+    // This means 0 bytes of video data for listing pages, fast poster-only display
     if (fill) {
       return (
         <video
-          src={videoSrc}
+          src={videoSrc || undefined}
           poster={posterSrc || undefined}
           autoPlay={autoPlay}
           loop={loop}
@@ -108,7 +111,7 @@ export function AvatarMedia({
 
     return (
       <video
-        src={videoSrc}
+        src={videoSrc || undefined}
         poster={posterSrc || undefined}
         autoPlay={autoPlay}
         loop={loop}

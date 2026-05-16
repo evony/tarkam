@@ -63,7 +63,6 @@ function WeekSlot({
             height={107}
             className="w-full h-full object-cover"
             loading="lazy"
-            autoPlay={false}
             loop={false}
           />
 
