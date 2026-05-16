@@ -125,7 +125,7 @@ export function CTASection({
               {/* Masuk Arena — Primary Gold Button with pulsing glow */}
               <button
                 onClick={onEnterCommunity}
-                className="btn-press focus-ring-premium cta-btn-pulse group relative px-6 sm:px-8 py-4 min-h-[48px] rounded-2xl bg-gradient-to-r from-[#D69E2E] via-idm-gold-warm to-[#B7791F] text-mid font-bold text-sm tracking-wider cursor-pointer overflow-hidden sm:shadow-[0_0_24px] sm:shadow-idm-gold-warm/30 sm:hover:shadow-[0_0_36px] sm:hover:shadow-idm-gold-warm/50 transition-shadow duration-300"
+                className="btn-press focus-ring-premium cta-btn-pulse group relative px-6 sm:px-8 py-4 min-h-[48px] rounded-2xl bg-gradient-to-r from-[#D69E2E] via-idm-gold-warm to-[#B7791F] text-white dark:text-mid font-bold text-sm tracking-wider cursor-pointer overflow-hidden sm:shadow-[0_0_24px] sm:shadow-idm-gold-warm/30 sm:hover:shadow-[0_0_36px] sm:hover:shadow-idm-gold-warm/50 transition-shadow duration-300"
               >
                 {/* Glow ripple on hover — desktop only */}
                 <div className="hidden sm:block absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ boxShadow: '0 0 30px 4px color-mix(in srgb, var(--color-idm-gold-warm) 35%, transparent), 0 0 60px 8px color-mix(in srgb, var(--color-idm-gold-warm) 15%, transparent)' }} />

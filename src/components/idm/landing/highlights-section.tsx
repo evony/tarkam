@@ -2,6 +2,7 @@
 
 import { useMemo } from 'react';
 import Image from 'next/image';
+import { useTheme } from 'next-themes';
 import {
   Trophy, Calendar, Swords,
   Star, Users, Flame, TrendingUp,
@@ -148,6 +149,57 @@ const MAROON = {
   icon: '❤️',
   rgb: '128,0,32',
 } as const;
+
+/* ─── Theme-Aware Color Helpers ─── */
+function useIsLightMode() {
+  const { resolvedTheme } = useTheme();
+  return resolvedTheme === 'light';
+}
+
+/** Light-mode adapted PLATINUM colors (darker variants for visibility on light bg) */
+function usePlatinum(isLight: boolean) {
+  return useMemo(() => isLight ? {
+    ...PLATINUM,
+    nameLight: '#6B6B6B',
+    nameMid: '#505050',
+    nameDark: '#3A3A3A',
+    badgeBg: 'rgba(80,80,80,0.15)',
+    badgeText: '#505050',
+    glow: 'rgba(80,80,80,0.3)',
+    rgb: '80,80,80',
+  } : PLATINUM, [isLight]);
+}
+
+/** Light-mode adapted MAROON colors (darker text variants for light bg) */
+function useMaroon(isLight: boolean) {
+  return useMemo(() => isLight ? {
+    ...MAROON,
+    nameLight: '#800020',
+    nameMid: '#A00030',
+    badgeBg: 'rgba(128,0,32,0.12)',
+    badgeText: '#800020',
+    glow: 'rgba(128,0,32,0.3)',
+  } : MAROON, [isLight]);
+}
+
+/** Gold accent bar gradient — uses darker gold in light mode for visibility */
+function goldAccentGradient(isLight: boolean, variant: 'full' | 'simple' = 'full') {
+  if (isLight) {
+    return variant === 'simple'
+      ? 'linear-gradient(90deg, #B8960A, #92780C, #B8960A)'
+      : 'linear-gradient(90deg, #B8960A, #92780C, #B8960A, #C8A020, #B8960A)';
+  }
+  return variant === 'simple'
+    ? 'linear-gradient(90deg, #EFF923, #F9CB25, #EFF923)'
+    : 'linear-gradient(90deg, #EFF923, #F9CB25, #EFF923, #FAF0DC, #EFF923)';
+}
+
+/** Gold glow under accent bar — uses darker alpha in light mode */
+function goldGlowGradient(isLight: boolean) {
+  return isLight
+    ? 'linear-gradient(to bottom, rgba(146,120,12,0.2), transparent)'
+    : 'linear-gradient(to bottom, rgba(239,249,35,0.25), transparent)';
+}
 
 /* ─── Build Highlight Items from Data ─── */
 function buildHighlights(
@@ -390,11 +442,13 @@ function DivisionCard({
   setSelectedPlayer: (player: any) => void;
 }) {
   const isMale = division === 'male';
+  const isLight = useIsLightMode();
   const accentColor = isMale ? COLORS.maleAccent : COLORS.femaleAccent;
   const accentLight = isMale ? COLORS.maleAccentLight : COLORS.femaleAccentLight;
   const DivisionIcon = isMale ? Music : Shield;
   const divisionLabel = isMale ? 'COWO' : 'CEWE';
   const colorRgb = isMale ? '46,159,255' : '255,45,120';
+  const greenText = isLight ? '#16a34a' : '#4ade80';
 
   return (
     <div
@@ -402,13 +456,15 @@ function DivisionCard({
       style={{
         background: `linear-gradient(165deg, rgba(${colorRgb},0.1) 0%, var(--bg-mid) 30%, rgba(${colorRgb},0.05) 100%)`,
         border: `1px solid rgba(${colorRgb},0.15)`,
-        boxShadow: `0 2px 8px rgba(0,0,0,0.3), 0 8px 32px rgba(${colorRgb},0.06), inset 0 1px 0 rgba(255,255,255,0.03)`,
+        boxShadow: isLight
+          ? `0 2px 8px rgba(0,0,0,0.08), 0 8px 32px rgba(${colorRgb},0.06), inset 0 1px 0 rgba(255,255,255,0.5)`
+          : `0 2px 8px rgba(0,0,0,0.3), 0 8px 32px rgba(${colorRgb},0.06), inset 0 1px 0 rgba(255,255,255,0.03)`,
         willChange: 'transform',
       }}
     >
       {/* Gold luxury top accent bar with glow */}
-      <div className="relative h-1.5" style={{ background: 'linear-gradient(90deg, #EFF923, #F9CB25, #EFF923, #FAF0DC, #EFF923)' }}>
-        <div className="absolute inset-x-0 -bottom-2 h-4" style={{ background: 'linear-gradient(to bottom, rgba(239,249,35,0.25), transparent)' }} />
+      <div className="relative h-1.5" style={{ background: goldAccentGradient(isLight) }}>
+        <div className="absolute inset-x-0 -bottom-2 h-4" style={{ background: goldGlowGradient(isLight) }} />
       </div>
 
       {/* Content */}
@@ -522,7 +578,7 @@ function DivisionCard({
                       <span className="text-[8px] font-bold text-idm-gold-warm">
                         {player.points}pts
                       </span>
-                      <span className="text-[8px] font-bold text-green-400">
+                      <span className="text-[8px] font-bold" style={{ color: greenText }}>
                         {player.totalWins}W
                       </span>
                     </div>
@@ -570,12 +626,15 @@ function MvpCard({
   setPreferredSkinType?: (type: string | null) => void;
 }) {
   const isMale = division === 'male';
+  const isLight = useIsLightMode();
+  const platinum = usePlatinum(isLight);
   const accentColor = isMale ? COLORS.maleAccent : COLORS.femaleAccent;
   const accentLight = isMale ? COLORS.maleAccentLight : COLORS.femaleAccentLight;
   const DivisionIcon = isMale ? Music : Shield;
   const isEmpty = !player || player.isEmpty;
   const divisionLabel = isMale ? 'COWO' : 'CEWE';
   const colorRgb = isMale ? '46,159,255' : '255,45,120';
+  const greenText = isLight ? '#16a34a' : '#4ade80';
 
   return (
     <div
@@ -583,19 +642,23 @@ function MvpCard({
       style={{
         background: isEmpty
           ? `linear-gradient(165deg, rgba(${colorRgb},0.1) 0%, var(--bg-mid) 30%, rgba(${colorRgb},0.05) 100%)`
-          : `linear-gradient(165deg, rgba(${PLATINUM.rgb},0.08) 0%, rgba(${colorRgb},0.06) 20%, var(--bg-mid) 50%, rgba(${PLATINUM.rgb},0.03) 100%)`,
+          : `linear-gradient(165deg, rgba(${platinum.rgb},0.08) 0%, rgba(${colorRgb},0.06) 20%, var(--bg-mid) 50%, rgba(${platinum.rgb},0.03) 100%)`,
         border: isEmpty
           ? `1px solid rgba(${colorRgb},0.15)`
-          : `1px solid rgba(${PLATINUM.rgb},0.2)`,
+          : `1px solid rgba(${platinum.rgb},0.2)`,
         boxShadow: isEmpty
-          ? `0 2px 8px rgba(0,0,0,0.3), 0 8px 32px rgba(${colorRgb},0.06), inset 0 1px 0 rgba(255,255,255,0.03)`
-          : `0 2px 8px rgba(0,0,0,0.3), 0 8px 32px rgba(${PLATINUM.rgb},0.06), inset 0 1px 0 rgba(255,255,255,0.03)`,
+          ? (isLight
+              ? `0 2px 8px rgba(0,0,0,0.08), 0 8px 32px rgba(${colorRgb},0.06), inset 0 1px 0 rgba(255,255,255,0.5)`
+              : `0 2px 8px rgba(0,0,0,0.3), 0 8px 32px rgba(${colorRgb},0.06), inset 0 1px 0 rgba(255,255,255,0.03)`)
+          : (isLight
+              ? `0 2px 8px rgba(0,0,0,0.08), 0 8px 32px rgba(${platinum.rgb},0.06), inset 0 1px 0 rgba(255,255,255,0.5)`
+              : `0 2px 8px rgba(0,0,0,0.3), 0 8px 32px rgba(${platinum.rgb},0.06), inset 0 1px 0 rgba(255,255,255,0.03)`),
         willChange: 'transform',
       }}
     >
       {/* Gold luxury top accent bar with glow */}
-      <div className="relative h-1.5" style={{ background: isEmpty ? 'linear-gradient(90deg, #EFF923, #F9CB25, #EFF923)' : 'linear-gradient(90deg, #EFF923, #F9CB25, #EFF923, #FAF0DC, #EFF923)' }}>
-        <div className="absolute inset-x-0 -bottom-2 h-4" style={{ background: 'linear-gradient(to bottom, rgba(239,249,35,0.25), transparent)' }} />
+      <div className="relative h-1.5" style={{ background: goldAccentGradient(isLight, isEmpty ? 'simple' : 'full') }}>
+        <div className="absolute inset-x-0 -bottom-2 h-4" style={{ background: goldGlowGradient(isLight) }} />
       </div>
 
       {/* Content */}
@@ -666,9 +729,11 @@ function MvpCard({
             className="relative rounded-2xl overflow-hidden cursor-pointer group/mvp transition-all duration-300 hover:shadow-lg"
             style={{
               minHeight: '280px',
-              border: `1px solid rgba(${PLATINUM.rgb},0.15)`,
-              boxShadow: `0 4px 16px rgba(${PLATINUM.rgb},0.08), 0 4px 12px rgba(${colorRgb},0.06), inset 0 1px 0 rgba(255,255,255,0.03)`,
-              background: `linear-gradient(165deg, rgba(${PLATINUM.rgb},0.06) 0%, var(--bg-mid) 40%, rgba(${colorRgb},0.02) 100%)`,
+              border: `1px solid rgba(${platinum.rgb},0.15)`,
+              boxShadow: isLight
+                ? `0 4px 16px rgba(${platinum.rgb},0.06), 0 4px 12px rgba(${colorRgb},0.04), inset 0 1px 0 rgba(255,255,255,0.5)`
+                : `0 4px 16px rgba(${platinum.rgb},0.08), 0 4px 12px rgba(${colorRgb},0.06), inset 0 1px 0 rgba(255,255,255,0.03)`,
+              background: `linear-gradient(165deg, rgba(${platinum.rgb},0.06) 0%, var(--bg-mid) 40%, rgba(${colorRgb},0.02) 100%)`,
             }}
             onClick={() => {
               if (player?.player?.gamertag) {
@@ -690,7 +755,7 @@ function MvpCard({
               {/* Bottom gradient overlay */}
               <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, var(--bg-mid) 0%, color-mix(in srgb, var(--bg-mid) 60%, transparent) 25%, transparent 55%)' }} />
               {/* Platinum + division accent glow at bottom */}
-              <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(ellipse at 50% 90%, rgba(${PLATINUM.rgb},0.08), rgba(${colorRgb},0.08), transparent 60%)` }} />
+              <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(ellipse at 50% 90%, rgba(${platinum.rgb},0.08), rgba(${colorRgb},0.08), transparent 60%)` }} />
             </div>
 
             {/* Platinum MVP badge top-right */}
@@ -698,8 +763,8 @@ function MvpCard({
               <div
                 className="w-8 h-8 rounded-full flex items-center justify-center shadow-lg"
                 style={{
-                  background: `linear-gradient(135deg, ${PLATINUM.nameLight}, ${PLATINUM.nameDark})`,
-                  boxShadow: `0 2px 10px ${PLATINUM.glow}, 0 0 20px ${PLATINUM.glow}`,
+                  background: `linear-gradient(135deg, ${platinum.nameLight}, ${platinum.nameDark})`,
+                  boxShadow: `0 2px 10px ${platinum.glow}, 0 0 20px ${platinum.glow}`,
                 }}
               >
                 <span className="text-sm" style={{ filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.5))' }}>⭐</span>
@@ -711,9 +776,9 @@ function MvpCard({
               <span
                 className="text-[8px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider"
                 style={{
-                  backgroundColor: `rgba(${PLATINUM.rgb},0.15)`,
-                  color: PLATINUM.nameLight,
-                  border: `1px solid rgba(${PLATINUM.rgb},0.3)`,
+                  backgroundColor: `rgba(${platinum.rgb},0.15)`,
+                  color: platinum.nameLight,
+                  border: `1px solid rgba(${platinum.rgb},0.3)`,
                   backdropFilter: 'blur(8px)',
                 }}
               >
@@ -727,8 +792,8 @@ function MvpCard({
               <p
                 className="text-base sm:text-lg font-black truncate drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]"
                 style={{
-                  color: PLATINUM.nameMid,
-                  textShadow: `0 0 6px ${PLATINUM.glow}, 0 0 16px ${PLATINUM.glow}`,
+                  color: platinum.nameMid,
+                  textShadow: isLight ? 'none' : `0 0 6px ${platinum.glow}, 0 0 16px ${platinum.glow}`,
                 }}
               >
                 {player.gamertag}
@@ -739,23 +804,23 @@ function MvpCard({
                 <span
                   className="text-[8px] font-bold px-1.5 py-0.5 rounded"
                   style={{
-                    backgroundColor: `rgba(${PLATINUM.rgb},0.08)`,
-                    color: PLATINUM.nameLight,
-                    border: `1px solid rgba(${PLATINUM.rgb},0.12)`,
+                    backgroundColor: `rgba(${platinum.rgb},0.08)`,
+                    color: platinum.nameLight,
+                    border: `1px solid rgba(${platinum.rgb},0.12)`,
                   }}
                 >
                   {player.points}pts
                 </span>
                 <span
                   className="text-[8px] font-bold px-1.5 py-0.5 rounded"
-                  style={{ backgroundColor: 'rgba(34,197,94,0.12)', color: '#4ade80' }}
+                  style={{ backgroundColor: isLight ? 'rgba(22,163,74,0.1)' : 'rgba(34,197,94,0.12)', color: greenText }}
                 >
                   {player.totalWins}W
                 </span>
                 {player.totalMvp && player.totalMvp > 0 && (
                   <span
                     className="text-[8px] font-bold px-1.5 py-0.5 rounded flex items-center gap-0.5"
-                    style={{ backgroundColor: 'rgba(239,249,35,0.12)', color: COLORS.gold }}
+                    style={{ backgroundColor: isLight ? 'rgba(146,120,12,0.1)' : 'rgba(239,249,35,0.12)', color: COLORS.gold }}
                   >
                     {player.totalMvp}x MVP
                   </span>
@@ -790,6 +855,8 @@ function SultanCard({
   setSelectedPlayer: (player: any) => void;
 }) {
   const sultanDivision = sultan.tournamentDivision as 'male' | 'female';
+  const isLight = useIsLightMode();
+  const maroon = useMaroon(isLight);
   const divisionAccent = sultanDivision === 'male' ? COLORS.maleAccent : COLORS.femaleAccent;
   const divisionAccentLight = sultanDivision === 'male' ? COLORS.maleAccentLight : COLORS.femaleAccentLight;
   const divisionLabel = sultanDivision === 'male' ? 'COWO' : 'CEWE';
@@ -801,15 +868,17 @@ function SultanCard({
     <div
       className="rounded-[20px] overflow-hidden group/sultan-card transition-all duration-500"
       style={{
-        background: `linear-gradient(165deg, rgba(${MAROON.rgb},0.12) 0%, rgba(${divisionRgb},0.06) 20%, var(--bg-mid) 50%, rgba(${MAROON.rgb},0.04) 100%)`,
-        border: `1px solid rgba(${MAROON.rgb},0.25)`,
-        boxShadow: `0 2px 8px rgba(0,0,0,0.3), 0 8px 32px rgba(${MAROON.rgb},0.08), inset 0 1px 0 rgba(255,255,255,0.03)`,
+        background: `linear-gradient(165deg, rgba(${maroon.rgb},0.12) 0%, rgba(${divisionRgb},0.06) 20%, var(--bg-mid) 50%, rgba(${maroon.rgb},0.04) 100%)`,
+        border: `1px solid rgba(${maroon.rgb},0.25)`,
+        boxShadow: isLight
+          ? `0 2px 8px rgba(0,0,0,0.08), 0 8px 32px rgba(${maroon.rgb},0.08), inset 0 1px 0 rgba(255,255,255,0.5)`
+          : `0 2px 8px rgba(0,0,0,0.3), 0 8px 32px rgba(${maroon.rgb},0.08), inset 0 1px 0 rgba(255,255,255,0.03)`,
         willChange: 'transform',
       }}
     >
       {/* Maroon luxury top accent bar with glow */}
-      <div className="relative h-1.5" style={{ background: 'linear-gradient(90deg, #800020, #d4576a, #800020, #f5c6cb, #800020)' }}>
-        <div className="absolute inset-x-0 -bottom-2 h-4" style={{ background: 'linear-gradient(to bottom, rgba(128,0,32,0.25), transparent)' }} />
+      <div className="relative h-1.5" style={{ background: isLight ? 'linear-gradient(90deg, #800020, #a00030, #800020, #d4576a, #800020)' : 'linear-gradient(90deg, #800020, #d4576a, #800020, #f5c6cb, #800020)' }}>
+        <div className="absolute inset-x-0 -bottom-2 h-4" style={{ background: isLight ? 'linear-gradient(to bottom, rgba(128,0,32,0.15), transparent)' : 'linear-gradient(to bottom, rgba(128,0,32,0.25), transparent)' }} />
       </div>
 
       {/* Content */}
@@ -820,17 +889,17 @@ function SultanCard({
             <div
               className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
               style={{
-                background: `linear-gradient(135deg, rgba(${MAROON.rgb},0.2), rgba(${divisionRgb},0.1))`,
-                border: `1px solid rgba(${MAROON.rgb},0.3)`,
-                boxShadow: `0 0 10px rgba(${MAROON.rgb},0.1)`,
+                background: `linear-gradient(135deg, rgba(${maroon.rgb},0.2), rgba(${divisionRgb},0.1))`,
+                border: `1px solid rgba(${maroon.rgb},0.3)`,
+                boxShadow: `0 0 10px rgba(${maroon.rgb},0.1)`,
               }}
             >
-              <Heart className="w-4 h-4" style={{ color: MAROON.nameMid }} />
+              <Heart className="w-4 h-4" style={{ color: maroon.nameMid }} />
             </div>
             <div>
               <h4
                 className="text-xs font-black uppercase tracking-wider"
-                style={{ color: MAROON.nameMid }}
+                style={{ color: maroon.nameMid }}
               >
                 SULTAN OF THE WEEK
               </h4>
@@ -853,9 +922,9 @@ function SultanCard({
             <span
               className="text-[8px] font-semibold px-1.5 py-0.5 rounded-md"
               style={{
-                backgroundColor: `rgba(${MAROON.rgb},0.1)`,
-                color: MAROON.nameMid,
-                border: `1px solid rgba(${MAROON.rgb},0.2)`,
+                backgroundColor: `rgba(${maroon.rgb},0.1)`,
+                color: maroon.nameMid,
+                border: `1px solid rgba(${maroon.rgb},0.2)`,
               }}
             >
               W{sultan.weekNumber}
@@ -869,9 +938,11 @@ function SultanCard({
             className="relative rounded-2xl overflow-hidden cursor-pointer group/sultan transition-all duration-300 hover:shadow-lg flex"
             style={{
               minHeight: '320px',
-              border: `1px solid rgba(${MAROON.rgb},0.15)`,
-              boxShadow: `0 4px 16px rgba(${MAROON.rgb},0.08), 0 4px 12px rgba(${divisionRgb},0.06), inset 0 1px 0 rgba(255,255,255,0.03)`,
-              background: `linear-gradient(165deg, rgba(${MAROON.rgb},0.08) 0%, var(--bg-mid) 40%, rgba(${divisionRgb},0.02) 100%)`,
+              border: `1px solid rgba(${maroon.rgb},0.15)`,
+              boxShadow: isLight
+                ? `0 4px 16px rgba(${maroon.rgb},0.06), 0 4px 12px rgba(${divisionRgb},0.04), inset 0 1px 0 rgba(255,255,255,0.5)`
+                : `0 4px 16px rgba(${maroon.rgb},0.08), 0 4px 12px rgba(${divisionRgb},0.06), inset 0 1px 0 rgba(255,255,255,0.03)`,
+              background: `linear-gradient(165deg, rgba(${maroon.rgb},0.08) 0%, var(--bg-mid) 40%, rgba(${divisionRgb},0.02) 100%)`,
             }}
             onClick={() => {
               if (sultan.player) {
@@ -904,17 +975,17 @@ function SultanCard({
               {/* Right edge gradient fade into info panel */}
               <div className="absolute inset-0" style={{ background: `linear-gradient(to right, transparent 60%, var(--bg-mid) 100%)` }} />
               {/* Bottom gradient for subtle depth */}
-              <div className="absolute inset-0 pointer-events-none" style={{ background: `linear-gradient(to top, rgba(${MAROON.rgb},0.15) 0%, transparent 40%)` }} />
+              <div className="absolute inset-0 pointer-events-none" style={{ background: `linear-gradient(to top, rgba(${maroon.rgb},0.15) 0%, transparent 40%)` }} />
               {/* Maroon glow at bottom */}
-              <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(ellipse at 50% 90%, rgba(${MAROON.rgb},0.12), transparent 60%)` }} />
+              <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(ellipse at 50% 90%, rgba(${maroon.rgb},0.12), transparent 60%)` }} />
 
               {/* Heart badge top-right of avatar */}
               <div className="absolute top-3 right-3 z-20">
                 <div
                   className="w-8 h-8 rounded-full flex items-center justify-center shadow-lg"
                   style={{
-                    background: `linear-gradient(135deg, ${MAROON.nameLight}, ${MAROON.nameDark})`,
-                    boxShadow: `0 2px 10px ${MAROON.glow}, 0 0 20px ${MAROON.glow}`,
+                    background: `linear-gradient(135deg, ${maroon.nameLight}, ${maroon.nameDark})`,
+                    boxShadow: `0 2px 10px ${maroon.glow}, 0 0 20px ${maroon.glow}`,
                   }}
                 >
                   <span className="text-sm" style={{ filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.5))' }}>❤️</span>
@@ -926,9 +997,9 @@ function SultanCard({
                 <span
                   className="text-[8px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider"
                   style={{
-                    backgroundColor: `rgba(${MAROON.rgb},0.25)`,
-                    color: MAROON.nameLight,
-                    border: `1px solid rgba(${MAROON.rgb},0.4)`,
+                    backgroundColor: `rgba(${maroon.rgb},0.25)`,
+                    color: maroon.nameLight,
+                    border: `1px solid rgba(${maroon.rgb},0.4)`,
                     backdropFilter: 'blur(8px)',
                   }}
                 >
@@ -943,8 +1014,8 @@ function SultanCard({
               <p
                 className="text-xl sm:text-2xl font-black leading-tight"
                 style={{
-                  color: MAROON.nameLight,
-                  textShadow: `0 0 8px ${MAROON.glow}`,
+                  color: maroon.nameLight,
+                  textShadow: isLight ? 'none' : `0 0 8px ${maroon.glow}`,
                 }}
               >
                 {sultan.player!.gamertag}
@@ -958,7 +1029,7 @@ function SultanCard({
               )}
 
               {/* Divider */}
-              <div className="my-3 h-px w-12 rounded-full" style={{ background: `linear-gradient(90deg, ${MAROON.nameMid}, transparent)` }} />
+              <div className="my-3 h-px w-12 rounded-full" style={{ background: `linear-gradient(90deg, ${maroon.nameMid}, transparent)` }} />
 
               {/* Stats grid */}
               <div className="flex flex-col gap-2">
@@ -966,13 +1037,13 @@ function SultanCard({
                 <div className="flex items-center gap-2">
                   <div
                     className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
-                    style={{ backgroundColor: `rgba(${MAROON.rgb},0.15)`, border: `1px solid rgba(${MAROON.rgb},0.25)` }}
+                    style={{ backgroundColor: `rgba(${maroon.rgb},0.15)`, border: `1px solid rgba(${maroon.rgb},0.25)` }}
                   >
-                    <Crown className="w-3.5 h-3.5" style={{ color: MAROON.nameMid }} />
+                    <Crown className="w-3.5 h-3.5" style={{ color: maroon.nameMid }} />
                   </div>
                   <div>
                     <p className="text-[8px] font-semibold uppercase tracking-wider" style={{ color: COLORS.secondaryText }}>Total Saweran</p>
-                    <p className="text-sm font-black" style={{ color: MAROON.nameLight }}>
+                    <p className="text-sm font-black" style={{ color: maroon.nameLight }}>
                       Rp {sultan.totalAmount >= 1000 ? `${(sultan.totalAmount / 1000).toFixed(0)}K` : sultan.totalAmount}
                     </p>
                   </div>
@@ -982,13 +1053,13 @@ function SultanCard({
                 <div className="flex items-center gap-2">
                   <div
                     className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
-                    style={{ backgroundColor: `rgba(${MAROON.rgb},0.15)`, border: `1px solid rgba(${MAROON.rgb},0.25)` }}
+                    style={{ backgroundColor: `rgba(${maroon.rgb},0.15)`, border: `1px solid rgba(${maroon.rgb},0.25)` }}
                   >
-                    <Heart className="w-3.5 h-3.5" style={{ color: MAROON.nameMid }} />
+                    <Heart className="w-3.5 h-3.5" style={{ color: maroon.nameMid }} />
                   </div>
                   <div>
                     <p className="text-[8px] font-semibold uppercase tracking-wider" style={{ color: COLORS.secondaryText }}>Jumlah Sawer</p>
-                    <p className="text-sm font-black" style={{ color: MAROON.nameLight }}>
+                    <p className="text-sm font-black" style={{ color: maroon.nameLight }}>
                       {sultan.donationCount}x
                     </p>
                   </div>
@@ -999,7 +1070,7 @@ function SultanCard({
                   {sultan.player!.tier && (
                     <span
                       className="text-[8px] font-bold px-2 py-0.5 rounded"
-                      style={{ backgroundColor: 'rgba(239,249,35,0.12)', color: COLORS.gold, border: '1px solid rgba(239,249,35,0.2)' }}
+                      style={{ backgroundColor: isLight ? 'rgba(146,120,12,0.1)' : 'rgba(239,249,35,0.12)', color: COLORS.gold, border: isLight ? '1px solid rgba(146,120,12,0.2)' : '1px solid rgba(239,249,35,0.2)' }}
                     >
                       Tier {sultan.player!.tier}
                     </span>
@@ -1024,28 +1095,28 @@ function SultanCard({
             className="flex flex-col items-center justify-center gap-3 rounded-2xl"
             style={{
               minHeight: '320px',
-              backgroundColor: `rgba(${MAROON.rgb},0.05)`,
-              border: `1px solid rgba(${MAROON.rgb},0.15)`,
+              backgroundColor: `rgba(${maroon.rgb},0.05)`,
+              border: `1px solid rgba(${maroon.rgb},0.15)`,
             }}
           >
             <div
               className="w-16 h-16 rounded-full flex items-center justify-center"
               style={{
-                background: `linear-gradient(135deg, ${MAROON.nameLight}, ${MAROON.nameDark})`,
-                boxShadow: `0 2px 10px ${MAROON.glow}`,
+                background: `linear-gradient(135deg, ${maroon.nameLight}, ${maroon.nameDark})`,
+                boxShadow: `0 2px 10px ${maroon.glow}`,
               }}
             >
-              <Heart className="w-8 h-8" style={{ color: 'white' }} />
+              <Heart className="w-8 h-8" style={{ color: isLight ? '#800020' : 'white' }} />
             </div>
-            <p className="text-sm font-bold" style={{ color: MAROON.nameLight }}>
+            <p className="text-sm font-bold" style={{ color: maroon.nameLight }}>
               {sultan.donorName}
             </p>
             <div className="flex items-center gap-2">
               <span
                 className="text-[9px] font-bold px-2 py-0.5 rounded"
                 style={{
-                  backgroundColor: `rgba(${MAROON.rgb},0.12)`,
-                  color: MAROON.nameLight,
+                  backgroundColor: `rgba(${maroon.rgb},0.12)`,
+                  color: maroon.nameLight,
                 }}
               >
                 Rp {sultan.totalAmount >= 1000 ? `${(sultan.totalAmount / 1000).toFixed(0)}K` : sultan.totalAmount}
@@ -1075,6 +1146,8 @@ export function HighlightsSection({
   setSelectedPlayer,
   setPreferredSkinType,
 }: HighlightsSectionProps) {
+  const isLight = useIsLightMode();
+
   // CMS text fields with fallbacks
   const highlightsLabel = cmsSettings?.highlights_label || 'HIGHLIGHTS';
   const highlightsTitle = cmsSettings?.highlights_title || 'Puncak Prestasi';
@@ -1101,7 +1174,7 @@ export function HighlightsSection({
       {/* Atmospheric glows — consistent with other sections */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
         {/* Center gold radial */}
-        <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 50% 50%, rgba(239,249,35,0.04), transparent 50%)' }} />
+        <div className="absolute inset-0" style={{ background: isLight ? 'radial-gradient(ellipse at 50% 50%, rgba(146,120,12,0.04), transparent 50%)' : 'radial-gradient(ellipse at 50% 50%, rgba(239,249,35,0.04), transparent 50%)' }} />
         {/* Left cyan atmosphere */}
         <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 20% 50%, rgba(46,159,255,0.03), transparent 50%)' }} />
         {/* Right purple atmosphere */}

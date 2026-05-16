@@ -90,7 +90,7 @@ export function LandingFooter({ cmsSettings, className }: LandingFooterProps) {
         <div
           className="h-full w-[200%]"
           style={{
-            background: 'linear-gradient(90deg, transparent, rgba(239,249,35,0.5), rgba(245,230,200,0.3), rgba(239,249,35,0.5), transparent, rgba(239,249,35,0.5), rgba(245,230,200,0.3), rgba(239,249,35,0.5), transparent)',
+            background: 'linear-gradient(90deg, transparent, color-mix(in srgb, var(--color-idm-gold-warm) 50%, transparent), color-mix(in srgb, var(--color-idm-champagne) 30%, transparent), color-mix(in srgb, var(--color-idm-gold-warm) 50%, transparent), transparent, color-mix(in srgb, var(--color-idm-gold-warm) 50%, transparent), color-mix(in srgb, var(--color-idm-champagne) 30%, transparent), color-mix(in srgb, var(--color-idm-gold-warm) 50%, transparent), transparent)',
             animation: 'footer-gradient-slide 8s linear infinite',
           }}
         />
@@ -126,12 +126,7 @@ export function LandingFooter({ cmsSettings, className }: LandingFooterProps) {
                 />
               </div>
               <span
-                className="text-base font-black tracking-tight"
-                style={{
-                  background: 'linear-gradient(135deg, #e8d5a3, #EFF923, #FAF0DC)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                }}
+                className="text-base font-black tracking-tight text-gradient-champion"
               >
                 {siteTitle}
               </span>
@@ -194,12 +189,7 @@ export function LandingFooter({ cmsSettings, className }: LandingFooterProps) {
             <span className="text-muted-foreground/30 text-[10px] tracking-wider uppercase flex items-center gap-1.5">
               Powered by
               <span
-                className="font-semibold tracking-wide normal-case text-[11px]"
-                style={{
-                  background: 'linear-gradient(135deg, rgba(239,249,35,0.5), rgba(245,230,200,0.4))',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                }}
+                className="font-semibold tracking-wide normal-case text-[11px] text-idm-gold-warm/60"
               >
                 Tarkam IDM
               </span>

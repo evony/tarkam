@@ -167,7 +167,7 @@ function TournamentCard({
 
         {/* Tournament count — top right */}
         <div className="absolute top-4 right-4 z-10">
-          <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-black/50 border border-border/40">
+          <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-foreground/5 dark:bg-black/50 border border-border/40">
             <Gamepad2 className="w-3 h-3 text-idm-gold-warm" />
             <span className="text-[10px] font-bold text-foreground/80">
               {weeklyCount} Week{weeklyCount !== 1 ? 's' : ''}
@@ -194,10 +194,10 @@ function TournamentCard({
                 boxShadow: `0 0 20px rgba(${division.colorRgb},0.15), inset 0 1px 0 rgba(255,255,255,0.1)`,
               }}
             >
-              <Play className="w-4 h-4 text-white fill-white ml-0.5 drop-shadow-[0_0_4px_rgba(255,255,255,0.4)]" />
+              <Play className="w-4 h-4 text-idm-gold-warm dark:text-white fill-idm-gold-warm dark:fill-white ml-0.5 drop-shadow-[0_0_4px_rgba(239,249,35,0.3)] dark:drop-shadow-[0_0_4px_rgba(255,255,255,0.4)]" />
             </span>
             {/* Label tooltip on hover */}
-            <span className="absolute -top-7 left-1/2 -translate-x-1/2 text-[9px] font-bold uppercase tracking-wider text-white/80 bg-black/70 px-2 py-0.5 rounded whitespace-nowrap opacity-0 group-hover/play:opacity-100 transition-opacity duration-200 pointer-events-none"
+            <span className="absolute -top-7 left-1/2 -translate-x-1/2 text-[9px] font-bold uppercase tracking-wider text-foreground dark:text-white/80 bg-background/90 dark:bg-black/70 border border-border/20 dark:border-0 px-2 py-0.5 rounded whitespace-nowrap opacity-0 group-hover/play:opacity-100 transition-opacity duration-200 pointer-events-none"
               style={{ backdropFilter: 'blur(4px)' }}
             >
               Watch Video
@@ -354,7 +354,7 @@ export function TournamentHub({
       id="kompetisi"
       role="region"
       aria-label={sectionLabel}
-      className="landing-section relative py-10 sm:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden bg-deep"
+      className="landing-section relative py-10 sm:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden bg-deep border-t border-border/10 dark:border-t-0"
     >
       {/* ── Top edge glow — section boundary ── */}
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-idm-gold-warm/30 to-transparent" aria-hidden="true" />

@@ -2,6 +2,7 @@
 
 import React, { useMemo, useEffect, useRef, useState, useCallback } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useTheme } from 'next-themes';
 import { hexToRgba, formatCurrency } from '@/lib/utils';
 import type { StatsData } from '@/types/stats';
 
@@ -59,9 +60,28 @@ const TYPE_ACCENT: Record<FeedItem['type'], string> = {
   stat: '#EFF923',
 };
 
+/* ========== Light-mode accent overrides ========== */
+const LIGHT_ACCENT_MAP: Record<string, string> = {
+  '#EFF923': '#92780C',
+  '#eab308': '#92780C',
+  '#f59e0b': '#B8860B',
+};
+
+function resolveAccent(hex: string, isLight: boolean): string {
+  if (!isLight) return hex;
+  const upper = hex.toUpperCase();
+  for (const [bright, dark] of Object.entries(LIGHT_ACCENT_MAP)) {
+    if (upper === bright.toUpperCase()) return dark;
+  }
+  return hex;
+}
+
 /* ========== Single Feed Card — Unified compact horizontal style ========== */
 function FeedCard({ item }: { item: FeedItem }) {
-  const accent = item.accent || TYPE_ACCENT[item.type] || '#EFF923';
+  const { resolvedTheme } = useTheme();
+  const isLight = resolvedTheme === 'light';
+  const rawAccent = item.accent || TYPE_ACCENT[item.type] || '#EFF923';
+  const accent = resolveAccent(rawAccent, isLight);
   const isStat = item.type === 'stat';
 
   const displayTitle = isStat && item.numericValue && item.numericValue > 0

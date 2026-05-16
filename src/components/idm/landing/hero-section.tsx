@@ -336,12 +336,12 @@ export function HeroSection({
           </div>
 
           {/* ── Subtitle — Clean Apple typography ── */}
-          <p className="hero-enter-3 text-base sm:text-xl lg:text-2xl text-[#e8d5a3]/80 font-light tracking-widest uppercase mb-2 min-h-[1.5rem] leading-normal dark:text-[#e8d5a3]/80 text-foreground/60">
+          <p className="hero-enter-3 text-base sm:text-xl lg:text-2xl font-light tracking-widest uppercase mb-2 min-h-[1.5rem] leading-normal text-foreground/70 dark:text-[#e8d5a3]/80">
             {heroSubtitle}
           </p>
 
           {/* ── Tagline — Lighter weight, iOS style ── */}
-          <p className="hero-enter-4 text-sm sm:text-base text-muted-foreground/70 max-w-xl mx-auto mb-6 sm:mb-8 leading-relaxed dark:text-muted-foreground/70 text-muted-foreground/80">
+          <p className="hero-enter-4 text-sm sm:text-base max-w-xl mx-auto mb-6 sm:mb-8 leading-relaxed text-muted-foreground dark:text-muted-foreground/70">
             {heroTagline}
           </p>
 
@@ -470,10 +470,10 @@ export function HeroSection({
               <div className="absolute -inset-1.5 rounded-2xl animate-pulse" style={{ background: 'rgba(239,249,35,0.15)', boxShadow: '0 0 30px rgba(239,249,35,0.3)' }} />
               {/* Glow background */}
               <div className="absolute -inset-1 rounded-2xl blur-lg opacity-0 group-hover:opacity-60 transition-opacity duration-500" style={{ background: 'rgba(239,249,35,0.25)' }} />
-              <div className="relative flex items-center justify-center gap-2.5 px-6 sm:px-7 py-2.5 sm:py-3 min-h-[44px] sm:min-h-[48px] rounded-xl sm:rounded-2xl font-bold text-[13px] sm:text-sm tracking-wide uppercase transition-all duration-300"
+              <div className="relative flex items-center justify-center gap-2.5 px-6 sm:px-7 py-2.5 sm:py-3 min-h-[44px] sm:min-h-[48px] rounded-xl sm:rounded-2xl font-bold text-[13px] sm:text-sm tracking-wide uppercase transition-all duration-300 hero-cta-primary-inner"
                 style={{
                   background: 'linear-gradient(135deg, #EFF923 0%, #F9CB25 50%, #F9CB25 100%)',
-                  color: 'var(--bg-deep)',
+                  color: '#1c1917',
                   boxShadow: '0 4px 20px rgba(239,249,35,0.35), inset 0 1px 0 rgba(255,255,255,0.3)',
                 }}
               >
@@ -490,7 +490,7 @@ export function HeroSection({
             >
               {/* Glow on hover */}
               <div className="absolute -inset-1 rounded-2xl blur-lg opacity-0 group-hover:opacity-40 transition-opacity duration-500" style={{ background: 'rgba(239,249,35,0.15)' }} />
-              <div className="relative flex items-center justify-center gap-2.5 px-6 sm:px-7 py-2.5 sm:py-3 min-h-[44px] sm:min-h-[48px] rounded-xl sm:rounded-2xl font-bold text-[13px] sm:text-sm tracking-wide uppercase border transition-all duration-300"
+              <div className="relative flex items-center justify-center gap-2.5 px-6 sm:px-7 py-2.5 sm:py-3 min-h-[44px] sm:min-h-[48px] rounded-xl sm:rounded-2xl font-bold text-[13px] sm:text-sm tracking-wide uppercase border transition-all duration-300 hero-cta-secondary-inner"
                 style={{
                   background: 'rgba(239,249,35,0.08)',
                   borderColor: 'rgba(239,249,35,0.3)',
@@ -535,11 +535,11 @@ export function HeroSection({
               aria-hidden={!showBracketPicker}
             >
             <div className="mb-8 sm:mb-10" style={{ animation: 'reveal-fade-up 0.25s cubic-bezier(0.16,1,0.3,1) both' }}>
-              <div className="relative rounded-2xl border border-idm-gold-warm/20 bg-mid/95 p-4 sm:p-6 shadow-2xl">
+              <div className="relative rounded-2xl border border-idm-gold-warm/20 bg-background/95 dark:bg-mid/95 p-4 sm:p-6 shadow-2xl backdrop-blur-xl">
                   {/* Close hint */}
                   <button
                     onClick={() => setShowBracketPicker(false)}
-                    className="absolute top-2 right-2 w-9 h-9 rounded-full flex items-center justify-center text-muted-foreground/50 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+                    className="absolute top-2 right-2 w-9 h-9 rounded-full flex items-center justify-center text-muted-foreground/50 hover:text-foreground hover:bg-black/5 dark:hover:text-white dark:hover:bg-white/10 transition-colors cursor-pointer"
                     aria-label="Close picker"
                   >
                     ✕

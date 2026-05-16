@@ -124,7 +124,7 @@ export function DreamSection({ maleData, femaleData, leagueData, nextSeason, com
                 <div className="relative">
                   <ClubLogoImage clubName={leagueData.tarkamChampion.name} dbLogo={leagueData.tarkamChampion.logo} alt={leagueData.tarkamChampion.name} width={40} height={40} className="w-10 h-10 rounded-2xl object-cover border border-idm-gold-warm/30" />
                   <div className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-idm-gold-warm flex items-center justify-center">
-                    <Crown className="w-3 h-3 text-deep" />
+                    <Crown className="w-3 h-3 text-white dark:text-deep" />
                   </div>
                 </div>
                 <div className="text-left">
@@ -196,7 +196,7 @@ export function DreamSection({ maleData, femaleData, leagueData, nextSeason, com
           </div>
 
           <div className="stagger-item-fast mt-8" style={{ animationDelay: '360ms' }}>
-            <button onClick={() => openDonationModal('season')} className="hover-scale-md group/donate relative px-7 py-4 rounded-2xl bg-gradient-to-r from-idm-gold-warm to-[#e8d5a3] text-deep font-black text-sm tracking-wider shadow-[0_0_30px_rgba(239,249,35,0.2)] hover:shadow-[0_0_60px_rgba(239,249,35,0.4)] transition-all cursor-pointer overflow-hidden">
+            <button onClick={() => openDonationModal('season')} className="hover-scale-md group/donate relative px-7 py-4 rounded-2xl bg-gradient-to-r from-idm-gold-warm to-[#e8d5a3] text-white dark:text-deep font-black text-sm tracking-wider shadow-[0_0_30px_rgba(239,249,35,0.2)] hover:shadow-[0_0_60px_rgba(239,249,35,0.4)] transition-all cursor-pointer overflow-hidden">
               {/* Animated shimmer sweep */}
               <div className="absolute inset-0 -translate-x-full group-hover/donate:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
               <Gift className="w-4 h-4 inline mr-2 relative z-10" />

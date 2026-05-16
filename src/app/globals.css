@@ -172,31 +172,33 @@
   --sidebar-accent-foreground: #7A360A;
   --sidebar-border: rgba(28, 25, 23, 0.08);
   --sidebar-ring: #D69E2E;
-  /* IDM custom — Light Electric Yellow */
+  /* IDM custom — Rich Dark Gold for light mode readability
+     Dark mode uses bright #EFF923 on dark bg → light mode uses deep #92780C on light bg
+     This single change fixes ~80% of text-idm-gold-warm visibility issues */
   --idm-gold: #D69E2E;
-  --idm-gold-warm: #F9CB25;
-  --idm-glow: rgba(249, 203, 37, 0.25);
+  --idm-gold-warm: #92780C;
+  --idm-glow: rgba(146, 120, 12, 0.2);
   --idm-champagne: #f5f0e8;
-  --idm-amber: #F9CB25;
+  --idm-amber: #B8860B;
   --idm-burgundy: #ea580c;
   --idm-s-tier: #dc2626;
   --idm-a-tier: #d97706;
   --idm-b-tier: #16a34a;
-  /* Division colors — lighter variants for light mode */
-  --idm-male: #2563eb;
-  --idm-male-light: #60a5fa;
-  --idm-male-glow: rgba(37, 99, 235, 0.2);
-  --idm-male-bg: rgba(37, 99, 235, 0.05);
-  --idm-female: #db2777;
-  --idm-female-light: #f472b6;
-  --idm-female-glow: rgba(219, 39, 119, 0.2);
-  --idm-female-bg: rgba(219, 39, 119, 0.05);
-  /* Community colors — Electric Yellow */
-  --idm-community: #D69E2E;
-  --idm-community-light: #F9CB25;
-  --idm-community-dark: #7A360A;
-  --idm-community-glow: rgba(249, 203, 37, 0.2);
-  --idm-community-bg: rgba(249, 203, 37, 0.05);
+  /* Division colors — deeper variants for light mode contrast */
+  --idm-male: #1d4ed8;
+  --idm-male-light: #3b82f6;
+  --idm-male-glow: rgba(29, 78, 216, 0.15);
+  --idm-male-bg: rgba(29, 78, 216, 0.06);
+  --idm-female: #be185d;
+  --idm-female-light: #db2777;
+  --idm-female-glow: rgba(190, 24, 93, 0.15);
+  --idm-female-bg: rgba(190, 24, 93, 0.06);
+  /* Community colors — Rich Dark Gold */
+  --idm-community: #92780C;
+  --idm-community-light: #B8860B;
+  --idm-community-dark: #5A2806;
+  --idm-community-glow: rgba(146, 120, 12, 0.15);
+  --idm-community-bg: rgba(146, 120, 12, 0.05);
   /* Background gradient tones — light mode warm neutrals */
   --bg-deep: #f5f0e8;
   --bg-mid: #faf8f4;
@@ -371,8 +373,184 @@
 
 /* Light mode card-premium borders — visible border on white */
 :root:not(.dark) .card-premium { border: 1px solid rgba(28, 25, 23, 0.08); }
-:root:not(.dark) .card-premium-male { border-color: rgba(37, 99, 235, 0.15); }
-:root:not(.dark) .card-premium-female { border-color: rgba(219, 39, 119, 0.15); }
+:root:not(.dark) .card-premium-male { border-color: rgba(29, 78, 216, 0.15); }
+:root:not(.dark) .card-premium-female { border-color: rgba(190, 24, 93, 0.15); }
+
+/* Light mode clubs section — visual separation on light bg */
+:root:not(.dark) .clubs-section-deep {
+  border-top: 1px solid rgba(28, 25, 23, 0.08);
+  border-bottom: 1px solid rgba(28, 25, 23, 0.08);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+}
+
+/* Light mode club cards — visible border and shadow on light bg */
+:root:not(.dark) .ios-club-card {
+  border: 1px solid rgba(28, 25, 23, 0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+:root:not(.dark) .ios-club-card.ios-card-featured {
+  border-color: rgba(146, 120, 12, 0.2);
+  box-shadow: 0 2px 12px rgba(146, 120, 12, 0.08);
+}
+
+/* ============================================
+   LIGHT MODE — Hero & Landing Page Overrides
+   Fixes bright-on-bright text visibility issues
+   ============================================ */
+
+/* Hero vignette — light mode uses warm shadow instead of dark */
+:root:not(.dark) .hero-vignette-cinematic {
+  background: radial-gradient(ellipse at center, transparent 30%, rgba(245,240,232,0.6) 100%) !important;
+}
+
+/* Hero title gradient — deep gold instead of bright yellow on light bg */
+:root:not(.dark) .hero-title-glow-enhanced {
+  background: linear-gradient(135deg, #5A2806 0%, #7A360A 25%, #B7791F 50%, #92780C 75%, #5A2806 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+/* Hero badge — dark text on light frosted bg */
+:root:not(.dark) .ios-badge {
+  background: rgba(146, 120, 12, 0.06) !important;
+  border-color: rgba(146, 120, 12, 0.2) !important;
+}
+
+/* Hero stats bar — dark text on light bg */
+:root:not(.dark) .ios-hero-stats {
+  background: rgba(255, 255, 255, 0.85) !important;
+  border: 1px solid rgba(28, 25, 23, 0.08) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Hero particles — warm amber dots instead of bright gold */
+:root:not(.dark) .hero-particle {
+  background: radial-gradient(circle, rgba(146,120,12,0.25) 0%, rgba(146,120,12,0.08) 60%, transparent 100%) !important;
+}
+
+/* Hero diagonal lines — subtle amber */
+:root:not(.dark) .hero-diagonal-line {
+  border-color: rgba(146, 120, 12, 0.15) !important;
+}
+
+/* Hero geometric accents — amber tint */
+:root:not(.dark) .hero-geo-accent {
+  border-color: rgba(146, 120, 12, 0.2) !important;
+}
+
+/* Hero top gold line — warm amber */
+:root:not(.dark) .hero-top-gold-line {
+  background: linear-gradient(90deg, transparent, rgba(146, 120, 12, 0.5), rgba(184, 134, 11, 0.3), rgba(146, 120, 12, 0.5), transparent) !important;
+}
+
+/* Hero underline — deep gold */
+:root:not(.dark) .hero-underline-dramatic {
+  background: linear-gradient(90deg, transparent, #92780C, #B7791F, #92780C, transparent) !important;
+  box-shadow: 0 0 8px rgba(146, 120, 12, 0.15) !important;
+}
+
+/* Hero scroll indicator — dark text */
+:root:not(.dark) .hero-scroll-mouse {
+  border-color: rgba(146, 120, 12, 0.4) !important;
+}
+:root:not(.dark) .hero-scroll-mouse-dot {
+  background: rgba(146, 120, 12, 0.6) !important;
+}
+
+/* Hero stats dot separator — dark dot */
+:root:not(.dark) .hero-stats-dot {
+  background: rgba(146, 120, 12, 0.3) !important;
+}
+
+/* Hero CTA breathing animation — amber glow */
+:root:not(.dark) .hero-cta-breath {
+  filter: none !important;
+}
+
+/* Frost glass — light mode warm white */
+:root:not(.dark) .frost-glass {
+  background: rgba(255, 255, 255, 0.8) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(28, 25, 23, 0.1) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04) !important;
+}
+
+/* Text gradient champion — light mode deep gold */
+:root:not(.dark) .text-gradient-champion {
+  background: linear-gradient(135deg, #5A2806, #7A360A, #B7791F, #92780C, #5A2806) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+/* Nav scrolled glow — subtle warm shadow for light mode */
+:root:not(.dark) .nav-scrolled-glow {
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Nav logo glow — warm amber */
+:root:not(.dark) .nav-logo-glow {
+  box-shadow: 0 0 8px rgba(146, 120, 12, 0.2) !important;
+}
+
+/* Section reveal animation — use opacity + transform that works on light bg */
+:root:not(.dark) .section-reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+:root:not(.dark) .section-reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Bracket picker buttons — light mode styling */
+:root:not(.dark) .bracket-picker-male {
+  background: rgba(29, 78, 216, 0.04) !important;
+  border-color: rgba(29, 78, 216, 0.15) !important;
+}
+:root:not(.dark) .bracket-picker-male:hover {
+  background: rgba(29, 78, 216, 0.08) !important;
+  border-color: rgba(29, 78, 216, 0.25) !important;
+}
+:root:not(.dark) .bracket-picker-female {
+  background: rgba(190, 24, 93, 0.04) !important;
+  border-color: rgba(190, 24, 93, 0.15) !important;
+}
+:root:not(.dark) .bracket-picker-female:hover {
+  background: rgba(190, 24, 93, 0.08) !important;
+  border-color: rgba(190, 24, 93, 0.25) !important;
+}
+
+/* Donor card — light mode */
+:root:not(.dark) .donor-name-pulse {
+  text-shadow: none !important;
+}
+:root:not(.dark) .donor-name-pulse-gold {
+  text-shadow: none !important;
+}
+
+/* Hero CTA Primary button — light mode: gold gradient stays but text is always dark */
+:root:not(.dark) .hero-cta-primary-inner {
+  background: linear-gradient(135deg, #D69E2E 0%, #F9CB25 50%, #F9CB25 100%) !important;
+  color: #1c1917 !important;
+  box-shadow: 0 4px 20px rgba(214,158,46,0.25), inset 0 1px 0 rgba(255,255,255,0.3) !important;
+}
+
+/* Hero CTA Secondary button — light mode: dark text + warm border */
+:root:not(.dark) .hero-cta-secondary-inner {
+  background: rgba(146, 120, 12, 0.06) !important;
+  border-color: rgba(146, 120, 12, 0.3) !important;
+  color: #7A360A !important;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06), inset 0 1px 0 rgba(146,120,12,0.05) !important;
+}
+
+/* Hero CTA glow rings — light mode: warm amber glow */
+:root:not(.dark) .hero-cta-breath .absolute {
+  background: rgba(146, 120, 12, 0.1) !important;
+  box-shadow: none !important;
+}
 
 @layer base {
   * {

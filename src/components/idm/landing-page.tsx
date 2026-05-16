@@ -71,7 +71,7 @@ function LandingThemeToggle({ scrolled }: { scrolled: boolean }) {
       className={`btn-press inline-flex h-8 w-8 items-center justify-center rounded-full transition-all duration-300 cursor-pointer border active:scale-95 ${
         scrolled
           ? 'border-idm-gold-warm/20 bg-idm-gold-warm/5 hover:bg-idm-gold-warm/15 text-idm-gold-warm'
-          : 'border-white/15 bg-white/5 hover:bg-white/15 text-white/70 hover:text-white'
+          : 'border-foreground/10 bg-foreground/5 hover:bg-foreground/10 text-foreground/70 hover:text-foreground dark:border-white/15 dark:bg-white/5 dark:hover:bg-white/15 dark:text-white/70 dark:hover:text-white'
       }`}
       aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
     >
@@ -144,7 +144,7 @@ function LandingAuthButton({
           className={`btn-press relative flex items-center gap-1.5 px-2.5 sm:px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer border active:scale-95 ${
             scrolled
               ? 'border-idm-gold-warm/25 text-idm-gold-warm hover:bg-idm-gold-warm/10 hover:border-idm-gold-warm/40'
-              : 'border-white/20 text-white/80 hover:bg-white/10 hover:border-white/30'
+              : 'border-foreground/15 text-foreground/80 hover:bg-foreground/5 hover:border-foreground/25 dark:border-white/20 dark:text-white/80 dark:hover:bg-white/10 dark:hover:border-white/30'
           }`}
         >
           <LogIn className="w-3.5 h-3.5" />
@@ -155,7 +155,7 @@ function LandingAuthButton({
           onClick={() => onOpenLogin('admin')}
           aria-label="Admin login"
           className={`btn-press p-1 rounded-md transition-all duration-200 cursor-pointer opacity-50 hover:opacity-100 ${
-            scrolled ? 'text-idm-gold-warm/70 hover:text-idm-gold-warm' : 'text-white/50 hover:text-white/90'
+            scrolled ? 'text-idm-gold-warm/70 hover:text-idm-gold-warm' : 'text-foreground/50 hover:text-foreground/90 dark:text-white/50 dark:hover:text-white/90'
           }`}
           title="Login Admin"
         >
@@ -173,7 +173,7 @@ function LandingAuthButton({
         className={`btn-press flex items-center gap-1.5 px-2 sm:px-2.5 py-1 rounded-full transition-all duration-200 cursor-pointer border active:scale-95 ${
           scrolled
             ? 'border-idm-gold-warm/20 bg-idm-gold-warm/5 hover:bg-idm-gold-warm/10'
-            : 'border-white/15 bg-white/5 hover:bg-white/10'
+            : 'border-foreground/10 bg-foreground/5 hover:bg-foreground/10 dark:border-white/15 dark:bg-white/5 dark:hover:bg-white/10'
         }`}
       >
         {/* Avatar */}
@@ -198,7 +198,7 @@ function LandingAuthButton({
           </div>
         )}
         <span className={`text-[10px] sm:text-xs font-semibold max-w-[60px] sm:max-w-[80px] truncate ${
-          scrolled ? 'text-idm-gold-warm' : 'text-white/80'
+          scrolled ? 'text-idm-gold-warm' : 'text-foreground/80 dark:text-white/80'
         }`}>
           {displayName}
         </span>

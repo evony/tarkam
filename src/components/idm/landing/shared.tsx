@@ -327,9 +327,9 @@ export function StatCard({ icon: Icon, value, label, delay }: {
 
   return (
     <div className={`reveal reveal-fade-up ${delayClass} group relative`}>
-      <div className="relative p-4 sm:p-6 rounded-2xl sm:rounded-2xl border border-idm-gold-warm/10 bg-white/[0.06] text-center transition-all duration-300 hover:shadow-[0_0_30px_rgba(239,249,35,0.15)] hover:border-idm-gold-warm/20">
+      <div className="relative p-4 sm:p-6 rounded-2xl sm:rounded-2xl border border-idm-gold-warm/10 bg-idm-gold-warm/5 dark:bg-white/[0.06] text-center transition-all duration-300 hover:shadow-[0_0_30px_color-mix(in_srgb,var(--color-idm-gold-warm)_15%,transparent)] hover:border-idm-gold-warm/20">
         <div className="absolute inset-0 rounded-2xl sm:rounded-2xl overflow-hidden pointer-events-none">
-          <div className="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-white/[0.04] to-transparent" />
+          <div className="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-idm-gold-warm/[0.02] dark:from-white/[0.04] to-transparent" />
         </div>
         <div className="relative z-10">
           <div className="w-7 h-7 sm:w-10 sm:h-10 mx-auto mb-1.5 sm:mb-3 rounded-lg sm:rounded-2xl bg-idm-gold-warm/10 flex items-center justify-center group-hover:scale-110 transition-transform">

@@ -82,7 +82,7 @@ export function PlayersSection({
   const femalePlayers = [...(femaleData?.topPlayers || [])].sort((a, b) => isHistorical ? b.points - a.points : a.gamertag.localeCompare(b.gamertag));
 
   return (
-    <section id="players" className="landing-section relative py-10 sm:py-24 px-4 overflow-hidden bg-deep" style={{ contain: 'layout style' }}>
+    <section id="players" className="landing-section relative py-10 sm:py-24 px-4 overflow-hidden bg-deep border-y border-border/30 dark:border-0 shadow-[0_2px_16px_rgba(0,0,0,0.04)] dark:shadow-none" style={{ contain: 'layout style' }}>
       {/* Background — 2 layers only */}
       <div className="absolute inset-0 opacity-[0.018]" style={{ backgroundImage: 'radial-gradient(circle, rgba(239,249,35,0.5) 1px, transparent 1px)', backgroundSize: '28px 28px' }} />
       <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 50% 20%, rgba(239,249,35,0.07) 0%, transparent 50%), radial-gradient(ellipse at 12% 50%, rgba(46,159,255,0.05) 0%, transparent 40%), radial-gradient(ellipse at 88% 50%, rgba(255,45,120,0.05) 0%, transparent 40%)' }} />
@@ -170,7 +170,7 @@ export function PlayersSection({
               <div key={div}>
                 <div className="flex items-center justify-center mb-6">
                   <span className={`inline-flex items-center gap-1.5 text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                    div === 'Cowo' ? 'bg-[#2E9FFF]/10 text-[#57B5FF] border border-[#2E9FFF]/15' : 'bg-[#FF2D78]/10 text-[#FF5C9A] border border-[#FF2D78]/15'
+                    div === 'Cowo' ? 'bg-idm-male/10 text-idm-male border border-idm-male/15' : 'bg-idm-female/10 text-idm-female border border-idm-female/15'
                   }`}>
                     {div === 'Cowo' ? '♂' : '♀'} {div}
                   </span>
@@ -193,7 +193,7 @@ export function PlayersSection({
                   className="inline-flex items-center gap-1.5 text-[10px] font-bold px-3 py-1 rounded-full border relative overflow-hidden"
                   style={{
                     background: 'linear-gradient(135deg, rgba(46,159,255,0.12) 0%, rgba(46,159,255,0.04) 100%)',
-                    color: '#57B5FF',
+                    color: 'var(--idm-male)',
                     borderColor: 'rgba(46,159,255,0.2)',
                     boxShadow: '0 0 8px rgba(46,159,255,0.06)',
                   }}
@@ -205,7 +205,7 @@ export function PlayersSection({
 
               {malePlayers.length === 0 ? (
                 <div className="py-12 text-center">
-                  <Music className="w-10 h-10 text-[#2E9FFF]/15 mx-auto mb-2" />
+                  <Music className="w-10 h-10 text-idm-male/15 mx-auto mb-2" />
                   <p className="text-sm text-muted-foreground">Belum ada player male</p>
                 </div>
               ) : (
@@ -320,8 +320,8 @@ export function PlayersSection({
                                     : isChampion
                                       ? 'text-idm-gold-warm dark:text-[#EFF923]'
                                       : isTop3
-                                        ? 'text-[#57B5FF] dark:text-[#57B5FF] text-idm-male'
-                                        : 'text-white dark:text-white text-foreground group-hover/player:text-[#57B5FF]'
+                                        ? 'text-idm-male dark:text-[#57B5FF]'
+                                        : 'text-foreground dark:text-white group-hover/player:text-idm-male dark:group-hover/player:text-[#57B5FF]'
                                 }`}
                                 style={skinColors ? {
                                   color: primaryNameColor || skinColors.frame,
@@ -344,8 +344,8 @@ export function PlayersSection({
                               {/* Club name */}
                               {playerClub && (
                                 <div className="flex items-center justify-center gap-1 mt-1.5">
-                                  <Shield className="w-2.5 h-2.5 text-[#57B5FF]/80" />
-                                  <span className="text-[10px] text-[#8FCEFF]/90 font-medium truncate">{playerClub}</span>
+                                  <Shield className="w-2.5 h-2.5 text-idm-male/80" />
+                                  <span className="text-[10px] text-idm-male-light/90 font-medium truncate">{playerClub}</span>
                                 </div>
                               )}
 
@@ -379,18 +379,20 @@ export function PlayersSection({
                         className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border text-xs font-semibold transition-all duration-300 cursor-pointer"
                         style={{
                           background: 'linear-gradient(135deg, rgba(46,159,255,0.08) 0%, rgba(46,159,255,0.03) 100%)',
-                          color: '#57B5FF',
+                          color: 'var(--idm-male)',
                           borderColor: 'rgba(46,159,255,0.2)',
                         }}
                         onMouseEnter={(e) => {
                           e.currentTarget.style.background = 'linear-gradient(135deg, rgba(46,159,255,0.15) 0%, rgba(46,159,255,0.06) 100%)';
                           e.currentTarget.style.borderColor = 'rgba(46,159,255,0.35)';
                           e.currentTarget.style.boxShadow = '0 0 12px rgba(46,159,255,0.12)';
+                          e.currentTarget.style.color = 'var(--idm-male)';
                         }}
                         onMouseLeave={(e) => {
                           e.currentTarget.style.background = 'linear-gradient(135deg, rgba(46,159,255,0.08) 0%, rgba(46,159,255,0.03) 100%)';
                           e.currentTarget.style.borderColor = 'rgba(46,159,255,0.2)';
                           e.currentTarget.style.boxShadow = 'none';
+                          e.currentTarget.style.color = 'var(--idm-male)';
                         }}
                       >
                         {showAllMalePlayers ? (
@@ -419,7 +421,7 @@ export function PlayersSection({
                   className="inline-flex items-center gap-1.5 text-[10px] font-bold px-3 py-1 rounded-full border relative overflow-hidden"
                   style={{
                     background: 'linear-gradient(135deg, rgba(255,45,120,0.12) 0%, rgba(255,45,120,0.04) 100%)',
-                    color: '#FF5C9A',
+                    color: 'var(--idm-female)',
                     borderColor: 'rgba(255,45,120,0.2)',
                     boxShadow: '0 0 8px rgba(255,45,120,0.06)',
                   }}
@@ -431,7 +433,7 @@ export function PlayersSection({
 
               {femalePlayers.length === 0 ? (
                 <div className="py-12 text-center">
-                  <Shield className="w-10 h-10 text-[#FF2D78]/15 mx-auto mb-2" />
+                  <Shield className="w-10 h-10 text-idm-female/15 mx-auto mb-2" />
                   <p className="text-sm text-muted-foreground">Belum ada player female</p>
                 </div>
               ) : (
@@ -546,8 +548,8 @@ export function PlayersSection({
                                     : isChampion
                                       ? 'text-idm-gold-warm dark:text-[#EFF923]'
                                       : isTop3
-                                        ? 'text-[#FF5C9A] dark:text-[#FF5C9A] text-idm-female'
-                                        : 'text-white dark:text-white text-foreground group-hover/player:text-[#FF5C9A]'
+                                        ? 'text-idm-female dark:text-[#FF5C9A]'
+                                        : 'text-foreground dark:text-white group-hover/player:text-idm-female dark:group-hover/player:text-[#FF5C9A]'
                                 }`}
                                 style={skinColors ? {
                                   color: primaryNameColor || skinColors.frame,
@@ -570,8 +572,8 @@ export function PlayersSection({
                               {/* Club name */}
                               {playerClub && (
                                 <div className="flex items-center justify-center gap-1 mt-1.5">
-                                  <Shield className="w-2.5 h-2.5 text-[#FF5C9A]/80" />
-                                  <span className="text-[10px] text-[#FF8FBC]/90 font-medium truncate">{playerClub}</span>
+                                  <Shield className="w-2.5 h-2.5 text-idm-female/80" />
+                                  <span className="text-[10px] text-idm-female-light/90 font-medium truncate">{playerClub}</span>
                                 </div>
                               )}
 
@@ -605,18 +607,20 @@ export function PlayersSection({
                         className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border text-xs font-semibold transition-all duration-300 cursor-pointer"
                         style={{
                           background: 'linear-gradient(135deg, rgba(255,45,120,0.08) 0%, rgba(255,45,120,0.03) 100%)',
-                          color: '#FF5C9A',
+                          color: 'var(--idm-female)',
                           borderColor: 'rgba(255,45,120,0.2)',
                         }}
                         onMouseEnter={(e) => {
                           e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255,45,120,0.15) 0%, rgba(255,45,120,0.06) 100%)';
                           e.currentTarget.style.borderColor = 'rgba(255,45,120,0.35)';
                           e.currentTarget.style.boxShadow = '0 0 12px rgba(255,45,120,0.12)';
+                          e.currentTarget.style.color = 'var(--idm-female)';
                         }}
                         onMouseLeave={(e) => {
                           e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255,45,120,0.08) 0%, rgba(255,45,120,0.03) 100%)';
                           e.currentTarget.style.borderColor = 'rgba(255,45,120,0.2)';
                           e.currentTarget.style.boxShadow = 'none';
+                          e.currentTarget.style.color = 'var(--idm-female)';
                         }}
                       >
                         {showAllFemalePlayers ? (

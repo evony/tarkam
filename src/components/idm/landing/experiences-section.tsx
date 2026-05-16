@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo, useCallback } from 'react';
+import { useTheme } from 'next-themes';
 import {
   Play,
   Trophy,
@@ -48,90 +49,167 @@ interface VideoHighlight {
   type: 'match' | 'mvp' | 'champion' | 'highlights';
 }
 
-/* ─── Color Tokens ─── */
-const COLORS = {
-  gold: '#EFF923',
-  cyan: '#2E9FFF',
-  purple: '#FF2D78',
-  darkBg: 'var(--bg-deep)',
-  cardBg: 'var(--bg-mid)',
-  mutedText: '#a09880',
-  lightText: '#f5f0e8',
-} as const;
+/* ─── Theme-Aware Color Helpers ───
+   In dark mode: bright colors on dark backgrounds
+   In light mode: deeper/darker colors for readability on light backgrounds */
+function tc(isLight: boolean) {
+  return isLight
+    ? {
+        gold: '#92780C',
+        cyan: '#1d4ed8',
+        purple: '#be185d',
+        darkBg: 'var(--bg-deep)',
+        cardBg: 'var(--bg-mid)',
+        mutedText: '#7A6F5A',
+        lightText: '#2D2A26',
+        activeText: '#1a1816',
+        overlayBg: 'rgba(245,240,232,0.75)',
+        vignette: 'radial-gradient(ellipse at center, transparent 30%, rgba(200,195,185,0.35) 100%)',
+        inactiveBorder: 'rgba(0,0,0,0.08)',
+        shadowLight: '0 1px 3px rgba(0,0,0,0.06)',
+        shadowMedium: '0 2px 8px rgba(0,0,0,0.08)',
+        shadowHeavy: '0 6px 24px rgba(0,0,0,0.10)',
+        thumbOverlay: 'rgba(255,255,255,0.25)',
+        progressTrack: 'rgba(0,0,0,0.08)',
+        goldGradient: 'linear-gradient(135deg, #5A2806 0%, #92780C 50%, #B8860B 100%)',
+        progressBar: 'linear-gradient(90deg, #B7791F 0%, #92780C 40%, #B8860B 50%, #92780C 60%, #B8860B 100%)',
+        progressBarGlow: '0 0 6px rgba(146,120,12,0.20)',
+        seasonGlowLine: 'linear-gradient(90deg, transparent 10%, rgba(146,120,12,0.3) 35%, rgba(184,134,11,0.4) 50%, rgba(146,120,12,0.3) 65%, transparent 90%)',
+        comingSoonBtnBg: 'rgba(146,120,12,0.08)',
+        comingSoonBtnBorder: '2px solid rgba(146,120,12,0.25)',
+        comingSoonBtnShadow: '0 0 40px rgba(146,120,12,0.08), inset 0 0 20px rgba(146,120,12,0.03)',
+        comingSoonGlowBg: 'radial-gradient(circle, rgba(146,120,12,0.15) 0%, transparent 70%)',
+        comingSoonDashBorder: '1.5px dashed rgba(146,120,12,0.15)',
+        inactiveDurationBg: 'rgba(0,0,0,0.06)',
+        inactiveDurationColor: 'rgba(0,0,0,0.55)',
+        progressCardBorder: 'rgba(146,120,12,0.12)',
+        progressCardGlowLine: 'linear-gradient(90deg, transparent 10%, rgba(146,120,12,0.3) 35%, rgba(184,134,11,0.4) 50%, rgba(146,120,12,0.3) 65%, transparent 90%)',
+        emptyIconBg: 'linear-gradient(135deg, rgba(146,120,12,0.10) 0%, rgba(146,120,12,0.03) 100%)',
+        emptyIconBorder: 'rgba(146,120,12,0.15)',
+        emptyIconShadow: '0 0 12px rgba(146,120,12,0.05), inset 0 1px 0 rgba(146,120,12,0.08)',
+        emptyGlowLine: 'linear-gradient(90deg, transparent, rgba(146,120,12,0.4), transparent)',
+        emptyGlowLineShadow: '0 0 6px rgba(146,120,12,0.15)',
+        listHoverBorder: 'rgba(0,0,0,0.10)',
+        listHoverShadow: '0 0 10px rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.04)',
+        filterInactiveBorder: 'rgba(0,0,0,0.08)',
+      }
+    : {
+        gold: '#EFF923',
+        cyan: '#2E9FFF',
+        purple: '#FF2D78',
+        darkBg: 'var(--bg-deep)',
+        cardBg: 'var(--bg-mid)',
+        mutedText: '#a09880',
+        lightText: '#f5f0e8',
+        activeText: '#ffffff',
+        overlayBg: 'rgba(6,8,18,0.70)',
+        vignette: 'radial-gradient(ellipse at center, transparent 30%, rgba(8,10,20,0.6) 100%)',
+        inactiveBorder: 'rgba(239,249,35,0.08)',
+        shadowLight: '0 1px 3px rgba(0,0,0,0.12)',
+        shadowMedium: '0 2px 8px rgba(0,0,0,0.18)',
+        shadowHeavy: '0 6px 24px rgba(0,0,0,0.35)',
+        thumbOverlay: 'rgba(0,0,0,0.30)',
+        progressTrack: 'rgba(0,0,0,0.3)',
+        goldGradient: 'linear-gradient(135deg, #FAF0DC 0%, #EFF923 50%, #F9CB25 100%)',
+        progressBar: 'linear-gradient(90deg, #B7791F 0%, #EFF923 40%, #F9CB25 50%, #EFF923 60%, #F9CB25 100%)',
+        progressBarGlow: '0 0 6px rgba(239,249,35,0.25)',
+        seasonGlowLine: 'linear-gradient(90deg, transparent 10%, rgba(239,249,35,0.3) 35%, rgba(249,203,37,0.4) 50%, rgba(239,249,35,0.3) 65%, transparent 90%)',
+        comingSoonBtnBg: 'rgba(239,249,35,0.08)',
+        comingSoonBtnBorder: '2px solid rgba(239,249,35,0.25)',
+        comingSoonBtnShadow: '0 0 40px rgba(239,249,35,0.08), inset 0 0 20px rgba(239,249,35,0.03)',
+        comingSoonGlowBg: 'radial-gradient(circle, rgba(239,249,35,0.2) 0%, transparent 70%)',
+        comingSoonDashBorder: '1.5px dashed rgba(239,249,35,0.15)',
+        inactiveDurationBg: 'rgba(0,0,0,0.5)',
+        inactiveDurationColor: 'rgba(255,255,255,0.7)',
+        progressCardBorder: 'rgba(239,249,35,0.12)',
+        progressCardGlowLine: 'linear-gradient(90deg, transparent 10%, rgba(239,249,35,0.3) 35%, rgba(249,203,37,0.4) 50%, rgba(239,249,35,0.3) 65%, transparent 90%)',
+        emptyIconBg: 'linear-gradient(135deg, rgba(239,249,35,0.10) 0%, rgba(239,249,35,0.03) 100%)',
+        emptyIconBorder: 'rgba(239,249,35,0.15)',
+        emptyIconShadow: '0 0 12px rgba(239,249,35,0.05), inset 0 1px 0 rgba(239,249,35,0.08)',
+        emptyGlowLine: 'linear-gradient(90deg, transparent, rgba(239,249,35,0.4), transparent)',
+        emptyGlowLineShadow: '0 0 6px rgba(239,249,35,0.15)',
+        listHoverBorder: 'rgba(239,249,35,0.08)',
+        listHoverShadow: '0 0 10px rgba(0,0,0,0.15), 0 2px 8px rgba(0,0,0,0.08)',
+        filterInactiveBorder: 'rgba(255,255,255,0.06)',
+      };
+}
 
 /* ─── Division config helper ─── */
-function getDivisionConfig(division: 'male' | 'female' | 'both') {
+function getDivisionConfig(division: 'male' | 'female' | 'both', isLight = false) {
+  const c = tc(isLight);
+
   if (division === 'male') {
     return {
-      color: COLORS.cyan,
-      glow: 'rgba(46,159,255,0.15)',
-      bg: 'rgba(46,159,255,0.10)',
-      border: 'rgba(46,159,255,0.20)',
-      hoverBorder: 'rgba(46,159,255,0.35)',
+      color: c.cyan,
+      glow: `rgba(${isLight ? '29,78,216' : '46,159,255'},0.15)`,
+      bg: `rgba(${isLight ? '29,78,216' : '46,159,255'},0.10)`,
+      border: `rgba(${isLight ? '29,78,216' : '46,159,255'},0.20)`,
+      hoverBorder: `rgba(${isLight ? '29,78,216' : '46,159,255'},0.35)`,
       gradient: 'from-[#2E9FFF]/20 via-mid to-mid',
       label: 'COWO',
       meshBg: `
-        radial-gradient(ellipse at 15% 30%, rgba(46,159,255,0.18) 0%, transparent 55%),
-        radial-gradient(ellipse at 85% 15%, rgba(87,181,255,0.12) 0%, transparent 50%),
-        radial-gradient(ellipse at 50% 95%, rgba(20,120,217,0.10) 0%, transparent 45%),
-        radial-gradient(ellipse at 70% 60%, rgba(143,206,255,0.06) 0%, transparent 40%),
-        conic-gradient(from 180deg at 50% 50%, rgba(46,159,255,0.04) 0deg, transparent 60deg, rgba(87,181,255,0.03) 120deg, transparent 180deg, rgba(20,120,217,0.04) 240deg, transparent 300deg, rgba(46,159,255,0.04) 360deg)
+        radial-gradient(ellipse at 15% 30%, rgba(${isLight ? '29,78,216' : '46,159,255'},0.18) 0%, transparent 55%),
+        radial-gradient(ellipse at 85% 15%, rgba(${isLight ? '59,130,246' : '87,181,255'},0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 95%, rgba(${isLight ? '29,78,216' : '20,120,217'},0.10) 0%, transparent 45%),
+        radial-gradient(ellipse at 70% 60%, rgba(${isLight ? '96,165,250' : '143,206,255'},0.06) 0%, transparent 40%),
+        conic-gradient(from 180deg at 50% 50%, rgba(${isLight ? '29,78,216' : '46,159,255'},0.04) 0deg, transparent 60deg, rgba(${isLight ? '59,130,246' : '87,181,255'},0.03) 120deg, transparent 180deg, rgba(${isLight ? '29,78,216' : '20,120,217'},0.04) 240deg, transparent 300deg, rgba(${isLight ? '29,78,216' : '46,159,255'},0.04) 360deg)
       `,
-      glowLine: `rgba(46,159,255,0.45)`,
-      shadow: `0 0 8px rgba(46,159,255,0.25), 0 0 3px rgba(46,159,255,0.4)`,
+      glowLine: `rgba(${isLight ? '29,78,216' : '46,159,255'},0.45)`,
+      shadow: `0 0 8px rgba(${isLight ? '29,78,216' : '46,159,255'},0.25), 0 0 3px rgba(${isLight ? '29,78,216' : '46,159,255'},0.4)`,
     };
   }
   if (division === 'female') {
     return {
-      color: COLORS.purple,
-      glow: 'rgba(255,45,120,0.15)',
-      bg: 'rgba(255,45,120,0.10)',
-      border: 'rgba(255,45,120,0.20)',
-      hoverBorder: 'rgba(255,45,120,0.35)',
+      color: c.purple,
+      glow: `rgba(${isLight ? '190,24,93' : '255,45,120'},0.15)`,
+      bg: `rgba(${isLight ? '190,24,93' : '255,45,120'},0.10)`,
+      border: `rgba(${isLight ? '190,24,93' : '255,45,120'},0.20)`,
+      hoverBorder: `rgba(${isLight ? '190,24,93' : '255,45,120'},0.35)`,
       gradient: 'from-[#FF2D78]/20 via-mid to-mid',
       label: 'CEWE',
       meshBg: `
-        radial-gradient(ellipse at 15% 30%, rgba(255,45,120,0.18) 0%, transparent 55%),
-        radial-gradient(ellipse at 85% 15%, rgba(255,92,154,0.12) 0%, transparent 50%),
-        radial-gradient(ellipse at 50% 95%, rgba(217,22,94,0.10) 0%, transparent 45%),
-        radial-gradient(ellipse at 70% 60%, rgba(255,143,188,0.06) 0%, transparent 40%),
-        conic-gradient(from 180deg at 50% 50%, rgba(255,45,120,0.04) 0deg, transparent 60deg, rgba(255,92,154,0.03) 120deg, transparent 180deg, rgba(217,22,94,0.04) 240deg, transparent 300deg, rgba(255,45,120,0.04) 360deg)
+        radial-gradient(ellipse at 15% 30%, rgba(${isLight ? '190,24,93' : '255,45,120'},0.18) 0%, transparent 55%),
+        radial-gradient(ellipse at 85% 15%, rgba(${isLight ? '219,39,119' : '255,92,154'},0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 95%, rgba(${isLight ? '159,18,78' : '217,22,94'},0.10) 0%, transparent 45%),
+        radial-gradient(ellipse at 70% 60%, rgba(${isLight ? '244,114,182' : '255,143,188'},0.06) 0%, transparent 40%),
+        conic-gradient(from 180deg at 50% 50%, rgba(${isLight ? '190,24,93' : '255,45,120'},0.04) 0deg, transparent 60deg, rgba(${isLight ? '219,39,119' : '255,92,154'},0.03) 120deg, transparent 180deg, rgba(${isLight ? '159,18,78' : '217,22,94'},0.04) 240deg, transparent 300deg, rgba(${isLight ? '190,24,93' : '255,45,120'},0.04) 360deg)
       `,
-      glowLine: `rgba(255,45,120,0.45)`,
-      shadow: `0 0 8px rgba(255,45,120,0.25), 0 0 3px rgba(255,45,120,0.4)`,
+      glowLine: `rgba(${isLight ? '190,24,93' : '255,45,120'},0.45)`,
+      shadow: `0 0 8px rgba(${isLight ? '190,24,93' : '255,45,120'},0.25), 0 0 3px rgba(${isLight ? '190,24,93' : '255,45,120'},0.4)`,
     };
   }
   return {
-    color: COLORS.gold,
-    glow: 'rgba(239,249,35,0.15)',
-    bg: 'rgba(239,249,35,0.10)',
-    border: 'rgba(239,249,35,0.20)',
-    hoverBorder: 'rgba(239,249,35,0.35)',
+    color: c.gold,
+    glow: `rgba(${isLight ? '146,120,12' : '239,249,35'},0.15)`,
+    bg: `rgba(${isLight ? '146,120,12' : '239,249,35'},0.10)`,
+    border: `rgba(${isLight ? '146,120,12' : '239,249,35'},0.20)`,
+    hoverBorder: `rgba(${isLight ? '146,120,12' : '239,249,35'},0.35)`,
     gradient: 'from-idm-gold-warm/20 via-mid to-mid',
     label: 'BOTH',
     meshBg: `
-      radial-gradient(ellipse at 15% 30%, rgba(239,249,35,0.18) 0%, transparent 55%),
-      radial-gradient(ellipse at 85% 15%, rgba(249,203,37,0.12) 0%, transparent 50%),
-      radial-gradient(ellipse at 50% 95%, rgba(184,134,11,0.10) 0%, transparent 45%),
-      radial-gradient(ellipse at 70% 60%, rgba(245,215,122,0.06) 0%, transparent 40%),
-      conic-gradient(from 180deg at 50% 50%, rgba(239,249,35,0.04) 0deg, transparent 60deg, rgba(249,203,37,0.03) 120deg, transparent 180deg, rgba(184,134,11,0.04) 240deg, transparent 300deg, rgba(239,249,35,0.04) 360deg)
+      radial-gradient(ellipse at 15% 30%, rgba(${isLight ? '146,120,12' : '239,249,35'},0.18) 0%, transparent 55%),
+      radial-gradient(ellipse at 85% 15%, rgba(${isLight ? '184,134,11' : '249,203,37'},0.12) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 95%, rgba(${isLight ? '146,120,12' : '184,134,11'},0.10) 0%, transparent 45%),
+      radial-gradient(ellipse at 70% 60%, rgba(${isLight ? '184,134,11' : '245,215,122'},0.06) 0%, transparent 40%),
+      conic-gradient(from 180deg at 50% 50%, rgba(${isLight ? '146,120,12' : '239,249,35'},0.04) 0deg, transparent 60deg, rgba(${isLight ? '184,134,11' : '249,203,37'},0.03) 120deg, transparent 180deg, rgba(${isLight ? '146,120,12' : '184,134,11'},0.04) 240deg, transparent 300deg, rgba(${isLight ? '146,120,12' : '239,249,35'},0.04) 360deg)
     `,
-    glowLine: `rgba(239,249,35,0.45)`,
-    shadow: `0 0 8px rgba(239,249,35,0.25), 0 0 3px rgba(239,249,35,0.4)`,
+    glowLine: `rgba(${isLight ? '146,120,12' : '239,249,35'},0.45)`,
+    shadow: `0 0 8px rgba(${isLight ? '146,120,12' : '239,249,35'},0.25), 0 0 3px rgba(${isLight ? '146,120,12' : '239,249,35'},0.4)`,
   };
 }
 
 /* ─── Type icon & label config ─── */
-function getTypeConfig(type: VideoHighlight['type']) {
+function getTypeConfig(type: VideoHighlight['type'], isLight = false) {
+  const c = tc(isLight);
   switch (type) {
     case 'champion':
-      return { icon: Trophy, label: 'CHAMPION', accent: COLORS.gold };
+      return { icon: Trophy, label: 'CHAMPION', accent: c.gold };
     case 'mvp':
-      return { icon: Star, label: 'MVP', accent: COLORS.gold };
+      return { icon: Star, label: 'MVP', accent: c.gold };
     case 'match':
-      return { icon: Flame, label: 'MATCH', accent: COLORS.gold };
+      return { icon: Flame, label: 'MATCH', accent: c.gold };
     case 'highlights':
-      return { icon: Sparkles, label: 'HIGHLIGHTS', accent: COLORS.gold };
+      return { icon: Sparkles, label: 'HIGHLIGHTS', accent: c.gold };
   }
 }
 
@@ -481,15 +559,18 @@ function FilterTabs({
   active,
   onChange,
   counts,
+  isLight,
 }: {
   active: 'all' | 'male' | 'female';
   onChange: (v: 'all' | 'male' | 'female') => void;
   counts: { all: number; male: number; female: number };
+  isLight: boolean;
 }) {
+  const c = tc(isLight);
   const tabs: { key: 'all' | 'male' | 'female'; label: string; color: string; count: number }[] = [
-    { key: 'all', label: 'Semua', color: COLORS.gold, count: counts.all },
-    { key: 'male', label: 'Cowo', color: COLORS.cyan, count: counts.male },
-    { key: 'female', label: 'Cewe', color: COLORS.purple, count: counts.female },
+    { key: 'all', label: 'Semua', color: c.gold, count: counts.all },
+    { key: 'male', label: 'Cowo', color: c.cyan, count: counts.male },
+    { key: 'female', label: 'Cewe', color: c.purple, count: counts.female },
   ];
 
   return (
@@ -505,8 +586,8 @@ function FilterTabs({
               background: isActive
                 ? `linear-gradient(135deg, ${tab.color}18 0%, ${tab.color}08 100%)`
                 : 'transparent',
-              color: isActive ? tab.color : COLORS.mutedText,
-              border: `1px solid ${isActive ? `${tab.color}35` : 'rgba(255,255,255,0.06)'}`,
+              color: isActive ? tab.color : c.mutedText,
+              border: `1px solid ${isActive ? `${tab.color}35` : c.filterInactiveBorder}`,
               boxShadow: isActive
                 ? `0 0 12px ${hexToRgba(tab.color, 0.08)}, 0 0 3px ${hexToRgba(tab.color, 0.15)}, inset 0 1px 0 ${hexToRgba(tab.color, 0.08)}`
                 : 'none',
@@ -560,14 +641,17 @@ function FeaturedBanner({
   isSelected,
   isPlayingInline,
   onStopPlayback,
+  isLight,
 }: {
   video: VideoHighlight;
   onPlay: (video: VideoHighlight) => void;
   isSelected: boolean;
   isPlayingInline: boolean;
   onStopPlayback: () => void;
+  isLight: boolean;
 }) {
-  const divConfig = getDivisionConfig(video.division);
+  const c = tc(isLight);
+  const divConfig = getDivisionConfig(video.division, isLight);
   const hasVideo = !!video.videoUrl;
 
   // Parse YouTube URL for inline playback
@@ -585,11 +669,11 @@ function FeaturedBanner({
       <div
         className="relative rounded-2xl overflow-hidden border transition-all duration-300 aspect-[4/3] lg:aspect-auto lg:h-full"
         style={{
-          background: COLORS.cardBg,
+          background: c.cardBg,
           borderColor: isSelected ? `${divConfig.color}40` : divConfig.border,
           boxShadow: isSelected
-            ? `${divConfig.shadow}, 0 6px 24px rgba(0,0,0,0.35)`
-            : '0 2px 8px rgba(0,0,0,0.18)',
+            ? `${divConfig.shadow}, ${c.shadowHeavy}`
+            : c.shadowMedium,
         }}
         onMouseEnter={(e) => {
           if (!isPlayingInline) {
@@ -601,8 +685,8 @@ function FeaturedBanner({
           if (!isPlayingInline) {
             e.currentTarget.style.borderColor = isSelected ? `${divConfig.color}40` : divConfig.border;
             e.currentTarget.style.boxShadow = isSelected
-              ? `${divConfig.shadow}, 0 6px 24px rgba(0,0,0,0.35)`
-              : '0 2px 8px rgba(0,0,0,0.18)';
+              ? `${divConfig.shadow}, ${c.shadowHeavy}`
+              : c.shadowMedium;
           }
         }}
       >
@@ -678,12 +762,12 @@ function FeaturedBanner({
             ) : (
               /* ── Cinematic empty preview — optimized mesh gradient ═══ */
               <>
-                {/* Base dark + mesh gradient (single layer) */}
+                {/* Base + mesh gradient (single layer) — theme-aware overlay */}
                 <div
                   className="absolute inset-0"
                   style={{
                     background: divConfig.meshBg,
-                    backgroundColor: 'rgba(6,8,18,0.70)',
+                    backgroundColor: c.overlayBg,
                   }}
                 />
 
@@ -699,8 +783,8 @@ function FeaturedBanner({
                   }}
                 />
 
-                {/* Vignette overlay */}
-                <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at center, transparent 30%, rgba(8,10,20,0.6) 100%)' }} />
+                {/* Vignette overlay — theme-aware */}
+                <div className="absolute inset-0" style={{ background: c.vignette }} />
 
                 {/* Film-strip lines — reduced to 8 */}
                 <div className="absolute inset-x-0 top-0 h-10 flex items-start justify-center gap-[32px] opacity-[0.04] pointer-events-none">
@@ -745,9 +829,9 @@ function FeaturedBanner({
               </>
             )}
 
-            {/* Dark overlay for readability on thumbnail */}
+            {/* Overlay for readability on thumbnail — theme-aware */}
             {hasVideo && isYouTube && (
-              <div className="absolute inset-0 bg-black/30" />
+              <div className="absolute inset-0" style={{ background: c.thumbOverlay }} />
             )}
 
             {/* Centered play button overlay — clickable to start video */}
@@ -803,27 +887,27 @@ function FeaturedBanner({
                     <div
                       className="absolute inset-0 -m-6 rounded-full opacity-30"
                       style={{
-                        background: `radial-gradient(circle, ${hexToRgba(COLORS.gold, 0.2)} 0%, transparent 70%)`,
+                        background: c.comingSoonGlowBg,
                       }}
                     />
                     {/* Button with countdown feel */}
                     <div
                       className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full flex flex-col items-center justify-center gap-1 transition-all duration-300"
                       style={{
-                        background: 'rgba(239,249,35,0.08)',
+                        background: c.comingSoonBtnBg,
                         backdropFilter: 'blur(12px)',
-                        border: '2px solid rgba(239,249,35,0.25)',
-                        boxShadow: `0 0 40px ${hexToRgba(COLORS.gold, 0.08)}, inset 0 0 20px ${hexToRgba(COLORS.gold, 0.03)}`,
+                        border: c.comingSoonBtnBorder,
+                        boxShadow: c.comingSoonBtnShadow,
                       }}
                     >
-                      <Video className="w-6 h-6 sm:w-7 sm:h-7" style={{ color: COLORS.gold, opacity: 0.7 }} />
-                      <span className="text-[7px] sm:text-[8px] font-bold uppercase tracking-widest" style={{ color: COLORS.gold, opacity: 0.5 }}>SOON</span>
+                      <Video className="w-6 h-6 sm:w-7 sm:h-7" style={{ color: c.gold, opacity: 0.7 }} />
+                      <span className="text-[7px] sm:text-[8px] font-bold uppercase tracking-widest" style={{ color: c.gold, opacity: 0.5 }}>SOON</span>
                     </div>
                     {/* Subtle dashed ring — rotating */}
                     <div
                       className="absolute inset-0 -m-3 rounded-full pointer-events-none"
                       style={{
-                        border: '1.5px dashed rgba(239,249,35,0.15)',
+                        border: c.comingSoonDashBorder,
                         animation: 'spin-slow 30s linear infinite',
                       }}
                     />
@@ -881,13 +965,19 @@ function FeaturedBanner({
               </div>
             )}
 
-            {/* Bottom gradient overlay for title readability */}
-            <div className="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-mid via-mid/80 to-transparent pointer-events-none z-10" />
+            {/* Bottom gradient overlay for title readability — theme-aware */}
+            <div className="absolute bottom-0 left-0 right-0 h-28 pointer-events-none z-10"
+              style={{
+                background: isLight
+                  ? 'linear-gradient(to top, var(--bg-mid), rgba(250,248,244,0.8), transparent)'
+                  : 'linear-gradient(to top, var(--bg-mid), rgba(10,12,22,0.8), transparent)',
+              }}
+            />
 
             {/* Title overlay at bottom */}
             <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 z-20">
               <h3
-                className="text-lg sm:text-xl lg:text-2xl font-bold tracking-tight leading-tight text-white"
+                className="text-lg sm:text-xl lg:text-2xl font-bold tracking-tight leading-tight text-foreground dark:text-white"
               >
                 {video.title}
               </h3>
@@ -904,7 +994,7 @@ function FeaturedBanner({
                   {divConfig.label}
                 </span>
                 {video.weekNumber && (
-                  <span className="text-[10px] font-medium" style={{ color: COLORS.mutedText }}>
+                  <span className="text-[10px] font-medium" style={{ color: c.mutedText }}>
                     · Week {video.weekNumber}
                   </span>
                 )}
@@ -924,14 +1014,17 @@ function VideoListItem({
   onSelect,
   isActive,
   index,
+  isLight,
 }: {
   video: VideoHighlight;
   onPlay: (video: VideoHighlight) => void;
   onSelect: (video: VideoHighlight) => void;
   isActive: boolean;
   index: number;
+  isLight: boolean;
 }) {
-  const divConfig = getDivisionConfig(video.division);
+  const c = tc(isLight);
+  const divConfig = getDivisionConfig(video.division, isLight);
   const hasVideo = !!video.videoUrl;
 
   return (
@@ -941,22 +1034,22 @@ function VideoListItem({
         style={{
           background: isActive
             ? `linear-gradient(135deg, ${hexToRgba(divConfig.color, 0.08)} 0%, var(--bg-mid) 60%, ${hexToRgba(divConfig.color, 0.04)} 100%)`
-            : COLORS.cardBg,
-          borderColor: isActive ? `${divConfig.color}40` : 'rgba(239,249,35,0.08)',
+            : c.cardBg,
+          borderColor: isActive ? `${divConfig.color}40` : c.inactiveBorder,
           boxShadow: isActive
-            ? `${divConfig.shadow}, 0 4px 16px rgba(0,0,0,0.25)`
-            : '0 1px 3px rgba(0,0,0,0.12)',
+            ? `${divConfig.shadow}, 0 4px 16px rgba(0,0,0,0.15)`
+            : c.shadowLight,
         }}
         onMouseEnter={(e) => {
           if (!isActive) {
             e.currentTarget.style.borderColor = `${divConfig.color}30`;
-            e.currentTarget.style.boxShadow = `0 0 10px ${divConfig.glow}, 0 2px 8px rgba(0,0,0,0.15)`;
+            e.currentTarget.style.boxShadow = `0 0 10px ${divConfig.glow}, 0 2px 8px rgba(0,0,0,0.08)`;
           }
         }}
         onMouseLeave={(e) => {
           if (!isActive) {
-            e.currentTarget.style.borderColor = 'rgba(239,249,35,0.08)';
-            e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.12)';
+            e.currentTarget.style.borderColor = c.inactiveBorder;
+            e.currentTarget.style.boxShadow = c.shadowLight;
           }
         }}
         onClick={() => {
@@ -997,7 +1090,7 @@ function VideoListItem({
             {hasVideo ? (
               <Play className="w-4 h-4 ml-0.5" style={{ color: divConfig.color }} fill={divConfig.color} />
             ) : (
-              <Lock className="w-3.5 h-3.5" style={{ color: COLORS.mutedText }} />
+              <Lock className="w-3.5 h-3.5" style={{ color: c.mutedText }} />
             )}
           </div>
 
@@ -1005,7 +1098,7 @@ function VideoListItem({
           <div className="flex-1 min-w-0">
             <h4
               className="text-sm font-bold tracking-tight leading-snug truncate"
-              style={{ color: isActive ? '#ffffff' : COLORS.lightText }}
+              style={{ color: isActive ? c.activeText : c.lightText }}
             >
               {video.title}
             </h4>
@@ -1031,8 +1124,8 @@ function VideoListItem({
                       S{video.seasonNumber}
                     </span>
                   )}
-                  <span className="text-[9px] font-medium uppercase tracking-wider" style={{ color: COLORS.mutedText }}>
-                    {getTypeConfig(video.type).label}
+                  <span className="text-[9px] font-medium uppercase tracking-wider" style={{ color: c.mutedText }}>
+                    {getTypeConfig(video.type, isLight).label}
                   </span>
                 </>
               )}
@@ -1052,8 +1145,8 @@ function VideoListItem({
                 style={{
                   background: isActive
                     ? `${hexToRgba(divConfig.color, 0.15)}`
-                    : 'rgba(0,0,0,0.5)',
-                  color: isActive ? divConfig.color : 'rgba(255,255,255,0.7)',
+                    : c.inactiveDurationBg,
+                  color: isActive ? divConfig.color : c.inactiveDurationColor,
                 }}
               >
                 <Clock className="w-2.5 h-2.5" />
@@ -1076,23 +1169,25 @@ function VideoListItem({
 }
 
 /* ─── Empty State Component — premium ═══ */
-function EmptyState() {
+function EmptyState({ isLight }: { isLight: boolean }) {
+  const c = tc(isLight);
+
   return (
     <div className="reveal reveal-fade-up flex flex-col items-center justify-center py-20 text-center">
       <div
         className="w-20 h-20 rounded-2xl border flex items-center justify-center mb-5 relative overflow-hidden"
         style={{
-          background: 'linear-gradient(135deg, rgba(239,249,35,0.10) 0%, rgba(239,249,35,0.03) 100%)',
-          borderColor: 'rgba(239,249,35,0.15)',
-          boxShadow: '0 0 12px rgba(239,249,35,0.05), inset 0 1px 0 rgba(239,249,35,0.08)',
+          background: c.emptyIconBg,
+          borderColor: c.emptyIconBorder,
+          boxShadow: c.emptyIconShadow,
         }}
       >
         {/* Top glow line */}
         <div
           className="absolute inset-x-0 top-0 h-px pointer-events-none"
           style={{
-            background: 'linear-gradient(90deg, transparent, rgba(239,249,35,0.4), transparent)',
-            boxShadow: '0 0 6px rgba(239,249,35,0.15)',
+            background: c.emptyGlowLine,
+            boxShadow: c.emptyGlowLineShadow,
           }}
         />
         <Trophy className="w-10 h-10 text-idm-gold-warm" />
@@ -1100,14 +1195,14 @@ function EmptyState() {
       <h3
         className="text-xl font-black mb-2"
         style={{
-          background: 'linear-gradient(135deg, #FAF0DC 0%, #EFF923 50%, #F9CB25 100%)',
+          background: c.goldGradient,
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
         }}
       >
         Belum Ada Video
       </h3>
-      <p className="text-sm max-w-xs" style={{ color: COLORS.mutedText }}>
+      <p className="text-sm max-w-xs" style={{ color: c.mutedText }}>
         Video highlight dari pertandingan akan muncul di sini setelah turnamen dimulai. Nantikan momen terbaik!
       </p>
     </div>
@@ -1129,6 +1224,13 @@ export function ExperiencesSection({
 }: ExperiencesSectionProps) {
   // Inline playback is now used instead of modal (onVideoPlay kept for interface compatibility)
   void _onVideoPlay;
+
+  // Theme detection for light/dark mode adaptations
+  const { resolvedTheme } = useTheme();
+  const isLight = resolvedTheme === 'light';
+
+  const c = tc(isLight);
+
   // CMS text fields with fallbacks
   const vhLabel = cmsSettings?.video_highlights_label || 'VIDEO HIGHLIGHTS';
   const vhTitle = cmsSettings?.video_highlights_title || 'Momen Terbaik';
@@ -1278,22 +1380,28 @@ export function ExperiencesSection({
       <div className="absolute inset-x-0 top-0 h-8 bg-gradient-to-b from-idm-gold-warm/3 to-transparent pointer-events-none" aria-hidden="true" />
 
       {/* Background — optimized 3-layer */}
-      {/* Central gold glow + division hints (combined) */}
+      {/* Central gold glow + division hints (combined) — theme-aware opacity */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: `
-            radial-gradient(ellipse at 50% 35%, rgba(239,249,35,0.06) 0%, transparent 50%),
-            radial-gradient(ellipse at 10% 50%, rgba(46,159,255,0.04) 0%, transparent 40%),
-            radial-gradient(ellipse at 90% 60%, rgba(255,45,120,0.04) 0%, transparent 40%)
-          `,
+          background: isLight
+            ? `
+              radial-gradient(ellipse at 50% 35%, rgba(146,120,12,0.04) 0%, transparent 50%),
+              radial-gradient(ellipse at 10% 50%, rgba(29,78,216,0.03) 0%, transparent 40%),
+              radial-gradient(ellipse at 90% 60%, rgba(190,24,93,0.03) 0%, transparent 40%)
+            `
+            : `
+              radial-gradient(ellipse at 50% 35%, rgba(239,249,35,0.06) 0%, transparent 50%),
+              radial-gradient(ellipse at 10% 50%, rgba(46,159,255,0.04) 0%, transparent 40%),
+              radial-gradient(ellipse at 90% 60%, rgba(255,45,120,0.04) 0%, transparent 40%)
+            `,
         }}
       />
       {/* Subtle dot pattern */}
       <div
         className="absolute inset-0 pointer-events-none opacity-[0.015]"
         style={{
-          backgroundImage: 'radial-gradient(circle, rgba(239,249,35,0.5) 1px, transparent 1px)',
+          backgroundImage: `radial-gradient(circle, ${isLight ? 'rgba(146,120,12,0.5)' : 'rgba(239,249,35,0.5)'} 1px, transparent 1px)`,
           backgroundSize: '32px 32px',
         }}
       />
@@ -1317,8 +1425,9 @@ export function ExperiencesSection({
                 active={divisionFilter}
                 onChange={handleFilterChange}
                 counts={counts}
+                isLight={isLight}
               />
-              <div className="hidden sm:flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest" style={{ color: COLORS.mutedText }}>
+              <div className="hidden sm:flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest" style={{ color: c.mutedText }}>
                 <Video className="w-3.5 h-3.5" />
                 {filteredVideos.length} Video
               </div>
@@ -1328,7 +1437,7 @@ export function ExperiencesSection({
 
         {/* ═══════════════ Content ═══════════════ */}
         {filteredVideos.length === 0 ? (
-          <EmptyState />
+          <EmptyState isLight={isLight} />
         ) : (
           <div>
             {/* LEFT Banner + RIGHT Video List Layout */}
@@ -1341,6 +1450,7 @@ export function ExperiencesSection({
                   isSelected={!!selectedVideoId}
                   isPlayingInline={isPlayingInline}
                   onStopPlayback={handleStopPlayback}
+                  isLight={isLight}
                 />
               )}
 
@@ -1355,6 +1465,7 @@ export function ExperiencesSection({
                     onSelect={handleVideoSelect}
                     isActive={featuredVideo?.id === video.id}
                     index={idx}
+                    isLight={isLight}
                   />
                 ))}
 
@@ -1371,26 +1482,26 @@ export function ExperiencesSection({
                       <div
                         className="rounded-2xl border p-4 overflow-hidden relative"
                         style={{
-                          background: `linear-gradient(135deg, ${hexToRgba(COLORS.gold, 0.05)} 0%, var(--bg-mid) 50%, ${hexToRgba(COLORS.gold, 0.02)} 100%)`,
-                          borderColor: 'rgba(239,249,35,0.12)',
-                          boxShadow: '0 2px 8px rgba(0,0,0,0.18)',
+                          background: `linear-gradient(135deg, ${hexToRgba(c.gold, 0.05)} 0%, var(--bg-mid) 50%, ${hexToRgba(c.gold, 0.02)} 100%)`,
+                          borderColor: c.progressCardBorder,
+                          boxShadow: c.shadowMedium,
                         }}
                       >
                         {/* Top glow line */}
                         <div
                           className="absolute inset-x-0 top-0 h-px pointer-events-none"
                           style={{
-                            background: 'linear-gradient(90deg, transparent 10%, rgba(239,249,35,0.3) 35%, rgba(249,203,37,0.4) 50%, rgba(239,249,35,0.3) 65%, transparent 90%)',
+                            background: c.progressCardGlowLine,
                           }}
                         />
 
                         {/* Label */}
                         <div className="flex items-center justify-between mb-2">
-                          <span className="text-sm font-bold" style={{ color: COLORS.lightText }}>
+                          <span className="text-sm font-bold" style={{ color: c.lightText }}>
                             Progres Season{' '}
                             <span
                               style={{
-                                background: 'linear-gradient(135deg, #FAF0DC 0%, #EFF923 50%, #F9CB25 100%)',
+                                background: c.goldGradient,
                                 WebkitBackgroundClip: 'text',
                                 WebkitTextFillColor: 'transparent',
                               }}
@@ -1398,25 +1509,25 @@ export function ExperiencesSection({
                               {seasonNumber}
                             </span>
                           </span>
-                          <span className="text-xs font-bold" style={{ color: COLORS.gold }}>
+                          <span className="text-xs font-bold" style={{ color: c.gold }}>
                             {Math.round(percentage)}%
                           </span>
                         </div>
 
                         {/* Progress Bar — premium gradient with glow */}
-                        <div className="h-2.5 rounded-full overflow-hidden" style={{ background: 'rgba(0,0,0,0.3)' }}>
+                        <div className="h-2.5 rounded-full overflow-hidden" style={{ background: c.progressTrack }}>
                           <div
                             className="h-2.5 rounded-full transition-all duration-1000 ease-out"
                             style={{
                               width: `${percentage}%`,
-                              background: 'linear-gradient(90deg, #B7791F 0%, #EFF923 40%, #F9CB25 50%, #EFF923 60%, #F9CB25 100%)',
-                              boxShadow: '0 0 6px rgba(239,249,35,0.25)',
+                              background: c.progressBar,
+                              boxShadow: c.progressBarGlow,
                             }}
                           />
                         </div>
 
                         {/* Week text */}
-                        <p className="mt-1.5 text-xs" style={{ color: COLORS.mutedText }}>
+                        <p className="mt-1.5 text-xs" style={{ color: c.mutedText }}>
                           Week {completedWeeks}/{totalWeeks} selesai
                         </p>
                       </div>
@@ -1431,7 +1542,7 @@ export function ExperiencesSection({
                     className="relative flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-2xl font-bold text-sm transition-all duration-300 cursor-pointer overflow-hidden border"
                     style={{
                       background: 'linear-gradient(135deg, rgba(46,159,255,0.12) 0%, rgba(46,159,255,0.06) 100%)',
-                      color: COLORS.cyan,
+                      color: c.cyan,
                       borderColor: 'rgba(46,159,255,0.25)',
                     }}
                     onMouseEnter={(e) => {
@@ -1454,7 +1565,7 @@ export function ExperiencesSection({
                     className="relative flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-2xl font-bold text-sm transition-all duration-300 cursor-pointer overflow-hidden border"
                     style={{
                       background: 'linear-gradient(135deg, rgba(255,45,120,0.12) 0%, rgba(255,45,120,0.06) 100%)',
-                      color: COLORS.purple,
+                      color: c.purple,
                       borderColor: 'rgba(255,45,120,0.25)',
                     }}
                     onMouseEnter={(e) => {

@@ -17,6 +17,9 @@ import type { StatsData, SeasonChampionPlayer, WeeklyPerformer, PlayerSkinInfo, 
    - Season progress bar below
    ═══════════════════════════════════════════════════════════════ */
 
+/** color-mix shorthand for theme-aware transparency — uses CSS vars that adapt to light/dark mode */
+const cm = (color: string, pct: number) => `color-mix(in srgb, ${color} ${pct}%, transparent)`;
+
 interface SeasonChampionSectionProps {
   maleData: StatsData | undefined;
   femaleData: StatsData | undefined;
@@ -115,7 +118,7 @@ function SeasonProgressBar({ seasonProgress }: {
     <div className="px-4 pb-4 pt-2">
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-1.5">
-          <Calendar className="w-3 h-3 text-[#eab308]" />
+          <Calendar className="w-3 h-3 text-idm-gold-warm" />
           <span className="text-[11px] font-bold text-foreground">
             Week {completedWeeks} / {totalWeeks}
           </span>
@@ -126,14 +129,14 @@ function SeasonProgressBar({ seasonProgress }: {
       </div>
 
       {/* Progress bar track */}
-      <div className="relative h-2 rounded-full overflow-hidden" style={{ backgroundColor: 'rgba(234,179,8,0.08)' }}>
+      <div className="relative h-2 rounded-full overflow-hidden bg-idm-gold-warm/5">
         {/* Filled portion */}
         <div
           className="absolute inset-y-0 left-0 rounded-full transition-all duration-1000 ease-out"
           style={{
             width: `${clampedPercentage}%`,
-            background: 'linear-gradient(90deg, #eab308, #f97316)',
-            boxShadow: '0 0 12px rgba(234,179,8,0.3), 0 0 4px rgba(249,115,22,0.2)',
+            background: 'linear-gradient(90deg, var(--idm-gold), var(--idm-amber))',
+            boxShadow: `0 0 12px ${cm('var(--idm-gold)', 30)}, 0 0 4px ${cm('var(--idm-amber)', 20)}`,
           }}
         />
         {/* Shimmer effect on the filled bar */}
@@ -161,14 +164,14 @@ function SeasonProgressBar({ seasonProgress }: {
               className="w-0.5 h-1.5 rounded-full"
               style={{
                 backgroundColor: i < completedWeeks
-                  ? (i < completedWeeks - 1 ? 'rgba(234,179,8,0.4)' : '#eab308')
+                  ? (i < completedWeeks - 1 ? cm('var(--idm-gold)', 40) : 'var(--idm-gold)')
                   : 'rgba(160,152,128,0.15)',
               }}
             />
             <span
               className="text-[8px] font-bold mt-0.5"
               style={{
-                color: i < completedWeeks ? 'rgba(234,179,8,0.6)' : 'rgba(160,152,128,0.25)',
+                color: i < completedWeeks ? cm('var(--idm-gold)', 60) : 'rgba(160,152,128,0.25)',
               }}
             >
               {i + 1}
@@ -183,6 +186,10 @@ function SeasonProgressBar({ seasonProgress }: {
 /* ═══════════════════════════════════════════════════════════════
    BINTANG MINGGU INI — Full Duo Display (No Champion State)
    Male left + Female right with fire/orange accent theme
+   Uses CSS variables for theme-aware colors:
+   - var(--idm-gold) for decorative gold (bright in dark, darker gold in light)
+   - var(--idm-gold-warm) for text-safe gold (bright in dark, dark amber in light)
+   - var(--idm-amber) for decorative amber/orange (adapts to light mode)
    ═══════════════════════════════════════════════════════════════ */
 function BintangMingguIniDuo({
   malePerformer,
@@ -193,11 +200,12 @@ function BintangMingguIniDuo({
   femalePerformer: WeeklyPerformer | undefined;
   seasonProgress: StatsData['seasonProgress'] | undefined;
 }) {
-  // Fire/orange accent colors
-  const maleAccent = '#eab308';   // yellow
-  const femaleAccent = '#f97316'; // orange
-  const maleAccentLight = '#facc15';
-  const femaleAccentLight = '#fb923c';
+  // Fire/orange accent colors — CSS variable references for theme-aware rendering
+  // Dark mode: bright gold/amber on dark bg → Light mode: deeper gold/amber on light bg
+  const maleAccent = 'var(--idm-gold)';       // decorative gold
+  const femaleAccent = 'var(--idm-amber)';     // decorative amber/orange
+  const maleAccentLight = 'var(--idm-gold-warm)'; // text-safe gold (dark amber in light mode)
+  const femaleAccentLight = 'var(--idm-amber)';   // text-safe amber
 
   const hasMale = !!malePerformer;
   const hasFemale = !!femalePerformer;
@@ -206,37 +214,37 @@ function BintangMingguIniDuo({
   return (
     <div
       className="champion-card reveal reveal-fade-up rounded-2xl overflow-hidden bg-card border transition-colors duration-500"
-      style={{ borderColor: hasAny ? 'rgba(234,179,8,0.15)' : 'rgba(234,179,8,0.08)' }}
+      style={{ borderColor: hasAny ? cm('var(--idm-gold)', 15) : cm('var(--idm-gold)', 8) }}
     >
       {/* ═══ Gold Flame Line — "Bintang" streak signature ═══ */}
       <div className="relative flex items-center justify-center h-6 overflow-hidden" aria-hidden="true">
         {/* Fire gradient line — left */}
-        <div className="absolute left-0 right-1/2 top-1/2 -translate-y-px mr-3 h-[2px]" style={{ background: 'linear-gradient(90deg, transparent, rgba(234,179,8,0.2), #EFF923, #eab308)' }} />
+        <div className="absolute left-0 right-1/2 top-1/2 -translate-y-px mr-3 h-[2px]" style={{ background: `linear-gradient(90deg, transparent, ${cm('var(--idm-gold)', 20)}, var(--idm-gold), var(--idm-gold))` }} />
         {/* Fire gradient line — right */}
-        <div className="absolute right-0 left-1/2 top-1/2 -translate-y-px ml-3 h-[2px]" style={{ background: 'linear-gradient(90deg, #f97316, #EFF923, rgba(234,179,8,0.2), transparent)' }} />
+        <div className="absolute right-0 left-1/2 top-1/2 -translate-y-px ml-3 h-[2px]" style={{ background: `linear-gradient(90deg, var(--idm-amber), var(--idm-gold), ${cm('var(--idm-gold)', 20)}, transparent)` }} />
         {/* Center flame dot */}
-        <div className="relative z-10 shrink-0 w-3 h-3 rounded-full" style={{ background: 'radial-gradient(circle, #F9CB25, #EFF923)', boxShadow: '0 0 10px rgba(239,249,35,0.5), 0 0 4px rgba(234,179,8,0.4)' }} />
+        <div className="relative z-10 shrink-0 w-3 h-3 rounded-full" style={{ background: 'radial-gradient(circle, var(--idm-gold), var(--idm-gold))', boxShadow: `0 0 10px ${cm('var(--idm-gold)', 50)}, 0 0 4px ${cm('var(--idm-gold)', 40)}` }} />
         {/* Glow aura */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full z-0" style={{ background: 'radial-gradient(circle, rgba(234,179,8,0.12), transparent 70%)' }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full z-0" style={{ background: `radial-gradient(circle, ${cm('var(--idm-gold)', 12)}, transparent 70%)` }} />
       </div>
 
       {/* Header */}
       <div className="relative h-14 overflow-hidden">
-        <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${hexToRgba(maleAccent, 0.08)} 0%, transparent 50%, ${hexToRgba(femaleAccent, 0.08)} 100%)` }} />
+        <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${cm('var(--idm-gold)', 8)} 0%, transparent 50%, ${cm('var(--idm-amber)', 8)} 100%)` }} />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
         <div className="absolute bottom-2.5 left-4 right-4 flex items-end justify-between">
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-1">
-              <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ backgroundColor: hexToRgba(maleAccent, 0.15) }}>
+              <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ backgroundColor: cm('var(--idm-gold)', 15) }}>
                 <Music className="w-3.5 h-3.5" style={{ color: maleAccentLight }} />
               </div>
-              <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ backgroundColor: hexToRgba(femaleAccent, 0.15) }}>
+              <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ backgroundColor: cm('var(--idm-amber)', 15) }}>
                 <Shield className="w-3.5 h-3.5" style={{ color: femaleAccentLight }} />
               </div>
             </div>
             <span className="text-xs font-black uppercase tracking-wider text-muted-foreground">Cowo & Cewe</span>
           </div>
-          <span className="text-[10px] font-bold px-2 py-0.5 rounded-md border" style={{ color: maleAccent, backgroundColor: hexToRgba(maleAccent, 0.08), borderColor: hexToRgba(maleAccent, 0.15) }}>
+          <span className="text-[10px] font-bold px-2 py-0.5 rounded-md border" style={{ color: maleAccentLight, backgroundColor: cm('var(--idm-gold)', 8), borderColor: cm('var(--idm-gold)', 15) }}>
             <Swords className="w-2.5 h-2.5 inline mr-1" />Berlangsung
           </span>
         </div>
@@ -245,7 +253,7 @@ function BintangMingguIniDuo({
       {/* Bintang badge */}
       <div className="px-4 pt-3 pb-2 flex items-center justify-between gap-2">
         <div className="flex items-center gap-2 min-w-0">
-          <div className="w-5 h-5 rounded-md flex items-center justify-center" style={{ backgroundColor: hexToRgba(maleAccent, 0.15) }}>
+          <div className="w-5 h-5 rounded-md flex items-center justify-center" style={{ backgroundColor: cm('var(--idm-gold)', 15) }}>
             <Flame className="w-3 h-3" style={{ color: maleAccent }} />
           </div>
           <span className="text-sm sm:text-base font-black uppercase tracking-wide" style={{ color: maleAccentLight }}>
@@ -255,13 +263,13 @@ function BintangMingguIniDuo({
       </div>
 
       {/* Fire divider */}
-      <div className="h-px mx-4" style={{ background: `linear-gradient(to right, transparent, ${hexToRgba(maleAccent, 0.25)}, ${hexToRgba(femaleAccent, 0.25)}, transparent)` }} />
+      <div className="h-px mx-4" style={{ background: `linear-gradient(to right, transparent, ${cm('var(--idm-gold)', 25)}, ${cm('var(--idm-amber)', 25)}, transparent)` }} />
 
       {/* ═══ DUO BINTANG DISPLAY ═══ */}
-      <div className="relative flex m-4 rounded-2xl overflow-hidden border" style={{ minHeight: '360px', borderColor: hexToRgba(maleAccent, 0.10) }}>
+      <div className="relative flex m-4 rounded-2xl overflow-hidden border" style={{ minHeight: '360px', borderColor: cm('var(--idm-gold)', 10) }}>
         {/* BINTANG watermark */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0" aria-hidden="true">
-          <span className="text-xl font-black uppercase tracking-widest select-none" style={{ color: hexToRgba(maleAccent, 0.03), WebkitTextStroke: `1px ${hexToRgba(maleAccent, 0.05)}` }}>BINTANG</span>
+          <span className="text-xl font-black uppercase tracking-widest select-none" style={{ color: cm('var(--idm-gold)', 3), WebkitTextStroke: `1px ${cm('var(--idm-gold)', 5)}` }}>BINTANG</span>
         </div>
 
         {/* Male side */}
@@ -280,10 +288,10 @@ function BintangMingguIniDuo({
               <div className="absolute inset-0 bg-gradient-to-t from-background via-background/10 to-transparent" />
               <div className="absolute inset-0 bg-gradient-to-r from-transparent to-background/50" />
               {/* Male fire glow */}
-              <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(ellipse at 40% 80%, ${hexToRgba(maleAccent, 0.08)}, transparent 50%)` }} />
+              <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(ellipse at 40% 80%, ${cm('var(--idm-gold)', 8)}, transparent 50%)` }} />
             </>
           ) : (
-            <div className="absolute inset-0 flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${hexToRgba(maleAccent, 0.1)}, var(--bg-mid))` }}>
+            <div className="absolute inset-0 flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${cm('var(--idm-gold)', 10)}, var(--bg-mid))` }}>
               <div className="flex flex-col items-center gap-2 opacity-25">
                 <Music className="w-10 h-10" style={{ color: maleAccent }} />
                 <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: maleAccentLight }}>Cowo</span>
@@ -319,23 +327,23 @@ function BintangMingguIniDuo({
         <div className="relative flex flex-col items-center justify-center shrink-0 z-10" style={{ width: '3px' }}>
           {/* Full-height fire gradient line */}
           <div className="absolute inset-0" style={{
-            background: `linear-gradient(to bottom, transparent 5%, ${hexToRgba(maleAccent, 0.6)} 20%, ${maleAccent} 50%, ${hexToRgba(femaleAccent, 0.6)} 80%, transparent 95%)`,
-            boxShadow: `0 0 12px ${hexToRgba(maleAccent, 0.3)}, 0 0 24px ${hexToRgba(femaleAccent, 0.15)}`,
+            background: `linear-gradient(to bottom, transparent 5%, ${cm('var(--idm-gold)', 60)} 20%, var(--idm-gold) 50%, ${cm('var(--idm-amber)', 60)} 80%, transparent 95%)`,
+            boxShadow: `0 0 12px ${cm('var(--idm-gold)', 30)}, 0 0 24px ${cm('var(--idm-amber)', 15)}`,
           }} />
           {/* Flame ornament */}
           <div
             className="relative w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center z-10"
             style={{
               backgroundColor: 'var(--bg-mid)',
-              border: `2px solid ${maleAccent}`,
-              boxShadow: `0 0 16px ${hexToRgba(maleAccent, 0.35)}, inset 0 0 6px ${hexToRgba(maleAccent, 0.1)}`,
+              border: `2px solid var(--idm-gold)`,
+              boxShadow: `0 0 16px ${cm('var(--idm-gold)', 35)}, inset 0 0 6px ${cm('var(--idm-gold)', 10)}`,
             }}
           >
             <Flame className="w-3 h-3 sm:w-3.5 sm:h-3.5" style={{ color: maleAccent }} />
           </div>
           {/* Accent color dots */}
-          <div className="absolute top-[20%] w-2 h-2 rounded-full z-10" style={{ backgroundColor: maleAccent, boxShadow: `0 0 6px ${hexToRgba(maleAccent, 0.5)}` }} />
-          <div className="absolute bottom-[20%] w-2 h-2 rounded-full z-10" style={{ backgroundColor: femaleAccent, boxShadow: `0 0 6px ${hexToRgba(femaleAccent, 0.5)}` }} />
+          <div className="absolute top-[20%] w-2 h-2 rounded-full z-10" style={{ backgroundColor: 'var(--idm-gold)', boxShadow: `0 0 6px ${cm('var(--idm-gold)', 50)}` }} />
+          <div className="absolute bottom-[20%] w-2 h-2 rounded-full z-10" style={{ backgroundColor: 'var(--idm-amber)', boxShadow: `0 0 6px ${cm('var(--idm-amber)', 50)}` }} />
         </div>
 
         {/* Female side */}
@@ -354,10 +362,10 @@ function BintangMingguIniDuo({
               <div className="absolute inset-0 bg-gradient-to-t from-background via-background/10 to-transparent" />
               <div className="absolute inset-0 bg-gradient-to-l from-transparent to-background/50" />
               {/* Female fire glow */}
-              <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(ellipse at 60% 80%, ${hexToRgba(femaleAccent, 0.08)}, transparent 50%)` }} />
+              <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(ellipse at 60% 80%, ${cm('var(--idm-amber)', 8)}, transparent 50%)` }} />
             </>
           ) : (
-            <div className="absolute inset-0 flex items-center justify-center" style={{ background: `linear-gradient(225deg, ${hexToRgba(femaleAccent, 0.1)}, var(--bg-mid))` }}>
+            <div className="absolute inset-0 flex items-center justify-center" style={{ background: `linear-gradient(225deg, ${cm('var(--idm-amber)', 10)}, var(--bg-mid))` }}>
               <div className="flex flex-col items-center gap-2 opacity-25">
                 <Shield className="w-10 h-10" style={{ color: femaleAccent }} />
                 <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: femaleAccentLight }}>Cewe</span>
@@ -390,7 +398,7 @@ function BintangMingguIniDuo({
         </div>
 
         {/* Flame badge floating at top */}
-        <div className="champion-crown-float absolute top-2 left-1/2 -translate-x-1/2 z-20 w-6 h-6 rounded-full flex items-center justify-center shadow-lg" style={{ backgroundColor: maleAccent, boxShadow: `0 4px 12px ${hexToRgba(maleAccent, 0.4)}` }}>
+        <div className="champion-crown-float absolute top-2 left-1/2 -translate-x-1/2 z-20 w-6 h-6 rounded-full flex items-center justify-center shadow-lg" style={{ backgroundColor: 'var(--idm-gold)', boxShadow: `0 4px 12px ${cm('var(--idm-gold)', 40)}` }}>
           <Flame className="w-3 h-3 text-background" />
         </div>
       </div>
@@ -515,17 +523,15 @@ function DuoChampionCard({
   setSelectedPlayer: (player: StatsData['topPlayers'][0] & { division?: string } | null) => void;
   skinMap?: Record<string, PlayerSkinInfo[]>;
 }) {
-  const maleAccent = '#2E9FFF';
-  const femaleAccent = '#FF2D78';
-  const maleAccentLight = '#57B5FF';
-  const femaleAccentLight = '#FF5C9A';
+  // Division accent colors — CSS variables for theme-aware rendering
+  // Dark mode: bright cyan/pink → Light mode: deeper blue/pink for readability
+  const maleAccent = 'var(--idm-male)';
+  const femaleAccent = 'var(--idm-female)';
+  const maleAccentLight = 'var(--idm-male-light)';
+  const femaleAccentLight = 'var(--idm-female-light)';
 
-  /* Luxury Gold visual — used in this section to differentiate from Male division cyan
-     Note: The actual skin system still uses Diamond Blue (#4FC3F7) everywhere else. */
-  const CHAMPION_GOLD = '#EFF923';
-  const CHAMPION_GOLD_LIGHT = '#F9CB25';
-  const CHAMPION_GOLD_BORDER = `1px solid ${CHAMPION_GOLD}`;
-  const CHAMPION_GOLD_GLOW = `0 0 16px ${hexToRgba(CHAMPION_GOLD, 0.4)}, 0 0 4px ${hexToRgba(CHAMPION_GOLD, 0.2)}`;
+  // Champion gold — CSS variable: bright #EFF923 in dark, deeper #D69E2E in light
+  const CHAMPION_GOLD = 'var(--idm-gold)';
 
   /** Check if a player has a season_champion skin in the skinMap */
   function hasSeasonChampionSkin(playerId: string): boolean {
@@ -567,36 +573,36 @@ function DuoChampionCard({
   return (
     <div
       className="champion-card reveal reveal-fade-up group rounded-3xl overflow-hidden bg-card border transition-all duration-500 hover:border-idm-gold-warm/25 hover:shadow-[0_0_40px_color-mix(in_srgb,var(--color-idm-gold-warm)_6%,transparent)]"
-      style={{ borderColor: 'rgba(239,249,35,0.12)' }}
+      style={{ borderColor: cm('var(--idm-gold)', 12) }}
     >
       {/* ═══ Gold Diamond Emblem — Royal seal signature ═══ */}
       <div className="relative flex items-center justify-center h-8 overflow-hidden" aria-hidden="true">
         {/* Left gold line */}
-        <div className="absolute left-0 right-1/2 top-1/2 -translate-y-px mr-4 h-[1.5px]" style={{ background: 'linear-gradient(90deg, transparent, rgba(239,249,35,0.1), rgba(239,249,35,0.6), #EFF923)' }} />
+        <div className="absolute left-0 right-1/2 top-1/2 -translate-y-px mr-4 h-[1.5px]" style={{ background: `linear-gradient(90deg, transparent, ${cm('var(--idm-gold)', 10)}, ${cm('var(--idm-gold)', 60)}, var(--idm-gold))` }} />
         {/* Right gold line */}
-        <div className="absolute right-0 left-1/2 top-1/2 -translate-y-px ml-4 h-[1.5px]" style={{ background: 'linear-gradient(90deg, #EFF923, rgba(239,249,35,0.6), rgba(239,249,35,0.1), transparent)' }} />
+        <div className="absolute right-0 left-1/2 top-1/2 -translate-y-px ml-4 h-[1.5px]" style={{ background: `linear-gradient(90deg, var(--idm-gold), ${cm('var(--idm-gold)', 60)}, ${cm('var(--idm-gold)', 10)}, transparent)` }} />
         {/* Center diamond emblem */}
-        <div className="relative z-10 shrink-0 w-5 h-5 rotate-45 rounded-[3px]" style={{ background: 'linear-gradient(135deg, #EFF923, #F9CB25, #EFF923)', boxShadow: '0 0 12px rgba(239,249,35,0.5), 0 0 4px rgba(245,215,122,0.4), inset 0 1px 0 rgba(255,255,255,0.3)' }}>
+        <div className="relative z-10 shrink-0 w-5 h-5 rotate-45 rounded-[3px]" style={{ background: `linear-gradient(135deg, var(--idm-gold), var(--idm-gold), var(--idm-gold))`, boxShadow: `0 0 12px ${cm('var(--idm-gold)', 50)}, 0 0 4px ${cm('var(--idm-gold)', 40)}, inset 0 1px 0 rgba(255,255,255,0.3)` }}>
           {/* Inner diamond */}
-          <div className="absolute inset-[3px] rotate-0 rounded-[1px]" style={{ background: 'linear-gradient(135deg, var(--bg-mid), var(--bg-deep))', border: '1px solid rgba(239,249,35,0.3)' }} />
+          <div className="absolute inset-[3px] rotate-0 rounded-[1px]" style={{ background: 'linear-gradient(135deg, var(--bg-mid), var(--bg-deep))', border: `1px solid ${cm('var(--idm-gold)', 30)}` }} />
         </div>
         {/* Diamond glow aura */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full z-0" style={{ background: 'radial-gradient(circle, rgba(239,249,35,0.15), transparent 70%)' }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full z-0" style={{ background: `radial-gradient(circle, ${cm('var(--idm-gold)', 15)}, transparent 70%)` }} />
       </div>
 
       {/* Header */}
       <div className="relative h-14 overflow-hidden">
-        <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${hexToRgba(maleAccent, 0.08)} 0%, transparent 50%, ${hexToRgba(femaleAccent, 0.08)} 100%)` }} />
+        <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${cm('var(--idm-male)', 8)} 0%, transparent 50%, ${cm('var(--idm-female)', 8)} 100%)` }} />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
         <div className="absolute bottom-2.5 left-4 right-4 flex items-end justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(239,249,35,0.15)', border: '1.5px solid rgba(239,249,35,0.35)', boxShadow: '0 0 10px rgba(239,249,35,0.2)' }}>
+            <div className="w-7 h-7 rounded-full flex items-center justify-center" style={{ backgroundColor: cm('var(--idm-gold)', 15), border: `1.5px solid ${cm('var(--idm-gold)', 35)}`, boxShadow: `0 0 10px ${cm('var(--idm-gold)', 20)}` }}>
               <Crown className="w-3.5 h-3.5 text-idm-gold-warm" />
             </div>
             <span className="text-[11px] font-black uppercase tracking-wider text-idm-gold-warm">Top Season</span>
           </div>
           {latestSeasonNumber > 0 && (
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded-md border" style={{ color: '#EFF923', backgroundColor: 'rgba(239,249,35,0.12)', borderColor: 'rgba(239,249,35,0.25)' }}>
+            <span className="text-[10px] font-bold px-2 py-0.5 rounded-md border text-idm-gold-warm" style={{ backgroundColor: cm('var(--idm-gold)', 12), borderColor: cm('var(--idm-gold)', 25) }}>
               <Crown className="w-2.5 h-2.5 inline mr-1" />S{latestSeasonNumber}
             </span>
           )}
@@ -741,21 +747,21 @@ function DuoChampionCard({
           <>
             {/* Mobile: horizontal divider */}
             <div className="flex lg:hidden items-center py-1 px-4">
-              <div className="h-px flex-1" style={{ background: `linear-gradient(to right, transparent, ${hexToRgba(maleAccent, 0.5)}, ${hexToRgba('#EFF923', 0.8)})` }} />
-              <div className="w-1.5 h-1.5 rounded-full mx-2 shrink-0" style={{ backgroundColor: '#EFF923', boxShadow: '0 0 6px rgba(239,249,35,0.4)' }} />
-              <div className="h-px flex-1" style={{ background: `linear-gradient(to left, transparent, ${hexToRgba(femaleAccent, 0.5)}, ${hexToRgba('#EFF923', 0.8)})` }} />
+              <div className="h-px flex-1" style={{ background: `linear-gradient(to right, transparent, ${cm('var(--idm-male)', 50)}, ${cm('var(--idm-gold)', 80)})` }} />
+              <div className="w-1.5 h-1.5 rounded-full mx-2 shrink-0" style={{ backgroundColor: 'var(--idm-gold)', boxShadow: `0 0 6px ${cm('var(--idm-gold)', 40)}` }} />
+              <div className="h-px flex-1" style={{ background: `linear-gradient(to left, transparent, ${cm('var(--idm-female)', 50)}, ${cm('var(--idm-gold)', 80)})` }} />
             </div>
 
             {/* Desktop: vertical divider with accent dots */}
             <div className="hidden lg:flex relative flex-col items-center justify-center shrink-0" style={{ width: '3px' }}>
               {/* Full-height gradient line */}
               <div className="absolute inset-0" style={{
-                background: `linear-gradient(to bottom, transparent 5%, ${hexToRgba(maleAccent, 0.6)} 20%, #EFF923 50%, ${hexToRgba(femaleAccent, 0.6)} 80%, transparent 95%)`,
-                boxShadow: `0 0 12px ${hexToRgba(maleAccent, 0.3)}, 0 0 8px rgba(239,249,35,0.15)`,
+                background: `linear-gradient(to bottom, transparent 5%, ${cm('var(--idm-male)', 60)} 20%, var(--idm-gold) 50%, ${cm('var(--idm-female)', 60)} 80%, transparent 95%)`,
+                boxShadow: `0 0 12px ${cm('var(--idm-male)', 30)}, 0 0 8px ${cm('var(--idm-gold)', 15)}`,
               }} />
               {/* Accent color dots */}
-              <div className="absolute top-[20%] w-2 h-2 rounded-full z-10" style={{ backgroundColor: maleAccent, boxShadow: `0 0 6px ${hexToRgba(maleAccent, 0.5)}` }} />
-              <div className="absolute bottom-[20%] w-2 h-2 rounded-full z-10" style={{ backgroundColor: femaleAccent, boxShadow: `0 0 6px ${hexToRgba(femaleAccent, 0.5)}` }} />
+              <div className="absolute top-[20%] w-2 h-2 rounded-full z-10" style={{ backgroundColor: 'var(--idm-male)', boxShadow: `0 0 6px ${cm('var(--idm-male)', 50)}` }} />
+              <div className="absolute bottom-[20%] w-2 h-2 rounded-full z-10" style={{ backgroundColor: 'var(--idm-female)', boxShadow: `0 0 6px ${cm('var(--idm-female)', 50)}` }} />
             </div>
           </>
         )}
@@ -900,7 +906,7 @@ function DuoChampionCard({
         return (
           <div className="px-4 pb-4 pt-3">
             {/* Divider */}
-            <div className="h-px mb-3" style={{ background: `linear-gradient(to right, transparent, ${hexToRgba(maleAccent, 0.15)}, ${hexToRgba('#EFF923', 0.2)}, ${hexToRgba(femaleAccent, 0.15)}, transparent)` }} />
+            <div className="h-px mb-3" style={{ background: `linear-gradient(to right, transparent, ${cm('var(--idm-male)', 15)}, ${cm('var(--idm-gold)', 20)}, ${cm('var(--idm-female)', 15)}, transparent)` }} />
 
             {/* Header */}
             <div className="flex items-center gap-1.5 mb-2">
@@ -921,7 +927,7 @@ function DuoChampionCard({
                     {male ? (
                       <button
                         className="flex-1 flex items-center gap-2 px-2.5 py-2 rounded-lg border hover:border-idm-gold-warm/20 transition-colors cursor-pointer text-left"
-                        style={{ borderColor: hexToRgba(maleAccent, 0.1), backgroundColor: hexToRgba(maleAccent, 0.03) }}
+                        style={{ borderColor: cm('var(--idm-male)', 10), backgroundColor: cm('var(--idm-male)', 3) }}
                         onClick={() => {
                           setSelectedPlayer({
                             ...male.player,
@@ -941,7 +947,7 @@ function DuoChampionCard({
                           });
                         }}
                       >
-                        <div className="relative w-8 h-8 rounded-full overflow-hidden shrink-0" style={{ border: `1.5px solid ${hexToRgba(maleAccent, 0.3)}` }}>
+                        <div className="relative w-8 h-8 rounded-full overflow-hidden shrink-0" style={{ border: `1.5px solid ${cm('var(--idm-male)', 30)}` }}>
                           <AvatarMedia
                             src={getAvatarUrl(male.player.gamertag, 'male', male.player.avatar)}
                             alt={male.player.gamertag}
@@ -963,14 +969,14 @@ function DuoChampionCard({
                         </div>
                       </button>
                     ) : (
-                      <div className="flex-1 h-12 rounded-lg border border-dashed opacity-20" style={{ borderColor: hexToRgba(maleAccent, 0.15) }} />
+                      <div className="flex-1 h-12 rounded-lg border border-dashed opacity-20" style={{ borderColor: cm('var(--idm-male)', 15) }} />
                     )}
 
                     {/* Female champion mini card */}
                     {female ? (
                       <button
                         className="flex-1 flex items-center gap-2 px-2.5 py-2 rounded-lg border hover:border-idm-gold-warm/20 transition-colors cursor-pointer text-left"
-                        style={{ borderColor: hexToRgba(femaleAccent, 0.1), backgroundColor: hexToRgba(femaleAccent, 0.03) }}
+                        style={{ borderColor: cm('var(--idm-female)', 10), backgroundColor: cm('var(--idm-female)', 3) }}
                         onClick={() => {
                           setSelectedPlayer({
                             ...female.player,
@@ -990,7 +996,7 @@ function DuoChampionCard({
                           });
                         }}
                       >
-                        <div className="relative w-8 h-8 rounded-full overflow-hidden shrink-0" style={{ border: `1.5px solid ${hexToRgba(femaleAccent, 0.3)}` }}>
+                        <div className="relative w-8 h-8 rounded-full overflow-hidden shrink-0" style={{ border: `1.5px solid ${cm('var(--idm-female)', 30)}` }}>
                           <AvatarMedia
                             src={getAvatarUrl(female.player.gamertag, 'female', female.player.avatar)}
                             alt={female.player.gamertag}
@@ -1012,7 +1018,7 @@ function DuoChampionCard({
                         </div>
                       </button>
                     ) : (
-                      <div className="flex-1 h-12 rounded-lg border border-dashed opacity-20" style={{ borderColor: hexToRgba(femaleAccent, 0.15) }} />
+                      <div className="flex-1 h-12 rounded-lg border border-dashed opacity-20" style={{ borderColor: cm('var(--idm-female)', 15) }} />
                     )}
                   </div>
                 </div>
@@ -1097,15 +1103,15 @@ function ClubChampionCard({
     <div
       className="champion-card reveal reveal-fade-up group relative rounded-3xl overflow-hidden border transition-all duration-500 hover:border-idm-gold-warm/25 hover:shadow-[0_0_40px_color-mix(in_srgb,var(--color-idm-gold-warm)_6%,transparent)]"
       style={{
-        borderColor: 'rgba(239,249,35,0.12)',
+        borderColor: cm('var(--idm-gold)', 12),
         background: 'linear-gradient(135deg, #080a14 0%, #0a0c18 25%, #080a14 50%, #0a0c18 75%, #080a14 100%)',
       }}
     >
       {/* ═══ Background layers — Dark coal navy canvas ═══ */}
       {/* Subtle grid texture */}
-      <div className="absolute inset-0 opacity-[0.015]" style={{ backgroundImage: 'linear-gradient(rgba(239,249,35,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(239,249,35,0.3) 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
+      <div className="absolute inset-0 opacity-[0.015]" style={{ backgroundImage: `linear-gradient(${cm('var(--idm-gold)', 30)} 1px, transparent 1px), linear-gradient(90deg, ${cm('var(--idm-gold)', 30)} 1px, transparent 1px)`, backgroundSize: '30px 30px' }} />
       {/* Subtle center glow — very restrained */}
-      <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 50% 30%, rgba(239,249,35,0.04) 0%, transparent 50%)' }} />
+      <div className="absolute inset-0" style={{ background: `radial-gradient(ellipse at 50% 30%, ${cm('var(--idm-gold)', 4)} 0%, transparent 50%)` }} />
 
       {/* Top gold accent line — thin refined */}
       <div className="h-px bg-gradient-to-r from-transparent via-idm-gold-warm/40 to-transparent" />
@@ -1114,7 +1120,7 @@ function ClubChampionCard({
         {/* ═══ Header Row — Trophy + Badges + Crown ═══ */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-idm-gold-warm/10 border border-idm-gold-warm/15 flex items-center justify-center" style={{ boxShadow: '0 0 20px rgba(239,249,35,0.06)' }}>
+            <div className="w-10 h-10 rounded-lg bg-idm-gold-warm/10 border border-idm-gold-warm/15 flex items-center justify-center" style={{ boxShadow: `0 0 20px ${cm('var(--idm-gold)', 6)}` }}>
               <Trophy className="w-5 h-5 text-idm-gold-warm/70" />
             </div>
             <div>
@@ -1130,9 +1136,9 @@ function ClubChampionCard({
           {/* Crown — luxury gold illuminated */}
           <div
             className="champion-crown-float hidden sm:block"
-            style={{ filter: 'drop-shadow(0 0 16px rgba(239,249,35,0.5)) drop-shadow(0 0 40px rgba(239,249,35,0.2))' }}
+            style={{ filter: `drop-shadow(0 0 16px ${cm('var(--idm-gold)', 50)}) drop-shadow(0 0 40px ${cm('var(--idm-gold)', 20)})` }}
           >
-            <Crown className="w-8 h-8" style={{ color: '#EFF923', filter: 'brightness(1.3)' }} />
+            <Crown className="w-8 h-8" style={{ color: 'var(--idm-gold)', filter: 'brightness(1.3)' }} />
           </div>
         </div>
 
@@ -1143,7 +1149,7 @@ function ClubChampionCard({
             <div className="relative">
               <div
                 className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl overflow-hidden border border-idm-gold-warm/15 bg-white/[0.02] cursor-pointer group/club"
-                style={{ boxShadow: '0 0 30px rgba(239,249,35,0.08)' }}
+                style={{ boxShadow: `0 0 30px ${cm('var(--idm-gold)', 8)}` }}
                 role="button"
                 tabIndex={0}
                 aria-label={`View club: ${clubData.name}`}
@@ -1165,7 +1171,7 @@ function ClubChampionCard({
                 <ClubLogoImage clubName={clubData.name} dbLogo={clubData.logo} alt={clubData.name} width={112} height={112} className="w-full h-full object-cover transition-transform duration-500 group-hover/club:scale-110" />
               </div>
               {/* Champion badge overlay — floating crown */}
-              <div className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-idm-gold-warm/80 flex items-center justify-center" style={{ boxShadow: '0 0 12px rgba(239,249,35,0.3)' }}>
+              <div className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-idm-gold-warm/80 flex items-center justify-center" style={{ boxShadow: `0 0 12px ${cm('var(--idm-gold)', 30)}` }}>
                 <Crown className="w-3.5 h-3.5 text-[#080a14]" />
               </div>
             </div>
@@ -1175,7 +1181,7 @@ function ClubChampionCard({
               <h4
                 className="text-2xl sm:text-3xl font-black uppercase tracking-wide cursor-pointer hover:opacity-90 transition-opacity text-foreground"
                 style={{
-                  textShadow: '0 0 30px rgba(239,249,35,0.08)',
+                  textShadow: `0 0 30px ${cm('var(--idm-gold)', 8)}`,
                 }}
                 onClick={() => {
                   if (setSelectedClub) {
@@ -1250,7 +1256,7 @@ function ClubChampionCard({
                     </div>
                     {/* Gamertag + points below avatar */}
                     <p className="text-[9px] font-bold mt-1 truncate max-w-[64px] text-center text-foreground/70">{member.gamertag}</p>
-                    <p className="text-[8px] font-black tabular-nums" style={{ color: member.division === 'male' ? 'rgba(87,181,255,0.7)' : 'rgba(255,92,154,0.7)' }}>{member.points}pts</p>
+                    <p className="text-[8px] font-black tabular-nums" style={{ color: member.division === 'male' ? 'var(--idm-male-light)' : 'var(--idm-female-light)' }}>{member.points}pts</p>
                   </div>
                 ))}
                 {allMembers.length > 5 && (
@@ -1345,9 +1351,9 @@ export function SeasonChampionSection({
   return (
     <section id="season-champion" role="region" aria-label="Top Season" className="landing-section relative py-24 px-4 sm:px-6 lg:px-8 overflow-hidden bg-deep">
       {/* Background */}
-      <div className="absolute inset-0 opacity-[0.025]" style={{ backgroundImage: 'linear-gradient(rgba(239,249,35,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(239,249,35,0.3) 1px, transparent 1px)', backgroundSize: '60px 60px' }} />
-      <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 30% 20%, rgba(46,159,255,0.06) 0%, transparent 45%), radial-gradient(ellipse at 70% 20%, rgba(255,45,120,0.06) 0%, transparent 45%)' }} />
-      <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 50% 10%, rgba(239,249,35,0.08) 0%, transparent 50%)' }} />
+      <div className="absolute inset-0 opacity-[0.025]" style={{ backgroundImage: `linear-gradient(${cm('var(--idm-gold)', 30)} 1px, transparent 1px), linear-gradient(90deg, ${cm('var(--idm-gold)', 30)} 1px, transparent 1px)`, backgroundSize: '60px 60px' }} />
+      <div className="absolute inset-0" style={{ background: `radial-gradient(ellipse at 30% 20%, ${cm('var(--idm-male)', 6)} 0%, transparent 45%), radial-gradient(ellipse at 70% 20%, ${cm('var(--idm-female)', 6)} 0%, transparent 45%)` }} />
+      <div className="absolute inset-0" style={{ background: `radial-gradient(ellipse at 50% 10%, ${cm('var(--idm-gold)', 8)} 0%, transparent 50%)` }} />
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-idm-gold-warm/25 to-transparent" />
       <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-idm-gold-warm/12 to-transparent" />
 

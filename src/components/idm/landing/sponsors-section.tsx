@@ -207,14 +207,14 @@ function SponsorCarousel({ sponsors }: { sponsors: Sponsor[] }) {
             <button
               onClick={goPrev}
               aria-label="Previous sponsor"
-              className="absolute left-1.5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/40 backdrop-blur-sm border border-idm-gold-warm/20 flex items-center justify-center text-white/70 hover:text-idm-gold-warm hover:bg-black/60 transition-all duration-200 cursor-pointer z-10 active:scale-90"
+              className="absolute left-1.5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/40 backdrop-blur-sm border border-idm-gold-warm/20 flex items-center justify-center text-muted-foreground dark:text-white/70 hover:text-idm-gold-warm hover:bg-black/60 transition-all duration-200 cursor-pointer z-10 active:scale-90"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
             <button
               onClick={goNext}
               aria-label="Next sponsor"
-              className="absolute right-1.5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/40 backdrop-blur-sm border border-idm-gold-warm/20 flex items-center justify-center text-white/70 hover:text-idm-gold-warm hover:bg-black/60 transition-all duration-200 cursor-pointer z-10 active:scale-90"
+              className="absolute right-1.5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/40 backdrop-blur-sm border border-idm-gold-warm/20 flex items-center justify-center text-muted-foreground dark:text-white/70 hover:text-idm-gold-warm hover:bg-black/60 transition-all duration-200 cursor-pointer z-10 active:scale-90"
             >
               <ChevronRight className="w-4 h-4" />
             </button>

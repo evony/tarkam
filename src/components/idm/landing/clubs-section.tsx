@@ -73,13 +73,13 @@ export function ClubsSection({ maleData, femaleData, isDataLoading, cmsSections,
 
   return (<>
       {/* ========== CLUB — Premium Card Layout ========== */}
-      <section id="clubs" className="landing-section relative py-16 sm:py-24 px-4 overflow-hidden bg-deep">
+      <section id="clubs" className="landing-section clubs-section-deep relative py-16 sm:py-24 px-4 overflow-hidden bg-deep">
         {/* ── Background layers (lightweight CSS-only) ── */}
-        <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: 'radial-gradient(circle, rgba(239,249,35,0.5) 1px, transparent 1px)', backgroundSize: '28px 28px' }} />
+        <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: 'radial-gradient(circle, color-mix(in srgb, var(--idm-gold-warm) 50%, transparent) 1px, transparent 1px)', backgroundSize: '28px 28px' }} />
         {/* Soft ambient radial glows */}
-        <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 50% 15%, rgba(239,249,35,0.07) 0%, transparent 45%), radial-gradient(ellipse at 10% 60%, rgba(46,159,255,0.04) 0%, transparent 40%), radial-gradient(ellipse at 90% 60%, rgba(255,45,120,0.04) 0%, transparent 40%)' }} />
+        <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 50% 15%, color-mix(in srgb, var(--idm-gold-warm) 7%, transparent) 0%, transparent 45%), radial-gradient(ellipse at 10% 60%, color-mix(in srgb, var(--idm-male) 4%, transparent) 0%, transparent 40%), radial-gradient(ellipse at 90% 60%, color-mix(in srgb, var(--idm-female) 4%, transparent) 0%, transparent 40%)' }} />
         {/* Top edge glow */}
-        <div className="absolute inset-x-0 top-0 h-[2px]" style={{ background: 'linear-gradient(90deg, transparent 5%, rgba(239,249,35,0.3) 30%, rgba(239,249,35,0.5) 50%, rgba(239,249,35,0.3) 70%, transparent 95%)' }} aria-hidden="true" />
+        <div className="absolute inset-x-0 top-0 h-[2px]" style={{ background: 'linear-gradient(90deg, transparent 5%, color-mix(in srgb, var(--idm-gold-warm) 30%, transparent) 30%, color-mix(in srgb, var(--idm-gold-warm) 50%, transparent) 50%, color-mix(in srgb, var(--idm-gold-warm) 30%, transparent) 70%, transparent 95%)' }} aria-hidden="true" />
         {/* Bottom edge line */}
         <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-idm-gold-warm/12 to-transparent" aria-hidden="true" />
 
@@ -150,7 +150,7 @@ export function ClubsSection({ maleData, femaleData, isDataLoading, cmsSections,
                 <div className="flex items-center justify-center">
                   <div className="relative inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-idm-gold-warm/15 bg-idm-gold-warm/5">
                     {/* Subtle inner glow */}
-                    <div className="absolute inset-0 rounded-full pointer-events-none" style={{ background: 'radial-gradient(ellipse at 50% 50%, rgba(239,249,35,0.06), transparent 70%)' }} />
+                    <div className="absolute inset-0 rounded-full pointer-events-none" style={{ background: 'radial-gradient(ellipse at 50% 50%, color-mix(in srgb, var(--idm-gold-warm) 6%, transparent), transparent 70%)' }} />
                     <Crown className="w-3.5 h-3.5 text-idm-gold-warm relative" />
                     {(() => {
                       // Group champions by club id — merge male+female if same club won both
@@ -249,7 +249,7 @@ export function ClubsSection({ maleData, femaleData, isDataLoading, cmsSections,
 
                                 {/* ── Champion card inner glow ── */}
                                 {isChampion && (
-                                  <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at 50% 30%, rgba(239,249,35,0.06) 0%, transparent 60%)' }} />
+                                  <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at 50% 30%, color-mix(in srgb, var(--idm-gold-warm) 6%, transparent) 0%, transparent 60%)' }} />
                                 )}
 
                                 {/* ── Logo watermark background ── */}
@@ -264,11 +264,11 @@ export function ClubsSection({ maleData, femaleData, isDataLoading, cmsSections,
                                     {/* Outer glow ring — single layer for performance */}
                                     <div className="absolute -inset-1.5 rounded-3xl transition-all duration-500" style={{
                                       background: isChampion
-                                        ? 'linear-gradient(135deg, rgba(239,249,35,0.3), rgba(239,249,35,0.08))'
-                                        : 'linear-gradient(135deg, rgba(239,249,35,0.12), rgba(239,249,35,0.03))',
+                                        ? 'linear-gradient(135deg, color-mix(in srgb, var(--idm-gold-warm) 30%, transparent), color-mix(in srgb, var(--idm-gold-warm) 8%, transparent))'
+                                        : 'linear-gradient(135deg, color-mix(in srgb, var(--idm-gold-warm) 12%, transparent), color-mix(in srgb, var(--idm-gold-warm) 3%, transparent))',
                                       boxShadow: isChampion
-                                        ? '0 0 20px rgba(239,249,35,0.2)'
-                                        : '0 0 10px rgba(239,249,35,0.08)',
+                                        ? '0 0 20px color-mix(in srgb, var(--idm-gold-warm) 20%, transparent)'
+                                        : '0 0 10px color-mix(in srgb, var(--idm-gold-warm) 8%, transparent)',
                                     }} />
                                     {/* Logo container */}
                                     <div className="club-logo-container relative w-20 h-20 sm:w-24 sm:h-24 rounded-3xl overflow-hidden bg-mid border-2 border-idm-gold-warm/20 flex items-center justify-center group-hover/club:scale-105 group-hover/club:border-idm-gold-warm/40 transition-all duration-500">
@@ -277,8 +277,8 @@ export function ClubsSection({ maleData, femaleData, isDataLoading, cmsSections,
                                     {/* Season champion badge */}
                                     {isChampion && (
                                       <div className="absolute -top-2 -right-2 z-20 min-w-[24px] h-[24px] rounded-full flex items-center justify-center border-2 border-mid" style={{
-                                        background: 'linear-gradient(135deg, #F9CB25, #F9CB25)',
-                                        boxShadow: '0 0 12px rgba(239,249,35,0.4)',
+                                        background: 'var(--idm-gold)',
+                                        boxShadow: '0 0 12px color-mix(in srgb, var(--idm-gold-warm) 40%, transparent)',
                                       }}>
                                         <Crown className="w-2.5 h-2.5 text-mid" />
                                       </div>
@@ -287,7 +287,7 @@ export function ClubsSection({ maleData, femaleData, isDataLoading, cmsSections,
 
                                   {/* Club name */}
                                   <p className={`text-sm font-black truncate max-w-full transition-colors duration-200 ios-heading ${
-                                    isChampion ? 'text-idm-gold-warm dark:text-[#EFF923]' : 'text-white dark:text-white text-foreground group-hover/club:text-idm-gold-warm'
+                                    isChampion ? 'text-idm-gold-warm dark:text-[#EFF923]' : 'text-foreground dark:text-white group-hover/club:text-idm-gold-warm'
                                   }`}>{club.name}</p>
 
                                   {/* Champion label */}
@@ -310,12 +310,12 @@ export function ClubsSection({ maleData, femaleData, isDataLoading, cmsSections,
                                   {/* Division badges */}
                                   <div className="flex items-center justify-center gap-1.5 mt-2.5">
                                     {maleMembers > 0 && (
-                                      <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#2E9FFF]/10 text-[#57B5FF] border border-[#2E9FFF]/15">
+                                      <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-idm-male/10 text-idm-male-light dark:text-[#57B5FF] border border-idm-male/15">
                                         <Music className="w-2.5 h-2.5" />{maleMembers} Cowo
                                       </span>
                                     )}
                                     {femaleMembers > 0 && (
-                                      <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#FF2D78]/10 text-[#FF5C9A] border border-[#FF2D78]/15">
+                                      <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-idm-female/10 text-idm-female-light dark:text-[#FF5C9A] border border-idm-female/15">
                                         <Shield className="w-2.5 h-2.5" />{femaleMembers} Cewe
                                       </span>
                                     )}
@@ -335,7 +335,7 @@ export function ClubsSection({ maleData, femaleData, isDataLoading, cmsSections,
                                 </div>
 
                                 {/* ── Bottom accent line (subtle) ── */}
-                                <div className="absolute bottom-0 left-[15%] right-[15%] h-px opacity-0 group-hover/club:opacity-100 transition-opacity duration-500" style={{ background: 'linear-gradient(90deg, transparent, rgba(239,249,35,0.2), transparent)' }} />
+                                <div className="absolute bottom-0 left-[15%] right-[15%] h-px opacity-0 group-hover/club:opacity-100 transition-opacity duration-500" style={{ background: 'linear-gradient(90deg, transparent, color-mix(in srgb, var(--idm-gold-warm) 20%, transparent), transparent)' }} />
                               </div>
                             </div>
                           );
