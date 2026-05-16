@@ -100,7 +100,7 @@ export function PlayerCard({
         <div className="flex items-center gap-1.5">
           <SkinName skin={primarySkin}>
             <p className={`font-bold text-xs sm:text-sm truncate text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)] ${
-              isChampion ? 'text-yellow-300' : ''
+              isChampion ? 'text-idm-gold-warm' : ''
             }`}>{gamertag}</p>
           </SkinName>
 

@@ -687,7 +687,7 @@ export function Dashboard() {
           </div>
 
           {/* RIGHT ZONE (Desktop) */}
-          <div className="hidden sm:flex flex-col items-stretch justify-between w-[150px] lg:w-[220px] shrink-0 border-l border-white/10 p-4 lg:p-6 gap-3">
+          <div className="hidden sm:flex flex-col items-stretch justify-between w-[150px] lg:w-[220px] shrink-0 border-l border-border p-4 lg:p-6 gap-3">
             <div className="flex items-center gap-2">
               <ShareButton
                 title={t?.name || 'Tarkam IDM'}

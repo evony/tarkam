@@ -87,10 +87,10 @@ export function PlayersSection({
       <div className="absolute inset-0 opacity-[0.018]" style={{ backgroundImage: 'radial-gradient(circle, rgba(239,249,35,0.5) 1px, transparent 1px)', backgroundSize: '28px 28px' }} />
       <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 50% 20%, rgba(239,249,35,0.07) 0%, transparent 50%), radial-gradient(ellipse at 12% 50%, rgba(46,159,255,0.05) 0%, transparent 40%), radial-gradient(ellipse at 88% 50%, rgba(255,45,120,0.05) 0%, transparent 40%)' }} />
       {/* Top edge glow */}
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[rgba(239,249,35,0.3)] to-transparent" aria-hidden="true" />
-      <div className="absolute inset-x-0 top-0 h-6 bg-gradient-to-b from-[rgba(239,249,35,0.025)] to-transparent pointer-events-none" aria-hidden="true" />
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-idm-gold-warm/30 to-transparent" aria-hidden="true" />
+      <div className="absolute inset-x-0 top-0 h-6 bg-gradient-to-b from-idm-gold-warm/[2.5] to-transparent pointer-events-none" aria-hidden="true" />
       {/* Bottom edge glow */}
-      <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[rgba(239,249,35,0.15)] to-transparent" aria-hidden="true" />
+      <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-idm-gold-warm/15 to-transparent" aria-hidden="true" />
 
       <div className="relative z-10 max-w-7xl mx-auto">
         <div className="stagger-item">
@@ -119,8 +119,8 @@ export function PlayersSection({
                         inline-flex items-center gap-1.5 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-bold
                         transition-all duration-200 cursor-pointer border
                         ${isSelected
-                          ? 'bg-[#EFF923]/15 border-[#EFF923]/40 text-[#EFF923] shadow-[0_0_12px_rgba(239,249,35,0.15)]'
-                          : 'bg-transparent border-[#EFF923]/10 text-muted-foreground/70 hover:border-[#EFF923]/25 hover:text-[#EFF923]/60'
+                          ? 'bg-idm-gold-warm/15 border-idm-gold-warm/40 text-idm-gold-warm shadow-[0_0_12px_color-mix(in_srgb,var(--color-idm-gold-warm)_15%,transparent)]'
+                          : 'bg-transparent border-idm-gold-warm/10 text-muted-foreground/70 hover:border-idm-gold-warm/25 hover:text-idm-gold-warm/60'
                         }
                       `}
                       aria-label={`Select ${season.name}`}
@@ -134,7 +134,7 @@ export function PlayersSection({
                         </span>
                       )}
                       {isCompleted && (
-                        <CheckCircle2 className="w-3 h-3 text-[#EFF923]/60" />
+                        <CheckCircle2 className="w-3 h-3 text-idm-gold-warm/60" />
                       )}
                     </button>
                   );
@@ -143,9 +143,9 @@ export function PlayersSection({
 
               {/* Historical Data Badge */}
               {isHistorical && (
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-[#EFF923]/20 bg-[#EFF923]/5">
-                  <History className="w-3 h-3 text-[#EFF923]/70" />
-                  <span className="text-[10px] font-bold text-[#EFF923]/70 uppercase tracking-wider">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-idm-gold-warm/20 bg-idm-gold-warm/5">
+                  <History className="w-3 h-3 text-idm-gold-warm/70" />
+                  <span className="text-[10px] font-bold text-idm-gold-warm/70 uppercase tracking-wider">
                     Data Historis — Season {seasonsForSelector.find(s => s.id === selectedSeasonId)?.number || '?'}
                   </span>
                 </div>
@@ -157,10 +157,10 @@ export function PlayersSection({
         {/* Season switch loading indicator — subtle shimmer bar */}
         {isSeasonSwitching && (
           <div className="mb-4 flex items-center justify-center gap-2">
-            <div className="h-1 w-24 rounded-full overflow-hidden bg-[#EFF923]/10">
-              <div className="h-full w-1/3 bg-[#EFF923]/40 rounded-full animate-pulse" style={{ animation: 'shimmer 1.5s infinite linear' }} />
+            <div className="h-1 w-24 rounded-full overflow-hidden bg-idm-gold-warm/10">
+              <div className="h-full w-1/3 bg-idm-gold-warm/40 rounded-full animate-pulse" style={{ animation: 'shimmer 1.5s infinite linear' }} />
             </div>
-            <span className="text-[10px] font-bold text-[#EFF923]/50 uppercase tracking-wider">Memuat data season...</span>
+            <span className="text-[10px] font-bold text-idm-gold-warm/50 uppercase tracking-wider">Memuat data season...</span>
           </div>
         )}
 
@@ -233,10 +233,10 @@ export function PlayersSection({
                               skinColors
                                 ? ''
                                 : isChampion
-                                  ? 'border-[rgba(239,249,35,0.25)]'
+                                  ? 'border-idm-gold-warm/25'
                                   : isTop3
                                     ? 'border-[rgba(46,159,255,0.2)]'
-                                    : 'border-[rgba(239,249,35,0.08)]'
+                                    : 'border-idm-gold-warm/8'
                             }`}
                             style={{
                               background: skinColors
@@ -273,7 +273,7 @@ export function PlayersSection({
                                 {/* Outer glow ring */}
                                 <div
                                   className={`absolute -inset-1.5 rounded-3xl transition-all duration-500 ${
-                                    isChampion && !skinColors ? 'shadow-[0_0_16px_rgba(239,249,35,0.3)]' : isTop3 && !skinColors ? 'shadow-[0_0_12px_rgba(46,159,255,0.2)]' : ''
+                                    isChampion && !skinColors ? 'shadow-[0_0_16px_color-mix(in_srgb,var(--color-idm-gold-warm)_30%,transparent)]' : isTop3 && !skinColors ? 'shadow-[0_0_12px_rgba(46,159,255,0.2)]' : ''
                                   }`}
                                   style={skinColors
                                     ? {
@@ -318,7 +318,7 @@ export function PlayersSection({
                                   skinColors
                                     ? ''
                                     : isChampion
-                                      ? 'text-[#EFF923] dark:text-[#EFF923] text-idm-gold-warm'
+                                      ? 'text-idm-gold-warm dark:text-[#EFF923]'
                                       : isTop3
                                         ? 'text-[#57B5FF] dark:text-[#57B5FF] text-idm-male'
                                         : 'text-white dark:text-white text-foreground group-hover/player:text-[#57B5FF]'
@@ -355,8 +355,8 @@ export function PlayersSection({
                                 style={{ background: 'rgba(239,249,35,0.04)' }}
                               >
                                 <div className="flex items-center gap-1">
-                                  <Trophy className="w-3 h-3 text-[#EFF923]/50" />
-                                  <span className="text-[10px] text-[#EFF923]/70 font-bold">{player.points.toLocaleString('id-ID')} pts</span>
+                                  <Trophy className="w-3 h-3 text-idm-gold-warm/50" />
+                                  <span className="text-[10px] text-idm-gold-warm/70 font-bold">{player.points.toLocaleString('id-ID')} pts</span>
                                 </div>
                                 {!isHistorical && (
                                   <div className="flex items-center gap-1">
@@ -459,10 +459,10 @@ export function PlayersSection({
                               skinColors
                                 ? ''
                                 : isChampion
-                                  ? 'border-[rgba(239,249,35,0.25)]'
+                                  ? 'border-idm-gold-warm/25'
                                   : isTop3
                                     ? 'border-[rgba(255,45,120,0.2)]'
-                                    : 'border-[rgba(239,249,35,0.08)]'
+                                    : 'border-idm-gold-warm/8'
                             }`}
                             style={{
                               background: skinColors
@@ -499,7 +499,7 @@ export function PlayersSection({
                                 {/* Outer glow ring */}
                                 <div
                                   className={`absolute -inset-1.5 rounded-3xl transition-all duration-500 ${
-                                    isChampion && !skinColors ? 'shadow-[0_0_16px_rgba(239,249,35,0.3)]' : isTop3 && !skinColors ? 'shadow-[0_0_12px_rgba(255,45,120,0.2)]' : ''
+                                    isChampion && !skinColors ? 'shadow-[0_0_16px_color-mix(in_srgb,var(--color-idm-gold-warm)_30%,transparent)]' : isTop3 && !skinColors ? 'shadow-[0_0_12px_rgba(255,45,120,0.2)]' : ''
                                   }`}
                                   style={skinColors
                                     ? {
@@ -544,7 +544,7 @@ export function PlayersSection({
                                   skinColors
                                     ? ''
                                     : isChampion
-                                      ? 'text-[#EFF923] dark:text-[#EFF923] text-idm-gold-warm'
+                                      ? 'text-idm-gold-warm dark:text-[#EFF923]'
                                       : isTop3
                                         ? 'text-[#FF5C9A] dark:text-[#FF5C9A] text-idm-female'
                                         : 'text-white dark:text-white text-foreground group-hover/player:text-[#FF5C9A]'
@@ -581,8 +581,8 @@ export function PlayersSection({
                                 style={{ background: 'rgba(239,249,35,0.04)' }}
                               >
                                 <div className="flex items-center gap-1">
-                                  <Trophy className="w-3 h-3 text-[#EFF923]/50" />
-                                  <span className="text-[10px] text-[#EFF923]/70 font-bold">{player.points.toLocaleString('id-ID')} pts</span>
+                                  <Trophy className="w-3 h-3 text-idm-gold-warm/50" />
+                                  <span className="text-[10px] text-idm-gold-warm/70 font-bold">{player.points.toLocaleString('id-ID')} pts</span>
                                 </div>
                                 {!isHistorical && (
                                   <div className="flex items-center gap-1">

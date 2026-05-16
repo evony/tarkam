@@ -1431,7 +1431,7 @@ export function CmsPanel() {
                                   </SelectItem>
                                   <SelectItem value="both">
                                     <span className="flex items-center gap-1.5">
-                                      <span className="w-2 h-2 rounded-full bg-[#EFF923]" />
+                                      <span className="w-2 h-2 rounded-full bg-idm-gold-warm" />
                                       Semua
                                     </span>
                                   </SelectItem>

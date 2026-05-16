@@ -351,7 +351,7 @@ export const CommunityLeaderboard = React.memo(function CommunityLeaderboard({
                                   )}
                                   {/* Season champion badge */}
                                   {seasonChampionClubIds.has(club.id) && (
-                                    <div className="absolute -top-1 -right-1 z-10 min-w-[14px] h-[14px] rounded-full bg-[#EFF923] flex items-center justify-center border border-border/20">
+                                    <div className="absolute -top-1 -right-1 z-10 min-w-[14px] h-[14px] rounded-full bg-idm-gold-warm flex items-center justify-center border border-border/20">
                                       <span className="text-[6px] font-black text-mid leading-none">S{seasonChampionClubIds.get(club.id)}</span>
                                     </div>
                                   )}

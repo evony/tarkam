@@ -39,7 +39,7 @@ function SocialLink({ href, label, children }: { href: string; label: string; ch
       target="_blank"
       rel="noopener noreferrer"
       aria-label={label}
-      className="footer-social-enhanced focus-ring-premium p-3 rounded-xl text-muted-foreground hover:text-[#EFF923] hover:bg-[rgba(239,249,35,0.08)] hover:shadow-[0_0_16px_2px_rgba(239,249,35,0.12)] transition-all duration-300"
+      className="footer-social-enhanced focus-ring-premium p-3 rounded-xl text-muted-foreground hover:text-idm-gold-warm hover:bg-idm-gold-warm/8 hover:shadow-[0_0_16px_2px_color-mix(in_srgb,var(--color-idm-gold-warm)_12%,transparent)] transition-all duration-300"
     >
       {children}
     </a>
@@ -56,7 +56,7 @@ function QuickLink({ label, sectionId }: { label: string; sectionId: string }) {
   return (
     <button
       onClick={handleClick}
-      className="focus-ring-premium text-muted-foreground text-sm hover:text-[#EFF923] transition-colors duration-200 cursor-pointer py-0.5 text-left"
+      className="focus-ring-premium text-muted-foreground text-sm hover:text-idm-gold-warm transition-colors duration-200 cursor-pointer py-0.5 text-left"
     >
       {label}
     </button>
@@ -82,7 +82,7 @@ export function LandingFooter({ cmsSettings, className }: LandingFooterProps) {
   const hasSocial = discordUrl || instagramUrl || youtubeUrl || whatsappUrl;
 
   return (
-    <footer className={`landing-footer relative bg-background border-t border-[rgba(239,249,35,0.08)] overflow-hidden pb-[env(safe-area-inset-bottom)] ${className || ''}`}>
+    <footer className={`landing-footer relative bg-background border-t border-idm-gold-warm/8 overflow-hidden pb-[env(safe-area-inset-bottom)] ${className || ''}`}>
       {/* ── Aurora atmospheric glow above footer ── */}
       <div className="aurora-bg absolute top-0 left-0 right-0 h-32 pointer-events-none opacity-50" aria-hidden="true" />
       {/* ── Premium gold gradient line at top ── */}
@@ -115,7 +115,7 @@ export function LandingFooter({ cmsSettings, className }: LandingFooterProps) {
           <div className="flex flex-col">
             {/* Logo + Title — with animated glow */}
             <div className="flex items-center gap-2.5 mb-2">
-              <div className="footer-logo-glow w-7 h-7 rounded-md overflow-hidden shrink-0 ring-1 ring-[rgba(239,249,35,0.2)]">
+              <div className="footer-logo-glow w-7 h-7 rounded-md overflow-hidden shrink-0 ring-1 ring-idm-gold-warm/20">
                 <Image
                   src={logoUrl}
                   alt="IDM Logo"

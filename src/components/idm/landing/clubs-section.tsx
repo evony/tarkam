@@ -81,7 +81,7 @@ export function ClubsSection({ maleData, femaleData, isDataLoading, cmsSections,
         {/* Top edge glow */}
         <div className="absolute inset-x-0 top-0 h-[2px]" style={{ background: 'linear-gradient(90deg, transparent 5%, rgba(239,249,35,0.3) 30%, rgba(239,249,35,0.5) 50%, rgba(239,249,35,0.3) 70%, transparent 95%)' }} aria-hidden="true" />
         {/* Bottom edge line */}
-        <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[rgba(239,249,35,0.12)] to-transparent" aria-hidden="true" />
+        <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-idm-gold-warm/12 to-transparent" aria-hidden="true" />
 
         <div className="relative z-10 max-w-7xl mx-auto">
           <div className="stagger-item">
@@ -110,8 +110,8 @@ export function ClubsSection({ maleData, femaleData, isDataLoading, cmsSections,
                           inline-flex items-center gap-1.5 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-bold
                           transition-all duration-200 cursor-pointer border
                           ${isSelected
-                            ? 'bg-[#EFF923]/15 border-[#EFF923]/40 text-[#EFF923] shadow-[0_0_12px_rgba(239,249,35,0.15)]'
-                            : 'bg-transparent border-[#EFF923]/10 text-muted-foreground/70 hover:border-[#EFF923]/25 hover:text-[#EFF923]/60'
+                            ? 'bg-idm-gold-warm/15 border-idm-gold-warm/40 text-idm-gold-warm shadow-[0_0_12px_color-mix(in_srgb,var(--color-idm-gold-warm)_15%,transparent)]'
+                            : 'bg-transparent border-idm-gold-warm/10 text-muted-foreground/70 hover:border-idm-gold-warm/25 hover:text-idm-gold-warm/60'
                           }
                         `}
                         aria-label={`Select ${season.name}`}
@@ -125,7 +125,7 @@ export function ClubsSection({ maleData, femaleData, isDataLoading, cmsSections,
                           </span>
                         )}
                         {isCompleted && (
-                          <CheckCircle2 className="w-3 h-3 text-[#EFF923]/60" />
+                          <CheckCircle2 className="w-3 h-3 text-idm-gold-warm/60" />
                         )}
                       </button>
                     );
@@ -134,9 +134,9 @@ export function ClubsSection({ maleData, femaleData, isDataLoading, cmsSections,
 
                 {/* Historical Data Badge */}
                 {isHistorical && (
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-[#EFF923]/20 bg-[#EFF923]/5">
-                    <History className="w-3 h-3 text-[#EFF923]/70" />
-                    <span className="text-[10px] font-bold text-[#EFF923]/70 uppercase tracking-wider">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-idm-gold-warm/20 bg-idm-gold-warm/5">
+                    <History className="w-3 h-3 text-idm-gold-warm/70" />
+                    <span className="text-[10px] font-bold text-idm-gold-warm/70 uppercase tracking-wider">
                       Data Historis — Season {seasonsForSelector.find(s => s.id === selectedSeasonId)?.number || '?'}
                     </span>
                   </div>
@@ -148,10 +148,10 @@ export function ClubsSection({ maleData, femaleData, isDataLoading, cmsSections,
             {seasonChampions.length > 0 && (
               <div className="stagger-item-fast mb-8" style={{ animationDelay: '60ms' }}>
                 <div className="flex items-center justify-center">
-                  <div className="relative inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-[#EFF923]/15 bg-[#EFF923]/5">
+                  <div className="relative inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-idm-gold-warm/15 bg-idm-gold-warm/5">
                     {/* Subtle inner glow */}
                     <div className="absolute inset-0 rounded-full pointer-events-none" style={{ background: 'radial-gradient(ellipse at 50% 50%, rgba(239,249,35,0.06), transparent 70%)' }} />
-                    <Crown className="w-3.5 h-3.5 text-[#EFF923] relative" />
+                    <Crown className="w-3.5 h-3.5 text-idm-gold-warm relative" />
                     {(() => {
                       // Group champions by club id — merge male+female if same club won both
                       type Champ = typeof seasonChampions[number];
@@ -170,7 +170,7 @@ export function ClubsSection({ maleData, femaleData, isDataLoading, cmsSections,
                         return (
                           <span key={`${ch.id}-${group.map(g => g.division).join('-')}-S${ch.seasonNumber}`} className="flex items-center gap-2 relative">
                             {i > 0 && <span className="text-[10px] text-muted-foreground/40">•</span>}
-                            <span className="text-[10px] font-bold text-[#EFF923]/70 uppercase tracking-wider">
+                            <span className="text-[10px] font-bold text-idm-gold-warm/70 uppercase tracking-wider">
                               Tarkam {label}
                             </span>
                             {ch.logo && (
@@ -242,7 +242,7 @@ export function ClubsSection({ maleData, femaleData, isDataLoading, cmsSections,
                               })}
                             >
                               <div className={`ios-club-card club-card-shimmer relative bg-mid text-center transition-all duration-300 overflow-hidden ${
-                                isChampion ? 'border-[rgba(239,249,35,0.30)] ios-card-featured' : ''
+                                isChampion ? 'border-idm-gold-warm/30 ios-card-featured' : ''
                               }`}>
                                 {/* ── iOS Gold accent line at top ── */}
                                 <div className="ios-gold-line" />
@@ -271,7 +271,7 @@ export function ClubsSection({ maleData, femaleData, isDataLoading, cmsSections,
                                         : '0 0 10px rgba(239,249,35,0.08)',
                                     }} />
                                     {/* Logo container */}
-                                    <div className="club-logo-container relative w-20 h-20 sm:w-24 sm:h-24 rounded-3xl overflow-hidden bg-mid border-2 border-[#EFF923]/20 flex items-center justify-center group-hover/club:scale-105 group-hover/club:border-[#EFF923]/40 transition-all duration-500">
+                                    <div className="club-logo-container relative w-20 h-20 sm:w-24 sm:h-24 rounded-3xl overflow-hidden bg-mid border-2 border-idm-gold-warm/20 flex items-center justify-center group-hover/club:scale-105 group-hover/club:border-idm-gold-warm/40 transition-all duration-500">
                                       <ClubLogoImage clubName={club.name} dbLogo={club.logo} alt={club.name} fill sizes="96px" className="object-cover" />
                                     </div>
                                     {/* Season champion badge */}
@@ -287,21 +287,21 @@ export function ClubsSection({ maleData, femaleData, isDataLoading, cmsSections,
 
                                   {/* Club name */}
                                   <p className={`text-sm font-black truncate max-w-full transition-colors duration-200 ios-heading ${
-                                    isChampion ? 'text-[#EFF923] dark:text-[#EFF923] text-idm-gold-warm' : 'text-white dark:text-white text-foreground group-hover/club:text-[#EFF923]'
+                                    isChampion ? 'text-idm-gold-warm dark:text-[#EFF923]' : 'text-white dark:text-white text-foreground group-hover/club:text-idm-gold-warm'
                                   }`}>{club.name}</p>
 
                                   {/* Champion label */}
                                   {isChampion && (
                                     <div className="mt-1 flex items-center gap-1">
-                                      <Star className="w-2.5 h-2.5 text-[#EFF923]/60" />
-                                      <span className="text-[9px] font-bold text-[#EFF923]/60 uppercase tracking-wider">Champion S{seasonChampions.find(ch => ch.name === club.name)?.seasonNumber ?? 1}</span>
+                                      <Star className="w-2.5 h-2.5 text-idm-gold-warm/60" />
+                                      <span className="text-[9px] font-bold text-idm-gold-warm/60 uppercase tracking-wider">Champion S{seasonChampions.find(ch => ch.name === club.name)?.seasonNumber ?? 1}</span>
                                     </div>
                                   )}
 
                                   {/* Rank badge for historical data */}
                                   {isHistorical && (club as any).rank && (
                                     <div className="mt-1">
-                                      <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#EFF923]/10 text-[#EFF923] border border-[#EFF923]/15">
+                                      <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-idm-gold-warm/10 text-idm-gold-warm border border-idm-gold-warm/15">
                                         #{(club as any).rank}
                                       </span>
                                     </div>
@@ -328,8 +328,8 @@ export function ClubsSection({ maleData, femaleData, isDataLoading, cmsSections,
                                       <span className="text-[10px] text-muted-foreground/60 font-medium">{club.memberCount || (('_count' in club) && (club as { _count: { members: number } })._count.members) || 0} anggota</span>
                                     </div>
                                     <div className="flex items-center gap-1">
-                                      <Trophy className="w-3 h-3 text-[#EFF923]/50" />
-                                      <span className="text-[10px] text-[#EFF923]/70 font-bold">{club.points.toLocaleString('id-ID')} pts</span>
+                                      <Trophy className="w-3 h-3 text-idm-gold-warm/50" />
+                                      <span className="text-[10px] text-idm-gold-warm/70 font-bold">{club.points.toLocaleString('id-ID')} pts</span>
                                     </div>
                                   </div>
                                 </div>
@@ -347,7 +347,7 @@ export function ClubsSection({ maleData, femaleData, isDataLoading, cmsSections,
                         <div className="flex justify-center mt-8">
                           <button
                             onClick={() => setShowAllClubs(!showAllClubs)}
-                            className="relative inline-flex items-center gap-2 px-6 py-2.5 rounded-full border border-[#EFF923]/20 bg-[#EFF923]/5 text-[#EFF923] text-xs font-semibold transition-all duration-300 hover:bg-[#EFF923]/10 hover:border-[#EFF923]/30 hover:shadow-[0_0_20px_rgba(239,249,35,0.1)] cursor-pointer"
+                            className="relative inline-flex items-center gap-2 px-6 py-2.5 rounded-full border border-idm-gold-warm/20 bg-idm-gold-warm/5 text-idm-gold-warm text-xs font-semibold transition-all duration-300 hover:bg-idm-gold-warm/10 hover:border-idm-gold-warm/30 hover:shadow-[0_0_20px_color-mix(in_srgb,var(--color-idm-gold-warm)_10%,transparent)] cursor-pointer"
                           >
                             {showAllClubs ? (
                               <>

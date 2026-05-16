@@ -546,7 +546,7 @@ export function ChampionsSection({
 
                                     {/* Bottom info overlay */}
                                     <div className="absolute bottom-0 inset-x-0 p-2 z-10">
-                                      <p className={`text-xs font-bold truncate text-center ${isCenter ? 'text-yellow-300' : 'text-white'}`}>
+                                      <p className={`text-xs font-bold truncate text-center ${isCenter ? 'text-idm-gold-warm' : 'text-white'}`}>
                                         {player.gamertag}
                                       </p>
                                       <div className="flex items-center justify-center gap-1.5 mt-1">

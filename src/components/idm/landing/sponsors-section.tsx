@@ -73,13 +73,13 @@ export function SponsorsSection() {
       className="relative py-10 sm:py-16 overflow-hidden bg-deep"
     >
       {/* ── Top edge glow ── */}
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[rgba(239,249,35,0.25)] to-transparent" aria-hidden="true" />
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-idm-gold-warm/25 to-transparent" aria-hidden="true" />
 
       {/* ── Background ── */}
       <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at 50% 50%, rgba(239,249,35,0.05) 0%, transparent 60%)' }} />
 
       {/* ── Bottom edge glow ── */}
-      <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[rgba(239,249,35,0.15)] to-transparent" aria-hidden="true" />
+      <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-idm-gold-warm/15 to-transparent" aria-hidden="true" />
 
       {/* Content */}
       <div className="relative z-10 max-w-7xl mx-auto">
@@ -235,7 +235,7 @@ function SponsorCarousel({ sponsors }: { sponsors: Sponsor[] }) {
               style={{ minWidth: 'unset', minHeight: 'unset', width: i === activeIndex ? 16 : 4, height: 4 }}
               className={`compact-dot transition-all duration-300 rounded-full cursor-pointer ${
                 i === activeIndex
-                  ? 'bg-idm-gold-warm shadow-[0_0_4px_rgba(239,249,35,0.4)]'
+                  ? 'bg-idm-gold-warm shadow-[0_0_4px_color-mix(in_srgb,var(--color-idm-gold-warm)_40%,transparent)]'
                   : 'bg-idm-gold-warm/25 hover:bg-idm-gold-warm/50'
               }`}
             />
@@ -309,7 +309,7 @@ function SponsorCarouselCard({ sponsor }: { sponsor: Sponsor }) {
 function SponsorCardDesktop({ sponsor }: { sponsor: Sponsor }) {
   const logo = sponsor.logo;
   const inner = (
-    <div className="group relative rounded-xl border border-idm-gold-warm/15 bg-idm-gold-warm/[0.04] h-28 overflow-hidden transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_0_24px_rgba(239,249,35,0.12)]">
+    <div className="group relative rounded-xl border border-idm-gold-warm/15 bg-idm-gold-warm/[0.04] h-28 overflow-hidden transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_0_24px_color-mix(in_srgb,var(--color-idm-gold-warm)_12%,transparent)]">
       {logo ? (
         <>
           <Image

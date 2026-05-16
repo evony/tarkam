@@ -19,7 +19,7 @@ export default function GlobalError({
 
   return (
     <html lang="id">
-      <body className="bg-[#080a14] text-white min-h-screen flex items-center justify-center overflow-hidden">
+      <body className="bg-background text-foreground min-h-screen flex items-center justify-center overflow-hidden">
         <div className="max-w-md mx-auto px-6 text-center space-y-6">
           {/* Logo */}
           <div className="flex justify-center">
@@ -33,11 +33,11 @@ export default function GlobalError({
             <h1 className="text-xl font-bold text-amber-400">
               Terjadi Kesalahan
             </h1>
-            <p className="text-sm text-gray-400 leading-relaxed">
+            <p className="text-sm text-muted-foreground leading-relaxed">
               Aplikasi mengalami error yang tidak terduga. Tim kami sudah menerima notifikasi tentang masalah ini.
             </p>
             {error?.message && (
-              <p className="text-xs text-gray-500 font-mono bg-gray-800/50 rounded-lg px-3 py-2 mt-3 break-all">
+              <p className="text-xs text-muted-foreground/60 font-mono bg-muted/50 rounded-lg px-3 py-2 mt-3 break-all">
                 {error.message}
               </p>
             )}
@@ -53,14 +53,14 @@ export default function GlobalError({
             </button>
             <button
               onClick={() => window.location.href = '/'}
-              className="w-full px-6 py-2.5 rounded-xl border border-gray-700 text-gray-300 text-sm hover:bg-gray-800 transition-colors cursor-pointer"
+              className="w-full px-6 py-2.5 rounded-xl border border-border text-muted-foreground text-sm hover:bg-muted transition-colors cursor-pointer"
             >
               Kembali ke Beranda
             </button>
           </div>
 
           {/* Footer */}
-          <p className="text-[10px] text-gray-600">
+          <p className="text-[10px] text-muted-foreground/40">
             TARKAM IDM — Fan Made Edition
           </p>
         </div>

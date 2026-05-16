@@ -23,8 +23,8 @@ const PARTICLES = [
 function TrustBadge({ icon: Icon, value, label }: { icon: React.ComponentType<{ className?: string }>; value: string; label: string }) {
   return (
     <div className="flex flex-col items-center gap-2 badge-premium">
-      <div className="cta-badge-ring w-14 h-14 rounded-2xl bg-[rgba(239,249,35,0.08)] flex items-center justify-center relative border border-[rgba(239,249,35,0.12)]">
-        <Icon className="w-6 h-6 text-[#EFF923] relative z-10" />
+      <div className="cta-badge-ring w-14 h-14 rounded-2xl bg-idm-gold-warm/8 flex items-center justify-center relative border border-idm-gold-warm/12">
+        <Icon className="w-6 h-6 text-idm-gold-warm relative z-10" />
       </div>
       <span className="cta-count-up text-foreground text-xl font-extrabold tabular-nums tracking-tight">{value}</span>
       <span className="text-idm-gold-warm/60 text-[10px] uppercase tracking-widest font-semibold">{label}</span>
@@ -68,20 +68,20 @@ export function CTASection({
 
       {/* Top gold border glow line */}
       <div className="absolute top-0 left-0 right-0 h-px" aria-hidden="true">
-        <div className="w-full h-full" style={{ background: 'linear-gradient(90deg, transparent, rgba(239,249,35,0.4), rgba(245,230,200,0.2), rgba(239,249,35,0.4), transparent)' }} />
+        <div className="w-full h-full" style={{ background: 'linear-gradient(90deg, transparent, color-mix(in srgb, var(--color-idm-gold-warm) 40%, transparent), rgba(245,230,200,0.2), color-mix(in srgb, var(--color-idm-gold-warm) 40%, transparent), transparent)' }} />
       </div>
 
       {/* ── Atmospheric: Dot grid pattern ── */}
       <div className="cta-dot-grid absolute inset-0 pointer-events-none" aria-hidden="true" />
 
       {/* Radial gold glow */}
-      <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at 50% 50%, rgba(239,249,35,0.08) 0%, transparent 50%)' }} />
+      <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at 50% 50%, color-mix(in srgb, var(--color-idm-gold-warm) 8%, transparent) 0%, transparent 50%)' }} />
 
       {/* Bilateral cyan+purple atmosphere */}
       <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at 15% 50%, rgba(46,159,255,0.04) 0%, transparent 45%), radial-gradient(ellipse at 85% 50%, rgba(255,45,120,0.04) 0%, transparent 45%)' }} />
 
       {/* Bottom edge glow */}
-      <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[rgba(239,249,35,0.12)] to-transparent" aria-hidden="true" />
+      <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-idm-gold-warm/12 to-transparent" aria-hidden="true" />
 
       {/* Content */}
       <div className="relative z-10 max-w-4xl mx-auto text-center">
@@ -96,7 +96,7 @@ export function CTASection({
           {/* Card content with background to mask the rotating border */}
           <div className="relative rounded-3xl glass-premium-strong px-5 sm:px-10 py-8 sm:py-14 m-[1.5px]">
             {/* Diamond pattern overlay */}
-            <div className="absolute inset-0 rounded-3xl opacity-[0.025] pointer-events-none" style={{ backgroundImage: 'repeating-linear-gradient(45deg, rgba(239,249,35,1) 0, rgba(239,249,35,1) 1px, transparent 1px, transparent 12px), repeating-linear-gradient(-45deg, rgba(239,249,35,1) 0, rgba(239,249,35,1) 1px, transparent 1px, transparent 12px)', backgroundSize: '17px 17px' }} aria-hidden="true" />
+            <div className="absolute inset-0 rounded-3xl opacity-[0.025] pointer-events-none" style={{ backgroundImage: 'repeating-linear-gradient(45deg, var(--color-idm-gold-warm) 0, var(--color-idm-gold-warm) 1px, transparent 1px, transparent 12px), repeating-linear-gradient(-45deg, var(--color-idm-gold-warm) 0, var(--color-idm-gold-warm) 1px, transparent 1px, transparent 12px)', backgroundSize: '17px 17px' }} aria-hidden="true" />
             {/* Gold particle trail — CSS pseudo-element */}
             <div className="cta-gold-trail absolute top-0 left-0 right-0 h-1 rounded-t-3xl overflow-hidden" aria-hidden="true" />
 
@@ -104,7 +104,7 @@ export function CTASection({
             {PARTICLES.map((particle, i) => (
               <div
                 key={i}
-                className={`${particle.className} ${particle.size} absolute rounded-full bg-[#EFF923] pointer-events-none`}
+                className={`${particle.className} ${particle.size} absolute rounded-full bg-idm-gold-warm pointer-events-none`}
                 style={{ opacity: 0.15 }}
                 aria-hidden="true"
               />
@@ -125,10 +125,10 @@ export function CTASection({
               {/* Masuk Arena — Primary Gold Button with pulsing glow */}
               <button
                 onClick={onEnterCommunity}
-                className="btn-press focus-ring-premium cta-btn-pulse group relative px-6 sm:px-8 py-4 min-h-[48px] rounded-2xl bg-gradient-to-r from-[#D69E2E] via-[#EFF923] to-[#B7791F] text-mid font-bold text-sm tracking-wider cursor-pointer overflow-hidden sm:shadow-[0_0_24px_rgba(239,249,35,0.3)] sm:hover:shadow-[0_0_36px_rgba(239,249,35,0.5)] transition-shadow duration-300"
+                className="btn-press focus-ring-premium cta-btn-pulse group relative px-6 sm:px-8 py-4 min-h-[48px] rounded-2xl bg-gradient-to-r from-[#D69E2E] via-idm-gold-warm to-[#B7791F] text-mid font-bold text-sm tracking-wider cursor-pointer overflow-hidden sm:shadow-[0_0_24px] sm:shadow-idm-gold-warm/30 sm:hover:shadow-[0_0_36px] sm:hover:shadow-idm-gold-warm/50 transition-shadow duration-300"
               >
                 {/* Glow ripple on hover — desktop only */}
-                <div className="hidden sm:block absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ boxShadow: '0 0 30px 4px rgba(239,249,35,0.35), 0 0 60px 8px rgba(239,249,35,0.15)' }} />
+                <div className="hidden sm:block absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ boxShadow: '0 0 30px 4px color-mix(in srgb, var(--color-idm-gold-warm) 35%, transparent), 0 0 60px 8px color-mix(in srgb, var(--color-idm-gold-warm) 15%, transparent)' }} />
                 {/* Shimmer sweep on hover — desktop only */}
                 <div className="hidden sm:block absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
                 <Flame className="w-4 h-4 inline mr-2 relative z-10" />
@@ -141,14 +141,14 @@ export function CTASection({
                 disabled={!isRegistrationOpen}
                 className={`btn-press focus-ring-premium group relative px-6 sm:px-8 py-4 min-h-[48px] rounded-2xl font-bold text-sm tracking-wider transition-all overflow-hidden ${
                   isRegistrationOpen
-                    ? 'border-2 border-[rgba(239,249,35,0.3)] text-[#EFF923] bg-transparent hover:bg-[rgba(239,249,35,0.05)] hover:border-[rgba(239,249,35,0.5)] hover:shadow-[0_0_20px_2px_rgba(239,249,35,0.15)] cursor-pointer'
+                    ? 'border-2 border-idm-gold-warm/30 text-idm-gold-warm bg-transparent hover:bg-idm-gold-warm/5 hover:border-idm-gold-warm/50 hover:shadow-[0_0_20px_2px] hover:shadow-idm-gold-warm/15 cursor-pointer'
                     : 'border-2 border-gray-500/20 text-gray-500 bg-gray-500/5 cursor-not-allowed opacity-60'
                 }`}
                 title={isRegistrationOpen ? 'Daftar sekarang' : 'Pendaftaran belum dibuka'}
               >
                 {/* Shimmer sweep on hover */}
                 {isRegistrationOpen && (
-                  <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-[rgba(239,249,35,0.12)] to-transparent pointer-events-none" />
+                  <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-idm-gold-warm/12 to-transparent pointer-events-none" />
                 )}
                 <UserPlus className="w-4 h-4 inline mr-2 relative z-10" />
                 <span className="relative z-10">{isRegistrationOpen ? (secondaryButtonText) : 'Belum Buka'}</span>
@@ -164,7 +164,7 @@ export function CTASection({
         <div className="reveal reveal-fade-up reveal-delay-3 mt-12 flex items-center justify-center gap-6 sm:gap-10 md:gap-16">
           {badges.map((badge, i) => (
             <span key={i} className="contents">
-              {i > 0 && <div className="h-10 w-px bg-[rgba(239,249,35,0.08)]" aria-hidden="true" />}
+              {i > 0 && <div className="h-10 w-px bg-idm-gold-warm/8" aria-hidden="true" />}
               <TrustBadge icon={badge.icon} value={badge.value} label={badge.label} />
             </span>
           ))}

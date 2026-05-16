@@ -15,7 +15,7 @@ export default function NotFound() {
   const mounted = useIsMounted();
 
   return (
-    <div className="min-h-screen bg-[#080a14] text-white flex items-center justify-center overflow-hidden relative">
+    <div className="min-h-screen bg-background text-foreground flex items-center justify-center overflow-hidden relative">
       {/* Background glow */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-amber-500/3 blur-3xl" />
@@ -45,8 +45,8 @@ export default function NotFound() {
           <h1 className="text-7xl font-black bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 bg-clip-text text-transparent">
             404
           </h1>
-          <h2 className="text-lg font-bold text-gray-300">Halaman Tidak Ditemukan</h2>
-          <p className="text-sm text-gray-500 leading-relaxed max-w-sm mx-auto">
+          <h2 className="text-lg font-bold text-muted-foreground">Halaman Tidak Ditemukan</h2>
+          <p className="text-sm text-muted-foreground/70 leading-relaxed max-w-sm mx-auto">
             Maaf, halaman yang kamu cari tidak ada atau sudah dipindahkan. Coba kembali ke beranda atau gunakan navigasi di bawah.
           </p>
         </div>
@@ -62,8 +62,8 @@ export default function NotFound() {
         </div>
 
         {/* Quick Links */}
-        <div className="pt-4 border-t border-gray-800">
-          <p className="text-[10px] text-gray-600 mb-3 uppercase tracking-wider">Navigasi Cepat</p>
+        <div className="pt-4 border-t border-border">
+          <p className="text-[10px] text-muted-foreground/50 mb-3 uppercase tracking-wider">Navigasi Cepat</p>
           <div className="flex flex-wrap justify-center gap-2">
             {[
               { label: 'Leaderboard', href: '/#kompetisi' },
@@ -74,7 +74,7 @@ export default function NotFound() {
               <a
                 key={link.label}
                 href={link.href}
-                className="px-3 py-1.5 rounded-lg border border-gray-800 text-gray-400 text-xs hover:text-amber-400 hover:border-amber-500/30 transition-colors"
+                className="px-3 py-1.5 rounded-lg border border-border text-muted-foreground text-xs hover:text-idm-gold hover:border-idm-gold/30 transition-colors"
               >
                 {link.label}
               </a>
@@ -83,8 +83,8 @@ export default function NotFound() {
         </div>
 
         {/* Footer */}
-        <p className="text-[10px] text-gray-700">
-          © 2026 TARKAM IDM — Idol Meta Fan Made Edition
+        <p className="text-[10px] text-muted-foreground/40">
+          © 2026 TARKAM IDM — Idol Meta
         </p>
       </div>
     </div>

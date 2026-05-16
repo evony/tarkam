@@ -1109,7 +1109,7 @@ export function HighlightsSection({
       </div>
 
       {/* Top edge line */}
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[rgba(239,249,35,0.15)] to-transparent" aria-hidden="true" />
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-idm-gold-warm/15 to-transparent" aria-hidden="true" />
 
       {/* ═══ Content ═══ */}
       <div className="relative z-10 max-w-7xl mx-auto">
@@ -1185,7 +1185,7 @@ export function HighlightsSection({
       </div>
 
       {/* Simple bottom edge line */}
-      <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[rgba(239,249,35,0.1)] to-transparent" aria-hidden="true" />
+      <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-idm-gold-warm/10 to-transparent" aria-hidden="true" />
     </section>
   );
 }

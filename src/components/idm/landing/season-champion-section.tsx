@@ -566,7 +566,7 @@ function DuoChampionCard({
 
   return (
     <div
-      className="champion-card reveal reveal-fade-up group rounded-3xl overflow-hidden bg-card border transition-all duration-500 hover:border-[rgba(239,249,35,0.25)] hover:shadow-[0_0_40px_rgba(239,249,35,0.06)]"
+      className="champion-card reveal reveal-fade-up group rounded-3xl overflow-hidden bg-card border transition-all duration-500 hover:border-idm-gold-warm/25 hover:shadow-[0_0_40px_color-mix(in_srgb,var(--color-idm-gold-warm)_6%,transparent)]"
       style={{ borderColor: 'rgba(239,249,35,0.12)' }}
     >
       {/* ═══ Gold Diamond Emblem — Royal seal signature ═══ */}
@@ -591,9 +591,9 @@ function DuoChampionCard({
         <div className="absolute bottom-2.5 left-4 right-4 flex items-end justify-between">
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(239,249,35,0.15)', border: '1.5px solid rgba(239,249,35,0.35)', boxShadow: '0 0 10px rgba(239,249,35,0.2)' }}>
-              <Crown className="w-3.5 h-3.5 text-[#EFF923]" />
+              <Crown className="w-3.5 h-3.5 text-idm-gold-warm" />
             </div>
-            <span className="text-[11px] font-black uppercase tracking-wider text-[#EFF923]">Top Season</span>
+            <span className="text-[11px] font-black uppercase tracking-wider text-idm-gold-warm">Top Season</span>
           </div>
           {latestSeasonNumber > 0 && (
             <span className="text-[10px] font-bold px-2 py-0.5 rounded-md border" style={{ color: '#EFF923', backgroundColor: 'rgba(239,249,35,0.12)', borderColor: 'rgba(239,249,35,0.25)' }}>
@@ -606,7 +606,7 @@ function DuoChampionCard({
       {/* Title row */}
       <div className="px-4 sm:px-6 pt-3 pb-2 flex items-center justify-between gap-2">
         <div className="flex items-center gap-2 min-w-0">
-          <Trophy className="w-4 h-4 shrink-0 text-[#EFF923]" />
+          <Trophy className="w-4 h-4 shrink-0 text-idm-gold-warm" />
           <span className="text-base sm:text-lg font-black text-foreground truncate">
             {hasMale && hasFemale ? `${latestMale.player.gamertag} & ${latestFemale.player.gamertag}` : hasMale ? latestMale.player.gamertag : latestFemale.player.gamertag}
           </span>
@@ -614,7 +614,7 @@ function DuoChampionCard({
       </div>
 
       {/* Gold divider */}
-      <div className="h-px mx-4 bg-gradient-to-r from-transparent via-[rgba(239,249,35,0.20)] to-transparent" />
+      <div className="h-px mx-4 bg-gradient-to-r from-transparent via-idm-gold-warm/20 to-transparent" />
 
       {/* ═══ DUO CHAMPION DISPLAY — MVP-style with Crown Divider ═══
           Avatar full left, stats right — decorative crown divider between divisions
@@ -658,7 +658,7 @@ function DuoChampionCard({
                 <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent" />
                 {/* Crown badge — top right */}
                 <div className="absolute top-2 right-2 z-10">
-                  <div className="w-6 h-6 rounded-full bg-idm-gold-warm flex items-center justify-center shadow-[0_0_12px_rgba(239,249,35,0.4)]">
+                  <div className="w-6 h-6 rounded-full bg-idm-gold-warm flex items-center justify-center shadow-[0_0_12px_color-mix(in_srgb,var(--color-idm-gold-warm)_40%,transparent)]">
                     <Crown className="w-3 h-3 text-[#0c0a06]" />
                   </div>
                 </div>
@@ -798,7 +798,7 @@ function DuoChampionCard({
                 <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent" />
                 {/* Crown badge — top right */}
                 <div className="absolute top-2 right-2 z-10">
-                  <div className="w-6 h-6 rounded-full bg-idm-gold-warm flex items-center justify-center shadow-[0_0_12px_rgba(239,249,35,0.4)]">
+                  <div className="w-6 h-6 rounded-full bg-idm-gold-warm flex items-center justify-center shadow-[0_0_12px_color-mix(in_srgb,var(--color-idm-gold-warm)_40%,transparent)]">
                     <Crown className="w-3 h-3 text-[#0c0a06]" />
                   </div>
                 </div>
@@ -904,8 +904,8 @@ function DuoChampionCard({
 
             {/* Header */}
             <div className="flex items-center gap-1.5 mb-2">
-              <Crown className="w-3 h-3 text-[#EFF923]" />
-              <span className="text-[10px] font-black uppercase tracking-wider text-[#EFF923]">
+              <Crown className="w-3 h-3 text-idm-gold-warm" />
+              <span className="text-[10px] font-black uppercase tracking-wider text-idm-gold-warm">
                 Juara Sebelumnya
               </span>
             </div>
@@ -1095,7 +1095,7 @@ function ClubChampionCard({
 
   return (
     <div
-      className="champion-card reveal reveal-fade-up group relative rounded-3xl overflow-hidden border transition-all duration-500 hover:border-[rgba(239,249,35,0.25)] hover:shadow-[0_0_40px_rgba(239,249,35,0.06)]"
+      className="champion-card reveal reveal-fade-up group relative rounded-3xl overflow-hidden border transition-all duration-500 hover:border-idm-gold-warm/25 hover:shadow-[0_0_40px_color-mix(in_srgb,var(--color-idm-gold-warm)_6%,transparent)]"
       style={{
         borderColor: 'rgba(239,249,35,0.12)',
         background: 'linear-gradient(135deg, #080a14 0%, #0a0c18 25%, #080a14 50%, #0a0c18 75%, #080a14 100%)',
@@ -1348,8 +1348,8 @@ export function SeasonChampionSection({
       <div className="absolute inset-0 opacity-[0.025]" style={{ backgroundImage: 'linear-gradient(rgba(239,249,35,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(239,249,35,0.3) 1px, transparent 1px)', backgroundSize: '60px 60px' }} />
       <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 30% 20%, rgba(46,159,255,0.06) 0%, transparent 45%), radial-gradient(ellipse at 70% 20%, rgba(255,45,120,0.06) 0%, transparent 45%)' }} />
       <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 50% 10%, rgba(239,249,35,0.08) 0%, transparent 50%)' }} />
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[rgba(239,249,35,0.25)] to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[rgba(239,249,35,0.12)] to-transparent" />
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-idm-gold-warm/25 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-idm-gold-warm/12 to-transparent" />
 
       <div className="relative z-10 max-w-5xl mx-auto">
         {/* Section Header — dynamic subtitle */}

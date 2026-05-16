@@ -154,7 +154,7 @@ export function DivisionRivalry({ setSelectedPlayer }: DivisionRivalryProps) {
           >
             <div className="relative">
               <div className={`w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden border-2 transition-all duration-300 group-hover/p1:scale-105 ${
-                pointDiff > 0 ? 'border-idm-gold-warm/40' : 'border-white/10'
+                pointDiff > 0 ? 'border-idm-gold-warm/40' : 'border-border'
               }`}>
                 <AvatarMedia
                   src={getAvatarUrl(player1.gamertag, toStrictDivision(division), player1.avatar)}
@@ -194,7 +194,7 @@ export function DivisionRivalry({ setSelectedPlayer }: DivisionRivalryProps) {
           >
             <div className="relative">
               <div className={`w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden border-2 transition-all duration-300 group-hover/p2:scale-105 ${
-                pointDiff <= 0 ? 'border-idm-gold-warm/40' : 'border-white/10'
+                pointDiff <= 0 ? 'border-idm-gold-warm/40' : 'border-border'
               }`}>
                 <AvatarMedia
                   src={getAvatarUrl(player2.gamertag, toStrictDivision(division), player2.avatar)}

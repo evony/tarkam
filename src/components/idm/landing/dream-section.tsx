@@ -90,8 +90,8 @@ export function DreamSection({ maleData, femaleData, leagueData, nextSeason, com
 
         {/* Decorative ring */}
         <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full border border-[#EFF923]/5" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] rounded-full border border-[#EFF923]/8" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full border border-idm-gold-warm/5" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] rounded-full border border-idm-gold-warm/8" />
         </div>
 
         <div
@@ -99,12 +99,12 @@ export function DreamSection({ maleData, femaleData, leagueData, nextSeason, com
         >
           <div className="stagger-item-fast stagger-d0">
             <div className="flex items-center justify-center gap-3 mb-4">
-              <div className="h-px w-12 sm:w-20 bg-gradient-to-r from-transparent to-[#EFF923]/50" />
-              <div className="flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#EFF923]/20 bg-[#EFF923]/5">
-                <Trophy className="w-4 h-4 text-[#EFF923]" />
-                <span className="text-[11px] font-bold text-[#EFF923] uppercase tracking-widest">Tarkam IDM</span>
+              <div className="h-px w-12 sm:w-20 bg-gradient-to-r from-transparent to-idm-gold-warm/50" />
+              <div className="flex items-center gap-2 px-4 py-1.5 rounded-full border border-idm-gold-warm/20 bg-idm-gold-warm/5">
+                <Trophy className="w-4 h-4 text-idm-gold-warm" />
+                <span className="text-[11px] font-bold text-idm-gold-warm uppercase tracking-widest">Tarkam IDM</span>
               </div>
-              <div className="h-px w-12 sm:w-20 bg-gradient-to-l from-transparent to-[#EFF923]/50" />
+              <div className="h-px w-12 sm:w-20 bg-gradient-to-l from-transparent to-idm-gold-warm/50" />
             </div>
           </div>
           <h2 className="stagger-item-fast stagger-d1 text-4xl sm:text-7xl font-black text-gradient-champion leading-none">
@@ -120,15 +120,15 @@ export function DreamSection({ maleData, femaleData, leagueData, nextSeason, com
           {/* Champion Highlight Card */}
           {leagueData?.tarkamChampion && leagueData.tarkamChampion.seasonNumber !== 1 && (
             <div className="stagger-item-fast mt-6" style={{ animationDelay: '120ms' }}>
-              <div className="inline-flex items-center gap-3 p-4 sm:p-5 rounded-2xl border border-[#EFF923]/20 bg-mid">
+              <div className="inline-flex items-center gap-3 p-4 sm:p-5 rounded-2xl border border-idm-gold-warm/20 bg-mid">
                 <div className="relative">
-                  <ClubLogoImage clubName={leagueData.tarkamChampion.name} dbLogo={leagueData.tarkamChampion.logo} alt={leagueData.tarkamChampion.name} width={40} height={40} className="w-10 h-10 rounded-2xl object-cover border border-[#EFF923]/30" />
-                  <div className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-[#EFF923] flex items-center justify-center">
+                  <ClubLogoImage clubName={leagueData.tarkamChampion.name} dbLogo={leagueData.tarkamChampion.logo} alt={leagueData.tarkamChampion.name} width={40} height={40} className="w-10 h-10 rounded-2xl object-cover border border-idm-gold-warm/30" />
+                  <div className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-idm-gold-warm flex items-center justify-center">
                     <Crown className="w-3 h-3 text-deep" />
                   </div>
                 </div>
                 <div className="text-left">
-                  <p className="text-xs text-[#EFF923]/60 font-semibold uppercase tracking-wider">Season {leagueData.tarkamChampion.seasonNumber} Champion</p>
+                  <p className="text-xs text-idm-gold-warm/60 font-semibold uppercase tracking-wider">Season {leagueData.tarkamChampion.seasonNumber} Champion</p>
                   <p className="text-lg font-black text-foreground">{leagueData.tarkamChampion.name}</p>
                 </div>
               </div>
@@ -138,14 +138,14 @@ export function DreamSection({ maleData, femaleData, leagueData, nextSeason, com
           {/* Season Highlights — Card-based grid */}
           <div className="stagger-item-fast mt-10 grid grid-cols-3 gap-3 sm:gap-4" style={{ animationDelay: '180ms' }}>
             {[
-              { icon: Shield, value: `${clubsCompeting}`, label: 'Club Bertanding', accent: 'border-[#EFF923]/15' },
-              { icon: Swords, value: `${matchesPlayed}`, label: 'Match Dimainkan', accent: 'border-[#EFF923]/10' },
-              { icon: Users, value: `${totalParticipants}`, label: 'Peserta Total', accent: 'border-[#EFF923]/15' },
+              { icon: Shield, value: `${clubsCompeting}`, label: 'Club Bertanding', accent: 'border-idm-gold-warm/15' },
+              { icon: Swords, value: `${matchesPlayed}`, label: 'Match Dimainkan', accent: 'border-idm-gold-warm/10' },
+              { icon: Users, value: `${totalParticipants}`, label: 'Peserta Total', accent: 'border-idm-gold-warm/15' },
             ].map((s, i) => (
               <div key={s.label} className={`relative rounded-2xl bg-mid border ${s.accent} p-4 sm:p-5 transition-all duration-300 hover:bg-mid/80 hover:scale-[1.03] hover:shadow-[0_8px_32px_rgba(239,249,35,0.08)] group/stat`}>
                 {/* Subtle radial glow behind icon */}
                 <div className="absolute inset-0 rounded-2xl pointer-events-none opacity-0 group-hover/stat:opacity-100 transition-opacity duration-500" style={{ background: 'radial-gradient(ellipse at 50% 30%, rgba(239,249,35,0.05), transparent 70%)' }} />
-                <s.icon className="w-4 h-4 text-[#EFF923] mx-auto mb-2 relative z-10 group-hover/stat:scale-110 transition-transform duration-300" />
+                <s.icon className="w-4 h-4 text-idm-gold-warm mx-auto mb-2 relative z-10 group-hover/stat:scale-110 transition-transform duration-300" />
                 <p className="text-lg sm:text-2xl font-black text-foreground truncate relative z-10 stat-count-up">{s.value}</p>
                 <p className="text-[10px] sm:text-[10px] text-muted-foreground/80 uppercase tracking-wider mt-1 relative z-10">{s.label}</p>
               </div>
@@ -155,8 +155,8 @@ export function DreamSection({ maleData, femaleData, leagueData, nextSeason, com
           {/* Countdown Timer — Gold accents */}
           {countdown && cmsSettings?.countdown_label && (
             <div className="stagger-item-fast mt-8" style={{ animationDelay: '240ms' }}>
-              <div className="rounded-2xl border border-[#EFF923]/20 bg-mid p-5 sm:p-6 text-center">
-                <p className="text-xs text-[#EFF923]/70 font-bold uppercase tracking-widest mb-4">{cmsSettings.countdown_label}</p>
+              <div className="rounded-2xl border border-idm-gold-warm/20 bg-mid p-5 sm:p-6 text-center">
+                <p className="text-xs text-idm-gold-warm/70 font-bold uppercase tracking-widest mb-4">{cmsSettings.countdown_label}</p>
                 <div className="flex items-center justify-center gap-1.5 sm:gap-3">
                   {[
                     { value: countdown.days, label: 'Hari' },
@@ -166,13 +166,13 @@ export function DreamSection({ maleData, femaleData, leagueData, nextSeason, com
                   ].map((unit, i) => (
                     <div key={unit.label} className="flex items-center gap-1.5 sm:gap-3">
                       <div className="flex flex-col items-center">
-                        <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-lg sm:rounded-2xl bg-[#EFF923]/10 border border-[#EFF923]/20 flex items-center justify-center">
-                          <span className="text-lg sm:text-2xl font-black text-[#EFF923] tabular-nums">{String(unit.value).padStart(2, '0')}</span>
+                        <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-lg sm:rounded-2xl bg-idm-gold-warm/10 border border-idm-gold-warm/20 flex items-center justify-center">
+                          <span className="text-lg sm:text-2xl font-black text-idm-gold-warm tabular-nums">{String(unit.value).padStart(2, '0')}</span>
                         </div>
                         <span className="text-[10px] text-muted-foreground/60 uppercase tracking-wider mt-1">{unit.label}</span>
                       </div>
                       {i < 3 && (
-                        <span className="text-[#EFF923]/40 font-bold text-base sm:text-xl mb-4">:</span>
+                        <span className="text-idm-gold-warm/40 font-bold text-base sm:text-xl mb-4">:</span>
                       )}
                     </div>
                   ))}
@@ -183,10 +183,10 @@ export function DreamSection({ maleData, femaleData, leagueData, nextSeason, com
 
           {/* Tarkam IDM Season Next — Call for Support */}
           <div className="stagger-item-fast mt-8" style={{ animationDelay: '300ms' }}>
-            <div className="rounded-2xl border border-[#EFF923]/15 bg-mid p-5 sm:p-6 text-center">
+            <div className="rounded-2xl border border-idm-gold-warm/15 bg-mid p-5 sm:p-6 text-center">
               <div className="flex items-center justify-center gap-2 mb-3">
-                <Flame className="w-4 h-4 text-[#EFF923]" />
-                <h4 className="text-sm font-bold text-[#EFF923]">Tarkam IDM Season {nextSeason}</h4>
+                <Flame className="w-4 h-4 text-idm-gold-warm" />
+                <h4 className="text-sm font-bold text-idm-gold-warm">Tarkam IDM Season {nextSeason}</h4>
                 <Badge className="bg-yellow-500/10 text-yellow-500 text-[10px] border-0">Menunggu</Badge>
               </div>
               <p className="text-xs text-muted-foreground leading-relaxed max-w-md mx-auto">
@@ -196,7 +196,7 @@ export function DreamSection({ maleData, femaleData, leagueData, nextSeason, com
           </div>
 
           <div className="stagger-item-fast mt-8" style={{ animationDelay: '360ms' }}>
-            <button onClick={() => openDonationModal('season')} className="hover-scale-md group/donate relative px-7 py-4 rounded-2xl bg-gradient-to-r from-[#EFF923] to-[#e8d5a3] text-deep font-black text-sm tracking-wider shadow-[0_0_30px_rgba(239,249,35,0.2)] hover:shadow-[0_0_60px_rgba(239,249,35,0.4)] transition-all cursor-pointer overflow-hidden">
+            <button onClick={() => openDonationModal('season')} className="hover-scale-md group/donate relative px-7 py-4 rounded-2xl bg-gradient-to-r from-idm-gold-warm to-[#e8d5a3] text-deep font-black text-sm tracking-wider shadow-[0_0_30px_rgba(239,249,35,0.2)] hover:shadow-[0_0_60px_rgba(239,249,35,0.4)] transition-all cursor-pointer overflow-hidden">
               {/* Animated shimmer sweep */}
               <div className="absolute inset-0 -translate-x-full group-hover/donate:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
               <Gift className="w-4 h-4 inline mr-2 relative z-10" />
@@ -217,7 +217,7 @@ export function DreamSection({ maleData, femaleData, leagueData, nextSeason, com
           {[...Array(6)].map((_, i) => (
             <div
               key={i}
-              className="absolute w-1 h-1 rounded-full bg-[#EFF923]/20"
+              className="absolute w-1 h-1 rounded-full bg-idm-gold-warm/20"
               style={{
                 left: `${15 + i * 15}%`,
                 top: `${20 + (i % 3) * 25}%`,
@@ -230,10 +230,10 @@ export function DreamSection({ maleData, femaleData, leagueData, nextSeason, com
 
         {/* Decorative corner accents */}
         <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-          <div className="absolute top-8 left-8 w-16 h-16 border-l-2 border-t-2 border-[#EFF923]/10 rounded-tl-xl" />
-          <div className="absolute top-8 right-8 w-16 h-16 border-r-2 border-t-2 border-[#EFF923]/10 rounded-tr-xl" />
-          <div className="absolute bottom-8 left-8 w-16 h-16 border-l-2 border-b-2 border-[#EFF923]/10 rounded-bl-xl" />
-          <div className="absolute bottom-8 right-8 w-16 h-16 border-r-2 border-b-2 border-[#EFF923]/10 rounded-br-xl" />
+          <div className="absolute top-8 left-8 w-16 h-16 border-l-2 border-t-2 border-idm-gold-warm/10 rounded-tl-xl" />
+          <div className="absolute top-8 right-8 w-16 h-16 border-r-2 border-t-2 border-idm-gold-warm/10 rounded-tr-xl" />
+          <div className="absolute bottom-8 left-8 w-16 h-16 border-l-2 border-b-2 border-idm-gold-warm/10 rounded-bl-xl" />
+          <div className="absolute bottom-8 right-8 w-16 h-16 border-r-2 border-b-2 border-idm-gold-warm/10 rounded-br-xl" />
         </div>
 
         <div
@@ -243,7 +243,7 @@ export function DreamSection({ maleData, femaleData, leagueData, nextSeason, com
             <div
               className="animate-float-medium inline-block mb-4"
             >
-              <Sparkles className="w-10 h-10 text-[#EFF923]" />
+              <Sparkles className="w-10 h-10 text-idm-gold-warm" />
             </div>
           </div>
           <h2 className="stagger-item-fast stagger-d0 text-3xl sm:text-5xl font-black text-gradient-champion mb-3">

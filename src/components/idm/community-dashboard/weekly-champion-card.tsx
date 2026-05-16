@@ -200,7 +200,7 @@ function DivisionChampionCard({
 
                       {/* Bottom info overlay */}
                       <div className="absolute bottom-0 inset-x-0 p-2 z-10">
-                        <p className="text-xs font-bold truncate text-center text-yellow-300">
+                        <p className="text-xs font-bold truncate text-center text-idm-gold-warm">
                           {player.gamertag}
                         </p>
                         <div className="flex items-center justify-center gap-1.5 mt-1">

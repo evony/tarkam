@@ -415,7 +415,7 @@ export function ClubProfile({ club, onClose, rank, onPlayerClick }: ClubProfileP
                     <ClubLogoImage clubName={club.name} dbLogo={club.logo} alt={club.name} width={100} height={100} className="w-full h-full object-cover" style={isChampion ? { filter: 'drop-shadow(0 0 12px rgba(234, 179, 8, 0.2))' } : undefined} />
                     {/* Season champion badge */}
                     {isChampion && (
-                      <div className="absolute -top-1 -right-1 z-20 min-w-[28px] h-[28px] rounded-full bg-[#EFF923] flex items-center justify-center shadow-lg shadow-[#EFF923]/30 border-2 border-mid">
+                      <div className="absolute -top-1 -right-1 z-20 min-w-[28px] h-[28px] rounded-full bg-idm-gold-warm flex items-center justify-center shadow-lg shadow-idm-gold-warm/30 border-2 border-mid">
                         <span className="text-[10px] font-black text-mid leading-none">S1</span>
                       </div>
                     )}

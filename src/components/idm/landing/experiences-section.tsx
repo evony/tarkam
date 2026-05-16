@@ -107,7 +107,7 @@ function getDivisionConfig(division: 'male' | 'female' | 'both') {
     bg: 'rgba(239,249,35,0.10)',
     border: 'rgba(239,249,35,0.20)',
     hoverBorder: 'rgba(239,249,35,0.35)',
-    gradient: 'from-[#EFF923]/20 via-mid to-mid',
+    gradient: 'from-idm-gold-warm/20 via-mid to-mid',
     label: 'BOTH',
     meshBg: `
       radial-gradient(ellipse at 15% 30%, rgba(239,249,35,0.18) 0%, transparent 55%),
@@ -864,7 +864,7 @@ function FeaturedBanner({
             {/* Coming Soon badge (top-right) — only for no-video */}
             {!hasVideo && (
               <div className="absolute top-4 right-4 z-20">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider border bg-[rgba(239,249,35,0.12)] border-[rgba(239,249,35,0.2)] text-[#EFF923]">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider border bg-idm-gold-warm/12 border-idm-gold-warm/20 text-idm-gold-warm">
                   <Clock className="w-3 h-3" />
                   Coming Soon
                 </span>
@@ -1027,7 +1027,7 @@ function VideoListItem({
                     </span>
                   )}
                   {video.seasonNumber && !video.weekNumber && (
-                    <span className="text-[9px] font-bold uppercase tracking-wider text-[#EFF923]">
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-idm-gold-warm">
                       S{video.seasonNumber}
                     </span>
                   )}
@@ -1037,7 +1037,7 @@ function VideoListItem({
                 </>
               )}
               {!hasVideo && (
-                <span className="text-[9px] font-bold uppercase tracking-wider text-[#EFF923]/60">
+                <span className="text-[9px] font-bold uppercase tracking-wider text-idm-gold-warm/60">
                   · Soon
                 </span>
               )}
@@ -1095,7 +1095,7 @@ function EmptyState() {
             boxShadow: '0 0 6px rgba(239,249,35,0.15)',
           }}
         />
-        <Trophy className="w-10 h-10 text-[#EFF923]" />
+        <Trophy className="w-10 h-10 text-idm-gold-warm" />
       </div>
       <h3
         className="text-xl font-black mb-2"
@@ -1274,8 +1274,8 @@ export function ExperiencesSection({
       className="landing-section relative py-16 sm:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden bg-deep"
     >
       {/* Top edge glow */}
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[rgba(239,249,35,0.3)] to-transparent" aria-hidden="true" />
-      <div className="absolute inset-x-0 top-0 h-8 bg-gradient-to-b from-[rgba(239,249,35,0.03)] to-transparent pointer-events-none" aria-hidden="true" />
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-idm-gold-warm/30 to-transparent" aria-hidden="true" />
+      <div className="absolute inset-x-0 top-0 h-8 bg-gradient-to-b from-idm-gold-warm/3 to-transparent pointer-events-none" aria-hidden="true" />
 
       {/* Background — optimized 3-layer */}
       {/* Central gold glow + division hints (combined) */}
@@ -1480,15 +1480,15 @@ export function ExperiencesSection({
 
         {/* Bottom Decorative Line */}
         <div className="mt-14 sm:mt-20 flex items-center gap-3">
-          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[rgba(239,249,35,0.18)] to-transparent" />
-          <div className="flex items-center gap-1.5 text-[rgba(239,249,35,0.25)]">
+          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-idm-gold-warm/18 to-transparent" />
+          <div className="flex items-center gap-1.5 text-idm-gold-warm/25">
             <Play className="w-3 h-3" />
             <span className="text-[10px] font-bold uppercase tracking-widest">
               Video Highlights
             </span>
             <Play className="w-3 h-3" />
           </div>
-          <div className="h-px flex-1 bg-gradient-to-l from-transparent via-[rgba(239,249,35,0.18)] to-transparent" />
+          <div className="h-px flex-1 bg-gradient-to-l from-transparent via-idm-gold-warm/18 to-transparent" />
         </div>
       </div>
     </section>

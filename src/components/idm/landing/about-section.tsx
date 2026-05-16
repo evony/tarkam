@@ -41,7 +41,7 @@ export function AboutSection({ cmsSections, cmsSettings }: AboutSectionProps) {
         segments.forEach((segment, i) => {
           if (segment) newParts.push(segment);
           if (i < segments.length - 1) {
-            newParts.push(<span key={`${keyword}-${i}`} className="text-[#EFF923] font-semibold">{keyword}</span>);
+            newParts.push(<span key={`${keyword}-${i}`} className="text-idm-gold-warm font-semibold">{keyword}</span>);
           }
         });
       }
@@ -54,22 +54,22 @@ export function AboutSection({ cmsSections, cmsSettings }: AboutSectionProps) {
   return (
     <section id="about" role="region" aria-label="Cerita Kami" className="relative py-12 sm:py-16 px-4 overflow-hidden bg-deep">
       {/* Background — subtle warm glow */}
-      <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 50% 50%, rgba(239,249,35,0.04) 0%, transparent 50%)' }} />
+      <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 50% 50%, color-mix(in srgb, var(--color-idm-gold-warm) 4%, transparent) 0%, transparent 50%)' }} />
 
       <div className="relative z-10 max-w-3xl mx-auto text-center">
         <AnimatedSection>
           {/* Simple centered text block with gold accents */}
           <div className="flex items-center justify-center gap-3 mb-3">
-            <div className="h-px w-8 bg-gradient-to-r from-transparent to-[#EFF923]/40" />
-            <Flame className="w-3.5 h-3.5 text-[#EFF923]/60" />
-            <div className="h-px w-8 bg-gradient-to-l from-transparent to-[#EFF923]/40" />
+            <div className="h-px w-8 bg-gradient-to-r from-transparent to-idm-gold-warm/40" />
+            <Flame className="w-3.5 h-3.5 text-idm-gold-warm/60" />
+            <div className="h-px w-8 bg-gradient-to-l from-transparent to-idm-gold-warm/40" />
           </div>
-          <h3 className="text-lg sm:text-xl font-black text-[#EFF923] mb-3">{sectionTitle}</h3>
+          <h3 className="text-lg sm:text-xl font-black text-idm-gold-warm mb-3">{sectionTitle}</h3>
           <p className="text-sm text-muted-foreground leading-relaxed max-w-xl mx-auto">{highlightText(firstParagraph)}</p>
           <div className="mt-4 flex items-center justify-center gap-2">
-            <div className="h-px w-12 bg-gradient-to-r from-transparent to-[#EFF923]/20" />
-            <span className="text-[10px] font-bold text-[#EFF923]/40 uppercase tracking-widest">{bottomTagline}</span>
-            <div className="h-px w-12 bg-gradient-to-l from-transparent to-[#EFF923]/20" />
+            <div className="h-px w-12 bg-gradient-to-r from-transparent to-idm-gold-warm/20" />
+            <span className="text-[10px] font-bold text-idm-gold-warm/40 uppercase tracking-widest">{bottomTagline}</span>
+            <div className="h-px w-12 bg-gradient-to-l from-transparent to-idm-gold-warm/20" />
           </div>
         </AnimatedSection>
       </div>
