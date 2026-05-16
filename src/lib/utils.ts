@@ -369,11 +369,12 @@ export function getVideoPosterUrl(url: string): string {
   if (videoIndex !== -1) {
     const before = url.substring(0, videoIndex + videoMarker.length);
     const after = url.substring(videoIndex + videoMarker.length);
-    // If already has transforms, inject f_jpg before them
+    // ★ so_1.5 = start offset 1.5 seconds — captures frame after initial blink/movement
+    // This ensures the poster thumbnail shows eyes open, not mid-blink at frame 0
     if (after.startsWith('f_') || after.startsWith('q_') || after.startsWith('w_')) {
-      return `${before}f_jpg,q_auto,so_auto/${after}`;
+      return `${before}f_jpg,q_auto,so_1.5/${after}`;
     }
-    return `${before}f_jpg,q_auto,so_auto/${after}`;
+    return `${before}f_jpg,q_auto,so_1.5/${after}`;
   }
 
   // If it's not a /video/upload/ URL, no poster can be generated
