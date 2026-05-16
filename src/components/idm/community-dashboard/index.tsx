@@ -71,8 +71,7 @@ import { HistoricalSeasonView } from './historical-season-view';
 // Import marquee ticker
 import { MarqueeTicker } from '../marquee-ticker';
 
-// Import Pusher real-time hook
-import { usePusherRealtime } from '@/hooks/use-pusher';
+// Pusher real-time hook is already called in AppShell — no duplicate needed here
 
 // Import landing shared components for visual enhancements
 import { AnimatedSection } from '../landing/shared';
@@ -1883,8 +1882,8 @@ const CommunityDashboardSkeleton = React.memo(function CommunityDashboardSkeleto
 
 
 export function CommunityDashboard() {
-  // Enable real-time Pusher updates
-  usePusherRealtime();
+  // Pusher real-time: already subscribed in AppShell (usePusherRealtime)
+  // No duplicate subscription here to avoid double WebSocket connections
 
   // Selected player for profile modal
   const [selectedPlayer, setSelectedPlayer] = useState<(TopPlayer & { division?: string }) | null>(null);
