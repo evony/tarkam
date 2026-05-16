@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useCallback, useEffect, useRef } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Share2, Check, X } from 'lucide-react';
 import { createPortal } from 'react-dom';
 
@@ -11,9 +11,9 @@ import { createPortal } from 'react-dom';
 interface SharePopupProps {
   /** The URL to share */
   shareUrl: string;
-  /** Title shown in the popup header, e.g. "Bagikan Profil" or "Bagikan Bracket" */
+  /** Title shown in the popup header */
   title: string;
-  /** Subtitle shown below title, e.g. "Profil PlayerX" or "Bracket Male Division" */
+  /** Subtitle shown below title */
   subtitle?: React.ReactNode;
   /** The text to include in share messages */
   shareText: string;
@@ -76,21 +76,8 @@ export function SharePopup({
 }: SharePopupProps) {
   const [showPicker, setShowPicker] = useState(false);
   const [copied, setCopied] = useState(false);
-  const pickerRef = useRef<HTMLDivElement>(null);
 
   const isSm = size === 'sm';
-
-  // Close picker on outside click
-  useEffect(() => {
-    if (!showPicker) return;
-    const handler = (e: MouseEvent) => {
-      if (pickerRef.current && !pickerRef.current.contains(e.target as Node)) {
-        setShowPicker(false);
-      }
-    };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, [showPicker]);
 
   const handleNativeShare = useCallback(async () => {
     if (!navigator.share) return false;
@@ -127,6 +114,20 @@ export function SharePopup({
       setCopied(true);
       setTimeout(() => { setCopied(false); setShowPicker(false); }, 1500);
     }
+  }, [shareUrl]);
+
+  // Fire-and-forget clipboard copy (doesn't block or prevent navigation)
+  const fireAndForCopy = useCallback(() => {
+    navigator.clipboard.writeText(shareUrl).catch(() => {
+      const ta = document.createElement('textarea');
+      ta.value = shareUrl;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    });
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   }, [shareUrl]);
 
   const socialLinks = [
@@ -168,7 +169,7 @@ export function SharePopup({
   ];
 
   return (
-    <div className="relative" ref={pickerRef}>
+    <div className="relative">
       <button
         onClick={handleClick}
         className={`inline-flex items-center justify-center rounded-lg transition-all duration-200 cursor-pointer ${
@@ -191,16 +192,16 @@ export function SharePopup({
         )}
       </button>
 
-      {/* Social Media Picker Popup */}
+      {/* Social Media Picker Popup — rendered via portal to document.body */}
       {showPicker && createPortal(
         <div
           className="fixed inset-0 z-[9999] flex items-end sm:items-center justify-center"
           onClick={() => setShowPicker(false)}
         >
-          {/* Backdrop */}
+          {/* Backdrop — clicking this closes the popup */}
           <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
 
-          {/* Picker Card */}
+          {/* Picker Card — stopPropagation so clicks inside don't close popup */}
           <div
             className="relative z-10 w-full max-w-xs mx-4 mb-4 sm:mb-0 rounded-2xl border border-idm-gold-warm/15 bg-background/98 backdrop-blur-xl shadow-2xl shadow-black/40"
             onClick={(e) => e.stopPropagation()}
@@ -239,22 +240,13 @@ export function SharePopup({
                   rel="noopener noreferrer"
                   onClick={() => {
                     // For Instagram/Discord: copy link to clipboard (fire-and-forget)
-                    // Let <a> tag handle navigation naturally — no preventDefault!
-                    // This ensures popup blockers never block the link
+                    // Do NOT call preventDefault — let the <a> tag navigate naturally
+                    // This is the most reliable way to open links without popup blockers
                     if (s.isCopyAndOpen) {
-                      navigator.clipboard.writeText(shareUrl).catch(() => {
-                        const ta = document.createElement('textarea');
-                        ta.value = shareUrl;
-                        document.body.appendChild(ta);
-                        ta.select();
-                        document.execCommand('copy');
-                        document.body.removeChild(ta);
-                      });
-                      setCopied(true);
-                      setTimeout(() => setCopied(false), 2000);
+                      fireAndForCopy();
                     }
-                    // Close picker after short delay so navigation can start
-                    setTimeout(() => setShowPicker(false), 400);
+                    // Close picker after short delay so link navigation starts first
+                    setTimeout(() => setShowPicker(false), 500);
                   }}
                   className={`relative flex items-center gap-2 px-3 py-2.5 rounded-xl text-white text-xs font-semibold transition-all duration-200 active:scale-95 cursor-pointer no-underline ${s.color}`}
                 >
@@ -294,22 +286,21 @@ export function SharePopup({
               </button>
             </div>
 
-            {/* More apps — native share on mobile, copy link on desktop */}
+            {/* More apps / Lainnya — always visible, smart behavior */}
             <div className="px-4 pb-4">
               <button
                 onClick={async () => {
-                  // Try native share first (works on mobile)
+                  // On mobile: try native share sheet first
                   const shared = await handleNativeShare();
+                  // On desktop or if native share fails: copy link
                   if (!shared) {
-                    // Fallback: copy link to clipboard
                     await copyLink();
                   }
-                  setTimeout(() => setShowPicker(false), 300);
                 }}
                 className="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 active:scale-95 cursor-pointer bg-idm-gold-warm/10 text-idm-gold-warm hover:bg-idm-gold-warm/20 border border-idm-gold-warm/15"
               >
                 <Share2 className="w-4 h-4" />
-                <span>{typeof navigator !== 'undefined' && 'share' in navigator ? 'Lainnya...' : 'Salin & Bagikan'}</span>
+                <span>Lainnya...</span>
               </button>
             </div>
           </div>
