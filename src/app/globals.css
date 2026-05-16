@@ -500,7 +500,7 @@
   transform: translateY(20px);
   transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
-:root:not(.dark) .section-reveal.revealed {
+:root:not(.dark) .section-reveal.section-reveal--visible {
   opacity: 1;
   transform: translateY(0);
 }
