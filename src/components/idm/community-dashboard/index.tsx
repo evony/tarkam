@@ -23,7 +23,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import React, { useState, useRef, useMemo, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useMemo, useEffect, useCallback, startTransition } from 'react';
 import { useCommunityTheme, getCommunityTheme } from '@/hooks/use-community-theme';
 import { useDivisionTheme, getDivisionTheme } from '@/hooks/use-division-theme';
 import { useAppStore } from '@/lib/store';
@@ -1816,7 +1816,7 @@ const Section = React.memo(function Section({
     <section
       className={className}
       id={sectionId ? `section-${sectionId}` : undefined}
-      style={skipContentVisibility ? undefined : { contentVisibility: 'auto', containIntrinsicSize: '0 600px' }}
+      style={skipContentVisibility ? undefined : { contentVisibility: 'auto', containIntrinsicSize: '0 800px' }}
     >
       {title && Icon && (
         <div className="flex items-center gap-2 mb-3">
@@ -1900,7 +1900,15 @@ export function CommunityDashboard() {
   const [selectedDivision, setSelectedDivision] = useState<DivisionFilter>('all');
   // Peringkat leaderboard filter state — lifted from CommunityLeaderboard for sticky header
   const [leaderboardSort, setLeaderboardSort] = useState<'players' | 'clubs'>('players');
+  // ★ INP optimization: wrap leaderboard sort in startTransition
+  const handleLeaderboardSortChange = useCallback((s: 'players' | 'clubs') => {
+    startTransition(() => setLeaderboardSort(s));
+  }, []);
   const [leaderboardDivisionFilter, setLeaderboardDivisionFilter] = useState<'all' | 'male' | 'female'>('all');
+  // ★ INP optimization: wrap leaderboard filter in startTransition
+  const handleLeaderboardDivisionChange = useCallback((f: 'all' | 'male' | 'female') => {
+    startTransition(() => setLeaderboardDivisionFilter(f));
+  }, []);
   // Track if rankings section is visible — hide sticky champion header when it is
   const [isRankingsVisible, setIsRankingsVisible] = useState(false);
   useEffect(() => {
@@ -1924,11 +1932,14 @@ export function CommunityDashboard() {
   const isViewingPastSeason = selectedSeason !== null && selectedSeason.status === 'completed';
 
   // When division changes while viewing a past season, reset to active season
+  // ★ INP optimization: wrap in startTransition so tab switch doesn't block paint
   const handleDivisionChange = useCallback((d: DivisionFilter) => {
-    setSelectedDivision(d);
-    if (selectedSeason) {
-      setSelectedSeason(null);
-    }
+    startTransition(() => {
+      setSelectedDivision(d);
+      if (selectedSeason) {
+        setSelectedSeason(null);
+      }
+    });
   }, [selectedSeason]);
 
   // Handle season change
@@ -1952,7 +1963,7 @@ export function CommunityDashboard() {
     select: (data) => data.settings || {},
   });
 
-  // Fetch male stats — faster polling so admin tournament status changes are reflected quickly
+  // Fetch male stats — placeholderData prevents CLS from empty→filled layout shift
   const { data: maleData } = useQuery<StatsData>({
     queryKey: ['stats', 'male'],
     queryFn: async () => {
@@ -1960,7 +1971,8 @@ export function CommunityDashboard() {
       return res.json();
     },
     staleTime: 30 * 1000,
-    refetchInterval: 60 * 1000,
+    refetchInterval: 120 * 1000,
+    placeholderData: (prev) => prev,
   });
 
   // Fetch female stats
@@ -1971,7 +1983,8 @@ export function CommunityDashboard() {
       return res.json();
     },
     staleTime: 30 * 1000,
-    refetchInterval: 60 * 1000,
+    refetchInterval: 120 * 1000,
+    placeholderData: (prev) => prev,
   });
 
   // Fetch league data
@@ -2008,7 +2021,8 @@ export function CommunityDashboard() {
       return res.json();
     },
     staleTime: 30 * 1000,
-    refetchInterval: 60 * 1000,
+    refetchInterval: 120 * 1000,
+    placeholderData: (prev) => prev,
   });
 
   // Player click handler
@@ -2156,9 +2170,9 @@ export function CommunityDashboard() {
             <div className="space-y-4">
               <PeringkatHeader
                 leaderboardSort={leaderboardSort}
-                onLeaderboardSortChange={setLeaderboardSort}
+                onLeaderboardSortChange={handleLeaderboardSortChange}
                 divisionFilter={leaderboardDivisionFilter}
-                onDivisionFilterChange={setLeaderboardDivisionFilter}
+                onDivisionFilterChange={handleLeaderboardDivisionChange}
                 maleData={maleData}
                 femaleData={femaleData}
               />
@@ -2169,9 +2183,9 @@ export function CommunityDashboard() {
                 onPlayerClick={handlePlayerClick}
                 onClubClick={handleClubClick}
                 leaderboardSort={leaderboardSort}
-                onLeaderboardSortChange={setLeaderboardSort}
+                onLeaderboardSortChange={handleLeaderboardSortChange}
                 divisionFilter={leaderboardDivisionFilter}
-                onDivisionFilterChange={setLeaderboardDivisionFilter}
+                onDivisionFilterChange={handleLeaderboardDivisionChange}
               />
             </div>
           </AnimatedSection>
@@ -2184,9 +2198,10 @@ export function CommunityDashboard() {
           {(effectiveDivision === 'male' ? maleData : femaleData) ? (
             <QuickStatsBar data={(effectiveDivision === 'male' ? maleData : femaleData)!} division={effectiveDivision} />
           ) : (
-            <div className="grid grid-cols-2 gap-2">
-              <Skeleton className="h-20 rounded-2xl" />
-              <Skeleton className="h-20 rounded-2xl" />
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <Skeleton key={i} className="h-24 rounded-2xl" />
+              ))}
             </div>
           )}
         </Section>

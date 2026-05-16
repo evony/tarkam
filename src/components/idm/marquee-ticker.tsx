@@ -259,9 +259,22 @@ export function MarqueeTicker({ maleData, femaleData, leagueData }: UnifiedMarqu
   }, [combinedItems]);
 
   // rAF-driven animation loop — completely bypasses CSS animation/transition conflicts
+  // ★ INP optimization: pause when tab is hidden to free main thread
   useEffect(() => {
     const track = trackRef.current;
     if (!track) return;
+
+    // Pause rAF when tab is hidden, resume when visible
+    const handleVisibility = () => {
+      if (document.hidden) {
+        isPausedRef.current = true;
+      } else {
+        // Reset timestamp so we don't get a huge delta on resume
+        lastTimeRef.current = 0;
+        isPausedRef.current = false;
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
 
     const animate = (timestamp: number) => {
       if (lastTimeRef.current === 0) {
@@ -294,6 +307,7 @@ export function MarqueeTicker({ maleData, femaleData, leagueData }: UnifiedMarqu
     rafRef.current = requestAnimationFrame(animate);
 
     return () => {
+      document.removeEventListener('visibilitychange', handleVisibility);
       if (rafRef.current) {
         cancelAnimationFrame(rafRef.current);
       }

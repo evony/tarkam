@@ -186,10 +186,9 @@ export const CommunityLeaderboard = React.memo(function CommunityLeaderboard({
                     return (
                       <TableRow
                         key={p.id}
-                        className={`standings-row-enter standings-row-glass ${idx % 2 === 0 ? 'standings-row-glass-even' : 'standings-row-glass-odd'} ${playerDivision === 'male' ? 'standings-row-glow-male' : 'standings-row-glow-female'} cursor-pointer transition-all duration-200 border-b ${playerDt.borderSubtle} ${
+                        className={`standings-row-glass ${idx % 2 === 0 ? 'standings-row-glass-even' : 'standings-row-glass-odd'} ${playerDivision === 'male' ? 'standings-row-glow-male' : 'standings-row-glow-female'} cursor-pointer transition-all duration-200 border-b ${playerDt.borderSubtle} ${
                           idx < 3 ? `${playerDt.bgSubtle}` : ''
                         }`}
-                        style={{ animationDelay: `${idx * 50}ms` }}
                         onClick={() => onPlayerClick(p, playerDivision)}
                       >
                         <TableCell className="text-center">
@@ -323,10 +322,9 @@ export const CommunityLeaderboard = React.memo(function CommunityLeaderboard({
                         return (
                           <TableRow
                             key={club.id}
-                            className={`standings-row-enter standings-row-glass ${idx % 2 === 0 ? 'standings-row-glass-even' : 'standings-row-glass-odd'} cursor-pointer transition-all duration-200 border-b ${dt.borderSubtle} ${
+                            className={`standings-row-glass ${idx % 2 === 0 ? 'standings-row-glass-even' : 'standings-row-glass-odd'} cursor-pointer transition-all duration-200 border-b ${dt.borderSubtle} ${
                               idx < 4 ? `${dt.bgSubtle}` : ''
                             }`}
-                            style={{ animationDelay: `${idx * 50}ms` }}
                             onClick={() => onClubClick?.(club as StatsData['clubs'][0])}
                           >
                             <TableCell className="text-center">

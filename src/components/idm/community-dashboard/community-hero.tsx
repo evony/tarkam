@@ -685,7 +685,8 @@ export const CommunityHero = React.memo(function CommunityHero({ maleData, femal
           />
         </div>
 
-        {/* ── Row 2.5: Personal Stats — shown only when logged in ── */}
+        {/* ── Row 2.5: Personal Stats — reserve space to prevent CLS ── */}
+        <div style={{ minHeight: loggedInPlayer ? undefined : 0, contain: 'layout style' }}>
         {loggedInPlayer && (
           <div className="flex items-center gap-3 p-4 sm:p-5 rounded-2xl bg-idm-gold-warm/5 border border-idm-gold-warm/10 mb-4">
             {/* Avatar */}
@@ -738,6 +739,7 @@ export const CommunityHero = React.memo(function CommunityHero({ maleData, femal
             </div>
           </div>
         )}
+        </div>
 
         {/* ── Row 3: Quick Stats + Progress (inline, compact) ── */}
         <div className="flex items-center gap-4 sm:gap-6 p-4 sm:p-5 rounded-2xl bg-idm-gold-warm/5 border border-idm-gold-warm/10 transition-all duration-300 hover:border-idm-gold-warm/20 hover:shadow-[0_0_5px_rgba(239,249,35,0.15)]">

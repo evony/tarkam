@@ -17,12 +17,12 @@ import { LandingSkeleton } from './landing/landing-skeleton';
 
 // ★ Below-fold sections: lazy loaded to reduce initial JS bundle by ~250KB
 import dynamic from 'next/dynamic';
-const TournamentHub = dynamic(() => import('./landing/tournament-hub').then(m => ({ default: m.TournamentHub })), { ssr: false, loading: () => <div className="h-64" /> });
-const PlayersSection = dynamic(() => import('./landing/players-section').then(m => ({ default: m.PlayersSection })), { ssr: false, loading: () => <div className="h-64" /> });
-const HighlightsSection = dynamic(() => import('./landing/highlights-section').then(m => ({ default: m.HighlightsSection })), { ssr: false, loading: () => <div className="h-64" /> });
-const SeasonChampionSection = dynamic(() => import('./landing/season-champion-section').then(m => ({ default: m.SeasonChampionSection })), { ssr: false, loading: () => <div className="h-64" /> });
-const ExperiencesSection = dynamic(() => import('./landing/experiences-section').then(m => ({ default: m.ExperiencesSection })), { ssr: false, loading: () => <div className="h-64" /> });
-const ClubsSection = dynamic(() => import('./landing/clubs-section').then(m => ({ default: m.ClubsSection })), { ssr: false, loading: () => <div className="h-64" /> });
+const TournamentHub = dynamic(() => import('./landing/tournament-hub').then(m => ({ default: m.TournamentHub })), { ssr: false, loading: () => <div className="h-[420px]" /> });
+const PlayersSection = dynamic(() => import('./landing/players-section').then(m => ({ default: m.PlayersSection })), { ssr: false, loading: () => <div className="h-[480px]" /> });
+const HighlightsSection = dynamic(() => import('./landing/highlights-section').then(m => ({ default: m.HighlightsSection })), { ssr: false, loading: () => <div className="h-[360px]" /> });
+const SeasonChampionSection = dynamic(() => import('./landing/season-champion-section').then(m => ({ default: m.SeasonChampionSection })), { ssr: false, loading: () => <div className="h-[400px]" /> });
+const ExperiencesSection = dynamic(() => import('./landing/experiences-section').then(m => ({ default: m.ExperiencesSection })), { ssr: false, loading: () => <div className="h-[380px]" /> });
+const ClubsSection = dynamic(() => import('./landing/clubs-section').then(m => ({ default: m.ClubsSection })), { ssr: false, loading: () => <div className="h-[400px]" /> });
 const SponsorsSection = dynamic(() => import('./landing/sponsors-section').then(m => ({ default: m.SponsorsSection })), { ssr: false, loading: () => null });
 const LandingFooter = dynamic(() => import('./landing/landing-footer').then(m => ({ default: m.LandingFooter })), { ssr: false, loading: () => null });
 const MarqueeTicker = dynamic(() => import('./marquee-ticker').then(m => ({ default: m.MarqueeTicker })), { ssr: false, loading: () => <div className="h-12" /> });
