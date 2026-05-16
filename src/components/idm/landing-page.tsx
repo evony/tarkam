@@ -13,7 +13,6 @@ import type { StatsData } from '@/types/stats';
 
 // ★ Above-fold: keep synchronous for instant render
 import { HeroSection } from './landing/hero-section';
-import { MarqueeTicker } from './marquee-ticker';
 import { LandingSkeleton } from './landing/landing-skeleton';
 
 // ★ Below-fold sections: lazy loaded to reduce initial JS bundle by ~250KB
@@ -26,6 +25,9 @@ const ExperiencesSection = dynamic(() => import('./landing/experiences-section')
 const ClubsSection = dynamic(() => import('./landing/clubs-section').then(m => ({ default: m.ClubsSection })), { ssr: false, loading: () => <div className="h-64" /> });
 const SponsorsSection = dynamic(() => import('./landing/sponsors-section').then(m => ({ default: m.SponsorsSection })), { ssr: false, loading: () => null });
 const LandingFooter = dynamic(() => import('./landing/landing-footer').then(m => ({ default: m.LandingFooter })), { ssr: false, loading: () => null });
+const MarqueeTicker = dynamic(() => import('./marquee-ticker').then(m => ({ default: m.MarqueeTicker })), { ssr: false, loading: () => <div className="h-12" /> });
+const BackToTop = dynamic(() => import('./ui/back-to-top').then(m => ({ default: m.BackToTop })), { ssr: false, loading: () => null });
+const ScrollProgress = dynamic(() => import('./ui/scroll-progress').then(m => ({ default: m.ScrollProgress })), { ssr: false, loading: () => null });
 
 // ★ Modals: lazy loaded — removes ~225KB (including framer-motion) from initial bundle
 const PlayerProfile = dynamic(() => import('./player-profile').then(m => ({ default: m.PlayerProfile })), { ssr: false, loading: () => null });
@@ -94,10 +96,6 @@ function LandingThemeToggle({ scrolled }: { scrolled: boolean }) {
     </button>
   );
 }
-
-// Utility components (tiny — keep synchronous)
-import { BackToTop } from './ui/back-to-top';
-import { ScrollProgress } from './ui/scroll-progress';
 
 /* ═══ Landing Auth Button — Desktop Header ═══
    Compact login button for the landing page header.
@@ -305,6 +303,7 @@ export function LandingPage() {
     },
     staleTime: 30000, // 30s — fast refresh since this is a lightweight query
     refetchInterval: 120000, // 2min polling — reduced from 60s to lower INP impact
+    refetchIntervalInBackground: false,
     refetchOnWindowFocus: true,
     gcTime: 60000,
   });
@@ -318,6 +317,8 @@ export function LandingPage() {
     },
     staleTime: 120000, // 2min — reduced polling frequency to lower INP impact
     refetchInterval: 300000, // 5min polling — reduced from 2min for INP optimization
+    refetchIntervalInBackground: false,
+    notifyOnChangeProps: ['data', 'error'],
     refetchOnWindowFocus: true,
     gcTime: 300000,
     placeholderData: (prev) => prev, // keep previous data during refetch/season switch — prevents FOUC
@@ -330,7 +331,9 @@ export function LandingPage() {
       const res = await fetch(url); return res.json();
     },
     staleTime: 120000, // 2min — reduced polling frequency to lower INP impact
-    refetchInterval: 300000, // 5min polling — reduced from 2min for INP optimization
+    refetchInterval: 330000, // 5.5min polling — staggered 30s from male to avoid simultaneous INP spikes
+    refetchIntervalInBackground: false,
+    notifyOnChangeProps: ['data', 'error'],
     refetchOnWindowFocus: true,
     gcTime: 300000,
     placeholderData: (prev) => prev, // keep previous data during refetch/season switch — prevents FOUC
@@ -357,6 +360,7 @@ export function LandingPage() {
     },
     staleTime: 300000, // CMS changes rarely — 5min stale is fine
     refetchInterval: 600000, // 10min polling — CMS data barely changes
+    refetchIntervalInBackground: false,
     refetchOnWindowFocus: true,
     gcTime: 300000,
   });
@@ -378,7 +382,8 @@ export function LandingPage() {
     gcTime: 300000, // Keep unused data for 5 min in memory
     refetchOnWindowFocus: true, // Refetch when user comes back to tab
     refetchOnReconnect: true, // Refetch when network reconnects
-    refetchInterval: 600000, // 10min polling — league data changes rarely
+    refetchInterval: 660000, // 11min polling — staggered 1min from cms to avoid simultaneous INP spikes
+    refetchIntervalInBackground: false,
   });
 
   // CMS helpers

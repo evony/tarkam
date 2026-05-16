@@ -7,18 +7,19 @@ import { buildSkinMap } from '@/lib/build-skin-map';
 export const dynamic = 'force-dynamic';
 
 // ── Smart Caching Strategy for /api/stats ──
-// Same as /api/league: CDN caches 10s, browser never caches, Surrogate-Key for targeted purge.
-// Admin mutations that affect standings/scores call revalidateTag('league-data').
+// CDN caches 60s, stale-while-revalidate=300 for background refresh.
+// Surrogate-Key: stats-data for targeted purge.
+// Admin mutations that affect standings/scores call revalidateTag('stats-data').
 
 const STATS_CACHE_HEADERS = {
   'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
-  'Surrogate-Key': 'league-data',
+  'Surrogate-Key': 'stats-data',
   'Vary': 'Accept-Encoding',
 };
 
 const STATS_CACHE_HEADERS_SHORT = {
   'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
-  'Surrogate-Key': 'league-data',
+  'Surrogate-Key': 'stats-data',
 };
 
 export async function GET(request: Request) {

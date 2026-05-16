@@ -17,6 +17,7 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
   display: "swap",
+  preload: false, // Defer — not needed for first paint
 });
 
 export const metadata: Metadata = {
@@ -83,30 +84,13 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://res.cloudinary.com" />
         <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+        <link rel="preconnect" href="https://www.youtube.com" />
+        <link rel="dns-prefetch" href="https://www.youtube.com" />
+        <link rel="preconnect" href="https://va.vercel-scripts.com" />
 
-        {/* ── Open Graph meta tags (hardcoded for maximum WhatsApp/Telegram compatibility) ── */}
-        <meta property="og:url" content="https://idolmeta.vercel.app/" />
-        <meta property="og:type" content="website" />
-        <meta property="og:title" content="TARKAM — Turnamen Idol Meta Indonesia" />
-        <meta property="og:description" content="Komunitas Idol Meta Indonesia. Turnamen dance rhythm mingguan, leaderboard, MVP, Sultan of the Week, dan komunitas terbesar. Gabung sekarang!" />
-        <meta property="og:image" content="https://idolmeta.vercel.app/og-banner.jpg" />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-        <meta property="og:image:alt" content="TARKAM — Turnamen Idol Meta Indonesia" />
-        <meta property="og:site_name" content="TARKAM IDM" />
-        <meta property="og:locale" content="id_ID" />
-
-        {/* ── Twitter Card meta tags ── */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta property="twitter:domain" content="idolmeta.vercel.app" />
-        <meta property="twitter:url" content="https://idolmeta.vercel.app/" />
-        <meta name="twitter:title" content="TARKAM — Turnamen Idol Meta Indonesia" />
-        <meta name="twitter:description" content="Komunitas Idol Meta Indonesia. Turnamen dance rhythm mingguan, leaderboard, MVP, dan komunitas terbesar." />
-        <meta name="twitter:image" content="https://idolmeta.vercel.app/og-banner.jpg" />
-        <meta name="twitter:image:alt" content="TARKAM — Turnamen Idol Meta Indonesia" />
-
-        {/* PWA: Register service worker */}
+        {/* PWA: Register service worker (async to avoid render-blocking) */}
         <script
+          async
           dangerouslySetInnerHTML={{
             __html: `
               if ('serviceWorker' in navigator) {

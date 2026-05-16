@@ -35,9 +35,9 @@ export async function GET() {
   return NextResponse.json(
     { settings: settingsMap, sections: sectionsMap },
     { headers: {
-      // ★ CMS data cached for 60s at CDN, stale-while-revalidate for 5min
-      // This dramatically reduces DB queries on Vercel while keeping content fresh.
-      'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
+      // ★ CMS data cached for 300s at CDN, stale-while-revalidate for 10min
+      // CMS content rarely changes — aggressive caching dramatically reduces DB queries.
+      'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
       'Surrogate-Key': 'cms-content',
       'Vary': 'Accept-Encoding',
     } }

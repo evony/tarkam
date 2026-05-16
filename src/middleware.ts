@@ -35,26 +35,14 @@ function isRateLimited(ip: string): boolean {
   return false;
 }
 
+// Pre-computed CSP header — identical for every response, no need to rebuild per request
+const CSP_HEADER = "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob: https://res.cloudinary.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://res.cloudinary.com https://*.pusher.com wss://*.pusher.com https://*.neon.tech; frame-src https://www.youtube.com https://youtube.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';";
+
 export function middleware(request: NextRequest) {
   // ── Step 1: Security headers for ALL responses ──
   const response = NextResponse.next();
 
-  // Content Security Policy
-  const cspHeader = `
-    default-src 'self';
-    script-src 'self' 'unsafe-eval' 'unsafe-inline';
-    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-    img-src 'self' data: blob: https://res.cloudinary.com;
-    font-src 'self' https://fonts.gstatic.com;
-    connect-src 'self' https://res.cloudinary.com https://*.pusher.com wss://*.pusher.com https://*.neon.tech;
-    frame-src https://www.youtube.com https://youtube.com;
-    object-src 'none';
-    base-uri 'self';
-    form-action 'self';
-    frame-ancestors 'none';
-  `.replace(/\n/g, ' ').trim();
-
-  response.headers.set('Content-Security-Policy', cspHeader);
+  response.headers.set('Content-Security-Policy', CSP_HEADER);
   response.headers.set('X-Content-Type-Options', 'nosniff');
   response.headers.set('X-Frame-Options', 'DENY');
   response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
@@ -102,6 +90,6 @@ export function middleware(request: NextRequest) {
 export const config = {
   // Apply to all routes (for security headers), but skip static assets
   matcher: [
-    '/((?!_next/static|_next/image|favicon.ico).*)',
+    '/((?!_next/static|_next/image|favicon.ico|sw.js|manifest.json|robots.txt|sitemap.xml|logo1\.webp|og-banner\.).*)',
   ],
 };

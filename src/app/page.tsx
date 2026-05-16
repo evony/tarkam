@@ -13,10 +13,10 @@ export const metadata = {
   },
 };
 
-// ★ Revalidate every 300 seconds (5min) — INP/TTFB optimization.
+// ★ Revalidate every 600 seconds (10min) — TTFB optimization.
 // Data is served from cache; revalidated in background.
-// 5min is safe since admin updates use revalidateTag for instant purge.
-export const revalidate = 300;
+// 10min is safe since admin updates use revalidateTag for instant purge.
+export const revalidate = 600;
 
 /**
  * Convert a raw Cloudinary URL to an optimized version matching the cloudinary-loader.

@@ -11,7 +11,7 @@ import { NextResponse } from 'next/server';
  */
 export async function GET(request: Request) {
   const headers = new Headers();
-  headers.set('Cache-Control', 'no-store, no-cache, must-revalidate');
+  headers.set('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=300');
 
   try {
   const { searchParams } = new URL(request.url);

@@ -734,7 +734,7 @@ async function fetchLandingStatsInner(division: 'male' | 'female') {
 const fetchLandingStatsCached = unstable_cache(
   fetchLandingStatsInner,
   ['landing-stats'],
-  { revalidate: 300, tags: ['landing-stats'] }
+  { revalidate: 600, tags: ['landing-stats'] }
 );
 
 /**
@@ -897,7 +897,7 @@ async function fetchLandingLeagueInner() {
 const fetchLandingLeagueCached = unstable_cache(
   fetchLandingLeagueInner,
   ['landing-league'],
-  { revalidate: 300, tags: ['landing-league'] }
+  { revalidate: 600, tags: ['landing-league'] }
 );
 
 /**

@@ -14,7 +14,7 @@ import { db } from '@/lib/db';
  */
 export async function GET(request: NextRequest) {
   const headers = new Headers();
-  headers.set('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=60');
+  headers.set('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=300');
 
   try {
     const { searchParams } = new URL(request.url);

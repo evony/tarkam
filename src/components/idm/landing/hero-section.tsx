@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Zap, Star, Eye, ArrowRight, Flame, Users, Trophy, Swords } from 'lucide-react';
 import { getAvatarUrl } from '@/lib/utils';
@@ -94,6 +94,14 @@ export function HeroSection({
   /* ─── Bracket picker state ─── */
   const [showBracketPicker, setShowBracketPicker] = useState(false);
 
+  /* ─── YouTube iframe facade — defer loading until after LCP ─── */
+  const [ytIframeReady, setYtIframeReady] = useState(false);
+  useEffect(() => {
+    // Defer YouTube iframe load by 3 seconds after mount — lets LCP complete first
+    const timer = setTimeout(() => setYtIframeReady(true), 3000);
+    return () => clearTimeout(timer);
+  }, []);
+
   /* ─── Compute stats ─── */
   const malePlayers = maleData?.totalPlayers || 0;
   const femalePlayers = femaleData?.totalPlayers || 0;
@@ -155,19 +163,25 @@ export function HeroSection({
             const startTime = startTimeMatch ? `&start=${startTimeMatch[1]}` : '';
 
             if (ytMatch) {
-              // YouTube embed — autoplay, muted, loop, no controls
+              // YouTube embed — deferred facade: only load iframe AFTER LCP completes
+              // This prevents YouTube's heavy JS from blocking initial paint
               return (
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                  <div className="absolute inset-0" style={{ width: '177.78vh', height: '56.25vw', minWidth: '100%', minHeight: '100%', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}>
-                    <iframe
-                      src={`https://www.youtube.com/embed/${ytMatch[1]}?autoplay=1&mute=1&loop=1&playlist=${ytMatch[1]}&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&disablekb=1&fs=0&iv_load_policy=3${startTime}`}
-                      title="Hero background video"
-                      allow="autoplay; encrypted-media"
-                      className="w-full h-full"
-                      style={{ border: 'none', opacity: 0.3 }}
-                      aria-hidden="true"
-                    />
-                  </div>
+                  {ytIframeReady ? (
+                    <div className="absolute inset-0" style={{ width: '177.78vh', height: '56.25vw', minWidth: '100%', minHeight: '100%', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}>
+                      <iframe
+                        src={`https://www.youtube.com/embed/${ytMatch[1]}?autoplay=1&mute=1&loop=1&playlist=${ytMatch[1]}&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&disablekb=1&fs=0&iv_load_policy=3${startTime}`}
+                        title="Hero background video"
+                        allow="autoplay; encrypted-media"
+                        className="w-full h-full"
+                        style={{ border: 'none', opacity: 0.3 }}
+                        aria-hidden="true"
+                      />
+                    </div>
+                  ) : (
+                    /* Placeholder — static dark gradient while iframe loads */
+                    <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-mid) 40%, var(--background) 100%)' }} />
+                  )}
                 </div>
               );
             }

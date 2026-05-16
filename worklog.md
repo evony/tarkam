@@ -1,29 +1,75 @@
-# Task 4-d: Fix Light Theme Visibility in Tournament Hub
+# Worklog — Task 2-b: Optimize API Caching & SSR Revalidation for Vercel Speed Insights
 
-## Summary
-Fixed light theme visibility issues in `src/components/idm/landing/tournament-hub.tsx`. The component had several hardcoded dark-mode-only styles (black backgrounds, white text/icons, white tooltips on black) that were invisible or looked wrong in light mode.
+## Date: 2026-03-04
 
-## File Modified
+## Task
+Optimize API caching and SSR revalidation to reduce TTFB from 1.02s to <0.8s.
+Increase CDN cache durations and add proper `stale-while-revalidate` headers.
 
-### `src/components/idm/landing/tournament-hub.tsx`
+## Changes Applied
 
-1. **Line 170 — Tournament count badge background**: `bg-black/50` → `bg-foreground/5 dark:bg-black/50`
-   - Black background looked harsh and out-of-place in light mode; replaced with subtle foreground-tinted bg
+### 1. SSR Cache Revalidation — `/home/z/my-project/src/lib/landing-data.ts`
+- **Line 737**: `fetchLandingStatsCached` revalidate changed from `300` → `600` (5min → 10min)
+- **Line 900**: `fetchLandingLeagueCached` revalidate changed from `300` → `600` (5min → 10min)
+- Rationale: Data barely changes — 10 minutes is fine and cuts SSR DB queries in half
 
-2. **Line 197 — Play icon color**: `text-white fill-white` → `text-idm-gold-warm dark:text-white fill-idm-gold-warm dark:fill-white`
-   - White play icon was invisible on light backgrounds; gold is visible in both themes
-   - Also updated `drop-shadow` from white glow → gold glow in light mode: `drop-shadow-[0_0_4px_rgba(239,249,35,0.3)] dark:drop-shadow-[0_0_4px_rgba(255,255,255,0.4)]`
+### 2. API Route Cache Headers
 
-3. **Line 200 — Video tooltip**: `text-white/80 bg-black/70` → `text-foreground dark:text-white/80 bg-background/90 dark:bg-black/70 border border-border/20 dark:border-0`
-   - White text on black bg was fully inverted in light mode; now uses foreground/background semantic colors with a subtle border in light mode
+#### `/home/z/my-project/src/app/api/stats/route.ts`
+- **Surrogate-Key**: Changed from `'league-data'` → `'stats-data'` for targeted revalidation
+- Cache-Control already had `s-maxage=60, stale-while-revalidate=300` ✅
+- Updated comment to reflect correct CDN cache duration and Surrogate-Key
 
-4. **Line 357 — Section background**: `bg-deep` → `bg-deep border-t border-border/10 dark:border-t-0`
-   - `bg-deep` already has light mode value (`#f5f0e8`) via CSS variables, but lacked visual separation from adjacent sections in light mode
-   - Added a subtle top border in light mode only to create section boundary
+#### `/home/z/my-project/src/app/api/leaderboard/route.ts`
+- **Cache-Control**: Changed from `s-maxage=10, stale-while-revalidate=60` → `s-maxage=60, stale-while-revalidate=300`
 
-5. **Lines 171, 285, 321** — `text-idm-gold-warm` and `bg-idm-gold-warm/5 border-idm-gold-warm/20` etc.
-   - Confirmed these auto-fix via CSS variables (gold resolves to `#92780C` in light mode, `#EFF923` in dark mode)
-   - No changes needed
+#### `/home/z/my-project/src/app/api/rankings/route.ts`
+- **Cache-Control**: Changed from `no-store, no-cache, must-revalidate` → `public, s-maxage=60, stale-while-revalidate=300`
+
+#### `/home/z/my-project/src/app/api/feed/route.ts`
+- **Cache-Control**: Changed from `s-maxage=30, stale-while-revalidate=60` → `s-maxage=60, stale-while-revalidate=300`
+
+#### `/home/z/my-project/src/app/api/tournament-status/route.ts`
+- **Cache-Control**: Changed from `s-maxage=30, stale-while-revalidate=60` → `s-maxage=30, stale-while-revalidate=120`
+- Shorter s-maxage because tournament status changes more frequently
+
+#### `/home/z/my-project/src/app/api/league/route.ts`
+- Already had `s-maxage=60, stale-while-revalidate=300` ✅ — No changes needed
+
+#### `/home/z/my-project/src/app/api/cms/content/route.ts`
+- **Cache-Control**: Changed from `s-maxage=60, stale-while-revalidate=300` → `s-maxage=300, stale-while-revalidate=600`
+- CMS content changes very rarely — 5min CDN cache + 10min stale-while-revalidate
+- Updated comment to reflect new caching strategy
 
 ## Verification
-- ESLint: ✅ `bun run lint` passes with no errors
+- `bun run lint` — ✅ No errors
+
+---
+
+# Worklog — Task 2-c: Optimize Landing Page INP & FCP
+
+## Date: 2026-03-04
+
+## Task
+Optimize the landing page for INP (504ms → target <200ms) and FCP (2.22s → target <1.8s).
+
+## Changes Applied to `/home/z/my-project/src/components/idm/landing-page.tsx`
+
+### Fix 1: Dynamic import MarqueeTicker
+- Removed synchronous `import { MarqueeTicker } from './marquee-ticker'` (was line 16)
+- Added `const MarqueeTicker = dynamic(() => import('./marquee-ticker').then(m => ({ default: m.MarqueeTicker })), { ssr: false, loading: () => <div className="h-12" /> })` alongside other dynamic imports
+
+### Fix 2: Dynamic import BackToTop & ScrollProgress
+- Removed synchronous imports for `BackToTop` and `ScrollProgress` (were lines 99-100)
+- Added two dynamic imports with `ssr: false` and `loading: () => null`
+
+### Fix 3: Stagger React Query polling intervals
+- `stats female`: `refetchInterval: 300000` → `330000` (5.5min, staggered 30s from male)
+- `league-landing`: `refetchInterval: 600000` → `660000` (11min, staggered 1min from cms)
+- Added `refetchIntervalInBackground: false` to all 5 queries
+
+### Fix 4: Add `notifyOnChangeProps` to stats queries
+- Added `notifyOnChangeProps: ['data', 'error']` to both male and female stats queries
+
+## Verification
+- `bun run lint` — ✅ No errors

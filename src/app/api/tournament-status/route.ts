@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
 // Used by the landing page to quickly determine if registration is open,
 // without waiting for the full /api/stats response (which is heavy & slow).
 const CACHE_HEADERS = {
-  'Cache-Control': 'public, s-maxage=30, stale-while-revalidate=60',
+  'Cache-Control': 'public, s-maxage=30, stale-while-revalidate=120',
   'Surrogate-Key': 'league-data',
   'Vary': 'Accept-Encoding',
 };
