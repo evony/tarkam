@@ -23,7 +23,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import React, { useState, useRef, useMemo, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useMemo, useEffect, useCallback, useDeferredValue, startTransition } from 'react';
 import { useCommunityTheme, getCommunityTheme } from '@/hooks/use-community-theme';
 import { useDivisionTheme, getDivisionTheme } from '@/hooks/use-division-theme';
 import { useAppStore } from '@/lib/store';
@@ -1802,6 +1802,7 @@ const Section = React.memo(function Section({
   icon: Icon,
   iconColor = 'text-idm-gold-warm',
   sectionId,
+  style,
 }: {
   children: React.ReactNode;
   className?: string;
@@ -1809,11 +1810,13 @@ const Section = React.memo(function Section({
   icon?: typeof Trophy;
   iconColor?: string;
   sectionId?: string;
+  style?: React.CSSProperties;
 }) {
   return (
     <section
       className={className}
       id={sectionId ? `section-${sectionId}` : undefined}
+      style={style}
     >
       {title && Icon && (
         <div className="flex items-center gap-2 mb-3">
@@ -1898,6 +1901,12 @@ export function CommunityDashboard() {
   // Peringkat leaderboard filter state — lifted from CommunityLeaderboard for sticky header
   const [leaderboardSort, setLeaderboardSort] = useState<'players' | 'clubs'>('players');
   const [leaderboardDivisionFilter, setLeaderboardDivisionFilter] = useState<'all' | 'male' | 'female'>('all');
+
+  // Deferred values for expensive renders — keeps interactive elements responsive
+  // while deferring the heavy content re-renders to idle time
+  const deferredDivision = useDeferredValue(selectedDivision);
+  const deferredLeaderboardSort = useDeferredValue(leaderboardSort);
+  const deferredLeaderboardDivisionFilter = useDeferredValue(leaderboardDivisionFilter);
   // Track if rankings section is visible — hide sticky champion header when it is
   const [isRankingsVisible, setIsRankingsVisible] = useState(false);
   useEffect(() => {
@@ -1916,24 +1925,29 @@ export function CommunityDashboard() {
 
   // Derive effective division for division-specific queries
   const effectiveDivision: 'male' | 'female' = selectedDivision === 'female' ? 'female' : 'male';
+  const deferredEffectiveDivision: 'male' | 'female' = deferredDivision === 'female' ? 'female' : 'male';
 
   // Whether we're viewing a completed/past season
   const isViewingPastSeason = selectedSeason !== null && selectedSeason.status === 'completed';
 
   // When division changes while viewing a past season, reset to active season
   const handleDivisionChange = useCallback((d: DivisionFilter) => {
-    setSelectedDivision(d);
-    if (selectedSeason) {
-      setSelectedSeason(null);
-    }
+    startTransition(() => {
+      setSelectedDivision(d);
+      if (selectedSeason) {
+        setSelectedSeason(null);
+      }
+    });
   }, [selectedSeason]);
 
   // Handle season change
   const handleSeasonChange = useCallback((season: SelectedSeason | null) => {
-    setSelectedSeason(season);
-    if (season && season.division !== effectiveDivision) {
-      setSelectedDivision(season.division);
-    }
+    startTransition(() => {
+      setSelectedSeason(season);
+      if (season && season.division !== effectiveDivision) {
+        setSelectedDivision(season.division);
+      }
+    });
   }, [effectiveDivision]);
 
 
@@ -2092,19 +2106,19 @@ export function CommunityDashboard() {
 
       {/* ═══ 2. Cari Turnamen Kamu — Right below hero, above match results ═══ */}
       <Section sectionId="tour-saya">
-        <TourSayaSection selectedDivision={selectedDivision} />
+        <TourSayaSection selectedDivision={deferredDivision} />
       </Section>
 
       {/* ═══ 3. Hasil Pertandingan — Bracket-style match results ═══ */}
-      <Section sectionId="matches">
+      <Section sectionId="matches" style={{ contentVisibility: 'auto', containIntrinsicSize: '0 500px' }}>
         <AnimatedSection variant="fadeUp">
           <BracketHasilSection maleData={maleData} femaleData={femaleData} />
         </AnimatedSection>
       </Section>
 
       {/* ═══ 4. Top Saweran ═══ */}
-      <Section sectionId="saweran">
-        <TopDonorsWidget onDonate={handleDonate} statsData={selectedDivision === 'female' ? femaleData : maleData} statsData2={selectedDivision === 'female' ? maleData : femaleData} />
+      <Section sectionId="saweran" style={{ contentVisibility: 'auto', containIntrinsicSize: '0 400px' }}>
+        <TopDonorsWidget onDonate={handleDonate} statsData={deferredDivision === 'female' ? femaleData : maleData} statsData2={deferredDivision === 'female' ? maleData : femaleData} />
       </Section>
 
       {/* ═══ 4. Season Selector ═══ */}
@@ -2139,39 +2153,39 @@ export function CommunityDashboard() {
           />
         </div>
 
-        <Section sectionId="champions">
+        <Section sectionId="champions" style={{ contentVisibility: 'auto', containIntrinsicSize: '0 600px' }}>
           <AnimatedSection>
             <ChampionsMvpContent
               maleData={maleData}
               femaleData={femaleData}
-              selectedDivision={selectedDivision}
+              selectedDivision={deferredDivision}
               onPlayerClick={handlePlayerClick}
             />
           </AnimatedSection>
         </Section>
 
         {/* ═══ 6. Peringkat/Standings — People check ranking changes after match ═══ */}
-        <Section sectionId="rankings">
+        <Section sectionId="rankings" style={{ contentVisibility: 'auto', containIntrinsicSize: '0 500px' }}>
           <AnimatedSection variant="fadeUp">
             <div className="space-y-4">
               <PeringkatHeader
                 leaderboardSort={leaderboardSort}
-                onLeaderboardSortChange={setLeaderboardSort}
+                onLeaderboardSortChange={(sort) => startTransition(() => setLeaderboardSort(sort))}
                 divisionFilter={leaderboardDivisionFilter}
-                onDivisionFilterChange={setLeaderboardDivisionFilter}
+                onDivisionFilterChange={(filter) => startTransition(() => setLeaderboardDivisionFilter(filter))}
                 maleData={maleData}
                 femaleData={femaleData}
               />
               <DivisionStandingsSection
                 maleData={maleData}
                 femaleData={femaleData}
-                selectedDivision={selectedDivision}
+                selectedDivision={deferredDivision}
                 onPlayerClick={handlePlayerClick}
                 onClubClick={handleClubClick}
-                leaderboardSort={leaderboardSort}
-                onLeaderboardSortChange={setLeaderboardSort}
-                divisionFilter={leaderboardDivisionFilter}
-                onDivisionFilterChange={setLeaderboardDivisionFilter}
+                leaderboardSort={deferredLeaderboardSort}
+                onLeaderboardSortChange={(sort) => startTransition(() => setLeaderboardSort(sort))}
+                divisionFilter={deferredLeaderboardDivisionFilter}
+                onDivisionFilterChange={(filter) => startTransition(() => setLeaderboardDivisionFilter(filter))}
               />
             </div>
           </AnimatedSection>
@@ -2179,10 +2193,10 @@ export function CommunityDashboard() {
       </div>
 
       {/* ═══ 7. Quick Stats Bar — Division-specific (when division selected) ═══ */}
-      {selectedDivision !== 'all' && (
+      {deferredDivision !== 'all' && (
         <Section sectionId="quick-stats">
-          {(effectiveDivision === 'male' ? maleData : femaleData) ? (
-            <QuickStatsBar data={(effectiveDivision === 'male' ? maleData : femaleData)!} division={effectiveDivision} />
+          {(deferredEffectiveDivision === 'male' ? maleData : femaleData) ? (
+            <QuickStatsBar data={(deferredEffectiveDivision === 'male' ? maleData : femaleData)!} division={deferredEffectiveDivision} />
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
               {Array.from({ length: 4 }).map((_, i) => (

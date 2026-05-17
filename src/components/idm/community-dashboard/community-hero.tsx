@@ -36,27 +36,49 @@ const AnimatedNumber = React.memo(function AnimatedNumber({ target, duration = 1
     const diff = target - start;
     if (diff === 0) return;
 
-    const startTime = performance.now();
+    // ★ INP optimization: defer animation start until idle to avoid competing with user interactions
+    let idleId: number | undefined;
     let rafId: number;
 
-    const animate = (now: number) => {
-      const elapsed = now - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const eased = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
-      const current = Math.round(start + diff * eased);
-      currentValueRef.current = current;
+    const startAnimation = () => {
+      const startTime = performance.now();
 
-      if (spanRef.current) {
-        spanRef.current.textContent = `${prefix}${current.toLocaleString('id-ID')}${suffix}`;
-      }
+      const animate = (now: number) => {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+        const current = Math.round(start + diff * eased);
+        currentValueRef.current = current;
 
-      if (progress < 1) {
-        rafId = requestAnimationFrame(animate);
-      }
+        if (spanRef.current) {
+          spanRef.current.textContent = `${prefix}${current.toLocaleString('id-ID')}${suffix}`;
+        }
+
+        if (progress < 1) {
+          rafId = requestAnimationFrame(animate);
+        }
+      };
+
+      rafId = requestAnimationFrame(animate);
     };
 
-    rafId = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(rafId);
+    // Use requestIdleCallback if available, otherwise setTimeout with short delay
+    if ('requestIdleCallback' in window) {
+      idleId = (window as any).requestIdleCallback(startAnimation, { timeout: 500 });
+    } else {
+      idleId = window.setTimeout(startAnimation, 100) as any;
+    }
+
+    return () => {
+      if (idleId !== undefined) {
+        if ('cancelIdleCallback' in window) {
+          (window as any).cancelIdleCallback(idleId);
+        } else {
+          clearTimeout(idleId);
+        }
+      }
+      cancelAnimationFrame(rafId);
+    };
   }, [target, duration, prefix, suffix]);
 
   return <span ref={spanRef}>{prefix}0{suffix}</span>;
@@ -662,7 +684,7 @@ export const CommunityHero = React.memo(function CommunityHero({ maleData, femal
         </div>
 
         {/* ── Row 2: Division Cards (with tournament details + CTA buttons) ── */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4" style={{ contain: 'layout style' }}>
           <DivisionCard
             division="male"
             data={maleData}
@@ -742,7 +764,7 @@ export const CommunityHero = React.memo(function CommunityHero({ maleData, femal
         </div>
 
         {/* ── Row 3: Quick Stats + Progress (inline, compact) ── */}
-        <div className="flex items-center gap-4 sm:gap-6 p-4 sm:p-5 rounded-2xl bg-idm-gold-warm/5 border border-idm-gold-warm/10 transition-all duration-300 hover:border-idm-gold-warm/20 hover:shadow-[0_0_5px_rgba(239,249,35,0.15)]">
+        <div className="flex items-center gap-4 sm:gap-6 p-4 sm:p-5 rounded-2xl bg-idm-gold-warm/5 border border-idm-gold-warm/10" style={{ contain: 'layout style' }}>
           {/* Stats */}
           <div className="flex items-center gap-3 sm:gap-5 shrink-0">
             {quickStats.map(stat => (
