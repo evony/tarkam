@@ -138,7 +138,7 @@ export function HeroSection({
       {/* ═══════════════ HERO SECTION ═══════════════ */}
       <section
         id="hero"
-        className="relative min-h-screen flex flex-col items-center justify-center"
+        className="relative min-h-[85vh] sm:min-h-screen flex flex-col items-center justify-center"
         aria-label="Tarkam IDM Hero"
       >
         {/* ── Animated gold line border at top ── */}
@@ -222,32 +222,16 @@ export function HeroSection({
           ) : null
         )}
 
-        {/* Mid-depth radial gold haze */}
+        {/* Decorative glow layers — hidden on mobile to reduce paint cost */}
         {!heroBgVideo && (
           <div
-            className="absolute inset-0 pointer-events-none"
+            className="hidden sm:block absolute inset-0 pointer-events-none"
             style={{
-              background: 'radial-gradient(ellipse at 50% 45%, rgba(239,249,35,0.02) 0%, transparent 65%)',
-            }}
-          />
-        )}
-
-        {/* Top-left cyan glow (Male) */}
-        {!heroBgVideo && (
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background: 'radial-gradient(ellipse at 15% 30%, rgba(46,159,255,0.04) 0%, transparent 50%)',
-            }}
-          />
-        )}
-
-        {/* Bottom-right purple glow (Female) */}
-        {!heroBgVideo && (
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background: 'radial-gradient(ellipse at 85% 70%, rgba(255,45,120,0.04) 0%, transparent 50%)',
+              background: `
+                radial-gradient(ellipse at 50% 45%, rgba(239,249,35,0.02) 0%, transparent 65%),
+                radial-gradient(ellipse at 15% 30%, rgba(46,159,255,0.04) 0%, transparent 50%),
+                radial-gradient(ellipse at 85% 70%, rgba(255,45,120,0.04) 0%, transparent 50%)
+              `,
             }}
           />
         )}
@@ -264,10 +248,10 @@ export function HeroSection({
           />
         )}
 
-        {/* Grid overlay — subtle esports tech feel — only when no video */}
+        {/* Grid overlay — subtle esports tech feel — only when no video, hidden on mobile */}
         {!heroBgVideo && (
           <div
-            className="absolute inset-0 pointer-events-none opacity-[0.015]"
+            className="hidden sm:block absolute inset-0 pointer-events-none opacity-[0.015]"
             style={{
               backgroundImage: `
                 linear-gradient(rgba(239,249,35,0.3) 1px, transparent 1px),
@@ -278,15 +262,15 @@ export function HeroSection({
           />
         )}
 
-        {/* 1. Animated Diagonal Accent Lines */}
-        <div className="hero-diagonal-line hero-diagonal-line-1" aria-hidden="true" />
-        <div className="hero-diagonal-line hero-diagonal-line-2" aria-hidden="true" />
-        <div className="hero-diagonal-line hero-diagonal-line-3" aria-hidden="true" />
-
-        {/* 5. Floating Geometric Accents */}
-        <div className="hero-geo-accent hero-geo-diamond-1" aria-hidden="true" />
-        <div className="hero-geo-accent hero-geo-diamond-2" aria-hidden="true" />
-        <div className="hero-geo-accent hero-geo-hex" aria-hidden="true" />
+        {/* Decorative elements — hidden on mobile for performance */}
+        <div className="hidden sm:block" aria-hidden="true">
+          <div className="hero-diagonal-line hero-diagonal-line-1" />
+          <div className="hero-diagonal-line hero-diagonal-line-2" />
+          <div className="hero-diagonal-line hero-diagonal-line-3" />
+          <div className="hero-geo-accent hero-geo-diamond-1" />
+          <div className="hero-geo-accent hero-geo-diamond-2" />
+          <div className="hero-geo-accent hero-geo-hex" />
+        </div>
 
         {/* ── Floating Particles — reduced to 6 for performance ── */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">

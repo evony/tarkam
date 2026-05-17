@@ -1804,10 +1804,12 @@ function LayoutRow({ children, cols = '2', className = '' }: { children: React.R
 const LazySection = React.memo(function LazySection({
   children,
   placeholderHeight = 500,
+  placeholderHeightMobile,
   rootMargin = '300px',
 }: {
   children: React.ReactNode;
   placeholderHeight?: number;
+  placeholderHeightMobile?: number;
   rootMargin?: string;
 }) {
   const [isVisible, setIsVisible] = useState(false);
@@ -1836,11 +1838,21 @@ const LazySection = React.memo(function LazySection({
 
   if (isVisible) return <>{children}</>;
 
+  // Use smaller placeholder on mobile to reduce CLS
+  const mobileHeight = placeholderHeightMobile ?? Math.round(placeholderHeight * 0.65);
+
   return (
     <div
       ref={ref}
-      style={{ height: placeholderHeight, contain: 'layout style' }}
+      style={{
+        height: mobileHeight,
+        contain: 'layout style',
+        minHeight: mobileHeight,
+        // Desktop override via CSS custom property approach
+        '--desktop-height': `${placeholderHeight}px`,
+      } as React.CSSProperties}
       aria-hidden="true"
+      className="sm:h-[var(--desktop-height)]"
     />
   );
 });
@@ -2203,7 +2215,7 @@ export function CommunityDashboard() {
       {/* ═══ 4. ⭐ Champions & MVP + Peringkat ═══ */}
       <div className="space-y-4 sm:space-y-6">
         {/* Sticky Champion Header — hidden when rankings section is in view */}
-        <div className={`sticky top-0 z-30 -mx-1.5 sm:-mx-4 lg:-mx-5 px-1.5 sm:px-4 lg:px-5 py-2.5 bg-background/95 backdrop-blur-md border-b border-idm-gold-warm/10 transition-all duration-300 ${isRankingsVisible ? 'opacity-0 pointer-events-none -translate-y-full' : 'opacity-100 translate-y-0'}`}>
+        <div className={`sticky top-0 z-30 -mx-1.5 sm:-mx-4 lg:-mx-5 px-1.5 sm:px-4 lg:px-5 py-2.5 bg-background/95 sm:backdrop-blur-md border-b border-idm-gold-warm/10 transition-all duration-300 ${isRankingsVisible ? 'opacity-0 pointer-events-none -translate-y-full' : 'opacity-100 translate-y-0'}`}>
           <ChampionsMvpHeader
             selectedDivision={selectedDivision}
             onDivisionChange={handleDivisionChange}

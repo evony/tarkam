@@ -20,7 +20,7 @@ function SkeletonCard({ className = '', children }: { className?: string; childr
 /* ─── Hero Skeleton ─── */
 function HeroSkeleton() {
   return (
-    <section className="relative min-h-[70vh] sm:min-h-[80vh] flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-[60vh] sm:min-h-[80vh] flex items-center justify-center overflow-hidden">
       {/* Background shimmer */}
       <div className="absolute inset-0 skeleton-shimmer opacity-20" />
       <div className="relative z-10 text-center space-y-4 px-4 max-w-2xl mx-auto">

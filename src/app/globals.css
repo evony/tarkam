@@ -11501,3 +11501,66 @@ img[alt] {
 .safe-area-top {
   padding-top: env(safe-area-inset-top, 0px);
 }
+
+/* ─── 11. Mobile Performance — Reduce animations & paint on small screens ─── */
+/* Mobile CPUs/GPUs are ~4x slower than desktop. Disabling non-essential animations
+   reduces paint/composite work, lowering INP and improving scroll smoothness. */
+@media (max-width: 640px) {
+  /* Disable infinite animations that run continuously — biggest CPU savings */
+  .hero-cta-breath::before,
+  .hero-cta-breath::after,
+  .animate-float-subtle,
+  .animate-pulse,
+  .hero-title-breath,
+  .progress-bar-breathe,
+  .community-progress-bar,
+  .mvp-spotlight-bg,
+  .casino-shimmer::after,
+  .rank-badge-gold-enhanced::after,
+  .avatar-shimmer-gold::after,
+  .avatar-shimmer-platinum::after,
+  .avatar-shimmer-diamond::after,
+  .avatar-shimmer-emerald::after,
+  .nav-logo-glow {
+    animation: none !important;
+  }
+
+  /* Disable complex background effects on mobile */
+  .hero-vignette-cinematic {
+    background: rgba(4, 6, 16, 0.5) !important;
+  }
+
+  /* Reduce box-shadow complexity on mobile — GPU compositing cost */
+  .glow-pulse,
+  .nav-scrolled-glow {
+    box-shadow: none !important;
+  }
+
+  /* Disable backdrop-filter on mobile — very expensive on low-end devices */
+  .frost-glass,
+  .activity-card-glass,
+  .standings-row-glass,
+  .standings-row-glass-even,
+  .standings-row-glass-odd {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* Reduce transition durations on mobile for snappier feel */
+  .stagger-item,
+  .stagger-item-fast,
+  .stagger-item-subtle {
+    animation-duration: 0.01ms !important;
+  }
+
+  /* Ensure content-visibility is visible on mobile (no lazy rendering surprises) */
+  .landing-section,
+  [style*="content-visibility"] {
+    content-visibility: visible !important;
+  }
+
+  /* Reduce hover/active effects that cause repaints on mobile */
+  *:hover {
+    transition-duration: 0ms !important;
+  }
+}
