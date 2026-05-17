@@ -23,7 +23,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import React, { useState, useRef, useMemo, useEffect, useCallback, startTransition } from 'react';
+import React, { useState, useRef, useMemo, useEffect, useCallback } from 'react';
 import { useCommunityTheme, getCommunityTheme } from '@/hooks/use-community-theme';
 import { useDivisionTheme, getDivisionTheme } from '@/hooks/use-division-theme';
 import { useAppStore } from '@/lib/store';
@@ -1802,7 +1802,6 @@ const Section = React.memo(function Section({
   icon: Icon,
   iconColor = 'text-idm-gold-warm',
   sectionId,
-  skipContentVisibility = false,
 }: {
   children: React.ReactNode;
   className?: string;
@@ -1810,13 +1809,11 @@ const Section = React.memo(function Section({
   icon?: typeof Trophy;
   iconColor?: string;
   sectionId?: string;
-  skipContentVisibility?: boolean;
 }) {
   return (
     <section
       className={className}
       id={sectionId ? `section-${sectionId}` : undefined}
-      style={skipContentVisibility ? undefined : { contentVisibility: 'auto', containIntrinsicSize: '0 800px' }}
     >
       {title && Icon && (
         <div className="flex items-center gap-2 mb-3">
@@ -1900,15 +1897,7 @@ export function CommunityDashboard() {
   const [selectedDivision, setSelectedDivision] = useState<DivisionFilter>('all');
   // Peringkat leaderboard filter state — lifted from CommunityLeaderboard for sticky header
   const [leaderboardSort, setLeaderboardSort] = useState<'players' | 'clubs'>('players');
-  // ★ INP optimization: wrap leaderboard sort in startTransition
-  const handleLeaderboardSortChange = useCallback((s: 'players' | 'clubs') => {
-    startTransition(() => setLeaderboardSort(s));
-  }, []);
   const [leaderboardDivisionFilter, setLeaderboardDivisionFilter] = useState<'all' | 'male' | 'female'>('all');
-  // ★ INP optimization: wrap leaderboard filter in startTransition
-  const handleLeaderboardDivisionChange = useCallback((f: 'all' | 'male' | 'female') => {
-    startTransition(() => setLeaderboardDivisionFilter(f));
-  }, []);
   // Track if rankings section is visible — hide sticky champion header when it is
   const [isRankingsVisible, setIsRankingsVisible] = useState(false);
   useEffect(() => {
@@ -1932,14 +1921,11 @@ export function CommunityDashboard() {
   const isViewingPastSeason = selectedSeason !== null && selectedSeason.status === 'completed';
 
   // When division changes while viewing a past season, reset to active season
-  // ★ INP optimization: wrap in startTransition so tab switch doesn't block paint
   const handleDivisionChange = useCallback((d: DivisionFilter) => {
-    startTransition(() => {
-      setSelectedDivision(d);
-      if (selectedSeason) {
-        setSelectedSeason(null);
-      }
-    });
+    setSelectedDivision(d);
+    if (selectedSeason) {
+      setSelectedSeason(null);
+    }
   }, [selectedSeason]);
 
   // Handle season change
@@ -2092,12 +2078,12 @@ export function CommunityDashboard() {
       </div>
 
       {/* ═══ 1. Hero — top of unified surface ═══ */}
-      <Section sectionId="hero" skipContentVisibility>
+      <Section sectionId="hero">
         <CommunityHero maleData={maleData} femaleData={femaleData} leagueData={leagueData} onSawer={handleDonate} onRegister={handleRegister} onPayment={handlePayment} />
       </Section>
 
       {/* ═══ Marquee Ticker — Live activity feed (full-bleed within surface) ═══ */}
-      <div className="relative z-40 -mx-2 sm:-mx-4 lg:-mx-5 py-2.5 bg-background/90 border-y border-idm-gold-warm/10" style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 48px' }}>
+      <div className="relative z-40 -mx-2 sm:-mx-4 lg:-mx-5 py-2.5 bg-background/90 border-y border-idm-gold-warm/10" style={{ contain: 'layout style' }}>
         <MarqueeTicker maleData={maleData} femaleData={femaleData} leagueData={leagueData} />
       </div>
 
@@ -2165,14 +2151,14 @@ export function CommunityDashboard() {
         </Section>
 
         {/* ═══ 6. Peringkat/Standings — People check ranking changes after match ═══ */}
-        <Section sectionId="rankings" skipContentVisibility>
+        <Section sectionId="rankings">
           <AnimatedSection variant="fadeUp">
             <div className="space-y-4">
               <PeringkatHeader
                 leaderboardSort={leaderboardSort}
-                onLeaderboardSortChange={handleLeaderboardSortChange}
+                onLeaderboardSortChange={setLeaderboardSort}
                 divisionFilter={leaderboardDivisionFilter}
-                onDivisionFilterChange={handleLeaderboardDivisionChange}
+                onDivisionFilterChange={setLeaderboardDivisionFilter}
                 maleData={maleData}
                 femaleData={femaleData}
               />
@@ -2183,9 +2169,9 @@ export function CommunityDashboard() {
                 onPlayerClick={handlePlayerClick}
                 onClubClick={handleClubClick}
                 leaderboardSort={leaderboardSort}
-                onLeaderboardSortChange={handleLeaderboardSortChange}
+                onLeaderboardSortChange={setLeaderboardSort}
                 divisionFilter={leaderboardDivisionFilter}
-                onDivisionFilterChange={handleLeaderboardDivisionChange}
+                onDivisionFilterChange={setLeaderboardDivisionFilter}
               />
             </div>
           </AnimatedSection>

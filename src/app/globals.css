@@ -574,11 +574,10 @@
   }
 }
 
-/* Performance: Skip rendering off-screen sections */
-.landing-section {
-  content-visibility: auto;
-  contain-intrinsic-size: 0 500px;
-}
+/* Performance: Skip rendering off-screen sections — removed content-visibility to prevent CLS
+   content-visibility: auto with contain-intrinsic-size causes layout shift when sections enter viewport
+   because the estimated size doesn't match actual content size. placeholderData in React Query
+   and proper skeleton states handle the loading experience instead. */
 
 /* Ensure hero section is NOT deferred */
 .hero-section-immediate {
@@ -8322,11 +8321,8 @@ html {
    GPU-friendly, mid-range device optimized
    ============================================ */
 
-/* ─── content-visibility for off-screen landing sections ─── */
-.landing-section {
-  content-visibility: auto;
-  contain-intrinsic-size: auto 600px;
-}
+/* ─── content-visibility removed for landing sections to prevent CLS ─── */
+/* .landing-section content-visibility was causing layout shift on viewport entry */
 
 /* ─── Hero: Animated gold line border at top ─── */
 .hero-top-gold-line {
