@@ -37,7 +37,7 @@ const AnimatedNumber = React.memo(function AnimatedNumber({ target, duration = 1
     if (diff === 0) return;
 
     // ★ INP optimization: defer animation start until idle to avoid competing with user interactions
-    let idleId: number | undefined;
+    let idleTimerId: number | ReturnType<typeof setTimeout> | undefined;
     let rafId: number;
 
     const startAnimation = () => {
@@ -63,18 +63,19 @@ const AnimatedNumber = React.memo(function AnimatedNumber({ target, duration = 1
     };
 
     // Use requestIdleCallback if available, otherwise setTimeout with short delay
-    if ('requestIdleCallback' in window) {
-      idleId = (window as any).requestIdleCallback(startAnimation, { timeout: 500 });
+    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+      idleTimerId = (window as unknown as { requestIdleCallback(cb: () => void, opts?: { timeout: number }): number })
+        .requestIdleCallback(startAnimation, { timeout: 500 });
     } else {
-      idleId = window.setTimeout(startAnimation, 100) as any;
+      idleTimerId = setTimeout(startAnimation, 100);
     }
 
     return () => {
-      if (idleId !== undefined) {
-        if ('cancelIdleCallback' in window) {
-          (window as any).cancelIdleCallback(idleId);
+      if (idleTimerId !== undefined) {
+        if (typeof window !== 'undefined' && 'cancelIdleCallback' in window) {
+          (window as unknown as { cancelIdleCallback(id: number): void }).cancelIdleCallback(idleTimerId as unknown as number);
         } else {
-          clearTimeout(idleId);
+          clearTimeout(idleTimerId as ReturnType<typeof setTimeout>);
         }
       }
       cancelAnimationFrame(rafId);
