@@ -637,7 +637,7 @@ export function LandingPage() {
           {/* Logo */}
           <div className="flex items-center gap-2.5">
             <div className={`w-7 h-7 rounded-lg overflow-hidden shrink-0 transition-all duration-500 ${scrolled ? 'nav-logo-glow glow-pulse' : 'glow-pulse'}`}>
-              <Image src={cmsLogo} alt="IDM" width={28} height={28} className="w-full h-full object-cover" loading="lazy" />
+              <Image src={cmsLogo} alt="IDM" width={28} height={28} className="w-full h-full object-cover" priority />
             </div>
             <span className={`text-gradient-fury text-sm font-bold tracking-tight transition-all duration-500 ${scrolled ? 'nav-logo-text-glow' : ''}`}>{cmsSiteTitle}</span>
           </div>

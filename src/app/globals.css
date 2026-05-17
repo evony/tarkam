@@ -11521,7 +11521,25 @@ img[alt] {
   .avatar-shimmer-platinum::after,
   .avatar-shimmer-diamond::after,
   .avatar-shimmer-emerald::after,
-  .nav-logo-glow {
+  .nav-logo-glow,
+  .donor-name-pulse,
+  .donor-name-pulse-gold,
+  .live-match-pulse,
+  .live-indicator-pulse,
+  .neon-pulse-male,
+  .neon-pulse-female,
+  .neon-pulse-community,
+  .bracket-live-pulse,
+  .hero-scroll-mouse,
+  .hero-scroll-mouse-dot,
+  .live-pulse,
+  .marquee,
+  .hero-btn-glow-pulse,
+  .scroll-bounce,
+  .scroll-dot,
+  .chevron-bounce,
+  .donor-rank-badge,
+  .tier-badge-glow {
     animation: none !important;
   }
 
@@ -11541,7 +11559,18 @@ img[alt] {
   .activity-card-glass,
   .standings-row-glass,
   .standings-row-glass-even,
-  .standings-row-glass-odd {
+  .standings-row-glass-odd,
+  .ios-hero-stats,
+  .hero-stats-bar,
+  .glass-strong-community,
+  .glass-strong-male,
+  .glass-strong-female,
+  .casino-pill,
+  .card-premium,
+  .card-premium-male,
+  .card-premium-female,
+  .tournament-header-mesh-male,
+  .tournament-header-mesh-female {
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
   }
@@ -11562,5 +11591,28 @@ img[alt] {
   /* Reduce hover/active effects that cause repaints on mobile */
   *:hover {
     transition-duration: 0ms !important;
+  }
+
+  /* Clean up will-change on mobile for disabled animations — frees GPU memory */
+  .hero-enter-1,
+  .hero-enter-2,
+  .hero-enter-3,
+  .hero-enter-4,
+  .hero-enter-5,
+  .hero-diagonal-line,
+  .hero-title-breath,
+  .hero-particle,
+  .donor-name-pulse,
+  .donor-name-pulse-gold,
+  .live-match-pulse,
+  .neon-pulse-male,
+  .neon-pulse-female,
+  .neon-pulse-community {
+    will-change: auto !important;
+  }
+
+  /* Disable hero shimmer sweep on mobile — infinite repaint */
+  .hero-shimmer-sweep::after {
+    animation: none !important;
   }
 }

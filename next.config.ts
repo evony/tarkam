@@ -24,6 +24,8 @@ const nextConfig: NextConfig = {
     loader: 'custom',
     loaderFile: './src/lib/cloudinary-loader.ts',
     formats: ['image/avif', 'image/webp'],
+    deviceSizes: [640, 828, 1080, 1920],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256],
     remotePatterns: [
       { protocol: "https", hostname: "res.cloudinary.com" },
       { protocol: "https", hostname: "img.youtube.com" },

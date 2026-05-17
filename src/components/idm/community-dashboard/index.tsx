@@ -29,8 +29,6 @@ import { useDivisionTheme, getDivisionTheme } from '@/hooks/use-division-theme';
 import { useAppStore } from '@/lib/store';
 import { formatCurrencyShort, clubToString, getAvatarUrl } from '@/lib/utils';
 import { AvatarMedia } from '@/components/ui/avatar-media';
-import { PlayerProfile } from '../player-profile';
-import { ClubProfile } from '../club-profile';
 
 // Import modular components — original
 import { CommunityHero } from './community-hero';
@@ -46,15 +44,23 @@ import { CommunityWeeklyChampions } from './weekly-champions';
 import { WeeklyChampionCard } from './weekly-champion-card';
 import { PlayerCard } from '../player-card';
 import { WeekNavigator } from '../week-navigator';
-import { DonationModal } from '../donation-modal';
-import { RegistrationModal } from '../registration-modal';
-import { PaymentModal } from '../payment-modal';
+
+// ★ Dynamic imports for modals — removes ~225KB (including framer-motion) from initial bundle
+import dynamic from 'next/dynamic';
+const DonationModal = dynamic(() => import('../donation-modal').then(m => ({ default: m.DonationModal })), { ssr: false, loading: () => null });
+const RegistrationModal = dynamic(() => import('../registration-modal').then(m => ({ default: m.RegistrationModal })), { ssr: false, loading: () => null });
+const PaymentModal = dynamic(() => import('../payment-modal').then(m => ({ default: m.PaymentModal })), { ssr: false, loading: () => null });
+const PlayerProfile = dynamic(() => import('../player-profile').then(m => ({ default: m.PlayerProfile })), { ssr: false, loading: () => null });
+const ClubProfile = dynamic(() => import('../club-profile').then(m => ({ default: m.ClubProfile })), { ssr: false, loading: () => null });
+
+// ★ Dynamic imports for below-fold heavy sections
+const TopDonorsWidget = dynamic(() => import('../dashboard/top-donors-widget').then(m => ({ default: m.TopDonorsWidget })), { ssr: false, loading: () => <div className="min-h-[400px]" /> });
+const MvpHallOfFame = dynamic(() => import('./mvp-hall-of-fame').then(m => ({ default: m.MvpHallOfFame })), { ssr: false, loading: () => <div className="min-h-[300px]" /> });
+const HistoricalSeasonView = dynamic(() => import('./historical-season-view').then(m => ({ default: m.HistoricalSeasonView })), { ssr: false, loading: () => <div className="min-h-[400px]" /> });
 
 // Import division dashboard components — REUSE, do NOT duplicate
 import { QuickStatsBar } from '../dashboard/quick-stats-bar';
-import { TopDonorsWidget } from '../dashboard/top-donors-widget';
 
-import { MvpHallOfFame } from './mvp-hall-of-fame';
 import { MatchesTab } from '../dashboard/matches-tab';
 
 // Import shared components
@@ -66,7 +72,6 @@ import { SponsorBanner } from '../ui/sponsor-banner';
 
 // Import season selector components
 import { SeasonSelector, type SelectedSeason } from './season-selector';
-import { HistoricalSeasonView } from './historical-season-view';
 
 // Import marquee ticker
 import { MarqueeTicker } from '../marquee-ticker';

@@ -226,9 +226,28 @@ export function useScrollReveal() {
   }, []);
 }
 
+/* ========== Shared Singleton IntersectionObserver for AnimatedSection ==========
+  Prevents creating a new IntersectionObserver per AnimatedSection instance.
+  On mobile, each observer costs ~2KB memory + compositor overhead.
+  Sharing one observer across all instances reduces memory & INP impact.
+*/
+const revealObserver = typeof IntersectionObserver !== 'undefined'
+  ? new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('reveal--visible');
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      },
+      { rootMargin: '0px 0px', threshold: 0.01 }
+    )
+  : { observe: () => {}, unobserve: () => {} } as unknown as IntersectionObserver;
+
 /* ========== Scroll-triggered Section Wrapper (CSS-only, Enhanced) ==========
   Premium reveal animation with blur-from + scale + opacity transition.
-  Uses IntersectionObserver to add `.reveal--visible`, triggering a
+  Uses shared singleton IntersectionObserver to add `.reveal--visible`, triggering a
   spring-like CSS transition (cubic-bezier spring approximation).
   All GPU-only: transform, opacity, filter — no layout thrash.
 */
@@ -242,19 +261,9 @@ export function AnimatedSection({ children, className = '', variant = 'fadeUp' }
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('reveal--visible');
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { rootMargin: '0px 0px', threshold: 0.01 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
+    // Use shared singleton observer to avoid creating one per AnimatedSection instance
+    revealObserver.observe(el);
+    return () => revealObserver.unobserve(el);
   }, []);
 
   const variantClass = {
