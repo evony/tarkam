@@ -177,11 +177,13 @@ export function MarqueeTicker({ maleData, femaleData, leagueData }: UnifiedMarqu
     },
     staleTime: 120000,
     refetchInterval: 300000,
+    refetchIntervalInBackground: false,
     refetchOnWindowFocus: true,
     refetchOnReconnect: true,
+    placeholderData: (prev) => prev,
   });
 
-  // Pusher real-time
+  // Pusher real-time — ★ deferred to idle to avoid competing with initial interactions (INP)
   useEffect(() => {
     const pusherKey = process.env.NEXT_PUBLIC_PUSHER_KEY;
     const pusherCluster = process.env.NEXT_PUBLIC_PUSHER_CLUSTER;
@@ -189,16 +191,34 @@ export function MarqueeTicker({ maleData, femaleData, leagueData }: UnifiedMarqu
 
     let pusher: any;
     let channel: any;
+    let idleId: number | ReturnType<typeof setTimeout> | undefined;
 
-    import('pusher-js').then(({ default: PusherJS }) => {
-      pusher = new PusherJS(pusherKey, { cluster: pusherCluster });
-      channel = pusher.subscribe('idm-feed');
-      channel.bind('feed-updated', () => {
-        qc.invalidateQueries({ queryKey: ['feed'] });
-      });
-    }).catch(() => {});
+    const connectPusher = () => {
+      import('pusher-js').then(({ default: PusherJS }) => {
+        pusher = new PusherJS(pusherKey, { cluster: pusherCluster });
+        channel = pusher.subscribe('idm-feed');
+        channel.bind('feed-updated', () => {
+          qc.invalidateQueries({ queryKey: ['feed'] });
+        });
+      }).catch(() => {});
+    };
+
+    // Defer Pusher connection until idle — reduces main thread work during initial load
+    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+      idleId = (window as unknown as { requestIdleCallback(cb: () => void, opts?: { timeout: number }): number })
+        .requestIdleCallback(connectPusher, { timeout: 3000 });
+    } else {
+      idleId = setTimeout(connectPusher, 2000);
+    }
 
     return () => {
+      if (idleId !== undefined) {
+        if (typeof window !== 'undefined' && 'cancelIdleCallback' in window) {
+          (window as unknown as { cancelIdleCallback(id: number): void }).cancelIdleCallback(idleId as unknown as number);
+        } else {
+          clearTimeout(idleId as ReturnType<typeof setTimeout>);
+        }
+      }
       if (channel) {
         channel.unbind_all();
         channel.unsubscribe();

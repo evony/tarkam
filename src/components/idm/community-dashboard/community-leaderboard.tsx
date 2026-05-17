@@ -103,9 +103,11 @@ export const CommunityLeaderboard = React.memo(function CommunityLeaderboard({
       if (!res.ok) return { clubs: [], type: 'tarkam' };
       return res.json();
     },
-    staleTime: 15000,
-    refetchInterval: 30000,
+    staleTime: 60000,
+    refetchInterval: 180000,
+    refetchIntervalInBackground: false,
     refetchOnWindowFocus: true,
+    placeholderData: (prev) => prev,
     enabled: leaderboardSort === 'clubs',
   });
 

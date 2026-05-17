@@ -1795,6 +1795,57 @@ function LayoutRow({ children, cols = '2', className = '' }: { children: React.R
 /* ═══════════════════════════════════════════
    Section wrapper with staggered reveal
    ═══════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════
+   LazySection — Skip JS execution + DOM creation for below-fold sections
+   Unlike content-visibility: auto (which only skips layout/paint),
+   this completely defers React component rendering until near viewport.
+   ★ KEY for INP: reduces initial hydration work and DOM element count ★
+   ═══════════════════════════════════════════════════════ */
+const LazySection = React.memo(function LazySection({
+  children,
+  placeholderHeight = 500,
+  rootMargin = '300px',
+}: {
+  children: React.ReactNode;
+  placeholderHeight?: number;
+  rootMargin?: string;
+}) {
+  const [isVisible, setIsVisible] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    // Already visible (e.g. server-rendered above fold)
+    if (isVisible) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [isVisible, rootMargin]);
+
+  if (isVisible) return <>{children}</>;
+
+  return (
+    <div
+      ref={ref}
+      style={{ height: placeholderHeight, contain: 'layout style' }}
+      aria-hidden="true"
+    />
+  );
+});
+
+
 const Section = React.memo(function Section({
   children,
   className = '',
@@ -1970,8 +2021,9 @@ export function CommunityDashboard() {
       const res = await fetch('/api/stats?division=male');
       return res.json();
     },
-    staleTime: 30 * 1000,
-    refetchInterval: 120 * 1000,
+    staleTime: 60 * 1000,
+    refetchInterval: 180 * 1000,
+    refetchIntervalInBackground: false,
     placeholderData: (prev) => prev,
   });
 
@@ -1982,8 +2034,9 @@ export function CommunityDashboard() {
       const res = await fetch('/api/stats?division=female');
       return res.json();
     },
-    staleTime: 30 * 1000,
-    refetchInterval: 120 * 1000,
+    staleTime: 60 * 1000,
+    refetchInterval: 180 * 1000,
+    refetchIntervalInBackground: false,
     placeholderData: (prev) => prev,
   });
 
@@ -2020,8 +2073,9 @@ export function CommunityDashboard() {
       const res = await fetch('/api/league');
       return res.json();
     },
-    staleTime: 30 * 1000,
-    refetchInterval: 120 * 1000,
+    staleTime: 60 * 1000,
+    refetchInterval: 180 * 1000,
+    refetchIntervalInBackground: false,
     placeholderData: (prev) => prev,
   });
 
@@ -2110,15 +2164,19 @@ export function CommunityDashboard() {
       </Section>
 
       {/* ═══ 3. Hasil Pertandingan — Bracket-style match results ═══ */}
-      <Section sectionId="matches" style={{ contentVisibility: 'auto', containIntrinsicSize: '0 500px' }}>
-        <AnimatedSection variant="fadeUp">
-          <BracketHasilSection maleData={maleData} femaleData={femaleData} />
-        </AnimatedSection>
+      <Section sectionId="matches">
+        <LazySection placeholderHeight={500}>
+          <AnimatedSection variant="fadeUp">
+            <BracketHasilSection maleData={maleData} femaleData={femaleData} />
+          </AnimatedSection>
+        </LazySection>
       </Section>
 
       {/* ═══ 4. Top Saweran ═══ */}
-      <Section sectionId="saweran" style={{ contentVisibility: 'auto', containIntrinsicSize: '0 400px' }}>
-        <TopDonorsWidget onDonate={handleDonate} statsData={deferredDivision === 'female' ? femaleData : maleData} statsData2={deferredDivision === 'female' ? maleData : femaleData} />
+      <Section sectionId="saweran">
+        <LazySection placeholderHeight={400}>
+          <TopDonorsWidget onDonate={handleDonate} statsData={deferredDivision === 'female' ? femaleData : maleData} statsData2={deferredDivision === 'female' ? maleData : femaleData} />
+        </LazySection>
       </Section>
 
       {/* ═══ 4. Season Selector ═══ */}
@@ -2153,19 +2211,22 @@ export function CommunityDashboard() {
           />
         </div>
 
-        <Section sectionId="champions" style={{ contentVisibility: 'auto', containIntrinsicSize: '0 600px' }}>
-          <AnimatedSection>
-            <ChampionsMvpContent
-              maleData={maleData}
-              femaleData={femaleData}
-              selectedDivision={deferredDivision}
-              onPlayerClick={handlePlayerClick}
-            />
-          </AnimatedSection>
+        <Section sectionId="champions">
+          <LazySection placeholderHeight={600}>
+            <AnimatedSection>
+              <ChampionsMvpContent
+                maleData={maleData}
+                femaleData={femaleData}
+                selectedDivision={deferredDivision}
+                onPlayerClick={handlePlayerClick}
+              />
+            </AnimatedSection>
+          </LazySection>
         </Section>
 
         {/* ═══ 6. Peringkat/Standings — People check ranking changes after match ═══ */}
-        <Section sectionId="rankings" style={{ contentVisibility: 'auto', containIntrinsicSize: '0 500px' }}>
+        <Section sectionId="rankings">
+          <LazySection placeholderHeight={500}>
           <AnimatedSection variant="fadeUp">
             <div className="space-y-4">
               <PeringkatHeader
@@ -2189,6 +2250,7 @@ export function CommunityDashboard() {
               />
             </div>
           </AnimatedSection>
+          </LazySection>
         </Section>
       </div>
 
