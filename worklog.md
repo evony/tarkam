@@ -73,3 +73,32 @@ Optimize the landing page for INP (504ms → target <200ms) and FCP (2.22s → t
 
 ## Verification
 - `bun run lint` — ✅ No errors
+
+---
+Task ID: 3
+Agent: Main Agent
+Task: Optimize INP from 576ms to target <200ms by removing useDeferredValue (double renders) and adding React.memo
+
+Work Log:
+- Analyzed root cause: `useDeferredValue` causes DOUBLE renders (once with old value, once with new) on every state change — this is the PRIMARY INP killer
+- Removed `useDeferredValue` import and all 3 usage calls from community-dashboard/index.tsx
+- Replaced all `deferredDivision` → `selectedDivision`, `deferredLeaderboardSort` → `leaderboardSort`, `deferredLeaderboardDivisionFilter` → `leaderboardDivisionFilter`, `deferredEffectiveDivision` → `effectiveDivision` in JSX
+- Added `React.memo` wrapper to `DivisionCard` in community-hero.tsx (was not memoized before)
+- Added `React.memo` wrapper to `QuickStatsBar` in quick-stats-bar.tsx (was not memoized before)
+- Simplified `AnimatedNumber` — removed `requestIdleCallback` complexity, now starts animation directly via `requestAnimationFrame` with `rafRef` for cleanup
+- Added `notifyOnChangeProps: ['data', 'error']` to all 3 community dashboard useQuery calls (male stats, female stats, league data)
+- Added `notifyOnChangeProps: ['data', 'error']` to 3 landing page queries that were missing it (tournament-status, cms-content, league-landing)
+- Increased polling intervals in community dashboard: `refetchInterval` from 180s → 300s (3min → 5min) for all 3 queries
+- Kept `startTransition` wrappers on filter/tab changes (useful for marking state updates as interruptible)
+- Verified: `npx tsc --noEmit` — no TypeScript errors
+- Verified: `bun run lint` — no lint errors
+- Verified: All `deferred*` variable references fully removed from codebase
+
+Stage Summary:
+- Removed `useDeferredValue` (was causing double renders — the primary INP killer)
+- Added `React.memo` to DivisionCard and QuickStatsBar (prevents unnecessary child re-renders)
+- Simplified AnimatedNumber (removed requestIdleCallback overhead)
+- Added `notifyOnChangeProps` to 6 queries total (prevents isFetching re-renders)
+- Increased community dashboard polling from 3min to 5min (reduces background re-renders)
+- CLS should remain at 0.1 (placeholderData still active)
+- INP should improve significantly due to eliminating double renders

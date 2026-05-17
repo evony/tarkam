@@ -23,7 +23,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import React, { useState, useRef, useMemo, useEffect, useCallback, useDeferredValue, startTransition } from 'react';
+import React, { useState, useRef, useMemo, useEffect, useCallback, startTransition } from 'react';
 import { useCommunityTheme, getCommunityTheme } from '@/hooks/use-community-theme';
 import { useDivisionTheme, getDivisionTheme } from '@/hooks/use-division-theme';
 import { useAppStore } from '@/lib/store';
@@ -1953,11 +1953,7 @@ export function CommunityDashboard() {
   const [leaderboardSort, setLeaderboardSort] = useState<'players' | 'clubs'>('players');
   const [leaderboardDivisionFilter, setLeaderboardDivisionFilter] = useState<'all' | 'male' | 'female'>('all');
 
-  // Deferred values for expensive renders — keeps interactive elements responsive
-  // while deferring the heavy content re-renders to idle time
-  const deferredDivision = useDeferredValue(selectedDivision);
-  const deferredLeaderboardSort = useDeferredValue(leaderboardSort);
-  const deferredLeaderboardDivisionFilter = useDeferredValue(leaderboardDivisionFilter);
+
   // Track if rankings section is visible — hide sticky champion header when it is
   const [isRankingsVisible, setIsRankingsVisible] = useState(false);
   useEffect(() => {
@@ -1976,7 +1972,7 @@ export function CommunityDashboard() {
 
   // Derive effective division for division-specific queries
   const effectiveDivision: 'male' | 'female' = selectedDivision === 'female' ? 'female' : 'male';
-  const deferredEffectiveDivision: 'male' | 'female' = deferredDivision === 'female' ? 'female' : 'male';
+
 
   // Whether we're viewing a completed/past season
   const isViewingPastSeason = selectedSeason !== null && selectedSeason.status === 'completed';
@@ -2022,9 +2018,10 @@ export function CommunityDashboard() {
       return res.json();
     },
     staleTime: 60 * 1000,
-    refetchInterval: 180 * 1000,
+    refetchInterval: 300 * 1000,
     refetchIntervalInBackground: false,
     placeholderData: (prev) => prev,
+    notifyOnChangeProps: ['data', 'error'],
   });
 
   // Fetch female stats
@@ -2035,9 +2032,10 @@ export function CommunityDashboard() {
       return res.json();
     },
     staleTime: 60 * 1000,
-    refetchInterval: 180 * 1000,
+    refetchInterval: 300 * 1000,
     refetchIntervalInBackground: false,
     placeholderData: (prev) => prev,
+    notifyOnChangeProps: ['data', 'error'],
   });
 
   // Fetch league data
@@ -2074,9 +2072,10 @@ export function CommunityDashboard() {
       return res.json();
     },
     staleTime: 60 * 1000,
-    refetchInterval: 180 * 1000,
+    refetchInterval: 300 * 1000,
     refetchIntervalInBackground: false,
     placeholderData: (prev) => prev,
+    notifyOnChangeProps: ['data', 'error'],
   });
 
   // Player click handler
@@ -2160,7 +2159,7 @@ export function CommunityDashboard() {
 
       {/* ═══ 2. Cari Turnamen Kamu — Right below hero, above match results ═══ */}
       <Section sectionId="tour-saya">
-        <TourSayaSection selectedDivision={deferredDivision} />
+        <TourSayaSection selectedDivision={selectedDivision} />
       </Section>
 
       {/* ═══ 3. Hasil Pertandingan — Bracket-style match results ═══ */}
@@ -2175,7 +2174,7 @@ export function CommunityDashboard() {
       {/* ═══ 4. Top Saweran ═══ */}
       <Section sectionId="saweran">
         <LazySection placeholderHeight={400}>
-          <TopDonorsWidget onDonate={handleDonate} statsData={deferredDivision === 'female' ? femaleData : maleData} statsData2={deferredDivision === 'female' ? maleData : femaleData} />
+          <TopDonorsWidget onDonate={handleDonate} statsData={selectedDivision === 'female' ? femaleData : maleData} statsData2={selectedDivision === 'female' ? maleData : femaleData} />
         </LazySection>
       </Section>
 
@@ -2217,7 +2216,7 @@ export function CommunityDashboard() {
               <ChampionsMvpContent
                 maleData={maleData}
                 femaleData={femaleData}
-                selectedDivision={deferredDivision}
+                selectedDivision={selectedDivision}
                 onPlayerClick={handlePlayerClick}
               />
             </AnimatedSection>
@@ -2240,12 +2239,12 @@ export function CommunityDashboard() {
               <DivisionStandingsSection
                 maleData={maleData}
                 femaleData={femaleData}
-                selectedDivision={deferredDivision}
+                selectedDivision={selectedDivision}
                 onPlayerClick={handlePlayerClick}
                 onClubClick={handleClubClick}
-                leaderboardSort={deferredLeaderboardSort}
+                leaderboardSort={leaderboardSort}
                 onLeaderboardSortChange={(sort) => startTransition(() => setLeaderboardSort(sort))}
-                divisionFilter={deferredLeaderboardDivisionFilter}
+                divisionFilter={leaderboardDivisionFilter}
                 onDivisionFilterChange={(filter) => startTransition(() => setLeaderboardDivisionFilter(filter))}
               />
             </div>
@@ -2255,10 +2254,10 @@ export function CommunityDashboard() {
       </div>
 
       {/* ═══ 7. Quick Stats Bar — Division-specific (when division selected) ═══ */}
-      {deferredDivision !== 'all' && (
+      {selectedDivision !== 'all' && (
         <Section sectionId="quick-stats">
-          {(deferredEffectiveDivision === 'male' ? maleData : femaleData) ? (
-            <QuickStatsBar data={(deferredEffectiveDivision === 'male' ? maleData : femaleData)!} division={deferredEffectiveDivision} />
+          {(effectiveDivision === 'male' ? maleData : femaleData) ? (
+            <QuickStatsBar data={(effectiveDivision === 'male' ? maleData : femaleData)!} division={effectiveDivision} />
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
               {Array.from({ length: 4 }).map((_, i) => (

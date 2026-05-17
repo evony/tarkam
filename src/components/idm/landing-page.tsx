@@ -307,6 +307,7 @@ export function LandingPage() {
     refetchOnWindowFocus: true,
     gcTime: 60000,
     placeholderData: (prev) => prev, // keep previous data during refetch — prevents CLS
+    notifyOnChangeProps: ['data', 'error'],
   });
 
   /* Data Queries — 1min polling, CDN-cached */
@@ -365,6 +366,7 @@ export function LandingPage() {
     refetchOnWindowFocus: true,
     gcTime: 300000,
     placeholderData: (prev) => prev, // keep previous data during refetch — prevents CLS
+    notifyOnChangeProps: ['data', 'error'],
   });
 
   const { data: leagueData } = useQuery<{ hasData: boolean; preSeason?: boolean; reason?: string; season?: { id: string; name: string; number: number }; tarkamChampion?: { id: string; name: string; logo: string | null; seasonNumber: number; malePoints: number; femalePoints: number; totalPoints: number; members: { id: string; gamertag: string; division: string; tier: string; points: number; role: string; avatar?: string | null }[] } | null; stats?: { totalClubs: number; totalMatches: number; completedMatches: number } }>({
@@ -387,6 +389,7 @@ export function LandingPage() {
     refetchInterval: 660000, // 11min polling — staggered 1min from cms to avoid simultaneous INP spikes
     refetchIntervalInBackground: false,
     placeholderData: (prev) => prev, // keep previous data during refetch — prevents CLS
+    notifyOnChangeProps: ['data', 'error'],
   });
 
   // CMS helpers

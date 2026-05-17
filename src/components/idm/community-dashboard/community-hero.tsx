@@ -30,56 +30,34 @@ import type { StatsData } from '@/types/stats';
 const AnimatedNumber = React.memo(function AnimatedNumber({ target, duration = 1500, prefix = '', suffix = '' }: { target: number; duration?: number; prefix?: string; suffix?: string }) {
   const spanRef = useRef<HTMLSpanElement>(null);
   const currentValueRef = useRef(0);
+  const rafRef = useRef(0);
 
   useEffect(() => {
     const start = currentValueRef.current;
     const diff = target - start;
     if (diff === 0) return;
 
-    // ★ INP optimization: defer animation start until idle to avoid competing with user interactions
-    let idleTimerId: number | ReturnType<typeof setTimeout> | undefined;
-    let rafId: number;
+    const startTime = performance.now();
 
-    const startAnimation = () => {
-      const startTime = performance.now();
+    const animate = (now: number) => {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+      const current = Math.round(start + diff * eased);
+      currentValueRef.current = current;
 
-      const animate = (now: number) => {
-        const elapsed = now - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        const eased = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
-        const current = Math.round(start + diff * eased);
-        currentValueRef.current = current;
-
-        if (spanRef.current) {
-          spanRef.current.textContent = `${prefix}${current.toLocaleString('id-ID')}${suffix}`;
-        }
-
-        if (progress < 1) {
-          rafId = requestAnimationFrame(animate);
-        }
-      };
-
-      rafId = requestAnimationFrame(animate);
-    };
-
-    // Use requestIdleCallback if available, otherwise setTimeout with short delay
-    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
-      idleTimerId = (window as unknown as { requestIdleCallback(cb: () => void, opts?: { timeout: number }): number })
-        .requestIdleCallback(startAnimation, { timeout: 500 });
-    } else {
-      idleTimerId = setTimeout(startAnimation, 100);
-    }
-
-    return () => {
-      if (idleTimerId !== undefined) {
-        if (typeof window !== 'undefined' && 'cancelIdleCallback' in window) {
-          (window as unknown as { cancelIdleCallback(id: number): void }).cancelIdleCallback(idleTimerId as unknown as number);
-        } else {
-          clearTimeout(idleTimerId as ReturnType<typeof setTimeout>);
-        }
+      if (spanRef.current) {
+        spanRef.current.textContent = `${prefix}${current.toLocaleString('id-ID')}${suffix}`;
       }
-      cancelAnimationFrame(rafId);
+
+      if (progress < 1) {
+        rafRef.current = requestAnimationFrame(animate);
+      }
     };
+
+    rafRef.current = requestAnimationFrame(animate);
+
+    return () => cancelAnimationFrame(rafRef.current);
   }, [target, duration, prefix, suffix]);
 
   return <span ref={spanRef}>{prefix}0{suffix}</span>;
@@ -224,7 +202,7 @@ function DetailItem({
    Division Card — tournament info card for Male/Female
    Shows: status, name, detail info, players, + CTA buttons
    ═══════════════════════════════════════════════════════ */
-function DivisionCard({
+const DivisionCard = React.memo(function DivisionCard({
   division,
   data,
   status,
@@ -478,7 +456,7 @@ function DivisionCard({
       </div>
     </div>
   );
-}
+});
 
 /* ═══════════════════════════════════════════════════════
    COMMUNITY HERO — Redesigned tournament-centric banner

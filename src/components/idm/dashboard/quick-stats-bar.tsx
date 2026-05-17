@@ -28,7 +28,7 @@ interface QuickStatsBarProps {
 }
 
 /* ─── QuickStatsBar Component ─── */
-export function QuickStatsBar({ data, division }: QuickStatsBarProps) {
+export const QuickStatsBar = React.memo(function QuickStatsBar({ data, division }: QuickStatsBarProps) {
   const dt = useDivisionTheme();
 
   const stats: StatCardConfig[] = [
@@ -133,4 +133,4 @@ export function QuickStatsBar({ data, division }: QuickStatsBarProps) {
       })}
     </div>
   );
-}
+});
