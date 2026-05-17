@@ -8334,20 +8334,20 @@ html {
   50% { background-position: 0% 0; }
 }
 
-/* ─── Hero: Title entrance — LCP-optimized: visible immediately, subtle letter-spacing animation ─── */
+/* ─── Hero: Title entrance — LCP-optimized: translateY only, no letter-spacing anim ─── */
 .hero-title-entrance {
   letter-spacing: -0.01em;
   animation: hero-title-enter 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
-  will-change: letter-spacing, transform;
+  will-change: transform;
 }
 @keyframes hero-title-enter {
   from {
-    letter-spacing: 0.15em;
     transform: translateY(4px);
+    opacity: 0.7;
   }
   to {
-    letter-spacing: -0.01em;
     transform: translateY(0);
+    opacity: 1;
   }
 }
 
@@ -11340,11 +11340,6 @@ main, [role="main"] {
     animation: none !important;
   }
 
-  /* Reduce particle animation complexity */
-  .hero-particle {
-    animation-duration: 12s !important;
-  }
-
   /* Disable tournament card tilt on mobile */
   .tournament-card-tilt {
     transform: none !important;
@@ -11366,9 +11361,41 @@ main, [role="main"] {
     animation: none !important;
   }
 
-  /* Simplify hero CTA breath animation */
-  .hero-cta-breath > div:first-child {
+  /* Hide decorative hero elements on mobile — reduce DOM compositing */
+  .hero-diagonal-line,
+  .hero-geo-accent,
+  .hero-top-gold-line {
+    display: none !important;
+  }
+
+  /* Disable hero particles on mobile — 6 animated elements removed */
+  .hero-particle {
+    display: none !important;
+  }
+
+  /* Disable infinite hero animations on mobile */
+  .hero-title-breath {
     animation: none !important;
+  }
+
+  .hero-cta-breath > div:first-child,
+  .hero-cta-breath::before {
+    animation: none !important;
+  }
+
+  .hero-underline-dramatic {
+    animation: none !important;
+  }
+
+  .hero-scroll-mouse,
+  .hero-scroll-mouse-dot {
+    animation: none !important;
+  }
+
+  /* Disable glow gradients on mobile (3 overlay divs with radial-gradient) */
+  .parallax-hero-slow,
+  .parallax-hero-mid {
+    display: none !important;
   }
 }
 

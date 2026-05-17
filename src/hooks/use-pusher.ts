@@ -63,12 +63,13 @@ export function usePusherChannel(
  * and flush them during requestIdleCallback. This ensures user interactions
  * are never blocked by invalidation cascades.
  */
-export function usePusherRealtime() {
+export function usePusherRealtime(enabled = true) {
   const qc = useQueryClient();
   const qcRef = useRef(qc);
   qcRef.current = qc;
 
   useEffect(() => {
+    if (!enabled) return;
     const pusherKey = process.env.NEXT_PUBLIC_PUSHER_KEY;
     const pusherCluster = process.env.NEXT_PUBLIC_PUSHER_CLUSTER;
 
@@ -187,5 +188,5 @@ export function usePusherRealtime() {
         cancelIdleCallback(idleHandle);
       }
     };
-  }, []);
+  }, [enabled]);
 }

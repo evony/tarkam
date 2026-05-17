@@ -543,7 +543,7 @@ export function AppShell() {
   const queryClient = useQueryClient();
   const isMobile = useIsMobile();
   const { canInstall: _canInstall, promptInstall } = usePWA();
-  const _pusherRealtime = usePusherRealtime();
+  const _pusherRealtime = usePusherRealtime(currentView !== 'landing');
   const [dismissed, setDismissed] = useState(() => {
     if (typeof window === 'undefined') return false;
     return !!localStorage.getItem('pwa-install-dismissed');

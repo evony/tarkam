@@ -114,7 +114,7 @@ export function HeroSection({
   const totalMatches = maleMatches + femaleMatches;
 
   /* ─── Particles — reduced to 6 for performance ─── */
-  const particles = useParticles(6);
+  const particles = useParticles(typeof window !== 'undefined' && window.innerWidth >= 640 ? 6 : 0);
 
   /* ─── Season Champions (latest completed season) ─── */
   const maleChampionSeason = !isSeasonDataPlaceholder ? maleData?.allSeasons?.find(s => s.status === 'completed' && s.championPlayer) : undefined;

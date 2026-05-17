@@ -280,6 +280,14 @@ export function LandingPage() {
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
   const [paymentModalDivision, setPaymentModalDivision] = useState<'male' | 'female'>('male');
 
+  /* Mobile performance: defer non-critical queries on small screens */
+  const [deferredQueriesReady, setDeferredQueriesReady] = useState(false);
+  useEffect(() => {
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
+    const timer = setTimeout(() => setDeferredQueriesReady(true), isMobile ? 2000 : 0);
+    return () => clearTimeout(timer);
+  }, []);
+
   const openVideoModal = useCallback((url: string, title: string) => {
     setVideoModalUrl(url);
     setVideoModalTitle(title);
@@ -301,6 +309,7 @@ export function LandingPage() {
       if (!res.ok) return { male: { tournamentId: null, status: null, name: null, weekNumber: null, isRegistrationOpen: false }, female: { tournamentId: null, status: null, name: null, weekNumber: null, isRegistrationOpen: false } };
       return res.json();
     },
+    enabled: deferredQueriesReady,
     staleTime: 30000, // 30s — fast refresh since this is a lightweight query
     refetchInterval: 120000, // 2min polling — reduced from 60s to lower INP impact
     refetchIntervalInBackground: false,
@@ -332,6 +341,7 @@ export function LandingPage() {
       const url = `/api/stats?division=female${selectedSeasonId ? `&seasonId=${selectedSeasonId}` : ''}`;
       const res = await fetch(url); return res.json();
     },
+    enabled: deferredQueriesReady,
     staleTime: 120000, // 2min — reduced polling frequency to lower INP impact
     refetchInterval: 330000, // 5.5min polling — staggered 30s from male to avoid simultaneous INP spikes
     refetchIntervalInBackground: false,
@@ -341,7 +351,7 @@ export function LandingPage() {
     placeholderData: (prev) => prev, // keep previous data during refetch/season switch — prevents FOUC
   });
 
-  const isDataLoading = isMaleLoading || isFemaleLoading;
+  const isDataLoading = isMaleLoading || (deferredQueriesReady && isFemaleLoading);
   // isSeasonSwitching: data exists (not initial load) but fetching new season data
   const isSeasonSwitching = !isDataLoading && (isMaleFetching || isFemaleFetching);
   // isSeasonDataPlaceholder: true when showing OLD season data during a season switch
@@ -360,6 +370,7 @@ export function LandingPage() {
       if (!res.ok) return { settings: {}, sections: {} };
       return res.json();
     },
+    enabled: deferredQueriesReady,
     staleTime: 300000, // CMS changes rarely — 5min stale is fine
     refetchInterval: 600000, // 10min polling — CMS data barely changes
     refetchIntervalInBackground: false,
@@ -376,6 +387,7 @@ export function LandingPage() {
       if (!res.ok) throw new Error('League API failed');
       return res.json();
     },
+    enabled: deferredQueriesReady,
     // ── 2min Polling Strategy ──
     // Most requests hit Vercel CDN (s-maxage=10), not the database.
     // 2min is optimized for mid-range devices while still feeling responsive:
@@ -584,13 +596,17 @@ export function LandingPage() {
   useScrollReveal();
 
   /* Parallax — lightweight rAF-based depth layers on scroll */
-  useParallax([
-    { selector: '.parallax-hero-bg', speed: 0.12 },      // base gradient — slowest
-    { selector: '.parallax-hero-mid', speed: 0.08 },      // gold haze — very slow
-    { selector: '.parallax-hero-slow', speed: 0.05 },     // cyan/purple glow — slowest
-    { selector: '.parallax-section-bg', speed: 0.06 },    // section backgrounds — subtle
-    { selector: '.parallax-particles', speed: 0.18 },     // floating particles — fastest
-  ]);
+  useParallax(
+    typeof window !== 'undefined' && window.innerWidth >= 640
+      ? [
+          { selector: '.parallax-hero-bg', speed: 0.12 },
+          { selector: '.parallax-hero-mid', speed: 0.08 },
+          { selector: '.parallax-hero-slow', speed: 0.05 },
+          { selector: '.parallax-section-bg', speed: 0.06 },
+          { selector: '.parallax-particles', speed: 0.18 },
+        ]
+      : []
+  );
 
   // ★ Show full-page skeleton while initial data is loading
   // OPTIMIZATION: Only wait for maleData (primary division) for faster LCP
@@ -678,7 +694,7 @@ export function LandingPage() {
         {/* Gradient border at top — premium separator */}
         <div className="h-px bg-gradient-to-r from-transparent via-idm-gold-warm/30 to-transparent" aria-hidden="true" />
         {/* Frosted glass background */}
-        <div className="bg-background/95 backdrop-blur-lg">
+        <div className="bg-background sm:bg-background/95 sm:backdrop-blur-lg">
           <div className="flex items-center justify-around h-16 px-1">
             {[
               { id: 'kompetisi', label: 'Kompetisi', icon: Swords, special: false },
